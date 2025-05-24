@@ -1,6 +1,6 @@
 .. _c2:
 
-Chapter 2 Application Layer 
+第 2 章 应用层
 ============================================
 
 Chapter 2 Application Layer 

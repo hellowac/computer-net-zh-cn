@@ -2,10 +2,10 @@
 
 
 
-Interview: Leonard Kleinrock 
+采访: Vinton G. Cerf
 ===================================
 
-Interview: Leonard Kleinrock 
+Interview: Vinton G. Cerf
 
 
 .. tab:: 中文

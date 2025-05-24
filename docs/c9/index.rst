@@ -1,6 +1,7 @@
 .. _c9:
 
-Chapter 9 Multimedia Networking
+
+第 9 章 多媒体联网
 ============================================
 
 Chapter 9 Multimedia Networking

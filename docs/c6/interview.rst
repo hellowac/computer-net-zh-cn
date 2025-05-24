@@ -2,10 +2,10 @@
 
 
 
-Interview: Leonard Kleinrock 
+采访: Simon S. Lam
 ===================================
 
-Interview: Leonard Kleinrock 
+Interview: Simon S. Lam
 
 
 .. tab:: 中文

@@ -1,6 +1,7 @@
 .. _c8:
 
-Chapter 8 Security in Computer Networks
+
+第 8 章 计算机网络中的安全性
 ============================================
 
 Chapter 8 Security in Computer Networks

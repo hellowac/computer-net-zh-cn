@@ -2,10 +2,10 @@
 
 
 
-Interview: Leonard Kleinrock 
+采访: Henning Schulzrinne
 ===================================
 
-Interview: Leonard Kleinrock 
+Interview: Henning Schulzrinne
 
 
 .. tab:: 中文

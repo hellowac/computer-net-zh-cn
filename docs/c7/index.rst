@@ -1,6 +1,7 @@
 .. _c7:
 
-Chapter 7 Wireless and Mobile Networks
+
+第 7 章 无线和移动网络
 ============================================
 
 Chapter 7 Wireless and Mobile Networks
@@ -69,6 +70,7 @@ Chapter 7 Wireless and Mobile Networks
    ./s5.rst
    ./s6.rst
    ./s7.rst
+   ./s8.rst
    ./summary.rst
    ./homework.rst
    ./wiresharklab.rst

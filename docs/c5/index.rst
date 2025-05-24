@@ -1,6 +1,7 @@
 .. _c5:
 
-Chapter 5 The Network Layer: Control Plane
+
+第 5 章 网络层：控制平面
 ============================================
 
 Chapter 5 The Network Layer: Control Plane
@@ -37,8 +38,8 @@ Chapter 5 The Network Layer: Control Plane
    ./s1.rst
    ./s2.rst
    ./s3.rst
-   ./s5.rst
    ./s4.rst
+   ./s5.rst
    ./s6.rst
    ./s7.rst
    ./summary.rst

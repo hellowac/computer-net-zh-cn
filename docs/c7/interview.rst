@@ -2,10 +2,10 @@
 
 
 
-Interview: Leonard Kleinrock 
+采访: Deborah Estrin
 ===================================
 
-Interview: Leonard Kleinrock 
+Interview: Deborah Estrin
 
 
 .. tab:: 中文

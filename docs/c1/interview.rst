@@ -1,8 +1,4 @@
-
-
-
-
-Interview: Leonard Kleinrock 
+采访：伦纳德·克莱因洛克
 ===================================
 
 Interview: Leonard Kleinrock 

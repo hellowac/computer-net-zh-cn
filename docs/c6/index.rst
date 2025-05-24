@@ -1,6 +1,7 @@
 .. _c6:
 
-Chapter 6 The Link Layer and LANs
+
+第 6 章 链路层和 LAN
 ============================================
 
 Chapter 6 The Link Layer and LANs

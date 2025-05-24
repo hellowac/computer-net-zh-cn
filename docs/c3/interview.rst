@@ -2,10 +2,10 @@
 
 
 
-Interview: Leonard Kleinrock 
+采访: Van Jacobson
 ===================================
 
-Interview: Leonard Kleinrock 
+Interview: Van Jacobson
 
 
 .. tab:: 中文

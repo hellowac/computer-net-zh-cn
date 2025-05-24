@@ -2,10 +2,10 @@
 
 
 
-Interview: Leonard Kleinrock 
+采访: Marc Andreessen
 ===================================
 
-Interview: Leonard Kleinrock 
+Interview: Marc Andreessen
 
 
 .. tab:: 中文

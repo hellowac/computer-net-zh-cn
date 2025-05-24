@@ -1,7 +1,7 @@
 .. _c1:
 
-Chapter 1 Computer Networks and the Internet 
-=================
+第 1 章 计算机网络和 Internet
+==================================
 
 Chapter 1 Computer Networks and the Internet 
 
@@ -51,6 +51,7 @@ Chapter 1 Computer Networks and the Internet
    ./s2.rst
    ./s3.rst
    ./s4.rst
+   ./s5.rst
    ./s6.rst
    ./s7.rst
    ./s8.rst
