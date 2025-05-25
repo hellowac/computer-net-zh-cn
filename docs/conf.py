@@ -11,9 +11,13 @@ copyright = '2025, Jim Kurose/Keith Ross'
 author = 'Jim Kurose/Keith Ross'
 release = '1.0'
 
+
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
+# extensions
+# https://www.sphinx-doc.org/en/master/usage/extensions/index.html
 extensions = [
     'sphinx.ext.autodoc', 
     'sphinx.ext.todo', 
@@ -35,3 +39,6 @@ html_static_path = ['_static']
 html_css_files = [
     'mystyles.css',
 ]
+
+highlight_language = 'python'  # 默认语言（可选）
+pygments_style = 'sphinx'  # Sphinx 默认样式

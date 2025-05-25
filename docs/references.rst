@@ -2206,11 +2206,11 @@ References
 
 [White 2011] A. White, K. Snow, A. Matthews, F. Monrose, “Hookt on fon-iks: Phonotactic Reconstruction of Encrypted VoIP Conversations,” IEEE Symposium on Security and Privacy, Oakland, CA, 2011.
 
-.. _Wigle.net:
+.. _Wigle.net 2016:
 
 [Wigle.net 2016] Wireless Geographic Logging Engine, http://www.wigle.net
 
-.. _Wiki Satellite:
+.. _Wiki Satellite 2016:
 
 [Wiki Satellite 2016] Satellite Internet access, https://en.wikipedia.org/wiki/Satellite_Internet_access
 
