@@ -61,5 +61,6 @@ again when we study transport, network, and link layer protocols.
    ./s7.rst
    ./summary.rst
    ./homework.rst
+   ./socketpro.rst
    ./wiresharklab.rst
    ./interview.rst
