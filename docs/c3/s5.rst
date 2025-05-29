@@ -660,6 +660,50 @@ categorized as a hybrid of GBN and SR protocols.
 
 .. tab:: 英文
 
+Recall that the hosts on each side of a TCP connection set aside a receive buffer for the connection. When the TCP connection receives bytes that are correct and in sequence, it places the data in the receive buffer. The associated application process will read data from this buffer, but not necessarily at the instant the data arrives. Indeed, the receiving application may be busy with some other task and may not even attempt to read the data until long after it has arrived. If the application is relatively slow at reading the data, the sender can very easily overflow the connection’s receive buffer by sending too much data too quickly.
+
+TCP provides a **flow-control service** to its applications to eliminate the possibility of the sender overflowing the receiver’s buffer. Flow control is thus a speed-matching service—matching the rate at which the sender is sending against the rate at which the receiving application is reading. As noted earlier, a TCP sender can also be throttled due to congestion within the IP network; this form of sender control is referred to as **congestion control**, a topic we will explore in detail in :ref:`Sections 3.6 <Sections 3.6>` and :ref:`3.7 <Sections 3.7>`. Even though the actions taken by flow and congestion control are similar (the throttling of the sender), they are obviously taken for very different reasons. Unfortunately, many authors use the terms interchangeably, and the savvy reader would be wise to distinguish between them. Let’s now discuss how TCP provides its flow-control service. In order to see the forest for the trees, we suppose throughout this section that the TCP implementation is such that the TCP receiver discards out-of-order segments.
+
+TCP provides flow control by having the sender maintain a variable called the **receive window**. Informally, the receive window is used to give the sender an idea of how much free buffer space is available at the receiver. Because TCP is full-duplex, the sender at each side of the connection maintains a distinct receive window. Let’s investigate the receive window in the context of a file transfer. Suppose that Host A is sending a large file to Host B over a TCP connection. Host B allocates a receive buffer to this connection; denote its size by **RcvBuffer**. From time to time, the application process in Host B reads from the buffer. Define the following variables:
+
+- **LastByteRead**: the number of the last byte in the data stream read from the buffer by the application process in B
+- **LastByteRcvd**: the number of the last byte in the data stream that has arrived from the network and has been placed in the receive buffer at B
+
+Because TCP is not permitted to overflow the allocated buffer, we must have
+
+.. code:: text
+
+    LastByteRcvd-LastByteRead≤RcvBuffer
+
+The receive window, denoted ``rwnd`` is set to the amount of spare room in the buffer:
+
+.. code:: text 
+
+    rwnd=RcvBuffer−[LastByteRcvd−LastByteRead]
+
+Because the spare room changes with time, ``rwnd`` is dynamic. The variable ``rwnd`` is illustrated in :ref:`Figure 3.38 <Figure 3.38>`.
+
+How does the connection use the variable ``rwnd`` to provide the flow-control service? Host B tells Host A how much spare room it has in the connection buffer by placing its current value of ``rwnd`` in the receive window field of every segment it sends to A. Initially, Host B sets ``rwnd = RcvBuffer``. Note that to pull this off, Host B must keep track of several connection-specific variables.
+
+.. _Figure 3.38:
+
+.. figure:: ../img/293-0.png
+   :align: center
+
+**Figure 3.38 The receive window (rwnd) and the receive buffer (RcvBuffer)**
+
+Host A in turn keeps track of two variables, ``LastByteSent`` and ``LastByteAcked``, which have obvious meanings. Note that the difference between these two variables, ``LastByteSent – LastByteAcked``, is the amount of unacknowledged data that A has sent into the connection. By keeping the amount of unacknowledged data less than the value of ``rwnd``, Host A is assured that it is not overflowing the receive buffer at Host B. Thus, Host A makes sure throughout the connection’s life that
+
+.. code:: text
+
+    LastByteSent−LastByteAcked≤rwnd
+
+There is one minor technical problem with this scheme. To see this, suppose Host B’s receive buffer
+becomes full so that ``rwnd = 0``. After advertising ``rwnd = 0`` to Host A, also suppose that B has nothing to send to A. Now consider what happens. As the application process at B empties the buffer, TCP does not send new segments with new ``rwnd`` values to Host A; indeed, TCP sends a segment to Host A only if it has data to send or if it has an acknowledgment to send. Therefore, Host A is never informed that some space has opened up in Host B’s receive buffer—Host A is blocked and can transmit no more data! To solve this problem, the TCP specification requires Host A to continue to send segments with one data byte when B’s receive window is zero. These segments will be acknowledged by the receiver. Eventually the buffer will begin to empty and the acknowledgments will contain a nonzero rwnd value.
+
+The online site at http://www.awl.com/kurose-ross for this book provides an interactive Java applet that illustrates the operation of the TCP receive window.
+
+Having described TCP’s flow-control service, we briefly mention here that UDP does not provide flow control and consequently, segments may be lost at the receiver due to buffer overflow. For example, consider sending a series of UDP segments from a process on Host A to a process on Host B. For a typical UDP implementation, UDP will append the segments in a finite-sized buffer that “precedes” the corresponding socket (that is, the door to the process). The process reads one entire segment at a time from the buffer. If the process does not read the segments fast enough from the buffer, the buffer will overflow and segments will get dropped.
 
 
 .. _c3.5.6:
@@ -672,3 +716,77 @@ categorized as a hybrid of GBN and SR protocols.
 
 .. tab:: 英文
 
+In this subsection we take a closer look at how a TCP connection is established and torn down. Although this topic may not seem particularly thrilling, it is important because TCP connection establishment can significantly add to perceived delays (for example, when surfing the Web). Furthermore, many of the most common network attacks—including the incredibly popular SYN flood attack—exploit vulnerabilities in TCP connection management. Let’s first take a look at how a TCP connection is established. Suppose a process running in one host (client) wants to initiate a connection with another process in another host (server). The client application process first informs the client TCP that it wants to establish a connection to a process in the server. The TCP in the client then proceeds to establish a TCP connection with the TCP in the server in the following manner:
+
+- **Step 1**. The client-side TCP first sends a special TCP segment to the server-side TCP. This special segment contains no application-layer data. But one of the flag bits in the segment’s header (see :ref:`Figure 3.29 <Figure 3.29>`), the SYN bit, is set to 1. For this reason, this special segment is referred to as a SYN segment. In addition, the client randomly chooses an initial sequence number (``client_isn``) and puts this number in the sequence number field of the initial TCP SYN segment. This segment is encapsulated within an IP datagram and sent to the server. There has been considerable interest in
+properly randomizing the choice of the ``client_isn`` in order to avoid certain security attacks :ref:`[CERT 2001–09] <CERT 2001–09>`.
+- **Step 2**. Once the IP datagram containing the TCP SYN segment arrives at the server host (assuming it does arrive!), the server extracts the TCP SYN segment from the datagram, allocates the TCP buffers and variables to the connection, and sends a connection-granted segment to the client TCP. (We’ll see in :ref:`Chapter 8 <c8>` that the allocation of these buffers and variables before completing the third step of the three-way handshake makes TCP vulnerable to a denial-of-service attack known as SYN flooding.) This connection-granted segment also contains no application-layer data. However, it does contain three important pieces of information in the segment header. First, the SYN bit is set to 1. Second, the acknowledgment field of the TCP segment header is set to ``client_isn+1``. Finally, the server chooses its own initial sequence number (server_isn) and puts this value in the sequence number field of the TCP segment header. This connection-granted segment is saying, in effect, “I received your SYN packet to start a connection with your initial sequence number, ``client_isn``. I agree to establish this connection. My own initial sequence number is ``server_isn``.” The connection-granted segment is referred to as a **SYNACK segment**.
+- **Step 3**. Upon receiving the SYNACK segment, the client also allocates buffers and variables to the connection. The client host then sends the server yet another segment; this last segment acknowledges the server’s connection-granted segment (the client does so by putting the value ``server_isn+1`` in the acknowledgment field of the TCP segment header). The SYN bit is set to zero, since the connection is established. This third stage of the three-way handshake may carry client-to-server data in the segment payload.
+
+Once these three steps have been completed, the client and server hosts can send segments containing data to each other. In each of these future segments, the SYN bit will be set to zero. Note that in order to establish the connection, three packets are sent between the two hosts, as illustrated in :ref:`Figure 3.39 <Figure 3.39>`. For this reason, this connection-establishment procedure is often referred to as a three- way handshake. Several aspects of the TCP **three-way handshake** are explored in the homework problems (Why are initial sequence numbers needed? Why is a three-way handshake, as opposed to a two-way handshake, needed?). It’s interesting to note that a rock climber and a belayer (who is stationed below the rock climber and whose job it is to handle the climber’s safety rope) use a three- way-handshake communication protocol that is identical to TCP’s to ensure that both sides are ready before the climber begins ascent.
+
+
+.. _Figure 3.39:
+
+.. figure:: ../img/296-0.png
+   :align: center
+
+**Figure 3.39 TCP three-way handshake: segment exchange**
+
+.. _Figure 3.40:
+
+.. figure:: ../img/296-1.png
+   :align: center
+
+**Figure 3.40 Closing a TCP connection**
+
+All good things must come to an end, and the same is true with a TCP connection. Either of the two processes participating in a TCP connection can end the connection. When a connection ends, the “resources” (that is, the buffers and variables) in the hosts are deallocated. As an example, suppose the client decides to close the connection, as shown in :ref:`Figure 3.40 <Figure 3.40>`. The client application process issues a close command. This causes the client TCP to send a special TCP segment to the server process. This special segment has a flag bit in the segment’s header, the FIN bit (see :ref:`Figure 3.29 <Figure 3.29>`), set to 1. When the server receives this segment, it sends the client an acknowledgment segment in return. The server then sends its own shutdown segment, which has the FIN bit set to 1. Finally, the client acknowledges the server’s shutdown segment. At this point, all the resources in the two hosts are now deallocated.
+
+During the life of a TCP connection, the TCP protocol running in each host makes transitions through various **TCP states**. :ref:`Figure 3.41 <Figure 3.41>` illustrates a typical sequence of TCP states that are visited by the client TCP. The client TCP begins in the CLOSED state. The application on the client side initiates a new TCP connection (by creating a Socket object in our Java examples as in the Python examples from :ref:`Chapter 2 <c2>`). This causes TCP in the client to send a SYN segment to TCP in the server. After having sent the SYN segment, the client TCP enters the SYN_SENT state. While in the SYN_SENT state, the
+client TCP waits for a segment from the server TCP that includes an acknowledgment for the client’s previous segment and has the SYN bit set to 1. Having received such a segment, the client TCP enters the ESTABLISHED state. While in the ESTABLISHED state, the TCP client can send and receive TCP segments containing payload (that is, application-generated) data.
+
+.. _Figure 3.41:
+
+.. figure:: ../img/297-0.png
+   :align: center
+
+**Figure 3.41 A typical sequence of TCP states visited by a client TCP**
+
+Suppose that the client application decides it wants to close the connection. (Note that the server could also choose to close the connection.) This causes the client TCP to send a TCP segment with the FIN bit set to 1 and to enter the FIN_WAIT_1 state. While in the FIN_WAIT_1 state, the client TCP waits for a TCP segment from the server with an acknowledgment. When it receives this segment, the client TCP enters the FIN_WAIT_2 state. While in the FIN_WAIT_2 state, the client waits for another segment from the server with the FIN bit set to 1; after receiving this segment, the client TCP acknowledges the server’s segment and enters the TIME_WAIT state. The TIME_WAIT state lets the TCP client resend the final acknowledgment in case the ACK is lost. The time spent in the TIME_WAIT state is implementation-dependent, but typical values are 30 seconds, 1 minute, and 2 minutes. After the wait, the connection formally closes and all resources on the client side (including port numbers) are released.
+
+:ref:`Figure 3.42 <Figure 3.42>` illustrates the series of states typically visited by the server-side TCP, assuming the client begins connection teardown. The transitions are self-explanatory. In these two state-transition diagrams, we have only shown how a TCP connection is normally established and shut down. We have not described what happens in certain pathological scenarios, for example, when both sides of a connection want to initiate or shut down at the same time. If you are interested in learning about this and other advanced issues concerning TCP, you are encouraged to see Stevens’ comprehensive book :ref:`[Stevens 1994] <Stevens 1994>`.
+
+
+.. _Figure 3.42:
+
+.. figure:: ../img/298-0.png
+   :align: center
+
+**Figure 3.42 A typical sequence of TCP states visited by a server-side TCP**
+
+Our discussion above has assumed that both the client and server are prepared to communicate, i.e., that the server is listening on the port to which the client sends its SYN segment. Let’s consider what happens when a host receives a TCP segment whose port numbers or source IP address do not match with any of the ongoing sockets in the host. For example, suppose a host receives a TCP SYN packet with destination port 80, but the host is not accepting connections on port 80 (that is, it is not running a Web server on port 80). Then the host will send a special reset segment to the source. This TCP
+segment has the RST flag bit (see :ref:`Section 3.5.2 <c3.5.2>`) set to 1. Thus, when a host sends a reset segment, it is telling the source “I don’t have a socket for that segment. Please do not resend the segment.” When a host receives a UDP packet whose destination port number doesn’t match with an ongoing UDP socket, the host sends a special ICMP datagram, as discussed in :ref:`Chapter 5 <c5>`.
+
+Now that we have a good understanding of TCP connection management, let’s revisit the nmap port- scanning tool and examine more closely how it works. To explore a specific TCP port, say port 6789, on a target host, nmap will send a TCP SYN segment with destination port 6789 to that host. There are three possible outcomes:
+
+- **The source host receives a TCP SYNACK segment from the target host**. Since this means that an application is running with TCP port 6789 on the target post, nmap returns “open.”
+  
+  .. admonition:: FOCUS ON SECURITY
+
+        The Syn Flood Attack
+
+        We’ve seen in our discussion of TCP’s three-way handshake that a server allocates and initializes connection variables and buffers in response to a received SYN. The server then sends a SYNACK in response, and awaits an ACK segment from the client. If the client does not send an ACK to complete the third step of this 3-way handshake, eventually (often after a minute or more) the server will terminate the half-open connection and reclaim the allocated resources.
+        
+        This TCP connection management protocol sets the stage for a classic Denial of Service (DoS) attack known as the **SYN flood attack**. In this attack, the attacker(s) send a large number of TCP SYN segments, without completing the third handshake step. With this deluge of SYN segments, the server’s connection resources become exhausted as they are allocated (but never used!) for half-open connections; legitimate clients are then denied
+        service. Such SYN flooding attacks were among the first documented DoS attacks :ref:`[CERT SYN 1996] <CERT SYN 1996>`. Fortunately, an effective defense known as SYN cookies :ref:`[RFC 4987] <RFC 4987>` are now deployed in most major operating systems. SYN cookies work as follows:
+
+        - When the server receives a SYN segment, it does not know if the segment is coming from a legitimate user or is part of a SYN flood attack. So, instead of creating a half-open TCP connection for this SYN, the server creates an initial TCP sequence number that is a complicated function (hash function) of source and destination IP addresses and port numbers of the SYN segment, as well as a secret number only known to the server. This carefully crafted initial sequence number is the so-called “cookie.” The server then sends the client a SYNACK packet with this special initial sequence number. Importantly, the server does not remember the cookie or any other state information corresponding to the SYN.
+        - A legitimate client will return an ACK segment. When the server receives this ACK, it must verify that the ACK corresponds to some SYN sent earlier. But how is this done if the server maintains no memory about SYN segments? As you may have guessed, it is done with the cookie. Recall that for a legitimate ACK, the value in the acknowledgment field is equal to the initial sequence number in the SYNACK (the cookie value in this case) plus one (see :ref:`Figure 3.39 <Figure 3.39>`). The server can then run the same hash function using the source and destination IP address and port numbers in the SYNACK (which are the same as in the original SYN) and the secret number. If the result of the function plus one is the same as the acknowledgment (cookie) value in the client’s SYNACK, the server concludes that the ACK corresponds to an earlier SYN segment and is hence valid. The server then creates a fully open connection along with a socket.
+        - On the other hand, if the client does not return an ACK segment, then the original SYN has done no harm at the server, since the server hasn’t yet allocated any resources in response to the original bogus SYN.
+
+- **The source host receives a TCP RST segment from the target host**. This means that the SYN segment reached the target host, but the target host is not running an application with TCP port 6789. But the attacker at least knows that the segments destined to the host at port 6789 are not blocked by any firewall on the path between source and target hosts. (Firewalls are discussed in :ref:`Chapter 8 <c8>`.)
+- **The source receives nothing**. This likely means that the SYN segment was blocked by an intervening firewall and never reached the target host.
+
+Nmap is a powerful tool that can “case the joint” not only for open TCP ports, but also for open UDP ports, for firewalls and their configurations, and even for the versions of applications and operating systems. Most of this is done by manipulating TCP connection-management segments :ref:`[Skoudis 2006] <Skoudis 2006>`. You can download nmap from `www.nmap.org <https://nmap.org/>`_.
+
+This completes our introduction to error control and flow control in TCP. In :ref:`Section 3.7 <c3.7>` we’ll return to TCP and look at TCP congestion control in some depth. Before doing so, however, we first step back and examine congestion-control issues in a broader context.
