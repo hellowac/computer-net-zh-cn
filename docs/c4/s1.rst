@@ -8,6 +8,19 @@
 
 .. tab:: 英文
 
+:ref:`Figure 4.1 <Figure 4.1>` shows a simple network with two hosts, H1 and H2, and several routers on the path between
+H1 and H2. Let’s suppose that H1 is sending information to H2, and consider the role of the network
+layer in these hosts and in the intervening routers. The network layer in H1 takes segments from the
+transport layer in H1, encapsulates each segment into a datagram, and then sends the datagrams to its
+nearby router, R1. At the receiving host, H2, the network layer receives the datagrams from its nearby
+router R2, extracts the transport-layer segments, and delivers the segments up to the transport layer at
+H2. The primary data-plane role of each router is to forward datagrams from its input links to its output
+links; the primary role of the network control plane is to coordinate these local, per-router forwarding
+actions so that datagrams are ultimately transferred end-to-end, along paths of routers between source
+and destination hosts. Note that the routers in :ref:`Figure 4.1` are shown with a truncated protocol stack, that
+is, with no upper layers above the network layer, because routers do not run application- and transport-
+layer protocols such as those we examined in :ref:`Chapters 2 <c2>` and :ref:`3 <c3>`.
+
 .. _c4.1.1:
 
 4.1.1 转发和路由：网络数据和控制平面
@@ -17,6 +30,98 @@
 .. tab:: 中文
 
 .. tab:: 英文
+
+The primary role of the network layer is deceptively simple—to move packets from a sending host to a
+receiving host. To do so, two important network-layer functions can be identified:
+
+- **Forwarding**. When a packet arrives at a router’s input link, the router must move the packet to the appropriate output link. For example, a packet arriving from Host H1 to Router R1 in :ref:`Figure 4.1 <Figure 4.1>` must be forwarded to the next router on a path to H2. As we will see, forwarding is but one function (albeit the most common and important one!) implemented in the data plane. In the more general case, which we’ll cover in :ref:`Section 4.4 <c4.4>`, a packet might also be blocked from exiting a router (e.g., if the packet originated at a known malicious sending host, or if the packet were destined to a forbidden destination host), or might be duplicated and sent over multiple outgoing links.
+  
+  .. figure:: ../img/351-0.png
+     :align: center 
+
+  .. _Figure 4.1:
+
+  **Figure 4.1 The network layer**
+
+- **Routing**. The network layer must determine the route or path taken by packets as they flow from a sender to a receiver. The algorithms that calculate these paths are referred to as **routing algorithms**. A routing algorithm would determine, for example, the path along which packets flowfrom H1 to H2 in :ref:`Figure 4.1 <Figure 4.1>`. Routing is implemented in the control plane of the network layer.
+
+The terms forwarding and routing are often used interchangeably by authors discussing the network
+layer. We’ll use these terms much more precisely in this book. **Forwarding** refers to the router-local
+action of transferring a packet from an input link interface to the appropriate output link interface.
+Forwarding takes place at very short timescales (typically a few nanoseconds), and thus is typically
+implemented in hardware. **Routing** refers to the network-wide process that determines the end-to-end
+paths that packets take from source to destination. Routing takes place on much longer timescales
+(typically seconds), and as we will see is often implemented in software. Using our driving analogy,
+consider the trip from Pennsylvania to Florida undertaken by our traveler back in :ref:`Section 1.3.1 <c1.3.1>`. During
+this trip, our driver passes through many interchanges en route to Florida. We can think of forwarding as
+the process of getting through a single interchange: A car enters the interchange from one road and
+determines which road it should take to leave the interchange. We can think of routing as the process of
+planning the trip from Pennsylvania to Florida: Before embarking on the trip, the driver has consulted a
+map and chosen one of many paths possible, with each path consisting of a series of road segments
+connected at interchanges.
+
+A key element in every network router is its **forwarding table**. A router forwards a packet by examining
+the value of one or more fields in the arriving packet’s header, and then using these header values to
+index into its forwarding table. The value stored in the forwarding table entry for those values indicates
+the outgoing link interface at that router to which that packet is to be forwarded. For example, in :ref:`Figure 4.2 <Figure 4.2>`, a packet with header field value of ``0110`` arrives to a router. The router indexes into its forwarding
+table and determines that the output link interface for this packet is interface 2. The router then internally
+forwards the packet to interface 2. In :ref:`Section 4.2 <c4.2>`, we’ll look inside a router and examine the forwarding
+function in much greater detail. Forwarding is the key function performed by the data-plane functionality
+of the network layer.
+
+Control Plane: The Traditional Approach
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+But now you are undoubtedly wondering how a router’s forwarding tables are configured in the first
+place. This is a crucial issue, one that exposes the important interplay between forwarding (in data
+plane) and routing (in control plane). As shown in :ref:`Figure 4.2 <Figure 4.2>`, the routing algorithm determines the contents of the routers’ forwarding tables. In this
+example, a routing algorithm runs in each and every router and both forwarding and routing functions
+are contained within a router. As we’ll see in :ref:`Sections 5.3 <c5.3>` and :ref:`5.4 <c5.4>`, the routing algorithm function in one
+router communicates with the routing algorithm function in other routers to compute the values for its
+forwarding table. How is this communication performed? By exchanging routing messages containing
+routing information according to a routing protocol! We’ll cover routing algorithms and protocols in
+:ref:`Sections 5.2 <c5.2>` through :ref:`5.4 <c5.4>`.
+
+.. figure:: ../img/353-0.png
+
+.. _Figure 4.2:
+
+**Figure 4.2 Routing algorithms determine values in forward tables**
+
+The distinct and different purposes of the forwarding and routing functions can be further illustrated by
+considering the hypothetical (and unrealistic, but technically feasible) case of a network in which all
+forwarding tables are configured directly by human network operators physically present at the routers.
+In this case, no routing protocols would be required! Of course, the human operators would need to
+interact with each other to ensure that the forwarding tables were configured in such a way that packets
+reached their intended destinations. It’s also likely that human configuration would be more error-prone
+and much slower to respond to changes in the network topology than a routing protocol. We’re thus
+fortunate that all networks have both a forwarding and a routing function!
+
+Control Plane: The SDN Approach
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The approach to implementing routing functionality shown in :ref:`Figure 4.2 <Figure 4.2>`—with each router having a
+routing component that communicates with the routing component of other routers—has been thetraditional approach adopted by routing vendors in their products, at least until recently. Our observation
+that humans could manually configure forwarding tables does suggest, however, that there may be
+other ways for control-plane functionality to determine the contents of the data-plane forwarding tables.
+
+:ref:`Figure 4.3 <Figure 4.3>` shows an alternate approach in which a physically separate (from the routers), remote
+controller computes and distributes the forwarding tables to be used by each and every router. Note that
+the data plane components of :ref:`Figures 4.2 <Figure 4.2>` and :ref:`4.3 <Figure 4.3>` are identical. In :ref:`Figure 4.3 <Figure 4.3>`, however, control-plane routing functionality is separated from the physical router—the routing device performs forwarding only, while the remote controller
+computes and distributes forwarding tables. The remote controller might be implemented in a remote
+data center with high reliability and redundancy, and might be managed by the ISP or some third party.
+How might the routers and the remote controller communicate? By exchanging messages containing
+forwarding tables and other pieces of routing information. The control-plane approach shown in :ref:`Figure 4.3 <Figure 4.3>` is at the heart of **software-defined networking (SDN)**, where the network is “software-defined”
+because the controller that computes forwarding tables and interacts with routers is implemented in
+software. Increasingly, these software implementations are also open, i.e., similar to Linux OS code, thecode is publically available, allowing ISPs (and networking researchers and students!) to innovate and
+propose changes to the software that controls network-layer functionality. We will cover the SDN control
+plane in :ref:`Section 5.5 <c5.5>`.
+
+.. figure:: ../img/354-0.png
+
+.. _Figure 4.3:
+
+**Figure 4.3 A remote controller determines and distributes values in ­forwarding tables**
 
 .. _c4.1.2:
 
@@ -28,3 +133,70 @@
 
 .. tab:: 英文
 
+Before delving into the network layer’s data plane, let’s wrap up our introduction by taking the broader
+view and consider the different types of service that might be offered by the network layer. When the
+transport layer at a sending host transmits a packet into the network (that is, passes it down to the
+network layer at the sending host), can the transport layer rely on the network layer to deliver the packet
+to the destination? When multiple packets are sent, will they be delivered to the transport layer in the
+receiving host in the order in which they were sent? Will the amount of time between the sending of two
+sequential packet transmissions be the same as the amount of time between their reception? Will the
+network provide any feedback about congestion in the network? The answers to these questions and
+others are determined by the service model provided by the network layer. The **network service model**
+defines the characteristics of end-to-end delivery of packets between sending and receiving hosts.
+
+Let’s now consider some possible services that the network layer could provide. These services could include:
+
+- **Guaranteed delivery**. This service guarantees that a packet sent by a source host will eventually arrive at the destination host.
+- **Guaranteed delivery with bounded delay**. This service not only guarantees delivery of the packet, but delivery within a specified host-to-host delay bound (for example, within 100 msec).
+- **In-order packet delivery**. This service guarantees that packets arrive at the destination in the order
+that they were sent.
+- **Guaranteed minimal bandwidth**. This network-layer service emulates the behavior of a
+transmission link of a specified bit rate (for example, 1 Mbps) between sending and receiving hosts.
+As long as the sending host transmits bits (as part of packets) at a rate below the specified bit rate,
+then all packets are eventually delivered to the destination host.
+- **Security**. The network layer could encrypt all datagrams at the source and decrypt them at the
+destination, thereby providing confidentiality to all transport-layer segments.
+
+This is only a partial list of services that a network layer could provide—there are countless variations
+possible.
+
+The Internet’s network layer provides a single service, known as **best-effort service**. With best-effort
+service, packets are neither guaranteed to be received in the order in which they were sent, nor is their
+eventual delivery even guaranteed. There is no guarantee on the end-to-end delay nor is there aminimal bandwidth guarantee. It might appear that best-effort service is a euphemism for no service at
+all—a network that delivered no packets to the destination would satisfy the definition of best-effort
+delivery service! Other network architectures have defined and implemented service models that go
+beyond the Internet’s best-effort service. For example, the ATM network architecture [:ref:`MFA Forum 2016 <MFA Forum 2016>`, :ref:`Black 1995 <Black 1995>`] provides for guaranteed in-order delay, bounded delay, and guaranteed minimal
+bandwidth. There have also been proposed service model extensions to the Internet architecture; for
+example, the Intserv architecture :ref:`[RFC 1633] <RFC 1633>` aims to provide end-end delay guarantees and
+congestion-free communication. Interestingly, in spite of these well-developed alternatives, the Internet’s
+basic best-effort service model combined with adequate bandwidth provisioning have arguably proven to
+be more than “good enough” to enable an amazing range of applications, including streaming video
+services such as Netflix and voice-and-video-over-IP, real-time conferencing applications such as Skype
+and Facetime.
+
+An Overview of Chapter 4
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Having now provided an overview of the network layer, we’ll cover the data-plane component of the
+network layer in the following sections in this chapter. In :ref:`Section 4.2 <c4.2>`, we’ll dive down into the internal
+hardware operations of a router, including input and output packet processing, the router’s internal
+switching mechanism, and packet queueing and scheduling. In :ref:`Section 4.3 <c4.3>`, we’ll take a look at
+traditional IP forwarding, in which packets are forwarded to output ports based on their destination IP
+addresses. We’ll encounter IP addressing, the celebrated IPv4 and IPv6 protocols and more. In :ref:`Section 4.4 <c4.4>`, we’ll cover more generalized forwarding, where packets may be forwarded to output ports based on
+a large number of header values (i.e., not only based on destination IP address). Packets may be
+blocked or duplicated at the router, or may have certain header field values rewritten—all under software
+control. This more generalized form of packet forwarding is a key component of a modern network data
+plane, including the data plane in software-defined networks (SDN).
+
+We mention here in passing that the terms *forwarding* and *switching* are often used interchangeably by
+computer-networking researchers and practitioners; we’ll use both terms interchangeably in this
+textbook as well. While we’re on the topic of terminology, it’s also worth mentioning two other terms that
+are often used interchangeably, but that we will use more carefully. We’ll reserve the term packet switch
+to mean a general packet-switching device that transfers a packet from input link interface to output link
+interface, according to values in a packet’s header fields. Some packet switches, called **link-layer switches** (examined in :ref:`Chapter 6 <c6>`), base their forwarding decision on values in the fields of the link-
+layer frame; switches are thus referred to as link-layer (layer 2) devices. Other packet switches, called
+**routers**, base their forwarding decision on header field values in the network-layer datagram. Routers
+are thus network-layer (layer 3) devices. (To fully appreciate this important distinction, you might want to
+review :ref:`Section 1.5.2 <c1.5.2>`, where we discuss network-layer datagrams and link-layer frames and their
+relationship.) Since our focus in this chapter is on the network layer, we’ll mostly use the term *router* in
+place of *packet switch*.
