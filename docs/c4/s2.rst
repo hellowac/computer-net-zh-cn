@@ -25,13 +25,7 @@ identified:
 - **Input ports**. An **input port** performs several key functions. It performs the physical layer function of terminating an incoming physical link at a router; this is shown in the leftmost box of an input port and the rightmost box of an output port in :ref:`Figure 4.4 <Figure 4.4>`. An input port also performs link-layer functions needed to interoperate with the link layer at the other side of the incoming link; this is represented by the middle boxes in the input and output ports. Perhaps most crucially, a lookup function is also performed at the input port; this will occur in the rightmost box of the input port. It is here that the forwarding table is consulted to determine the router output port to which an arriving packet will be forwarded via the switching fabric. Control packets (for example, packets carrying routing protocol information) are forwarded from an input port to the routing processor. Note that the term “port” here —referring to the physical input and output router interfaces—is distinctly different from the softwareports associated with network applications and sockets discussed in :ref:`Chapters 2 <c2>` and :ref:`3 <c3>`. In practice, the number of ports supported by a router can range from a relatively small number in enterprise routers, to hundreds of 10 Gbps ports in a router at an ISP’s edge, where the number of incoming lines tends to be the greatest. The Juniper MX2020, edge router, for example, supports up to 960 10 Gbps Ethernet ports, with an overall router system capacity of 80 Tbps :ref:`[Juniper MX 2020 2016] <Juniper MX 2020 2016>`.
 - **Switching fabric**. The switching fabric connects the router’s input ports to its output ports. This switching fabric is completely contained within the router—a network inside of a network router!
 - **Output ports**. An **output port** stores packets received from the switching fabric and transmits these packets on the outgoing link by performing the necessary link-layer and physical-layer functions. When a link is bidirectional (that is, carries traffic in both directions), an output port will typically be paired with the input port for that link on the same line card.
-- **Routing processor**. The routing processor performs control-plane functions. In traditional routers, it
-executes the routing protocols (which we’ll study in :ref:`Sections 5.3 <c5.3>` and :ref:`5.4 <c5.4>`), maintains routing tables
-and attached link state information, and computes the forwarding table for the router. In SDN
-routers, the routing processor is responsible for communicating with the remote controller in order to
-(among other activities) receive forwarding table entries computed by the remote controller, and
-install these entries in the router’s input ports. The routing processor also performs the network
-management functions that we’ll study in :ref:`Section 5.7 <c5.7>`.
+- **Routing processor**. The routing processor performs control-plane functions. In traditional routers, it executes the routing protocols (which we’ll study in :ref:`Sections 5.3 <c5.3>` and :ref:`5.4 <c5.4>`), maintains routing tables and attached link state information, and computes the forwarding table for the router. In SDN routers, the routing processor is responsible for communicating with the remote controller in order to (among other activities) receive forwarding table entries computed by the remote controller, and install these entries in the router’s input ports. The routing processor also performs the network management functions that we’ll study in :ref:`Section 5.7 <c5.7>`.
 
 A router’s input ports, output ports, and switching fabric are almost always implemented in hardware, as
 shown in :ref:`Figure 4.4 <Figure 4.4>`. To appreciate why a hardware implementation is needed, consider that with a 10
@@ -53,18 +47,8 @@ chapter, where packet forwarding was compared to cars entering and leaving an in
 suppose that the interchange is a roundabout, and that as a car enters the roundabout, a bit of
 processing is required. Let’s consider what information is required for this processing:
 
-- **Destination-based forwarding**. Suppose the car stops at an entry station and indicates its finaldestination (not at the local roundabout, but the ultimate destination of its journey). An attendant at
-the entry station looks up the final destination, determines the roundabout exit that leads to that final
-destination, and tells the driver which roundabout exit to take.
-- **Generalized forwarding**. The attendant could also determine the car’s exit ramp on the basis of
-many other factors besides the destination. For example, the selected exit ramp might depend on
-the car’s origin, for example the state that issued the car’s license plate. Cars from a certain set of
-states might be directed to use one exit ramp (that leads to the destination via a slow road), while
-cars from other states might be directed to use a different exit ramp (that leads to the destination via
-superhighway). The same decision might be made based on the model, make and year of the car.
-Or a car not deemed roadworthy might be blocked and not be allowed to pass through the
-roundabout. In the case of generalized forwarding, any number of factors may contribute to the
-attendant’s choice of the exit ramp for a given car.
+- **Destination-based forwarding**. Suppose the car stops at an entry station and indicates its finaldestination (not at the local roundabout, but the ultimate destination of its journey). An attendant at the entry station looks up the final destination, determines the roundabout exit that leads to that final destination, and tells the driver which roundabout exit to take.
+- **Generalized forwarding**. The attendant could also determine the car’s exit ramp on the basis of many other factors besides the destination. For example, the selected exit ramp might depend on the car’s origin, for example the state that issued the car’s license plate. Cars from a certain set of states might be directed to use one exit ramp (that leads to the destination via a slow road), while cars from other states might be directed to use a different exit ramp (that leads to the destination via superhighway). The same decision might be made based on the model, make and year of the car. Or a car not deemed roadworthy might be blocked and not be allowed to pass through the roundabout. In the case of generalized forwarding, any number of factors may contribute to the attendant’s choice of the exit ramp for a given car.
 
 Once the car enters the roundabout (which may be filled with other cars entering from other input roads
 and heading to other roundabout exits), it eventually leaves at the prescribed roundabout exit ramp,
