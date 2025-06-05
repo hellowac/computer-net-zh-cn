@@ -8,6 +8,32 @@
 
 .. tab:: 英文
 
+In this section, we’ll dive into the SDN control plane—the network-wide logic that controls packet forwarding among a network’s SDN-enabled devices, as well as the configuration and management of these devices and their services. Our study here builds on our earlier discussion of generalized SDN forwarding in :ref:`Section 4.4 <c4.4>`, so you might want to first review that section, as well as :ref:`Section 5.1 <c5.1>` of this chapter, before continuing on. As in :ref:`Section 4.4 <c4.4>`, we’ll again adopt the terminology used in the SDN literature and refer to the network’s forwarding devices as “packet switches” (or just switches, with “packet” being understood), since forwarding decisions can be made on the basis of network-layer source/destination addresses, link-layer source/destination addresses, as well as many other values in transport-, network-, and link-layer packet-header fields.
+
+Four key characteristics of an SDN architecture can be identified :ref:`[Kreutz 2015] <Kreutz 2015>`:
+
+- **Flow-based forwarding**. Packet forwarding by SDN-controlled switches can be based on any number of header field values in the transport-layer, network-layer, or link-layer header. We saw in :ref:`Section 4.4 <c4.4>` that the OpenFlow1.0 abstraction allows forwarding based on eleven different header field values. This contrasts sharply with the traditional approach to router-based forwarding that we studied in :ref:`Sections 5.2 <c5.2>`–:ref:`5.4 <c5.4>`, where forwarding of IP datagrams was based solely on a datagram’s destination IP address. Recall from :ref:`Figure 5.2 <Figure 5.2>` that packet forwarding rules are specified in a switch’s flow table; it is the job of the SDN control plane to compute, manage and install flow table entries in all of the network’s switches.
+- **Separation of data plane and control plane**. This separation is shown clearly in :ref:`Figures 5.2 <Figures 5.2>` and :ref:`5.14 <Figure 5.14>`. The data plane consists of the network’s switches— relatively simple (but fast) devices that
+execute the “match plus action” rules in their flow tables. The control plane consists of servers and software that determine and manage the switches’ flow tables.
+- **Network control functions: external to data-plane switches**. Given that the “S” in SDN is for “software,” it’s perhaps not surprising that the SDN control plane is implemented in software. Unlike
+traditional routers, however, this software executes on servers that are both distinct and remote from the network’s switches. As shown in :ref:`Figure 5.14 <Figure 5.14>`, the control plane itself consists of two components
+—an SDN controller (or network operating system :ref:`[Gude 2008] <Gude 2008>`) and a set of network-control applications. The controller maintains accurate network state information (e.g., the state of remote
+links, switches, and hosts); provides this information to the network-control applications running in the control plane; and provides the means through which these applications can monitor, program,
+and control the underlying network devices. Although the controller in :ref:`Figure 5.14 <Figure 5.14>` is shown as a single central server, in practice the controller is only logically centralized; it is typically implemented
+on several servers that provide coordinated, scalable performance and high availability.
+- **A programmable network**. The network is programmable through the network-control applications running in the control plane. These applications represent the “brains” of the SDN control plane, using the APIs provided by the SDN controller to specify and control the data plane in the network devices. For example, a routing network-control application might determine the end-end paths between sources and destinations (e.g., by executing Dijkstra’s algorithm using the node-state and link-state information maintained by the SDN controller). Another network application might perform access control, i.e., determine which packets are to be blocked at a switch, as in our third example in :ref:`Section 4.4.3 <c4.4.3>`. Yet another application might forward packets in a manner that performs server load balancing (the second example we considered in :ref:`Section 4.4.3 <c4.4.3>`).
+
+From this discussion, we can see that SDN represents a significant “unbundling” of network functionality —data plane switches, SDN controllers, and network-control applications are separate entities that may each be provided by different vendors and organizations. This contrasts with the pre-SDN model in which a switch/router (together with its embedded control plane software and protocol implementations) was monolithic, vertically integrated, and sold by a single vendor. This unbundling of network functionality in SDN has been likened to the earlier evolution from mainframe computers (where hardware, system software, and applications were provided by a single vendor) to personal computers (with their separate hardware, operating systems, and applications). The unbundling of computing hardware, system software, and applications has arguably led to a rich, open ecosystem driven by innovation in all three of these areas; one hope for SDN is that it too will lead to a such rich innovation.
+
+Given our understanding of the SDN architecture of :ref:`Figure 5.14 <Figure 5.14>`, many questions naturally arise. How and where are the flow tables actually computed? How are these tables updated in response to events at SDN-controlled devices (e.g., an attached link going up/down)? And how are the flow table entries at multiple switches coordinated in such a way as to result in orchestrated and consistent network-wide functionality (e.g., end-to-end paths for forwarding packets from sources to destinations, or coordinated distributed firewalls)? It is the role of the SDN control plane to provide these, and many other, capabilities.
+
+.. figure:: ../img/455-0.png 
+   :align: center 
+
+.. _Figure 5.14:
+
+**Figure 5.14 A simple BGP policy scenario**
+
 .. _c5.5.1:
 
 5.5.1 SDN 控制平面: SDN 控制器和 SDN 控制应用程序
