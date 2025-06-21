@@ -1,0 +1,838 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="2.2 Web 和 HTTP" href="s2.html" /><link rel="prev" title="第 2 章 应用层" href="index.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>2.1 网络应用原理 - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络和 Internet</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 2 章 应用层</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">2.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线和移动网络</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全性</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="c2-1">
+<span id="id1"></span><h1>2.1 网络应用原理<a class="headerlink" href="#c2-1" title="此标题的永久链接">#</a></h1>
+<p>2.1 Principles of Network Applications</p>
+<p>Suppose you have an idea for a new network application. Perhaps this application will be a great service
+to humanity, or will please your professor, or will bring you great wealth, or will simply be fun to develop.
+Whatever the motivation may be, let’s now examine how you transform the idea into a real-world
+network application.</p>
+<p>At the core of network application development is writing programs that run on different end systems
+and communicate with each other over the network. For example, in the Web application there are two
+distinct programs that communicate with each other: the browser program running in the user’s host
+(desktop, laptop, tablet, smartphone, and so on); and the Web server program running in the Web
+server host. As another example, in a P2P file-sharing system there is a program in each host that
+participates in the file-sharing community. In this case, the programs in the various hosts may be similar
+or identical.</p>
+<p>Thus, when developing your new application, you need to write software that will run on multiple end
+systems. This software could be written, for example, in C, Java, or Python. Importantly, you do not
+need to write software that runs on network-core devices, such as routers or link-layer switches. Even if
+you wanted to write application software for these network-core devices, you wouldn’t be able to do so.
+As we learned in <a class="reference internal" href="../c1/index.html#c1"><span class="std std-ref">Chapter 1</span></a>, and as shown earlier in <a class="reference internal" href="../c1/s5.html#figure-1-24"><span class="std std-ref">Figure 1.24</span></a>, network-core devices do not function
+at the application layer but instead function at lower layers—specifically at the network layer and below.
+This basic design—namely, confining application software to the end systems—as shown in <a class="reference internal" href="#figure-2-1"><span class="std std-ref">Figure 2.1</span></a>,
+has facilitated the rapid development and deployment of a vast array of network applications.</p>
+<figure class="align-center" id="communication-for-a-network-application-takes-place-between-end-systems-at-the-application-layer">
+<span id="figure-2-1"></span><img alt="../_images/115-0.png" src="../_images/115-0.png" />
+</figure>
+<p><strong>Figure 2.1 Communication for a network application takes place between end systems at the application layer</strong></p>
+<section id="c2-1-1">
+<span id="id2"></span><h2>2.1.1 网络应用程序体系结构<a class="headerlink" href="#c2-1-1" title="此标题的永久链接">#</a></h2>
+<p>2.1.1 Network Application Architectures</p>
+<p>Before diving into software coding, you should have a broad architectural plan for your application. Keep
+in mind that an application’s architecture is distinctly different from the network architecture (e.g., the
+five-layer Internet architecture discussed in <a class="reference internal" href="../c1/index.html#c1"><span class="std std-ref">Chapter 1</span></a> ). From the application developer’s perspective,
+the network architecture is fixed and provides a specific set of services to applications. The <strong>application
+architecture</strong>, on the other hand, is designed by the application developer and dictates how the
+application is structured over the various end systems. In choosing the application architecture, an
+application developer will likely draw on one of the two predominant architectural paradigms used in
+modern network applications: the client-server architecture or the peer-to-peer (P2P) architecture.</p>
+<p>In a <strong>client-server architecture</strong>, there is an always-on host, called the server, which services requests
+from many other hosts, called <em>clients</em>. A classic example is the Web application for which an always-on
+Web server services requests from browsers running on client hosts. When a Web server receives a
+request for an object from a client host, it responds by sending the requested object to the client host.
+Note that with the client-server architecture, clients do not directly communicate with each other; for
+example, in the Web application, two browsers do not directly communicate. Another characteristic of
+the client-server architecture is that the server has a fixed, well-known address, called an IP address
+(which we’ll discuss soon). Because the server has a fixed, well-known address, and because the server
+is always on, a client can always contact the server by sending a packet to the server’s IP address.
+Some of the better-known applications with a client-server architecture include the Web, FTP, Telnet,
+and e-mail. The client-server architecture is shown in <a class="reference internal" href="#figure-2-2"><span class="std std-ref">Figure 2.2(a)</span></a> .</p>
+<p>Often in a client-server application, a single-server host is incapable of keeping up with all the requests
+from clients. For example, a popular social-networking site can quickly become overwhelmed if it has
+only one server handling all of its requests. For this reason, a <strong>data center</strong>, housing a large number of
+hosts, is often used to create a powerful virtual server. The most popular Internet services—such as
+search engines (e.g., Google, Bing, Baidu), Internet commerce (e.g., Amazon, eBay, Alibaba), Web-
+based e-mail (e.g., Gmail and Yahoo Mail), social networking (e.g., Facebook, Instagram, Twitter, and
+WeChat)—employ one or more data centers. As discussed in <a class="reference internal" href="../c1/s3.html#c1-3-3"><span class="std std-ref">Section 1.3.3</span></a> , Google has 30 to 50 data
+centers distributed around the world, which collectively handle search, YouTube, Gmail, and other
+services. A data center can have hundreds of thousands of servers, which must be powered and
+maintained. Additionally, the service providers must pay recurring interconnection and bandwidth costs
+for sending data from their data centers.</p>
+<p>In a <strong>P2P architecture</strong>, there is minimal (or no) reliance on dedicated servers in data centers. Instead
+the application exploits direct communication between pairs of intermittently connected hosts, called
+peers. The peers are not owned by the service provider, but are instead desktops and laptops controlled
+by users, with most of the peers residing in homes, universities, and offices. Because the peers communicate without passing
+through a dedicated server, the architecture is called peer-to-peer. Many of today’s most popular and
+traffic-intensive applications are based on P2P architectures. These applications include file sharing
+(e.g., BitTorrent), peer-assisted download acceleration (e.g., Xunlei), and Internet telephony and video
+conference (e.g., Skype). The P2P architecture is illustrated in <a class="reference internal" href="#figure-2-2"><span class="std std-ref">Figure 2.2(b)</span></a> . We mention that some
+applications have hybrid architectures, combining both client-server and P2P elements. For example, for
+many instant messaging applications, servers are used to track the IP addresses of users, but user-to-
+user messages are sent directly between user hosts (without passing through intermediate servers).</p>
+<figure class="align-left" id="a-client-server-architecture">
+<span id="figure-2-2"></span><img alt="../_images/117-0.png" src="../_images/117-0.png" />
+</figure>
+<figure class="align-center" id="b-p2p-architecture">
+<img alt="../_images/117-1.png" src="../_images/117-1.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>Figure 2.2 (a) Client-server architecture; (b) P2P architecture</strong></p>
+<p>One of the most compelling features of P2P architectures is their <strong>self-scalability</strong>. For example, in a
+P2P file-sharing application, although each peer generates workload by requesting files, each peer also
+adds service capacity to the system by distributing files to other peers. P2P architectures are also cost
+effective, since they normally don’t require significant server infrastructure and server bandwidth (in
+contrast with clients-server designs with datacenters). However, P2P applications face challenges of
+security, performance, and reliability due to their highly decentralized structure.</p>
+</section>
+<section id="c2-1-2">
+<span id="id3"></span><h2>2.1.2 通信进程<a class="headerlink" href="#c2-1-2" title="此标题的永久链接">#</a></h2>
+<p>2.1.2 Processes Communicating</p>
+<p>Before building your network application, you also need a basic understanding of how the programs,
+running in multiple end systems, communicate with each other. In the jargon of operating systems, it is
+not actually programs but <strong>processes</strong> that communicate. A process can be thought of as a program that
+is running within an end system. When processes are running on the same end system, they can
+communicate with each other with interprocess communication, using rules that are governed by the
+end system’s operating system. But in this book we are not particularly interested in how processes in
+the same host communicate, but instead in how processes running on <em>different</em> hosts (with potentially
+different operating systems) communicate.</p>
+<p>Processes on two different end systems communicate with each other by exchanging <strong>messages</strong> across
+the computer network. A sending process creates and sends messages into the network; a receiving
+process receives these messages and possibly responds by sending messages back. <a class="reference internal" href="#figure-2-1"><span class="std std-ref">Figure 2.1</span></a>
+illustrates that processes communicating with each other reside in the application layer of the five-layer
+protocol stack.</p>
+<section id="client-and-server-processes">
+<h3>Client and Server Processes<a class="headerlink" href="#client-and-server-processes" title="此标题的永久链接">#</a></h3>
+<p>A network application consists of pairs of processes that send messages to each other over a network.
+For example, in the Web application a client browser process exchanges messages with a Web server
+process. In a P2P file-sharing system, a file is transferred from a process in one peer to a process in
+another peer. For each pair of communicating processes, we typically label one of the two processes as
+the client and the other process as the <strong>server</strong>. With the Web, a browser is a client process and a Web
+server is a server process. With P2P file sharing, the peer that is downloading the file is labeled as the
+client, and the peer that is uploading the file is labeled as the server.</p>
+<p>You may have observed that in some applications, such as in P2P file sharing, a process can be both a
+client and a server. Indeed, a process in a P2P file-sharing system can both upload and download files.
+Nevertheless, in the context of any given communication session between a pair of processes, we can
+still label one process as the client and the other process as the server. We define the client and server
+processes as follows:</p>
+<blockquote>
+<div><p>In the context of a communication session between a pair of processes, the process that initiates the
+communication (that is, initially contacts the other process at the beginning of the session) is labeled
+as the client. The process that waits to be contacted to begin the session is the server.</p>
+</div></blockquote>
+<p>In the Web, a browser process initializes contact with a Web server process; hence the browser process
+is the client and the Web server process is the server. In P2P file sharing, when Peer A asks Peer B to
+send a specific file, Peer A is the client and Peer B is the server in the context of this specific
+communication session. When there’s no confusion, we’ll sometimes also use the terminology “client
+side and server side of an application.” At the end of this chapter, we’ll step through simple code for both
+the client and server sides of network applications.</p>
+</section>
+<section id="the-interface-between-the-process-and-the-computer-network">
+<h3>The Interface Between the Process and the Computer Network<a class="headerlink" href="#the-interface-between-the-process-and-the-computer-network" title="此标题的永久链接">#</a></h3>
+<p>As noted above, most applications consist of pairs of communicating processes, with the two processes
+in each pair sending messages to each other. Any message sent from one process to another must go
+through the underlying network. A process sends messages into, and receives messages from, the
+network through a software interface called a <strong>socket</strong>. Let’s consider an analogy to help us understand
+processes and sockets. A process is analogous to a house and its socket is analogous to its door. When
+a process wants to send a message to another process on another host, it shoves the message out its
+door (socket). This sending process assumes that there is a transportation infrastructure on the other
+side of its door that will transport the message to the door of the destination process. Once the message
+arrives at the destination host, the message passes through the receiving process’s door (socket), and
+the receiving process then acts on the message.</p>
+<p><a class="reference internal" href="#figure-2-3"><span class="std std-ref">Figure 2.3</span></a> illustrates socket communication between two processes that communicate over the Internet.
+(<a class="reference internal" href="#figure-2-3"><span class="std std-ref">Figure 2.3</span></a> assumes that the underlying transport protocol used by the processes is the Internet’s TCP
+protocol.) As shown in this figure, a socket is the interface between the application layer and the
+transport layer within a host. It is also referred to as the <strong>Application Programming Interface (API)</strong>
+between the application and the network, since the socket is the programming interface with which
+network applications are built. The application developer has control of everything on the application-
+layer side of the socket but has little control of the transport-layer side of the socket. The only control
+that the application developer has on the transport-layer side is (1) the choice of transport protocol and
+(2) perhaps the ability to fix a few transport-layer parameters such as maximum buffer and maximum
+segment sizes (to be covered in <strong>Chapter 3</strong>). Once the application developer chooses a transport
+protocol (if a choice is available), the application is built using the transport-layer services provided by
+that protocol. We’ll explore sockets in some detail in <span class="xref std std-ref">Section 2.7</span>.</p>
+</section>
+<section id="addressing-processes">
+<h3>Addressing Processes<a class="headerlink" href="#addressing-processes" title="此标题的永久链接">#</a></h3>
+<p>In order to send postal mail to a particular destination, the destination needs to have an address.
+Similarly, in order for a process running on one host to send packets to a process running on another
+host, the receiving process needs to have an address.</p>
+<figure class="align-center" id="application-processes-sockets-and-underlying-transport-protocol">
+<span id="figure-2-3"></span><img alt="../_images/120-0.png" src="../_images/120-0.png" />
+</figure>
+<p><strong>Figure 2.3 Application processes, sockets, and underlying transport protocol</strong></p>
+<p>To identify the receiving process, two pieces of information need to be specified: (1) the address of the
+host and (2) an identifier that specifies the receiving process in the destination host.</p>
+<p>In the Internet, the host is identified by its <strong>IP address</strong>. We’ll discuss IP addresses in great detail in
+<strong>Chapter 4</strong>. For now, all we need to know is that an IP address is a 32-bit quantity that we can think of as
+uniquely identifying the host. In addition to knowing the address of the host to which a message is
+destined, the sending process must also identify the receiving process (more specifically, the receiving
+socket) running in the host. This information is needed because in general a host could be running many
+network applications. A destination <strong>port number</strong> serves this purpose. Popular applications have been
+assigned specific port numbers. For example, a Web server is identified by port number 80. A mail
+server process (using the SMTP protocol) is identified by port number 25. A list of well-known port
+numbers for all Internet standard protocols can be found at <a class="reference external" href="http://www.iana.org/">www.iana.org</a> . We’ll examine port numbers in detail in <a class="reference internal" href="../c3/index.html#c3"><span class="std std-ref">Chapter 3</span></a>.</p>
+</section>
+</section>
+<section id="c2-1-3">
+<span id="id4"></span><h2>2.1.3 应用程序可用的传输服务<a class="headerlink" href="#c2-1-3" title="此标题的永久链接">#</a></h2>
+<p>2.1.3 Transport Services Available to Applications</p>
+<p>Recall that a socket is the interface between the application process and the transport-layer protocol.
+The application at the sending side pushes messages through the socket. At the other side of the
+socket, the transport-layer protocol has the responsibility of getting the messages to the socket of the
+receiving process.</p>
+<p>Many networks, including the Internet, provide more than one transport-layer protocol. When you
+develop an application, you must choose one of the available transport-layer protocols. How do you
+make this choice? Most likely, you would study the services provided by the available transport-layer
+protocols, and then pick the protocol with the services that best match your application’s needs. The
+situation is similar to choosing either train or airplane transport for travel between two cities. You have to
+choose one or the other, and each transportation mode offers different services. (For example, the train
+offers downtown pickup and drop-off, whereas the plane offers shorter travel time.)</p>
+<p>What are the services that a transport-layer protocol can offer to applications invoking it? We can
+broadly classify the possible services along four dimensions: reliable data transfer, throughput, timing,
+and security.</p>
+<section id="reliable-data-transfer">
+<h3>Reliable Data Transfer<a class="headerlink" href="#reliable-data-transfer" title="此标题的永久链接">#</a></h3>
+<p>As discussed in <a class="reference internal" href="../c1/index.html#c1"><span class="std std-ref">Chapter 1</span></a>, packets can get lost within a computer network. For example, a packet can
+overflow a buffer in a router, or can be discarded by a host or router after having some of its bits
+corrupted. For many applications—such as electronic mail, file transfer, remote host access, Web
+document transfers, and financial applications—data loss can have devastating consequences (in the
+latter case, for either the bank or the customer!). Thus, to support these applications, something has to
+be done to guarantee that the data sent by one end of the application is delivered correctly and
+completely to the other end of the application. If a protocol provides such a guaranteed data delivery
+service, it is said to provide <strong>reliable data transfer</strong>. One important service that a transport-layer protocol
+can potentially provide to an application is process-to-process reliable data transfer. When a transport
+protocol provides this service, the sending process can just pass its data into the socket and know with
+complete confidence that the data will arrive without errors at the receiving process.</p>
+<p>When a transport-layer protocol doesn’t provide reliable data transfer, some of the data sent by thesending process may never arrive at the receiving process. This may be acceptable for <strong>loss-tolerant
+applications</strong>, most notably multimedia applications such as conversational audio/video that can tolerate
+some amount of data loss. In these multimedia applications, lost data might result in a small glitch in the
+audio/video—not a crucial impairment.</p>
+</section>
+<section id="throughput">
+<h3>Throughput<a class="headerlink" href="#throughput" title="此标题的永久链接">#</a></h3>
+<p>In <a class="reference internal" href="../c1/index.html#c1"><span class="std std-ref">Chapter 1</span></a> we introduced the concept of available throughput, which, in the context of a
+communication session between two processes along a network path, is the rate at which the sending
+process can deliver bits to the receiving process. Because other sessions will be sharing the bandwidth
+along the network path, and because these other sessions will be coming and going, the available
+throughput can fluctuate with time. These observations lead to another natural service that a transport-
+layer protocol could provide, namely, guaranteed available throughput at some specified rate. With such
+a service, the application could request a guaranteed throughput of r bits/sec, and the transport protocol
+would then ensure that the available throughput is always at least r bits/sec. Such a guaranteed
+throughput service would appeal to many applications. For example, if an Internet telephony application
+encodes voice at 32 kbps, it needs to send data into the network and have data delivered to the
+receiving application at this rate. If the transport protocol cannot provide this throughput, the application
+would need to encode at a lower rate (and receive enough throughput to sustain this lower coding rate)
+or may have to give up, since receiving, say, half of the needed throughput is of little or no use to this
+Internet telephony application. Applications that have throughput requirements are said to be
+<strong>bandwidth-sensitive applications</strong>. Many current multimedia applications are bandwidth sensitive,
+although some multimedia applications may use adaptive coding techniques to encode digitized voice or
+video at a rate that matches the currently available throughput.</p>
+<p>While bandwidth-sensitive applications have specific throughput requirements, <strong>elastic applications</strong> can
+make use of as much, or as little, throughput as happens to be available. Electronic mail, file transfer,
+and Web transfers are all elastic applications. Of course, the more throughput, the better. There’san
+adage that says that one cannot be too rich, too thin, or have too much throughput!</p>
+</section>
+<section id="timing">
+<h3>Timing<a class="headerlink" href="#timing" title="此标题的永久链接">#</a></h3>
+<p>A transport-layer protocol can also provide timing guarantees. As with throughput guarantees, timing
+guarantees can come in many shapes and forms. An example guarantee might be that every bit that the
+sender pumps into the socket arrives at the receiver’s socket no more than 100 msec later. Such a
+service would be appealing to interactive real-time applications, such as Internet telephony, virtual
+environments, teleconferencing, and multiplayer games, all of which require tight timing constraints on
+data delivery in order to be effective. (See <a class="reference internal" href="../c9/index.html#c9"><span class="std std-ref">Chapter 9</span></a>, [ <a class="reference internal" href="../references.html#gauthier-1999"><span class="std std-ref">Gauthier 1999</span></a>; <a class="reference internal" href="../references.html#ramjee-1994"><span class="std std-ref">Ramjee 1994</span></a>].) Long delays in
+Internet telephony, for example, tend to result in unnatural pauses in the conversation; in a multiplayer
+game or virtual interactive environment, a long delay between taking an action and seeing the responsefrom the environment (for example, from another player at the end of an end-to-end connection) makes
+the application feel less realistic. For non-real-time applications, lower delay is always preferable to
+higher delay, but no tight constraint is placed on the end-to-end delays.</p>
+</section>
+<section id="security">
+<h3>Security<a class="headerlink" href="#security" title="此标题的永久链接">#</a></h3>
+<p>Finally, a transport protocol can provide an application with one or more security services. For example,
+in the sending host, a transport protocol can encrypt all data transmitted by the sending process, and in
+the receiving host, the transport-layer protocol can decrypt the data before delivering the data to the
+receiving process. Such a service would provide confidentiality between the two processes, even if the
+data is somehow observed between sending and receiving processes. A transport protocol can also
+provide other security services in addition to confidentiality, including data integrity and end-point
+authentication, topics that we’ll cover in detail in <a class="reference internal" href="../c8/index.html#c8"><span class="std std-ref">Chapter 8</span></a>.</p>
+</section>
+</section>
+<section id="c2-1-4">
+<span id="id5"></span><h2>2.1.4 互联网提供的传输服务<a class="headerlink" href="#c2-1-4" title="此标题的永久链接">#</a></h2>
+<p>2.1.4 Transport Services Provided by the Internet</p>
+<p>Up until this point, we have been considering transport services that a computer network could provide
+in general. Let’s now get more specific and examine the type of transport services provided by the
+Internet. The Internet (and, more generally, TCP/IP networks) makes two transport protocols available to
+applications, UDP and TCP. When you (as an application developer) create a new network application
+for the Internet, one of the first decisions you have to make is whether to use UDP or TCP. Each of
+these protocols offers a different set of services to the invoking applications. <a class="reference internal" href="#figure-2-4"><span class="std std-ref">Figure 2.4</span></a> shows the
+service requirements for some selected applications.</p>
+<section id="tcp-services">
+<h3>TCP Services<a class="headerlink" href="#tcp-services" title="此标题的永久链接">#</a></h3>
+<p>The TCP service model includes a connection-oriented service and a reliable data transfer service.
+When an application invokes TCP as its transport protocol, the application receives both of these
+services from TCP.</p>
+<ul class="simple">
+<li><p><strong>Connection-oriented service</strong>. TCP has the client and server exchange transport-layer control information with each other before the application-level messages begin to flow. This so-called handshaking procedure alerts the client and server, allowing them to prepare for an onslaught of packets. After the handshaking phase, a <strong>TCP connection</strong> is said to exist between the sockets of the two processes. The connection is a full-duplex connection in that the two processes can send messages to each other over the connection at the same time. When the application finishes sending messages, it must tear down the connection. In <span class="xref std std-ref">Chapter 3</span> we’ll discuss connection-oriented service in detail and examine how it is implemented.</p></li>
+</ul>
+<figure class="align-center" id="requirements-of-selected-network-applications">
+<span id="figure-2-4"></span><img alt="../_images/124-0.png" src="../_images/124-0.png" />
+</figure>
+<p><strong>Figure 2.4 Requirements of selected network applications</strong></p>
+<ul class="simple">
+<li><p><strong>Reliable data transfer service</strong>. The communicating processes can rely on TCP to deliver all data sent without error and in the proper order. When one side of the application passes a stream of bytes into a socket, it can count on TCP to deliver the same stream of bytes to the receiving socket, with no missing or duplicate bytes.</p></li>
+</ul>
+<p>TCP also includes a congestion-control mechanism, a service for the general welfare of the Internet
+rather than for the direct benefit of the communicating processes. The TCP congestion-control
+mechanism throttles a sending process (client or server) when the network is congested between
+sender and receiver. As we will see in <a class="reference internal" href="../c3/index.html#c3"><span class="std std-ref">Chapter 3</span></a>, TCP congestion control also attempts to limit each TCP connection to its fair share of network bandwidth.</p>
+<aside class="topic">
+<p class="topic-title">FOCUS ON SECURITY</p>
+<p>SECURING TCP</p>
+<p>Neither TCP nor UDP provides any encryption—the data that the sending process passes into
+its socket is the same data that travels over the network to the destination process. So, for
+example, if the sending process sends a password in cleartext (i.e., unencrypted) into its socket,
+the cleartext password will travel over all the links between sender and receiver, potentially
+getting sniffed and discovered at any of the intervening links. Because privacy and other security
+issues have become critical for many applications, the Internet community has developed an
+enhancement for TCP, called <strong>Secure Sockets Layer (SSL)</strong>. TCP-enhanced-with-SSL not only
+does everything that traditional TCP does but also provides critical process-to-process security
+services, including encryption, data integrity, and end-point authentication. We emphasize that
+SSL is not a third Internet transport protocol, on the same level as TCP and UDP, but instead is
+an enhancement of TCP, with the enhancements being implemented in the application layer. In
+particular, if an application wants to use the services of SSL, it needs to include SSL code
+(existing, highly optimized libraries and classes) in both the client and server sides of the
+application. SSL has its own socket API that is similar to the traditional TCP socket API. When
+an application uses SSL, the sending process passes cleartext data to the SSL socket; SSL in
+the sending host then encrypts the data and passes the encrypted data to the TCP socket. The
+encrypted data travels over the Internet to the TCP socket in the receiving process. The
+receiving socket passes the encrypted data to SSL, which decrypts the data. Finally, SSL
+passes the cleartext data through its SSL socket to the receiving process. We’ll cover SSL in
+some detail in <a class="reference internal" href="../c8/index.html#c8"><span class="std std-ref">Chapter 8</span></a>.</p>
+</aside>
+</section>
+<section id="udp-services">
+<h3>UDP Services<a class="headerlink" href="#udp-services" title="此标题的永久链接">#</a></h3>
+<p>UDP is a no-frills, lightweight transport protocol, providing minimal services. UDP is connectionless, so
+there is no handshaking before the two processes start to communicate. UDP provides an unreliable
+data transfer service—that is, when a process sends a message into a UDP socket, UDP provides no
+guarantee that the message will ever reach the receiving process. Furthermore, messages that do arrive
+at the receiving process may arrive out of order.</p>
+<p>UDP does not include a congestion-control mechanism, so the sending side of UDP can pump data into
+the layer below (the network layer) at any rate it pleases. (Note, however, that the actual end-to-end
+throughput may be less than this rate due to the limited transmission capacity of intervening links or due
+to congestion).</p>
+</section>
+<section id="services-not-provided-by-internet-transport-protocols">
+<h3>Services Not Provided by Internet Transport Protocols<a class="headerlink" href="#services-not-provided-by-internet-transport-protocols" title="此标题的永久链接">#</a></h3>
+<p>We have organized transport protocol services along four dimensions: reliable data transfer, throughput,
+timing, and security. Which of these services are provided by TCP and UDP? We have already noted
+that TCP provides reliable end-to-end data transfer. And we also know that TCP can be easily enhanced
+at the application layer with SSL to provide security services. But in our brief description of TCP and
+UDP, conspicuously missing was any mention of throughput or timing guarantees— services not
+provided by today’s Internet transport protocols. Does this mean that time-sensitive applications such as
+Internet telephony cannot run in today’s Internet? The answer is clearly no—the Internet has been
+hosting time-sensitive applications for many years. These applications often work fairly well because
+they have been designed to cope, to the greatest extent possible, with this lack of guarantee. We’ll
+investigate several of these design tricks in <a class="reference internal" href="../c9/index.html#c9"><span class="std std-ref">Chapter 9</span></a>. Nevertheless, clever design has its limitations
+when delay is excessive, or the end-to-end throughput is limited. In summary, today’s Internet can often
+provide satisfactory service to time-sensitive applications, but it cannot provide any timing or throughput
+guarantees.</p>
+<p><a class="reference internal" href="#figure-2-5"><span class="std std-ref">Figure 2.5</span></a> indicates the transport protocols used by some popular Internet applications. We see that e-
+mail, remote terminal access, the Web, and file transfer all use TCP. These applications have chosen
+TCP primarily because TCP provides reliable data transfer, guaranteeing that all data will eventually get
+to its destination. Because Internet telephony applications (such as Skype) can often tolerate some loss
+but require a minimal rate to be effective, developers of Internet telephony applications usually prefer to
+run their applications over UDP, thereby circumventing TCP’s congestion control mechanism and packet
+overheads. But because many firewalls are configured to block (most types of) UDP traffic, Internet
+telephony applications often are designed to use TCP as a backup if UDP communication fails.</p>
+<figure class="align-center" id="figure-2-5">
+<img alt="../_images/126-0.png" src="../_images/126-0.png" />
+</figure>
+<p><strong>Figure 2.5 Popular Internet applications, their application-layer protocols, and their underlying transport protocols</strong></p>
+</section>
+</section>
+<section id="c2-1-5">
+<span id="id6"></span><h2>2.1.5 应用层协议<a class="headerlink" href="#c2-1-5" title="此标题的永久链接">#</a></h2>
+<p>2.1.5 Application-Layer Protocols</p>
+<p>We have just learned that network processes communicate with each other by sending messages into
+sockets. But how are these messages structured? What are the meanings of the various fields in the
+messages? When do the processes send the messages? These questions bring us into the realm of
+application-layer protocols. An <strong>application-layer protocol</strong> defines how an application’s processes,
+running on different end systems, pass messages to each other. In particular, an application-layer
+protocol defines:</p>
+<ul class="simple">
+<li><p>The types of messages exchanged, for example, request messages and response messages</p></li>
+<li><p>The syntax of the various message types, such as the fields in the message and how the fields are delineated</p></li>
+<li><p>The semantics of the fields, that is, the meaning of the information in the fields</p></li>
+<li><p>Rules for determining when and how a process sends messages and responds to messages</p></li>
+</ul>
+<p>Some application-layer protocols are specified in RFCs and are therefore in the public domain. For
+example, the Web’s application-layer protocol, HTTP (the HyperText Transfer Protocol <a class="reference internal" href="../references.html#rfc-2616"><span class="std std-ref">[RFC 2616]</span></a>), is
+available as an RFC. If a browser developer follows the rules of the HTTP RFC, the browser will be able
+to retrieve Web pages from any Web server that has also followed the rules of the HTTP RFC. Many
+other application-layer protocols are proprietary and intentionally not available in the public domain. For
+example, Skype uses proprietary application-layer protocols.</p>
+<p>It is important to distinguish between network applications and application-layer protocols. An
+application-layer protocol is only one piece of a network application (albeit, a very important piece of the
+application from our point of view!). Let’s look at a couple of examples. The Web is a client-server
+application that allows users to obtain documents from Web servers on demand. The Web application
+consists of many components, including a standard for document formats (that is, HTML), Web
+browsers (for example, Firefox and Microsoft Internet Explorer), Web servers (for example, Apache and
+Microsoft servers), and an application-layer protocol. The Web’s application-layer protocol, HTTP,
+defines the format and sequence of messages exchanged between browser and Web server. Thus,
+HTTP is only one piece (albeit, an important piece) of the Web application. As another example, an
+Internet e-mail application also has many components, including mail servers that house user
+mailboxes; mail clients (such as Microsoft Outlook) that allow users to read and create messages; a
+standard for defining the structure of an e-mail message; and application-layer protocols that define how
+messages are passed between servers, how messages are passed between servers and mail clients,
+and how the contents of message headers are to be interpreted. The principal application-layer protocol
+for electronic mail is SMTP (Simple Mail Transfer Protocol) <a class="reference internal" href="../references.html#rfc-5321"><span class="std std-ref">[RFC 5321]</span></a> . Thus, e-mail’s principal
+application-layer protocol, SMTP, is only one piece (albeit an important piece) of the e-mail application.</p>
+</section>
+<section id="c2-1-6">
+<span id="id7"></span><h2>2.1.6 本书涵盖的网络应用<a class="headerlink" href="#c2-1-6" title="此标题的永久链接">#</a></h2>
+<p>2.1.6 Network Applications Covered in This Book</p>
+<p>New public domain and proprietary Internet applications are being developed every day. Rather than
+covering a large number of Internet applications in an encyclopedic manner, we have chosen to focus
+on a small number of applications that are both pervasive and important. In this chapter we discuss five
+important applications: the Web, electronic mail, directory service video streaming, and P2P
+applications. We first discuss the Web, not only because it is an enormously popular application, but
+also because its application-layer protocol, HTTP, is straightforward and easy to understand. We then
+discuss electronic mail, the Internet’s first killer application. E-mail is more complex than the Web in the
+sense that it makes use of not one but several application-layer protocols. After e-mail, we cover DNS,
+which provides a directory service for the Internet. Most users do not interact with DNS directly; instead,
+users invoke DNS indirectly through other applications (including the Web, file transfer, and electronic
+mail). DNS illustrates nicely how a piece of core network functionality (network-name to network-
+address translation) can be implemented at the application layer in the Internet. We then discuss P2P
+file sharing applications, and complete our application study by discussing video streaming on demand,
+including distributing stored video over content distribution networks. In <a class="reference internal" href="../c9/index.html#c9"><span class="std std-ref">Chapter 9</span></a>, we’ll cover
+multimedia applications in more depth, including voice over IP and video conferencing.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="s2.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">2.2 Web 和 HTTP</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">第 2 章 应用层</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">2.1 网络应用原理</a><ul>
+<li><a class="reference internal" href="#c2-1-1">2.1.1 网络应用程序体系结构</a></li>
+<li><a class="reference internal" href="#c2-1-2">2.1.2 通信进程</a><ul>
+<li><a class="reference internal" href="#client-and-server-processes">Client and Server Processes</a></li>
+<li><a class="reference internal" href="#the-interface-between-the-process-and-the-computer-network">The Interface Between the Process and the Computer Network</a></li>
+<li><a class="reference internal" href="#addressing-processes">Addressing Processes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#c2-1-3">2.1.3 应用程序可用的传输服务</a><ul>
+<li><a class="reference internal" href="#reliable-data-transfer">Reliable Data Transfer</a></li>
+<li><a class="reference internal" href="#throughput">Throughput</a></li>
+<li><a class="reference internal" href="#timing">Timing</a></li>
+<li><a class="reference internal" href="#security">Security</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#c2-1-4">2.1.4 互联网提供的传输服务</a><ul>
+<li><a class="reference internal" href="#tcp-services">TCP Services</a></li>
+<li><a class="reference internal" href="#udp-services">UDP Services</a></li>
+<li><a class="reference internal" href="#services-not-provided-by-internet-transport-protocols">Services Not Provided by Internet Transport Protocols</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#c2-1-5">2.1.5 应用层协议</a></li>
+<li><a class="reference internal" href="#c2-1-6">2.1.6 本书涵盖的网络应用</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    </body>
+</html>
