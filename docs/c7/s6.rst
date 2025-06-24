@@ -9,3 +9,62 @@
 .. tab:: 英文
 
 
+The Internet architecture and protocols for supporting mobility, collectively known as mobile IP, are defined primarily in RFC 5944 for IPv4. Mobile IP is a flexible standard, supporting many different modes of operation (for example, operation with or without a foreign agent), multiple ways for agents and mobile nodes to discover each other, use of single or multiple COAs, and multiple forms of encapsulation. As such, mobile IP is a complex standard, and would require an entire book to describe in detail; indeed one such book is :ref:`[Perkins 1998b] <Perkins 1998b>`. Our modest goal here is to provide an overview of the most important aspects of mobile IP and to illustrate its use in a few common-case scenarios.
+
+The mobile IP architecture contains many of the elements we have considered above, including the concepts of home agents, foreign agents, care-of addresses, and encapsulation/decapsulation. The current standard [:rfc:`5944`] specifies the use of indirect routing to the mobile node. 
+
+The mobile IP standard consists of three main pieces:
+
+- **Agent discovery**. Mobile IP defines the protocols used by a home or foreign agent to advertise its services to mobile nodes, and protocols for mobile nodes to solicit the services of a foreign or home agent.
+- **Registration with the home agent**. Mobile IP defines the protocols used by the mobile node and/or foreign agent to register and deregister COAs with a mobile node’s home agent.
+- **Indirect routing of datagrams**. The standard also defines the manner in which datagrams are forwarded to mobile nodes by a home agent, including rules for forwarding datagrams, rules for handling error conditions, and several forms of encapsulation [:rfc:`2003`, :rfc:`2004`].
+
+Security considerations are prominent throughout the mobile IP standard. For example, authentication of a mobile node is clearly needed to ensure that a ­malicious user does not register a bogus care-of address with a home agent, which could cause all datagrams addressed to an IP address to be redirected to the malicious user. Mobile IP achieves security using many of the mechanisms that we will examine in :ref:`Chapter 8 <c8>`, so we will not address security considerations in our discussion below.
+
+Agent Discovery
+~~~~~~~~~~~~~~~~~~
+
+A mobile IP node arriving to a new network, whether attaching to a foreign network or returning to its home network, must learn the identity of the corresponding foreign or home agent. Indeed it is the discovery of a new foreign agent, with a new network address, that allows the network layer in a mobile node to learn that it has moved into a new foreign network. This process is known as agent discovery. Agent discovery can be accomplished in one of two ways: via agent advertisement or via agent solicitation.
+
+With **agent advertisement**, a foreign or home agent advertises its services using an extension to the existing router discovery protocol [:rfc:`1256`]. The agent periodically broadcasts an ICMP message with a type field of 9 (router discovery) on all links to which it is connected. The router discovery message contains the IP address of the router (that is, the agent), thus allowing a mobile node to learn the agent’s IP address. The router discovery message also contains a mobility agent advertisement extension that contains additional information needed by the mobile node. Among the more important fields in the extension are the following:
+
+- **Home agent bit (H)**. Indicates that the agent is a home agent for the network in which it resides. 
+- **Foreign agent bit (F)**. Indicates that the agent is a foreign agent for the network in which it resides.
+- **Registration required bit (R)**. Indicates that a mobile user in this network must register with a foreign agent. In particular, a mobile user cannot obtain a care-of address in the foreign network (for example, using DHCP) and assume the functionality of the foreign agent for itself, without registering with the foreign agent.
+
+  .. figure:: ../img/633-0.png 
+      :align: center
+  
+  .. _Figure 7.28:
+
+  **Figure 7.28 ICMP router discovery message with mobility agent ­advertisement extension**
+
+- **M, G encapsulation bits**. Indicate whether a form of encapsulation other than IP-in-IP encapsulation will be used.
+- **Care-of address (COA) fields**. A list of one or more care-of addresses provided by the foreign agent. In our example below, the COA will be associated with the foreign agent, who will receive datagrams sent to the COA and then forward them to the appropriate mobile node. The mobile user will select one of these addresses as its COA when registering with its home agent.
+
+:ref:`Figure 7.28 <Figure 7.28>` illustrates some of the key fields in the agent advertisement message.
+
+With **agent solicitation**, a mobile node wanting to learn about agents without waiting to receive an agent advertisement can broadcast an agent solicitation message, which is simply an ICMP message with type value 10. An agent receiving the solicitation will unicast an agent advertisement directly to the mobile node, which can then proceed as if it had received an unsolicited advertisement.
+
+Registration with the Home Agent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once a mobile IP node has received a COA, that address must be registered with the home agent. This can be done either via the foreign agent (who then registers the COA with the home agent) or directly by the mobile IP node itself. We consider the former case below. Four steps are involved.
+
+1. Following the receipt of a foreign agent advertisement, a mobile node sends a mobile IP registration message to the foreign agent. The registration message is carried within a UDP datagram and sent to port 434. The registration message carries a COA advertised by the foreign agent, the address of the home agent (HA), the permanent address of the mobile node (MA), the requested lifetime of the registration, and a 64-bit registration identification. The requested registration lifetime is the number of seconds that the registration is to be valid. If the registration is not renewed at the home agent within the specified lifetime, the registration will become invalid. The registration identifier acts like a sequence number and serves to match a received registration reply with a registration request, as discussed below.
+2. The foreign agent receives the registration message and records the mobile node’s permanent IP address. The foreign agent now knows that it should be looking for datagrams containing an encapsulated datagram whose destination address matches the permanent address of the mobile node. The foreign agent then sends a mobile IP registration message (again, within a UDP datagram) to port 434 of the home agent. The message contains the COA, HA, MA, encapsulation format requested, requested registration lifetime, and registration identification.
+3. The home agent receives the registration request and checks for authenticity and correctness. The home agent binds the mobile node’s permanent IP address with the COA; in the future, datagrams arriving at the home agent and addressed to the mobile node will now be encapsulated and tunneled to the COA. The home agent sends a mobile IP registration reply containing the HA, MA, actual registration lifetime, and the registration identification of the request that is being satisfied with this reply.
+4. The foreign agent receives the registration reply and then forwards it to the mobile node.
+
+At this point, registration is complete, and the mobile node can receive datagrams sent to its permanent address. :ref:`Figure 7.29` illustrates these steps. Note that the home agent specifies a lifetime that is smaller than the lifetime requested by the mobile node.
+
+A foreign agent need not explicitly deregister a COA when a mobile node leaves its network. This will occur automatically, when the mobile node moves to a new network (whether another foreign network or its home network) and registers a new COA.
+
+The mobile IP standard allows many additional scenarios and capabilities in addition to those described previously. The interested reader should consult [:ref:`Perkins 1998b <Perkins 1998b>`; :rfc:`5944`].
+
+.. figure:: ../img/635-0.png 
+    :align: center
+
+.. _Figure 7.29:
+
+**Figure 7.29 Agent advertisement and mobile IP registration**
