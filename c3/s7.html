@@ -1,0 +1,557 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="3.8 总结" href="summary.html" /><link rel="prev" title="3.6 拥塞控制原则" href="s6.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>3.7 TCP 拥塞控制 - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络和 Internet</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 3 章 传输层</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">3.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线和移动网络</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全性</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="tcp">
+<span id="c3-7"></span><h1>3.7 TCP 拥塞控制<a class="headerlink" href="#tcp" title="此标题的永久链接">#</a></h1>
+<p>3.7 TCP Congestion Control</p>
+<section id="nbsp">
+<h2>&amp;nbsp;<a class="headerlink" href="#nbsp" title="此标题的永久链接">#</a></h2>
+<p>In this section we return to our study of TCP. As we learned in <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">Section 3.5</span></a>, TCP provides a reliable transport service between two processes running on different hosts. Another key component of TCP is its congestion-control mechanism. As indicated in the previous section, TCP must use end-to-end congestion control rather than network-assisted congestion control, since the IP layer provides no explicit feedback to the end systems regarding network congestion.</p>
+<p>The approach taken by TCP is to have each sender limit the rate at which it sends traffic into its connection as a function of perceived network congestion. If a TCP sender perceives that there is little congestion on the path between itself and the destination, then the TCP sender increases its send rate; if the sender perceives that there is congestion along the path, then the sender reduces its send rate. But this approach raises three questions. First, how does a TCP sender limit the rate at which it sends traffic into its connection? Second, how does a TCP sender perceive that there is congestion on the path between itself and the destination? And third, what algorithm should the sender use to change its send rate as a function of perceived end-to-end congestion?</p>
+<p>Let’s first examine how a TCP sender limits the rate at which it sends traffic into its connection. In <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">Section 3.5</span></a> we saw that each side of a TCP connection consists of a receive buffer, a send buffer, and several variables <code class="docutils literal notranslate"><span class="pre">(LastByteRead,</span> <span class="pre">rwnd,</span> <span class="pre">and</span> <span class="pre">so</span> <span class="pre">on)</span></code>. The TCP congestion-control mechanism operating at the sender keeps track of an additional variable, the <strong>congestion window</strong>. The congestion window, denoted <code class="docutils literal notranslate"><span class="pre">cwnd</span></code>, imposes a constraint on the rate at which a TCP sender can send traffic into the network. Specifically, the amount of unacknowledged data at a sender may not exceed the minimum of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> and <code class="docutils literal notranslate"><span class="pre">rwnd</span></code>, that is:</p>
+<blockquote>
+<div><p>LastByteSent−LastByteAcked≤min{cwnd, rwnd}</p>
+</div></blockquote>
+<p>In order to focus on congestion control (as opposed to flow control), let us henceforth assume that the TCP receive buffer is so large that the receive-window constraint can be ignored; thus, the amount of unacknowledged data at the sender is solely limited by <code class="docutils literal notranslate"><span class="pre">cwnd</span></code>. We will also assume that the sender always has data to send, i.e., that all segments in the congestion window are sent.</p>
+<p>The constraint above limits the amount of unacknowledged data at the sender and therefore indirectly limits the sender’s send rate. To see this, consider a connection for which loss and packet transmission delays are negligible. Then, roughly, at the beginning of every RTT, the constraint permits the sender to send <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> bytes of data into the connection; at the end of the RTT the sender receives acknowledgments for the data. Thus the sender’s send rate is roughly cwnd/RTT bytes/sec. By adjusting the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code>, the sender can therefore adjust the rate at which it sends data into its connection.</p>
+<p>Let’s next consider how a TCP sender perceives that there is congestion on the path between itself and the destination. Let us define a “loss event” at a TCP sender as the occurrence of either a timeout or the receipt of three duplicate ACKs from the receiver. (Recall our discussion in <a class="reference internal" href="s5.html#c3-5-4"><span class="std std-ref">Section 3.5.4</span></a> of the timeout event in <a class="reference internal" href="s5.html#figure-3-33"><span class="std std-ref">Figure 3.33</span></a> and the subsequent modification to include fast retransmit on receipt of three duplicate ACKs.) When there is excessive congestion, then one (or more) router buffers along the path overflows, causing a datagram (containing a TCP segment) to be dropped. The dropped datagram, in turn, results in a loss event at the sender—either a timeout or the receipt of three duplicate ACKs— which is taken by the sender to be an indication of congestion on the sender-to-receiver path.</p>
+<p>Having considered how congestion is detected, let’s next consider the more optimistic case when the network is congestion-free, that is, when a loss event doesn’t occur. In this case, acknowledgments for previously unacknowledged segments will be received at the TCP sender. As we’ll see, TCP will take the arrival of these acknowledgments as an indication that all is well—that segments being transmitted into the network are being successfully delivered to the destination—and will use acknowledgments to increase its congestion window size (and hence its transmission rate). Note that if acknowledgments arrive at a relatively slow rate (e.g., if the end-end path has high delay or contains a low-bandwidth link), then the congestion window will be increased at a relatively slow rate. On the other hand, if acknowledgments arrive at a high rate, then the congestion window will be increased more quickly. Because TCP uses acknowledgments to trigger (or clock) its increase in congestion window size, TCP is said to be <strong>self-clocking</strong>.</p>
+<p>Given the mechanism of adjusting the value of cwnd to control the sending rate, the critical question remains: How should a TCP sender determine the rate at which it should send? If TCP senders collectively send too fast, they can congest the network, leading to the type of congestion collapse that we saw in <a class="reference internal" href="s6.html#figure-3-48"><span class="std std-ref">Figure 3.48</span></a>. Indeed, the version of TCP that we’ll study shortly was developed in response to observed Internet congestion collapse <a class="reference internal" href="../references.html#jacobson-1988"><span class="std std-ref">[Jacobson 1988]</span></a> under earlier versions of TCP. However, if TCP senders are too cautious and send too slowly, they could under utilize the bandwidth in the network; that is, the TCP senders could send at a higher rate without congesting the network. How then do the TCP senders determine their sending rates such that they don’t congest the network but at the same time make use of all the available bandwidth? Are TCP senders explicitly coordinated, or is there a distributed approach in which the TCP senders can set their sending rates based only on local information? TCP answers these questions using the following guiding principles:</p>
+<ul class="simple">
+<li><p><strong>A lost segment implies congestion, and hence, the TCP sender’s rate should be decreased when a segment is lost</strong>. Recall from our discussion in <a class="reference internal" href="s5.html#c3-5-4"><span class="std std-ref">Section 3.5.4</span></a>, that a timeout event or the receipt of four acknowledgments for a given segment (one original ACK and then three duplicate ACKs) is interpreted as an implicit “loss event” indication of the segment following the quadruply ACKed segment, triggering a retransmission of the lost segment. From a congestion-control standpoint, the question is how the TCP sender should decrease its congestion window size, and hence its sending rate, in response to this inferred loss event.</p></li>
+<li><p><strong>An acknowledged segment indicates that the network is delivering the sender’s segments to the receiver, and hence, the sender’s rate can be increased when an ACK arrives for a previously unacknowledged segment</strong>. The arrival of acknowledgments is taken as an implicit indication that all is well—segments are being successfully delivered from sender to receiver, and the network is thus not congested. The congestion window size can thus be increased.</p></li>
+<li><p><strong>Bandwidth probing</strong>. Given ACKs indicating a congestion-free source-to-destination path and loss events indicating a congested path, TCP’s strategy for adjusting its transmission rate is to increase its rate in response to arriving ACKs until a loss event occurs, at which point, the transmission rate is decreased. The TCP sender thus increases its transmission rate to probe for the rate that at which congestion onset begins, backs off from that rate, and then to begins probing again to see if the congestion onset rate has changed. The TCP sender’s behavior is perhaps analogous to the child who requests (and gets) more and more goodies until finally he/she is finally told “No!”, backs off a bit, but then begins making requests again shortly afterwards. Note that there is no explicit signaling of congestion state by the network—ACKs and loss events serve as implicit signals—and that each TCP sender acts on local information asynchronously from other TCP senders.</p></li>
+</ul>
+<p>Given this overview of TCP congestion control, we’re now in a position to consider the details of the celebrated <strong>TCP congestion-control algorithm</strong>, which was first described in <a class="reference internal" href="../references.html#jacobson-1988"><span class="std std-ref">[Jacobson 1988]</span></a> and is standardized in <a class="reference internal" href="../references.html#rfc-5681"><span class="std std-ref">[RFC 5681]</span></a>. The algorithm has three major components: (1) slow start, (2) congestion avoidance, and (3) fast recovery. Slow start and congestion avoidance are mandatory components of TCP, differing in how they increase the size of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> in response to received ACKs. We’ll see shortly that slow start increases the size of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> more rapidly (despite its name!) than congestion avoidance. Fast recovery is recommended, but not required, for TCP senders.</p>
+<section id="slow-start">
+<h3>Slow Start<a class="headerlink" href="#slow-start" title="此标题的永久链接">#</a></h3>
+<p>When a TCP connection begins, the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> is typically initialized to a small value of 1 MSS <a class="reference internal" href="../references.html#rfc-3390"><span class="std std-ref">[RFC 3390]</span></a>, resulting in an initial sending rate of roughly MSS/RTT. For example, if MSS = 500 bytes and RTT = 200 msec, the resulting initial sending rate is only about 20 kbps. Since the available bandwidth to the TCP sender may be much larger than MSS/RTT, the TCP sender would like to find the amount of available bandwidth quickly. Thus, in the <strong>slow-start</strong> state, the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> begins at 1 MSS and increases by 1 MSS every time a transmitted segment is first acknowledged. In the example of <a class="reference internal" href="#figure-3-50"><span class="std std-ref">Figure 3.50</span></a>, TCP sends the first segment into the network and waits for an acknowledgment. When this acknowledgment arrives, the TCP sender increases the congestion window by one MSS and sends out two maximum-sized segments. These segments are then acknowledged, with the sender increasing the congestion window by 1 MSS for each of the acknowledged segments, giving a congestion window of 4 MSS, and so on. This process results in a doubling of the sending rate every RTT. Thus, the TCP send rate starts slow but grows exponentially during the slow start phase.</p>
+<figure class="align-default">
+<img alt="../_images/314-0.png" src="../_images/314-0.png" />
+</figure>
+<p id="figure-3-50"><strong>Figure 3.50 TCP slow start</strong></p>
+<p>But when should this exponential growth end? Slow start provides several answers to this question. First, if there is a loss event (i.e., congestion) indicated by a timeout, the TCP sender sets the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> to 1 and begins the slow start process anew. It also sets the value of a second state variable, <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> (shorthand for “slow start threshold”) to <code class="docutils literal notranslate"><span class="pre">cwnd/2</span></code>—half of the value of the congestion window value when congestion was detected. The second way in which slow start may end is directly tied to the value of <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code>. Since <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> is half the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> when congestion was last detected, it might be a bit reckless to keep doubling <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> when it reaches or surpasses the value of <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code>. Thus, when the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> equals <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code>, slow start ends and TCP transitions into congestion avoidance mode. As we’ll see, TCP increases <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> more cautiously when in congestion-avoidance mode. The final way in which slow start can end is if three duplicate ACKs are detected, in which case TCP performs a fast retransmit (see <a class="reference internal" href="s5.html#c3-5-4"><span class="std std-ref">Section 3.5.4</span></a>) and enters the fast recovery state, as discussed below. TCP’s behavior in slow start is summarized in the FSM description of TCP congestion control in <a class="reference internal" href="#figure-3-51"><span class="std std-ref">Figure 3.51</span></a>. The slow-start algorithm traces it roots to <a class="reference internal" href="../references.html#jacobson-1988"><span class="std std-ref">[Jacobson 1988]</span></a>; an approach similar to slow start was also proposed independently in <a class="reference internal" href="../references.html#jain-1986"><span class="std std-ref">[Jain 1986]</span></a>.</p>
+</section>
+<section id="congestion-avoidance">
+<h3>Congestion Avoidance<a class="headerlink" href="#congestion-avoidance" title="此标题的永久链接">#</a></h3>
+<p>On entry to the congestion-avoidance state, the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> is approximately half its value when congestion was last encountered—congestion could be just around the corner! Thus, rather than
+doubling the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> every RTT, TCP adopts a more conservative approach and increases the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> by just a single MSS every RTT <a class="reference internal" href="../references.html#rfc-5681"><span class="std std-ref">[RFC 5681]</span></a>. This can be accomplished in several ways. A common approach is for the TCP sender to increase <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> by MSS bytes (MSS/<code class="docutils literal notranslate"><span class="pre">cwnd</span></code>) whenever a
+new acknowledgment arrives. For example, if MSS is 1,460 bytes and <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> is 14,600 bytes, then 10 segments are being sent within an RTT. Each arriving ACK (assuming one ACK per segment) increases the congestion window size by 1/10 MSS, and thus, the value of the congestion window will have increased by one MSS after ACKs when all 10 segments have been received.</p>
+<p>But when should congestion avoidance’s linear increase (of 1 MSS per RTT) end? TCP’s congestion- avoidance algorithm behaves the same when a timeout occurs. As in the case of slow start: The value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> is set to 1 MSS, and the value of <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> is updated to half the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> when the loss event occurred. Recall, however, that a loss event also can be triggered by a triple duplicate ACK event.</p>
+<figure class="align-center">
+<img alt="../_images/316-0.png" src="../_images/316-0.png" />
+</figure>
+<p id="figure-3-51"><strong>Figure 3.51 FSM description of TCP congestion control</strong></p>
+<p>In this case, the network is continuing to deliver segments from sender to receiver (as indicated by the receipt of duplicate ACKs). So TCP’s behavior to this type of loss event should be less drastic than with a timeout-indicated loss: TCP halves the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> (adding in 3 MSS for good measure to account for the triple duplicate ACKs received) and records the value of <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> to be half the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> when the triple duplicate ACKs were received. The fast-recovery state is then entered.</p>
+</section>
+<section id="fast-recovery">
+<h3>Fast Recovery<a class="headerlink" href="#fast-recovery" title="此标题的永久链接">#</a></h3>
+<p>In fast recovery, the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> is increased by 1 MSS for every duplicate ACK received for the missing segment that caused TCP to enter the fast-recovery state. Eventually, when an ACK arrives for the missing segment, TCP enters the congestion-avoidance state after deflating <code class="docutils literal notranslate"><span class="pre">cwnd</span></code>. If a timeout event occurs, fast recovery transitions to the slow-start state after performing the same actions as in slow start and congestion avoidance: The value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> is set to 1 MSS, and the value of <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> is set to half the value of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> when the loss event occurred.</p>
+<figure class="align-center">
+<img alt="../_images/videonote.png" src="../_images/videonote.png" />
+</figure>
+<p><strong>Examining the behavior of TCP</strong></p>
+<div class="admonition-principles-in-practice admonition">
+<p class="admonition-title">PRINCIPLES IN PRACTICE</p>
+<p>TCP SPLITTING: OPTIMIZING THE PERFORMANCE OF CLOUD SERVICES</p>
+<p>For cloud services such as search, e-mail, and social networks, it is desirable to provide a high- level of responsiveness, ideally giving users the illusion that the services are running within their own end systems (including their smartphones). This can be a major challenge, as users are often located far away from the data centers responsible for serving the dynamic content associated with the cloud services. Indeed, if the end system is far from a data center, then the RTT will be large, potentially leading to poor response time performance due to TCP slow start.</p>
+<p>As a case study, consider the delay in receiving a response for a search query. Typically, the server requires three TCP windows during slow start to deliver the response <a class="reference internal" href="../references.html#pathak-2010"><span class="std std-ref">[Pathak 2010]</span></a>. Thus the time from when an end system initiates a TCP connection until the time when it receives the last packet of the response is roughly 4⋅RTT (one RTT to set up the TCP connection plus three RTTs for the three windows of data) plus the processing time in the data center. These RTT delays can lead to a noticeable delay in returning search results for a significant fraction of queries. Moreover, there can be significant packet loss in access networks, leading to TCP retransmissions and even larger delays.</p>
+<p>One way to mitigate this problem and improve user-perceived performance is to (1) deploy front- end servers closer to the users, and (2) utilize TCP splitting by breaking the TCP connection at the front-end server. With <strong>TCP splitting</strong>, the client establishes a TCP connection to the nearby front-end, and the front-end maintains a persistent TCP connection to the data center with a very large TCP congestion window [<a class="reference internal" href="../references.html#tariq-2008"><span class="std std-ref">Tariq 2008</span></a>, <a class="reference internal" href="../references.html#pathak-2010"><span class="std std-ref">Pathak 2010</span></a>, <a class="reference internal" href="../references.html#chen-2011"><span class="std std-ref">Chen 2011</span></a>]. With this approach, the response time roughly becomes 4⋅RTTFE+RTTBE+ processing time, where RTTFE is the round- trip time between client and front-end server, and RTTBE is the round-trip time between the front- end server and the data center (back-end server). If the front-end server is close to client, then this response time approximately becomes RTT plus processing time, since RTTFE is negligibly small and RTTBE is approximately RTT. In summary, TCP splitting can reduce the networking delay roughly from 4⋅RTT to RTT, significantly improving user-perceived performance, particularly for users who are far from the nearest data center. TCP splitting also helps reduce TCP retransmission delays caused by losses in access networks. Google and Akamai have made extensive use of their CDN servers in access networks (recall our discussion in <a class="reference internal" href="../c2/s6.html#c2-6"><span class="std std-ref">Section 2.6</span></a>) to perform TCP splitting for the cloud services they support <a class="reference internal" href="../references.html#chen-2011"><span class="std std-ref">[Chen 2011]</span></a>.</p>
+</div>
+<p>Fast recovery is a recommended, but not required, component of TCP <a class="reference internal" href="../references.html#rfc-5681"><span class="std std-ref">RFC 5681</span></a>. It is interesting that an early version of TCP, known as <strong>TCP Tahoe</strong>, unconditionally cut its congestion window to 1 MSS and entered the slow-start phase after either a timeout-indicated or triple-duplicate-ACK-indicated loss event. The newer version of TCP, <strong>TCP Reno</strong>, incorporated fast recovery.</p>
+<p><a class="reference internal" href="#figure-3-52"><span class="std std-ref">Figure 3.52</span></a> illustrates the evolution of TCP’s congestion window for both Reno and Tahoe. In this figure, the threshold is initially equal to 8 MSS. For the first eight transmission rounds, Tahoe and Reno take identical actions. The congestion window climbs exponentially fast during slow start and hits the threshold at the fourth round of transmission. The congestion window then climbs linearly until a triple duplicate- ACK event occurs, just after transmission round 8. Note that the congestion window is 12⋅MSS when this loss event occurs. The value of <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> is then set to 0.5⋅ <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> =6⋅MSS. Under TCP Reno, the congestion window is set to <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> = 9⋅MSS and then grows linearly. Under TCP Tahoe, the congestion window is set to 1 MSS and grows exponentially until it reaches the value of <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code>, at which point it grows linearly.</p>
+<p><a class="reference internal" href="#figure-3-51"><span class="std std-ref">Figure 3.51</span></a> presents the complete FSM description of TCP’s congestion-control algorithms—slow start, congestion avoidance, and fast recovery. The figure also indicates where transmission of new segments
+or retransmitted segments can occur. Although it is important to distinguish between TCP error control/retransmission and TCP congestion control, it’s also important to appreciate how these two aspects of TCP are inextricably linked.</p>
+</section>
+<section id="tcp-congestion-control-retrospective">
+<h3>TCP Congestion Control: Retrospective<a class="headerlink" href="#tcp-congestion-control-retrospective" title="此标题的永久链接">#</a></h3>
+<p>Having delved into the details of slow start, congestion avoidance, and fast recovery, it’s worthwhile to now step back and view the forest from the trees. Ignoring the initial slow-start period when a connection begins and assuming that losses are indicated by triple duplicate ACKs rather than timeouts, TCP’s congestion control consists of linear (additive) increase in <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> of 1 MSS per RTT and then a halving (multiplicative decrease) of <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> on a triple duplicate-ACK event. For this reason, TCP congestion control is often referred to as an <strong>additive-increase, multiplicative-decrease (AIMD)</strong> form of congestion control. AIMD congestion control gives rise to the “saw tooth” behavior shown in <a class="reference internal" href="#figure-3-53"><span class="std std-ref">Figure 3.53</span></a>, which also nicely illustrates our earlier intuition of TCP “probing” for bandwidth—TCP linearly increases its congestion window size (and hence its transmission rate) until a triple duplicate-ACK event occurs. It then decreases its congestion window size by a factor of two but then again begins increasing it linearly, probing to see if there is additional available bandwidth.</p>
+<figure class="align-center">
+<img alt="../_images/319-0.png" src="../_images/319-0.png" />
+</figure>
+<p id="figure-3-52"><strong>Figure 3.52 Evolution of TCP’s congestion window (Tahoe and Reno)</strong></p>
+<figure class="align-center">
+<img alt="../_images/319-1.png" src="../_images/319-1.png" />
+</figure>
+<p id="figure-3-53"><strong>Figure 3.53 Additive-increase, multiplicative-decrease congestion control</strong></p>
+<p>As noted previously, many TCP implementations use the Reno algorithm <a class="reference internal" href="../references.html#padhye-2001"><span class="std std-ref">[Padhye 2001]</span></a>. Many variations of the Reno algorithm have been proposed [<a class="reference internal" href="../references.html#rfc-3782"><span class="std std-ref">RFC 3782</span></a>; <a class="reference internal" href="../references.html#rfc-2018"><span class="std std-ref">RFC 2018</span></a>]. The TCP Vegas algorithm [<a class="reference internal" href="../references.html#brakmo-1995"><span class="std std-ref">Brakmo 1995</span></a>; <span class="xref std std-ref">Ahn 1995</span>] attempts to avoid congestion while maintaining good throughput. The basic idea of Vegas is to (1) detect congestion in the routers between source and destination before packet loss occurs, and (2) lower the rate linearly when this imminent packet loss is detected. Imminent packet loss is predicted by observing the RTT. The longer the RTT of the packets, the greater the congestion in the routers. As of late 2015, the Ubuntu Linux implementation of TCP provided slowstart, congestion avoidance, fast recovery, fast retransmit, and SACK, by default; alternative congestion control algorithms, such as TCP Vegas and BIC <a class="reference internal" href="../references.html#xu-2004"><span class="std std-ref">[Xu 2004]</span></a>, are also provided. For a survey of the many flavors of TCP, see <a class="reference internal" href="../references.html#afanasyev-2010"><span class="std std-ref">[Afanasyev 2010]</span></a>.</p>
+<p>TCP’s AIMD algorithm was developed based on a tremendous amount of engineering insight and experimentation with congestion control in operational networks. Ten years after TCP’s development, theoretical analyses showed that TCP’s congestion-control algorithm serves as a distributed asynchronous-optimization algorithm that results in several important aspects of user and network performance being simultaneously optimized <a class="reference internal" href="../references.html#kelly-1998"><span class="std std-ref">[Kelly 1998]</span></a>. A rich theory of congestion control has since been developed <a class="reference internal" href="../references.html#srikant-2004"><span class="std std-ref">[Srikant 2004]</span></a>.</p>
+</section>
+<section id="macroscopic-description-of-tcp-throughput">
+<h3>Macroscopic Description of TCP Throughput<a class="headerlink" href="#macroscopic-description-of-tcp-throughput" title="此标题的永久链接">#</a></h3>
+<p>Given the saw-toothed behavior of TCP, it’s natural to consider what the average throughput (that is, the average rate) of a long-lived TCP connection might be. In this analysis we’ll ignore the slow-start phases that occur after timeout events. (These phases are typically very short, since the sender grows out of the phase exponentially fast.) During a particular round-trip interval, the rate at which TCP sends data is a function of the congestion window and the current RTT. When the window size is w bytes and the current round-trip time is RTT seconds, then TCP’s transmission rate is roughly w/RTT. TCP then probes for additional bandwidth by increasing w by 1 MSS each RTT until a loss event occurs. Denote by W the value of w when a loss event occurs. Assuming that RTT and W are approximately constant over the duration of the connection, the TCP transmission rate ranges from W/(2 · RTT) to W/RTT. These assumptions lead to a highly simplified macroscopic model for the steady-state behavior of TCP. The network drops a packet from the connection when the rate increases to W/RTT; the rate is then cut in half and then increases by MSS/RTT every RTT until it again reaches W/RTT. This process repeats itself over and over again. Because TCP’s throughput (that is, rate) increases linearly between the two extreme values, we have</p>
+<blockquote>
+<div><p>average throughput of a connection=0.75⋅WRTT</p>
+</div></blockquote>
+<p>Using this highly idealized model for the steady-state dynamics of TCP, we can also derive an interesting expression that relates a connection’s loss rate to its available bandwidth <a class="reference internal" href="../references.html#mahdavi-1997"><span class="std std-ref">[Mahdavi 1997]</span></a>. This derivation is outlined in the homework problems. A more sophisticated model that has been found empirically to agree with measured data is <a class="reference internal" href="../references.html#padhye-2000"><span class="std std-ref">[Padhye 2000]</span></a>.</p>
+</section>
+<section id="tcp-over-high-bandwidth-paths">
+<h3>TCP Over High-Bandwidth Paths<a class="headerlink" href="#tcp-over-high-bandwidth-paths" title="此标题的永久链接">#</a></h3>
+<p>It is important to realize that TCP congestion control has evolved over the years and indeed continues to evolve. For a summary of current TCP variants and discussion of TCP evolution, see [ <a class="reference internal" href="../references.html#floyd-2001"><span class="std std-ref">Floyd 2001</span></a>, <a class="reference internal" href="../references.html#rfc-5681"><span class="std std-ref">RFC 5681</span></a>, <a class="reference internal" href="../references.html#afanasyev-2010"><span class="std std-ref">Afanasyev 2010</span></a>]. What was good for the Internet when the bulk of the TCP connections carried SMTP, FTP, and Telnet traffic is not necessarily good for today’s HTTP-dominated Internet or for a future Internet with services that are still undreamed of.</p>
+<p>The need for continued evolution of TCP can be illustrated by considering the high-speed TCP connections that are needed for grid- and cloud-computing applications. For example, consider a TCP connection with 1,500-byte segments and a 100 ms RTT, and suppose we want to send data through this connection at 10 Gbps. Following <a class="reference internal" href="../references.html#rfc-3649"><span class="std std-ref">[RFC 3649]</span></a>, we note that using the TCP throughput formula above, in order to achieve a 10 Gbps throughput, the average congestion window size would need to be 83,333 segments. That’s a lot of segments, leading us to be rather concerned that one of these 83,333 in-flight segments might be lost. What would happen in the case of a loss? Or, put another way, what fraction of the transmitted segments could be lost that would allow the TCP congestion-control algorithm specified in <a class="reference internal" href="#figure-3-51"><span class="std std-ref">Figure 3.51</span></a> still to achieve the desired 10 Gbps rate? In the homework questions for this chapter, you are led through the derivation of a formula relating the throughput of a TCP connection as a function of the loss rate (L), the round-trip time (RTT), and the maximum segment size (MSS):</p>
+<blockquote>
+<div><p>average throughput of a connection=1.22⋅MSSRTTL</p>
+</div></blockquote>
+<p>Using this formula, we can see that in order to achieve a throughput of 10 Gbps, today’s TCP congestion-control algorithm can only tolerate a segment loss probability of <span class="math notranslate nohighlight">\(2 · 10^{–10}\)</span> (or equivalently, one loss event for every 5,000,000,000 segments)—a very low rate. This observation has led a number of researchers to investigate new versions of TCP that are specifically designed for such high-speed environments; see [ <a class="reference internal" href="../references.html#jin-2004"><span class="std std-ref">Jin 2004</span></a>; <a class="reference internal" href="../references.html#kelly-2003"><span class="std std-ref">Kelly 2003</span></a>; <a class="reference internal" href="../references.html#ha-2008"><span class="std std-ref">Ha 2008</span></a>; <a class="reference internal" href="../references.html#rfc-7323"><span class="std std-ref">RFC 7323</span></a>] for discussions of these efforts.</p>
+</section>
+</section>
+<section id="c3-7-1">
+<span id="id1"></span><h2>3.7.1 公平性<a class="headerlink" href="#c3-7-1" title="此标题的永久链接">#</a></h2>
+<p>3.7.1 Fairness</p>
+<p>Consider K TCP connections, each with a different end-to-end path, but all passing through a bottleneck link with transmission rate R bps. (By <em>bottleneck link</em>, we mean that for each connection, all the other links along the connection’s path are not congested and have abundant transmission capacity as compared with the transmission capacity of the bottleneck link.) Suppose each connection is transferring a large file and there is no UDP traffic passing through the bottleneck link. A congestion-control mechanism is said to be fair if the average transmission rate of each connection is approximately R/K; that is, each connection gets an equal share of the link bandwidth.</p>
+<p>Is TCP’s AIMD algorithm fair, particularly given that different TCP connections may start at different times and thus may have different window sizes at a given point in time? <a class="reference internal" href="../references.html#chiu-1989"><span class="std std-ref">[Chiu 1989]</span></a> provides an elegant and intuitive explanation of why TCP congestion control converges to provide an equal share of a bottleneck link’s bandwidth among competing TCP connections.</p>
+<p>Let’s consider the simple case of two TCP connections sharing a single link with transmission rate R, as shown in <a class="reference internal" href="#figure-3-54"><span class="std std-ref">Figure 3.54</span></a>. Assume that the two connections have the same MSS and RTT (so that if they have the same congestion window size, then they have the same throughput), that they have a large amount of data to send, and that no other TCP connections or UDP datagrams traverse this shared link. Also, ignore the slow-start phase of TCP and assume the TCP connections are operating in CA mode (AIMD) at all times.</p>
+<figure class="align-center">
+<img alt="../_images/322-0.png" src="../_images/322-0.png" />
+</figure>
+<p id="figure-3-54"><strong>Figure 3.54 Two TCP connections sharing a single bottleneck link</strong></p>
+<p><a class="reference internal" href="#figure-3-55"><span class="std std-ref">Figure 3.55</span></a> plots the throughput realized by the two TCP connections. If TCP is to share the link bandwidth equally between the two connections, then the realized throughput should fall along the 45-degree arrow (equal bandwidth share) emanating from the origin. Ideally, the sum of the two throughputs should equal R. (Certainly, each connection receiving an equal, but zero, share of the link capacity is not a desirable situation!) So the goal should be to have the achieved throughputs fall somewhere near the intersection of the equal bandwidth share line and the full bandwidth utilization line in <a class="reference internal" href="#figure-3-55"><span class="std std-ref">Figure 3.55</span></a>.</p>
+<p>Suppose that the TCP window sizes are such that at a given point in time, connections 1 and 2 realize throughputs indicated by point A in <a class="reference internal" href="#figure-3-55"><span class="std std-ref">Figure 3.55</span></a>. Because the amount of link bandwidth jointly consumed by the two connections is less than R, no loss will occur, and both connections will increase their window by 1 MSS per RTT as a result of TCP’s congestion-avoidance algorithm. Thus, the joint throughput of the two connections proceeds along a 45-degree line (equal increase for both connections) starting from point A. Eventually, the link bandwidth jointly consumed by the two connections will be greater than R, and eventually packet loss will occur. Suppose that connections 1 and 2 experience packet loss when they realize throughputs indicated by point B. Connections 1 and 2 then decrease their windows by a factor of two. The resulting throughputs realized are thus at point C, halfway along a vector starting at B and ending at the origin. Because the joint bandwidth use is less than R at point C, the two connections again increase their throughputs along a 45-degree line starting from C. Eventually, loss will again occur, for example, at point D, and the two connections again decrease their window sizes by a factor of two, and so on. You should convince yourself that the bandwidth realized by the two connections eventually fluctuates along the equal bandwidth share line. You should also convince yourself that the two connections will converge to this behavior regardless of where they are in the two- dimensional space! Although a number of idealized assumptions lie behind this scenario, it still provides an intuitive feel for why TCP results in an equal sharing of bandwidth among connections.</p>
+<figure class="align-center">
+<img alt="../_images/323-0.png" src="../_images/323-0.png" />
+</figure>
+<p id="figure-3-55"><strong>Figure 3.55 Throughput realized by TCP connections 1 and 2</strong></p>
+<p>In our idealized scenario, we assumed that only TCP connections traverse the bottleneck link, that the connections have the same RTT value, and that only a single TCP connection is associated with a host- destination pair. In practice, these conditions are typically not met, and client-server applications can thus obtain very unequal portions of link bandwidth. In particular, it has been shown that when multiple connections share a common bottleneck, those sessions with a smaller RTT are able to grab the available bandwidth at that link more quickly as it becomes free (that is, open their congestion windows
+faster) and thus will enjoy higher throughput than those connections with larger RTTs <a class="reference internal" href="../references.html#lakshman-1997"><span class="std std-ref">[Lakshman 1997]</span></a>.</p>
+<section id="fairness-and-udp">
+<h3>Fairness and UDP<a class="headerlink" href="#fairness-and-udp" title="此标题的永久链接">#</a></h3>
+<p>We have just seen how TCP congestion control regulates an application’s transmission rate via the congestion window mechanism. Many multimedia applications, such as Internet phone and video conferencing, often do not run over TCP for this very reason—they do not want their transmission rate throttled, even if the network is very congested. Instead, these applications prefer to run over UDP, which does not have built-in congestion control. When running over UDP, applications can pump their audio and video into the network at a constant rate and occasionally lose packets, rather than reduce their rates to “fair” levels at times of congestion and not lose any packets. From the perspective of TCP, the multimedia applications running over UDP are not being fair—they do not cooperate with the other connections nor adjust their transmission rates appropriately. Because TCP congestion control will decrease its transmission rate in the face of increasing congestion (loss), while UDP sources need not, it is possible for UDP sources to crowd out TCP traffic. An area of research today is thus the development of congestion-control mechanisms for the Internet that prevent UDP traffic from bringing the Internet’s throughput to a grinding halt [<a class="reference internal" href="../references.html#floyd-1999"><span class="std std-ref">Floyd 1999</span></a>; <a class="reference internal" href="../references.html#floyd-2000"><span class="std std-ref">Floyd 2000</span></a>; <a class="reference internal" href="../references.html#kohler-2006"><span class="std std-ref">Kohler 2006</span></a>; <a class="reference internal" href="../references.html#rfc-4340"><span class="std std-ref">RFC 4340</span></a>].</p>
+</section>
+<section id="fairness-and-parallel-tcp-connections">
+<h3>Fairness and Parallel TCP Connections<a class="headerlink" href="#fairness-and-parallel-tcp-connections" title="此标题的永久链接">#</a></h3>
+<p>But even if we could force UDP traffic to behave fairly, the fairness problem would still not be completely solved. This is because there is nothing to stop a TCP-based application from using multiple parallel connections. For example, Web browsers often use multiple parallel TCP connections to transfer the multiple objects within a Web page. (The exact number of multiple connections is configurable in most browsers.) When an application uses multiple parallel connections, it gets a larger fraction of the
+bandwidth in a congested link. As an example, consider a link of rate R supporting nine ongoing client- server applications, with each of the applications using one TCP connection. If a new application comes
+along and also uses one TCP connection, then each application gets approximately the same transmission rate of R/10. But if this new application instead uses 11 parallel TCP connections, then the
+new application gets an unfair allocation of more than R/2. Because Web traffic is so pervasive in the Internet, multiple parallel connections are not uncommon.</p>
+</section>
+</section>
+<section id="ecn">
+<span id="c3-7-2"></span><h2>3.7.2 显式拥塞通知 (ECN): 网络辅助拥塞控制<a class="headerlink" href="#ecn" title="此标题的永久链接">#</a></h2>
+<p>3.7.2 Explicit Congestion Notification (ECN): Network-assisted Congestion Control</p>
+<p>Since the initial standardization of slow start and congestion avoidance in the late 1980’s <a class="reference internal" href="../references.html#rfc-1122"><span class="std std-ref">RFC 1122</span></a>, TCP has implemented the form of end-end congestion control that we studied in <a class="reference internal" href="#c3-7-1"><span class="std std-ref">Section 3.7.1</span></a>: a TCP sender receives no explicit congestion indications from the network layer, and instead infers congestion through observed packet loss. More recently, extensions to both IP and TCP <a class="reference internal" href="../references.html#rfc-3168"><span class="std std-ref">[RFC 3168]</span></a> have been proposed, implemented, and deployed that allow the network to explicitly signal congestion to a TCP sender and receiver. This form of network-assisted congestion control is known as <strong>Explicit Congestion Notification</strong>. As shown in <a class="reference internal" href="#figure-3-56"><span class="std std-ref">Figure 3.56</span></a>, the TCP and IP protocols are involved.</p>
+<p>At the network layer, two bits (with four possible values, overall) in the Type of Service field of the IP datagram header (which we’ll discuss in <a class="reference internal" href="../c4/s3.html#c4-3"><span class="std std-ref">Section 4.3</span></a>) are used for ECN. One setting of the ECN bits is used by a router to indicate that it (the router) is experiencing congestion. This congestion indication is then carried in the marked IP datagram to the destination host, which then informs the sending host, as shown in <a class="reference internal" href="#figure-3-56"><span class="std std-ref">Figure 3.56</span></a>. RFC 3168 does not provide a definition of when a router is congested; that decision is a configuration choice made possible by the router vendor, and decided by the network operator. However, RFC 3168 does recommend that an ECN congestion indication be set only in the face of persistent congestion. A second setting of the ECN bits is used by the sending host to inform routers that the sender and receiver are ECN-capable, and thus capable of taking action in response to ECN-indicated network congestion.</p>
+<figure class="align-center">
+<img alt="../_images/325-0.png" src="../_images/325-0.png" />
+</figure>
+<p id="figure-3-56"><strong>Figure 3.56 Explicit Congestion Notification: network-assisted congestion control</strong></p>
+<p>As shown in <a class="reference internal" href="#figure-3-56"><span class="std std-ref">Figure 3.56</span></a>, when the TCP in the receiving host receives an ECN congestion indication via a received datagram, the TCP in the receiving host informs the TCP in the sending host of the congestion indication by setting the ECE (Explicit Congestion Notification Echo) bit (see <a class="reference internal" href="s5.html#figure-3-29"><span class="std std-ref">Figure 3.29</span></a>) in a receiver-to-sender TCP ACK segment. The TCP sender, in turn, reacts to an ACK with an ECE congestion indication by halving the congestion window, as it would react to a lost segment using fast retransmit, and sets the CWR (Congestion Window Reduced) bit in the header of the next transmitted TCP sender-to-receiver segment.</p>
+<p>Other transport-layer protocols besides TCP may also make use of network-layer-signaled ECN. The Datagram Congestion Control Protocol (DCCP) <a class="reference internal" href="../references.html#rfc-4340"><span class="std std-ref">[RFC 4340]</span></a> provides a low-overhead, congestion-controlled UDP-like unreliable service that utilizes ECN. DCTCP (Data Center TCP) <a class="reference internal" href="../references.html#alizadeh-2010"><span class="std std-ref">[Alizadeh 2010]</span></a>, a version of TCP designed specifically for data center networks, also makes use of ECN.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="summary.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">3.8 总结</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="s6.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">3.6 拥塞控制原则</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">3.7 TCP 拥塞控制</a><ul>
+<li><a class="reference internal" href="#nbsp">&amp;nbsp;</a><ul>
+<li><a class="reference internal" href="#slow-start">Slow Start</a></li>
+<li><a class="reference internal" href="#congestion-avoidance">Congestion Avoidance</a></li>
+<li><a class="reference internal" href="#fast-recovery">Fast Recovery</a></li>
+<li><a class="reference internal" href="#tcp-congestion-control-retrospective">TCP Congestion Control: Retrospective</a></li>
+<li><a class="reference internal" href="#macroscopic-description-of-tcp-throughput">Macroscopic Description of TCP Throughput</a></li>
+<li><a class="reference internal" href="#tcp-over-high-bandwidth-paths">TCP Over High-Bandwidth Paths</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#c3-7-1">3.7.1 公平性</a><ul>
+<li><a class="reference internal" href="#fairness-and-udp">Fairness and UDP</a></li>
+<li><a class="reference internal" href="#fairness-and-parallel-tcp-connections">Fairness and Parallel TCP Connections</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ecn">3.7.2 显式拥塞通知 (ECN): 网络辅助拥塞控制</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

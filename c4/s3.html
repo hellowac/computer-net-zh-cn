@@ -1,0 +1,649 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="4.4 广义转发和 SDN" href="s4.html" /><link rel="prev" title="4.2 路由器里面有什么？" href="s2.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>4.3 互联网协议 (IP): IPv4、寻址、IPv6 等 - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络和 Internet</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 4 章 网络层：数据平面</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线和移动网络</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全性</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="ip-ipv4ipv6">
+<span id="c4-3"></span><h1>4.3 互联网协议 (IP): IPv4、寻址、IPv6 等<a class="headerlink" href="#ip-ipv4ipv6" title="此标题的永久链接">#</a></h1>
+<p>4.3 The Internet Protocol (IP): IPv4, Addressing, IPv6, and More</p>
+<p>Our study of the network layer thus far in <a class="reference internal" href="index.html#c4"><span class="std std-ref">Chapter 4</span></a>—the notion of the data and control plane
+component of the network layer, our distinction between forwarding and routing, the identification of
+various network service models, and our look inside a router—have often been without reference to any
+specific computer network architecture or protocol. In this section we’ll focus on key aspects of the
+network layer on today’s Internet and the celebrated Internet Protocol (IP).</p>
+<p>There are two versions of IP in use today. We’ll first examine the widely deployed IP protocol version 4,
+which is usually referred to simply as IPv4 <a class="reference internal" href="../references.html#rfc-791"><span class="std std-ref">[RFC 791]</span></a> in <a class="reference internal" href="#c4-3-1"><span class="std std-ref">Section 4.3.1</span></a>. We’ll examine IP version 6 [<a class="reference internal" href="../references.html#rfc-2460"><span class="std std-ref">RFC 2460</span></a>; <a class="reference internal" href="../references.html#rfc-4291"><span class="std std-ref">RFC 4291</span></a>], which has been proposed to
+replace IPv4, in <a class="reference internal" href="#c4-3-5"><span class="std std-ref">Section 4.3.5</span></a>. In between, we’ll primarily cover Internet addressing—a topic that might
+seem rather dry and detail-oriented but we’ll see is crucial to understanding how the Internet’s network
+layer works. To master IP addressing is to master the Internet’s network layer itself!</p>
+<figure class="align-center">
+<img alt="../_images/376-0.png" src="../_images/376-0.png" />
+</figure>
+<p id="figure-4-16"><strong>Figure 4.16 IPv4 datagram format</strong></p>
+<section id="ipv4">
+<span id="c4-3-1"></span><h2>4.3.1 IPv4 数据报格式<a class="headerlink" href="#ipv4" title="此标题的永久链接">#</a></h2>
+<p>4.3.1 IPv4 Datagram Format</p>
+<p>Recall that the Internet’s network-layer packet is referred to as a datagram. We begin our study of IP
+with an overview of the syntax and semantics of the IPv4 datagram. You might be thinking that nothing
+could be drier than the syntax and semantics of a packet’s bits. Nevertheless, the datagram plays a
+central role in the Internet—every networking student and professional needs to see it, absorb it, and
+master it. (And just to see that protocol headers can indeed be fun to study, check out <a class="reference internal" href="../references.html#pomeranz-2010"><span class="std std-ref">[Pomeranz 2010]</span></a>). The IPv4 datagram format is shown in <a class="reference internal" href="#figure-4-16"><span class="std std-ref">Figure 4.16</span></a>. The key fields in the IPv4 datagram are the
+following:</p>
+<ul class="simple">
+<li><p><strong>Version number</strong>. These 4 bits specify the IP protocol version of the datagram. By looking at the version number, the router can determine how to interpret the remainder of the IP datagram. Different versions of IP use different datagram formats. The datagram format for IPv4 is shown in <a class="reference internal" href="#figure-4-16"><span class="std std-ref">Figure 4.16</span></a>. The datagram format for the new version of IP (IPv6) is discussed in <a class="reference internal" href="#c4-3-5"><span class="std std-ref">Section 4.3.5</span></a>.</p></li>
+<li><p><strong>Header length</strong>. Because an IPv4 datagram can contain a variable number of options (which are included in the IPv4 datagram header), these 4 bits are needed to determine where in the IP datagram the payload (e.g., the transport-layer segment being encapsulated in this datagram) actually begins. Most IP datagrams do not contain options, so the typical IP datagram has a 20-byte header.</p></li>
+<li><p><strong>Type of service</strong>. The type of service (TOS) bits were included in the IPv4 header to allow different types of IP datagrams to be distinguished from each other. For example, it might be useful to distinguish real-time datagrams (such as those used by an IP telephony application) from non-real- time traffic (for example, FTP). The specific level of service to be provided is a policy issue determined and configured by the network administrator for that router. We also learned in <a class="reference internal" href="../c3/s7.html#c3-7-2"><span class="std std-ref">Section 3.7.2</span></a> that two of the TOS bits are used for Explicit Congestion ­Notification.</p></li>
+<li><p><strong>Datagram length</strong>. This is the total length of the IP datagram (header plus data), measured in bytes. Since this field is 16 bits long, the theoretical maximum size of the IP datagram is 65,535 bytes. However, datagrams are rarely larger than 1,500 bytes, which allows an IP datagram to fit in the payload field of a maximally sized Ethernet frame.</p></li>
+<li><p><strong>Identifier, flags, fragmentation offset</strong>. These three fields have to do with so-called IP fragmentation, a topic we will consider shortly. Interestingly, the new version of IP, IPv6, does not allow for fragmentation.</p></li>
+<li><p><strong>Time-to-live</strong>. The time-to-live (TTL) field is included to ensure that datagrams do not circulate forever (due to, for example, a long-lived routing loop) in the network. This field is decremented by one each time the datagram is processed by a router. If the TTL field reaches 0, a router must drop that datagram.</p></li>
+<li><p><strong>Protocol</strong>. This field is typically used only when an IP datagram reaches its final destination. The value of this field indicates the specific transport-layer protocol to which the data portion of this IP datagram should be passed. For example, a value of 6 indicates that the data portion is passed to TCP, while a value of 17 indicates that the data is passed to UDP. For a list of all possible values,see <span class="xref std std-ref">[IANA Protocol Numbers 2016]</span>. Note that the protocol number in the IP datagram has a role that is analogous to the role of the port number field in the transport-layer segment. The protocol number is the glue that binds the network and transport layers together, whereas the port number is the glue that binds the transport and application layers together. We’ll see in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a> that the link- layer frame also has a special field that binds the link layer to the network layer.</p></li>
+<li><p><strong>Header checksum</strong>. The header checksum aids a router in detecting bit errors in a received IP datagram. The header checksum is computed by treating each 2 bytes in the header as a number and summing these numbers using 1s complement arithmetic. As discussed in <a class="reference internal" href="../c3/s3.html#c3-3"><span class="std std-ref">Section 3.3</span></a>, the 1s complement of this sum, known as the Internet checksum, is stored in the checksum field. A router computes the header checksum for each received IP datagram and detects an error condition if the checksum carried in the datagram header does not equal the computed checksum. Routers typically discard datagrams for which an error has been detected. Note that the checksum must be recomputed and stored again at each router, since the TTL field, and possibly the options field as well, will change. An interesting discussion of fast algorithms for computing the Internet checksum is <a class="reference internal" href="../references.html#rfc-1071"><span class="std std-ref">[RFC 1071]</span></a>. A question often asked at this point is, why does TCP/IP perform error checking at both the transport and network layers? There are several reasons for this repetition. First, note that only the IP header is checksummed at the IP layer, while the TCP/UDP checksum is computed over the entire TCP/UDP segment. Second, TCP/UDP and IP do not necessarily both have to belong to the same protocol stack. TCP can, in principle, run over a different network-layer protocol (for example, ATM) <a class="reference internal" href="../references.html#black-1995"><span class="std std-ref">[Black 1995]</span></a>) and IP can carry data that will not be passed to TCP/UDP.</p></li>
+<li><p><strong>Source and destination IP addresses</strong>. When a source creates a datagram, it inserts its IP address into the source IP address field and inserts the address of the ultimate destination into the destination IP address field. Often the source host determines the destination address via a DNS lookup, as discussed in <a class="reference internal" href="../c2/index.html#c2"><span class="std std-ref">Chapter 2</span></a>. We’ll discuss IP addressing in detail in <a class="reference internal" href="#c4-3-3"><span class="std std-ref">Section 4.3.3</span></a>.</p></li>
+<li><p><strong>Options</strong>. The options fields allow an IP header to be extended. Header options were meant to be used rarely—hence the decision to save overhead by not including the information in options fields in every datagram header. However, the mere existence of options does complicate matters—since datagram headers can be of variable length, one cannot determine a priori where the data field will start. Also, since some datagrams may require options processing and others may not, the amount of time needed to process an IP datagram at a router can vary greatly. These considerations become particularly important for IP processing in high-performance routers and hosts. For these reasons and others, IP options were not included in the IPv6 header, as discussed in <a class="reference internal" href="#c4-3-5"><span class="std std-ref">Section 4.3.5</span></a>.</p></li>
+<li><p><strong>Data (payload)</strong>. Finally, we come to the last and most important field—the raison d’etre for the datagram in the first place! In most circumstances, the data field of the IP datagram contains the transport-layer segment (TCP or UDP) to be delivered to the destination. However, the data field can carry other types of data, such as ICMP messages (discussed in <a class="reference internal" href="../c5/s6.html#c5-6"><span class="std std-ref">Section 5.6</span></a>).</p></li>
+</ul>
+<p>Note that an IP datagram has a total of 20 bytes of header (assuming no options). If the datagram
+carries a TCP segment, then each (non-fragmented) datagram carries a total of 40 bytes of header (20
+bytes of IP header plus 20 bytes of TCP header) along with the application-layer message.</p>
+</section>
+<section id="c4-3-2">
+<span id="id1"></span><h2>4.3.2 IPv4 数据报碎片<a class="headerlink" href="#c4-3-2" title="此标题的永久链接">#</a></h2>
+<p>4.3.2 IPv4 Datagram Fragmentation</p>
+<p>We’ll see in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a> that not all link-layer protocols can carry network-layer packets of the same size. Some protocols can carry big datagrams, whereas other protocols can carry only little datagrams. For example, Ethernet frames can carry up to 1,500 bytes of data, whereas frames for some wide-area links can carry no more than 576 bytes. The maximum amount of data that a link-layer frame can carry is called the <strong>maximum transmission unit (MTU)</strong>. Because each IP datagram is encapsulated within the link-layer frame for transport from one router to the next router, the MTU of the link-layer protocol places a hard limit on the length of an IP datagram. Having a hard limit on the size of an IP datagram is not much of a problem. What is a problem is that each of the links along the route between sender and destination can use different link-layer protocols, and each of these protocols can have different MTUs.</p>
+<p>To understand the forwarding issue better, imagine that you are a router that interconnects several links, each running different link-layer protocols with different MTUs. Suppose you receive an IP datagram from one link. You check your forwarding table to determine the outgoing link, and this outgoing link has an MTU that is smaller than the length of the IP datagram. Time to panic—how are you going to squeeze this oversized IP datagram into the payload field of the link-layer frame? The solution is to fragment the payload in the IP datagram into two or more smaller IP datagrams, encapsulate each of these smaller IP datagrams in a separate link-layer frame; and send these frames over the outgoing link. Each of these smaller datagrams is referred to as a <strong>fragment</strong>.</p>
+<p>Fragments need to be reassembled before they reach the transport layer at the destination. Indeed, both TCP and UDP are expecting to receive complete, unfragmented segments from the network layer. The designers of IPv4 felt that reassembling datagrams in the routers would introduce significant complication into the protocol and put a damper on router performance. (If you were a router, would you want to be reassembling fragments on top of everything else you had to do?) Sticking to the principle of keeping the network core simple, the designers of IPv4 decided to put the job of datagram reassembly in the end systems rather than in network routers.</p>
+<p>When a destination host receives a series of datagrams from the same source, it needs to determine whether any of these datagrams are fragments of some original, larger datagram. If some datagrams are fragments, it must further determine when it has received the last fragment and how the fragments it has received should be pieced back together to form the original datagram. To allow the destination host to perform these reassembly tasks, the designers of IP (version 4) put <em>identification</em>, flag, and fragmentation offset fields in the IP datagram header. When a datagram is created, the sending host stamps the datagram with an identification number as well as source and destination addresses. Typically, the sending host increments the identification number for each datagram it sends. When a router needs to fragment a datagram, each resulting datagram (that is, fragment) is stamped with the source address, destination address, and identification number of the original datagram. When the destination receives a series of datagrams from the same sending host, it can examine the identification numbers of the datagrams to determine which of the datagrams are actually fragments of the same larger datagram. Because IP is an unreliable service, one or more of the fragments may never arrive at the destination. For this reason, in order for the destination host to be absolutely sure it has received the last fragment of the original datagram, the last fragment has a flag bit set to 0, whereas all the other fragments have this flag bit set to 1. Also, in order for the destination host to determine whether a fragment is missing (and also to be able to reassemble the fragments in their proper order), the offset field is used to specify where the fragment fits within the original IP datagram.</p>
+<figure class="align-center">
+<img alt="../_images/380-0.png" src="../_images/380-0.png" />
+</figure>
+<p id="figure-4-17"><strong>Figure 4.17 IP fragmentation and reassembly</strong></p>
+<p><a class="reference internal" href="#figure-4-17"><span class="std std-ref">Figure 4.17</span></a> illustrates an example. A datagram of 4,000 bytes (20 bytes of IP header plus 3,980 bytes of IP payload) arrives at a router and must be forwarded to a link with an MTU of 1,500 bytes. This implies that the 3,980 data bytes in the original datagram must be allocated to three separate fragments (each of which is also an IP datagram).</p>
+<p>The online material for this book, and the problems at the end of this chapter will allow you to explore fragmentation in more detail. Also, on this book’s Web site, we provide a Java applet that generates fragments. You provide the incoming datagram size, the MTU, and the incoming datagram identification.</p>
+<p>The applet automatically generates the fragments for you. See <a class="reference external" href="http://www.pearsonhighered.com/cs-resources/">http://www.pearsonhighered.com/cs-resources/</a>.</p>
+</section>
+<section id="c4-3-3">
+<span id="id2"></span><h2>4.3.3 IPv4 寻址<a class="headerlink" href="#c4-3-3" title="此标题的永久链接">#</a></h2>
+<p>4.3.3 IPv4 Addressing</p>
+<p>We now turn our attention to IPv4 addressing. Although you may be thinking that addressing must be a straightforward topic, hopefully by the end of this section you’ll be convinced that Internet addressing is not only a juicy, subtle, and interesting topic but also one that is of central importance to the Internet. An
+excellent treatment of IPv4 addressing can be found in the first chapter in <a class="reference internal" href="../references.html#stewart-1999"><span class="std std-ref">[Stewart 1999]</span></a>.</p>
+<p>Before discussing IP addressing, however, we’ll need to say a few words about how hosts and routers are connected into the Internet. A host typically has only a single link into the network; when IP in the host wants to send a datagram, it does so over this link. The boundary between the host and the physical link is called an interface. Now consider a router and its <strong>interfaces</strong>. Because a router’s job is to receive a datagram on one link and forward the datagram on some other link, a router necessarily has two or more links to which it is connected. The boundary between the router and any one of its links is also called an interface. A router thus has multiple interfaces, one for each of its links. Because every host and router is capable of sending and receiving IP datagrams, IP requires each host and router interface to have its own IP address. <em>Thus, an IP address is technically associated with an interface, rather than with the host or router containing that interface</em>.</p>
+<p>Each IP address is 32 bits long (equivalently, 4 bytes), and there are thus a total of <span class="math notranslate nohighlight">\(2^{32}\)</span> (or approximately 4 billion) possible IP addresses. These addresses are typically written in so-called <strong>dotted-decimal notation</strong>, in which each byte of the address is written in its decimal form and is separated by a period (dot) from other bytes in the address. For example, consider the IP address 193.32.216.9. The 193 is the decimal equivalent of the first 8 bits of the address; the 32 is the decimal equivalent of the second 8 bits of the address, and so on. Thus, the address 193.32.216.9 in binary notation is</p>
+<blockquote>
+<div><p>11000001 00100000 11011000 00001001</p>
+</div></blockquote>
+<p>Each interface on every host and router in the global Internet must have an IP address that is globally
+unique (except for interfaces behind NATs, as discussed in <a class="reference internal" href="#c4-3-4"><span class="std std-ref">Section 4.3.4</span></a>). These addresses cannot be chosen in a willy-nilly manner, however. A portion of an interface’s IP address will be determined by the subnet to which it is connected.</p>
+<p><a class="reference internal" href="#figure-4-18"><span class="std std-ref">Figure 4.18</span></a> provides an example of IP addressing and interfaces. In this figure, one router (with three interfaces) is used to interconnect seven hosts. Take a close look at the IP addresses assigned to the host and router interfaces, as there are several things to notice. The three hosts in the upper-left portion of <a class="reference internal" href="#figure-4-18"><span class="std std-ref">Figure 4.18</span></a>, and the router interface to which they are connected, all have an IP address of the form 223.1.1.xxx. That is, they all have the same leftmost 24 bits in their IP address. These four interfaces are also interconnected to each other by a network that contains no routers. This network could be interconnected by an Ethernet LAN, in which case the interfaces would be interconnected by an Ethernet switch (as we’ll discuss in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a>), or by a wireless access point (as we’ll discuss in <a class="reference internal" href="../c7/index.html#c7"><span class="std std-ref">Chapter 7</span></a>). We’ll represent this routerless network connecting these hosts as a cloud for now, and dive into the internals of such networks in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapters 6</span></a> and <a class="reference internal" href="../c7/index.html#c7"><span class="std std-ref">7</span></a>.</p>
+<figure class="align-center">
+<img alt="../_images/382-0.png" src="../_images/382-0.png" />
+</figure>
+<p id="figure-4-18"><strong>Figure 4.18 Interface addresses and subnets</strong></p>
+<p>In IP terms, this network interconnecting three host interfaces and one router interface forms a subnet <a class="reference internal" href="../references.html#rfc-950"><span class="std std-ref">[RFC 950]</span></a>. (A subnet is also called an IP network or simply a <em>network</em> in the Internet literature.) IP addressing assigns an address to this subnet: 223.1.1.0/24, where the /24 (“slash-24”) notation, sometimes known as a <strong>subnet mask</strong>, indicates that the leftmost 24 bits of the 32-bit quantity define the subnet address. The 223.1.1.0/24 subnet thus consists of the three host interfaces (223.1.1.1, 223.1.1.2, and 223.1.1.3) and one router interface (223.1.1.4). Any additional hosts attached to the 223.1.1.0/24 subnet would be required to have an address of the form 223.1.1.xxx. There are two additional subnets shown in <a class="reference internal" href="#figure-4-18"><span class="std std-ref">Figure 4.18</span></a>: the 223.1.2.0/24 network and the 223.1.3.0/24 subnet. <a class="reference internal" href="#figure-4-19"><span class="std std-ref">Figure 4.19</span></a> illustrates the three IP subnets present in <a class="reference internal" href="#figure-4-18"><span class="std std-ref">Figure 4.18</span></a>.</p>
+<p>The IP definition of a subnet is not restricted to Ethernet segments that connect multiple hosts to a router interface. To get some insight here, consider <a class="reference internal" href="#figure-4-20"><span class="std std-ref">Figure 4.20</span></a>, which shows three routers that are interconnected with each other by point-to-point links. Each router has three interfaces, one for each point-to-point link and one for the broadcast link that directly connects the router to a pair of hosts. What</p>
+<p>subnets are present here? Three subnets, 223.1.1.0/24, 223.1.2.0/24, and 223.1.3.0/24, are similar to the subnets we encountered in <a class="reference internal" href="#figure-4-18"><span class="std std-ref">Figure 4.18</span></a>. But note that there are three additional subnets in this example as well: one subnet, 223.1.9.0/24, for the interfaces that connect routers R1 and R2; another subnet, 223.1.8.0/24, for the interfaces that connect routers R2 and R3; and a third subnet, 223.1.7.0/24, for the interfaces that connect routers R3 and R1. For a general interconnected system of routers and hosts, we can use the following recipe to define the subnets in the system:</p>
+<figure class="align-center">
+<img alt="../_images/383-0.png" src="../_images/383-0.png" />
+</figure>
+<p id="figure-4-19"><strong>Figure 4.19 Subnet addresses</strong></p>
+<blockquote>
+<div><p>To determine the subnets, detach each interface from its host or router, creating islands of isolated networks, with interfaces terminating the end points of the isolated networks. Each of these isolated networks is called a <strong>subnet</strong>.</p>
+</div></blockquote>
+<p>If we apply this procedure to the interconnected system in <a class="reference internal" href="#figure-4-20"><span class="std std-ref">Figure 4.20</span></a>, we get six islands or subnets.</p>
+<p>From the discussion above, it’s clear that an organization (such as a company or academic institution) with multiple Ethernet segments and point-to-point links will have multiple subnets, with all of the devices on a given subnet having the same subnet address. In principle, the different subnets could have quite different subnet addresses. In practice, however, their subnet addresses often have much in common. To understand why, let’s next turn our attention to how addressing is handled in the global Internet.</p>
+<p>The Internet’s address assignment strategy is known as <strong>Classless Interdomain Routing (CIDR— pronounced cider)</strong> <a class="reference internal" href="../references.html#rfc-4632"><span class="std std-ref">[RFC 4632]</span></a>. CIDR generalizes the notion of subnet addressing. As with subnet addressing, the 32-bit IP address is divided into two parts and again has the dotted-decimal form a.b.c.d/x, where x indicates the number of bits in the first part of the address.</p>
+<p>The x most significant bits of an address of the form a.b.c.d/x constitute the network portion of the IP address, and are often referred to as the <strong>prefix</strong> (or <em>network prefix</em>) of the address. An organization is typically assigned a block of contiguous addresses, that is, a range of addresses with a common prefix (see the <a class="reference internal" href="#principles-in-practice"><span class="std std-ref">Principles in Practice</span></a> feature). In this case, the IP addresses of devices within the organization will share the common prefix. When we cover the Internet’s BGP routing protocol in Section 5.4, we’ll see that only these x leading prefix bits are considered by routers outside the organization’s network. That is, when a router outside the organization forwards a datagram whose destination address is inside the organization, only the leading x bits of the address need be considered. This considerably reduces the size of the forwarding table in these routers, since a single entry of the form a.b.c.d/x will be sufficient to forward packets to any destination within the organization.</p>
+<figure class="align-center">
+<img alt="../_images/384-0.png" src="../_images/384-0.png" />
+</figure>
+<p id="figure-4-20"><strong>Figure 4.20 Three routers interconnecting six subnets</strong></p>
+<p>The remaining 32-x bits of an address can be thought of as distinguishing among the devices within the organization, all of which have the same network prefix. These are the bits that will be considered when forwarding packets at routers within the organization. These lower-order bits may (or may not) have an additional subnetting structure, such as that discussed above. For example, suppose the first 21 bits of the CIDRized address a.b.c.d/21 specify the organization’s network prefix and are common to the IP addresses of all devices in that organization. The remaining 11 bits then identify the specific hosts in the organization. The organization’s internal structure might be such that these 11 rightmost bits are used for subnetting within the organization, as discussed above. For example, a.b.c.d/24 might refer to a specific subnet within the organization.</p>
+<p>Before CIDR was adopted, the network portions of an IP address were constrained to be 8, 16, or 24 bits in length, an addressing scheme known as <strong>classful addressing</strong>, since subnets with 8-, 16-, and 24-bit subnet addresses were known as class A, B, and C networks, respectively. The requirement that the subnet portion of an IP address be exactly 1, 2, or 3 bytes long turned out to be problematic for supporting the rapidly growing number of organizations with small and medium-sized subnets. A class C (/24) subnet could accommodate only up to 28 − 2 = 254 hosts (two of the 28 = 256 addresses are reserved for special use)—too small for many organizations. However, a class B (/16) subnet, which supports up to 65,634 hosts, was too large. Under classful addressing, an organization with, say, 2,000 hosts was typically allocated a class B (/16) subnet address. This led to a rapid depletion of the class B address space and poor utilization of the assigned address space. For example, the organization that used a class B address for its 2,000 hosts was allocated enough of the address space for up to 65,534 interfaces—leaving more than 63,000 addresses that could not be used by other organizations.</p>
+<div class="admonition-principles-in-practice admonition" id="principles-in-practice">
+<p class="admonition-title">PRINCIPLES IN PRACTICE</p>
+<p>This example of an ISP that connects eight organizations to the Internet nicely illustrates how carefully allocated CIDRized addresses facilitate routing. Suppose, as shown in <a class="reference internal" href="#figure-4-21"><span class="std std-ref">Figure 4.21</span></a>, that the ISP (which we’ll call Fly-By-Night-ISP) advertises to the outside world that it should be sent any datagrams whose first 20 address bits match 200.23.16.0/20. The rest of the world need not know that within the address block 200.23.16.0/20 there are in fact eight other organizations, each with its own subnets. This ability to use a single prefix to advertise multiple networks is often referred to as <strong>address aggregation</strong> (also <strong>route aggregation</strong> or <strong>route summarization</strong>).</p>
+<p>Address aggregation works extremely well when addresses are allocated in blocks to ISPs and then from ISPs to client organizations. But what happens when addresses are not allocated in such a hierarchical manner? What would happen, for example, if Fly-By-Night-ISP acquires ISPs-R-Us and then has Organization 1 connect to the Internet through its subsidiary ISPs-R-Us? As shown in <a class="reference internal" href="#figure-4-21"><span class="std std-ref">Figure 4.21</span></a>, the subsidiary ISPs-R-Us owns the address block 199.31.0.0/16, but Organization 1’s IP addresses are unfortunately outside of this address block. What should be done here? Certainly, Organization 1 could renumber all of its routers and hosts to have addresses within the ISPs-R-Us address block. But this is a costly solution, and Organization 1 might well be reassigned to another subsidiary in the future. The solution typically adopted is for Organization 1 to keep its IP addresses in 200.23.18.0/23. In this case, as shown in <a class="reference internal" href="#figure-4-22"><span class="std std-ref">Figure 4.22</span></a>, Fly-By-Night-ISP continues to advertise the address block 200.23.16.0/20 and ISPs-R-Us continues to advertise 199.31.0.0/16. However, ISPs-R-Us now also advertises the block of addresses for Organization 1, 200.23.18.0/23. When other routers in the larger Internet see the address blocks 200.23.16.0/20 (from Fly-By-Night-ISP) and 200.23.18.0/23 (from ISPs-R-Us) and want to route to an address in the block 200.23.18.0/23, they will use longest prefix matching (see <a class="reference internal" href="s2.html#c4-2-1"><span class="std std-ref">Section 4.2.1</span></a>), and route toward ISPs-R-Us, as it advertises the longest (i.e., most-specific) address prefix that matches the destination address.</p>
+</div>
+<figure class="align-center">
+<img alt="../_images/386-0.png" src="../_images/386-0.png" />
+</figure>
+<p id="figure-4-21"><strong>Figure 4.21 Hierarchical addressing and route aggregation</strong></p>
+<figure class="align-center">
+<img alt="../_images/387-0.png" src="../_images/387-0.png" />
+</figure>
+<p id="figure-4-22"><strong>Figure 4.22 ISPs-R-Us has a more specific route to Organization 1</strong></p>
+<p>We would be remiss if we did not mention yet another type of IP address, the IP broadcast address 255.255.255.255. When a host sends a datagram with destination address 255.255.255.255, the message is delivered to all hosts on the same subnet. Routers optionally forward the message into neighboring subnets as well (although they usually don’t).</p>
+<p>Having now studied IP addressing in detail, we need to know how hosts and subnets get their addresses in the first place. Let’s begin by looking at how an organization gets a block of addresses for its devices, and then look at how a device (such as a host) is assigned an address from within the organization’s block of addresses.</p>
+<section id="obtaining-a-block-of-addresses">
+<h3>Obtaining a Block of Addresses<a class="headerlink" href="#obtaining-a-block-of-addresses" title="此标题的永久链接">#</a></h3>
+<p>In order to obtain a block of IP addresses for use within an organization’s subnet, a network administrator might first contact its ISP, which would provide addresses from a larger block of addresses that had already been allocated to the ISP. For example, the ISP may itself have been allocated the address block 200.23.16.0/20. The ISP, in turn, could divide its address block into eight equal-sized contiguous address blocks and give one of these address blocks out to each of up to eight organizations that are supported by this ISP, as shown below. (We have underlined the subnet part of these addresses for your convenience.)</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ISP’s block:     200.23.16.0/20     11001000 00010111 00010000 00000000
+
+Organization 0   200.23.16.0/23     11001000 00010111 00010000 00000000
+
+Organization 1   200.23.18.0/23     11001000 00010111 00010010 00000000
+
+Organization 2   200.23.20.0/23     11001000 00010111 00010100 00000000
+
+... ...
+
+Organization 7   200.23.30.0/23     11001000 00010111 00011110 00000000
+</pre></div>
+</div>
+<p>While obtaining a set of addresses from an ISP is one way to get a block of addresses, it is not the only way. Clearly, there must also be a way for the ISP itself to get a block of addresses. Is there a global authority that has ultimate responsibility for managing the IP address space and allocating address blocks to ISPs and other organizations? Indeed there is! IP addresses are managed under the authority of the Internet Corporation for Assigned Names and Numbers (ICANN) <a class="reference internal" href="../references.html#icann-2016"><span class="std std-ref">[ICANN 2016]</span></a>, based on guidelines set forth in <a class="reference internal" href="../references.html#rfc-7020"><span class="std std-ref">[RFC 7020]</span></a>. The role of the nonprofit ICANN organization <span class="xref std std-ref">[NTIA 1998]</span> is not only to allocate IP addresses, but also to manage the DNS root servers. It also has the very contentious job of assigning domain names and resolving domain name disputes. The ICANN allocates addresses to regional Internet registries (for example, ARIN, RIPE, APNIC, and LACNIC, which together form the Address Supporting Organization of ICANN <a class="reference internal" href="../references.html#aso-icann-2016"><span class="std std-ref">[ASO-ICANN 2016]</span></a>), and handle the allocation/management of addresses within their regions.</p>
+</section>
+<section id="obtaining-a-host-address-the-dynamic-host-configuration-protocol">
+<h3>Obtaining a Host Address: The Dynamic Host Configuration Protocol<a class="headerlink" href="#obtaining-a-host-address-the-dynamic-host-configuration-protocol" title="此标题的永久链接">#</a></h3>
+<p>Once an organization has obtained a block of addresses, it can assign individual IP addresses to the host and router interfaces in its organization. A system administrator will typically manually configure the IP addresses into the router (often remotely, with a network management tool). Host addresses can also be configured manually, but typically this is done using the <strong>Dynamic Host Configuration Protocol (DHCP)</strong> <a class="reference internal" href="../references.html#rfc-2131"><span class="std std-ref">[RFC 2131]</span></a>. DHCP allows a host to obtain (be allocated) an IP address automatically. A network administrator can configure DHCP so that a given host receives the same IP address each time it connects to the network, or a host may be assigned a <strong>temporary IP address</strong> that will be different each time the host connects to the network. In addition to host IP address assignment, DHCP also allows a host to learn additional information, such as its subnet mask, the address of its first-hop router (often called the default gateway), and the address of its local DNS server.</p>
+<p>Because of DHCP’s ability to automate the network-related aspects of connecting a host into a network, it is often referred to as a <strong>plug-and-play</strong> or <strong>zeroconf</strong> (zero-configuration) protocol. This capability
+makes it very attractive to the network administrator who would otherwise have to perform these tasks manually! DHCP is also enjoying widespread use in residential Internet access networks, enterprise</p>
+<p>networks, and in wireless LANs, where hosts join and leave the network frequently. Consider, for example, the student who carries a laptop from a dormitory room to a library to a classroom. It is likely that in each location, the student will be connecting into a new subnet and hence will need a new IP address at each location. DHCP is ideally suited to this situation, as there are many users coming and going, and addresses are needed for only a limited amount of time. The value of DHCP’s plug-and-play capability is clear, since it’s unimaginable that a system administrator would be able to reconfigure laptops at each location, and few students (except those taking a computer networking class!) would have the expertise to configure their laptops manually. DHCP is a client-server protocol. A client is typically a newly arriving host wanting to obtain network configuration information, including an IP address for itself. In the simplest case, each subnet (in the addressing sense of <a class="reference internal" href="#figure-4-20"><span class="std std-ref">Figure 4.20</span></a>) will have a DHCP server. If no server is present on the subnet, a DHCP relay agent (typically a router) that knows the address of a DHCP server for that network is needed. <a class="reference internal" href="#figure-4-23"><span class="std std-ref">Figure 4.23</span></a> shows a DHCP server attached to subnet 223.1.2/24, with the router serving as the relay agent for arriving clients attached to subnets 223.1.1/24 and 223.1.3/24. In our discussion below, we’ll assume that a DHCP server is available on the subnet.</p>
+<p>For a newly arriving host, the DHCP protocol is a four-step process, as shown in <a class="reference internal" href="#figure-4-24"><span class="std std-ref">Figure 4.24</span></a> for the network setting shown in <a class="reference internal" href="#figure-4-23"><span class="std std-ref">Figure 4.23</span></a>. In this figure, <code class="docutils literal notranslate"><span class="pre">yiaddr</span></code> (as in “your Internet address”) indicates the address being allocated to the newly arriving client. The four steps are:</p>
+<figure class="align-center">
+<img alt="../_images/389-0.png" src="../_images/389-0.png" />
+</figure>
+<p id="figure-4-23"><strong>Figure 4.23 DHCP client and server</strong></p>
+<ul>
+<li><p><strong>DHCP server discovery</strong>. The first task of a newly arriving host is to find a DHCP server with which to interact. This is done using a <strong>DHCP discover message</strong>, which a client sends within a UDP packet to port 67. The UDP packet is encapsulated in an IP datagram. But to whom should this datagram be sent? The host doesn’t even know the IP address of the network to which it is attaching, much less the address of a DHCP server for this network. Given this, the DHCP client creates an IP datagram containing its DHCP discover message along with the broadcast destination IP address of 255.255.255.255 and a “this host” source IP address of 0.0.0.0. The DHCP client passes the IP datagram to the link layer, which then broadcasts this frame to all nodes attached to the subnet (we will cover the details of link-layer broadcasting in <a class="reference internal" href="../c6/s4.html#c6-4"><span class="std std-ref">Section 6.4</span></a>).</p></li>
+<li><p><strong>DHCP server offer(s)</strong>. A DHCP server receiving a DHCP discover message responds to the client with a <strong>DHCP offer message</strong> that is broadcast to all nodes on the subnet, again using the IP broadcast address of 255.255.255.255. (You might want to think about why this server reply must also be broadcast). Since several DHCP servers can be present on the subnet, the client may find itself in the enviable position of being able to choose from among several offers. Each server offer message contains the transaction ID of the received discover message, the proposed IP address for the client, the network mask, and an IP <strong>address lease time</strong>—the amount of time for which the IP address will be valid. It is common for the server to set the lease time to several hours or days <a class="reference internal" href="../references.html#droms-2002"><span class="std std-ref">[Droms 2002]</span></a>.</p>
+<figure class="align-center">
+<img alt="../_images/391-0.png" src="../_images/391-0.png" />
+</figure>
+<p id="figure-4-24"><strong>Figure 4.24 DHCP client-server interaction</strong></p>
+</li>
+<li><p><strong>DHCP request</strong>. The newly arriving client will choose from among one or more server offers and respond to its selected offer with a <strong>DHCP request message</strong>, echoing back the configuration parameters.</p></li>
+<li><p><strong>DHCP ACK</strong>. The server responds to the DHCP request message with a <strong>DHCP ACK message</strong>, confirming the requested parameters.</p></li>
+</ul>
+<p>Once the client receives the DHCP ACK, the interaction is complete and the client can use the DHCP- allocated IP address for the lease duration. Since a client may want to use its address beyond the lease’s expiration, DHCP also provides a mechanism that allows a client to renew its lease on an IP address.</p>
+<p>From a mobility aspect, DHCP does have one very significant shortcoming. Since a new IP address is obtained from DHCP each time a node connects to a new subnet, a TCP connection to a remote application cannot be maintained as a mobile node moves between subnets. In <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a>, we will examine mobile IP—an extension to the IP infrastructure that allows a mobile node to use a single permanent address as it moves between subnets. Additional details about DHCP can be found in <a class="reference internal" href="../references.html#droms-2002"><span class="std std-ref">[Droms 2002]</span></a> and <a class="reference internal" href="../references.html#dhc-2016"><span class="std std-ref">[dhc 2016]</span></a>. An open source reference implementation of DHCP is available from the Internet Systems Consortium <a class="reference internal" href="../references.html#isc-2016"><span class="std std-ref">[ISC 2016]</span></a>.</p>
+</section>
+</section>
+<section id="nat">
+<span id="c4-3-4"></span><h2>4.3.4 网络地址转换 （NAT）<a class="headerlink" href="#nat" title="此标题的永久链接">#</a></h2>
+<p>4.3.4 Network Address Translation (NAT)</p>
+<p>Given our discussion about Internet addresses and the IPv4 datagram format, we’re now well aware that every IP-capable device needs an IP address. With the proliferation of small office, home office (SOHO) subnets, this would seem to imply that whenever a SOHO wants to install a LAN to connect multiple machines, a range of addresses would need to be allocated by the ISP to cover all of the SOHO’s IP devices (including phones, tablets, gaming devices, IP TVs, printers and more). If the subnet grew bigger, a larger block of addresses would have to be allocated. But what if the ISP had already allocated the contiguous portions of the SOHO network’s current address range? And what typical homeowner wants (or should need) to know how to manage IP addresses in the first place? Fortunately, there is a simpler approach to address allocation that has found increasingly widespread use in such scenarios: <strong>network address translation (NAT)</strong> [<a class="reference internal" href="../references.html#rfc-2663"><span class="std std-ref">RFC 2663</span></a>; <span class="xref std std-ref">RFC 3022</span>; <a class="reference internal" href="../references.html#huston-2004"><span class="std std-ref">Huston 2004</span></a>, <a class="reference internal" href="../references.html#zhang-2007"><span class="std std-ref">Zhang 2007</span></a>; <a class="reference internal" href="../references.html#cisco-nat-2016"><span class="std std-ref">Cisco NAT 2016</span></a>].</p>
+<p><a class="reference internal" href="#figure-4-25"><span class="std std-ref">Figure 4.25</span></a> shows the operation of a NAT-enabled router. The NAT-enabled router, residing in the home, has an interface that is part of the home network on the right of <a class="reference internal" href="#figure-4-25"><span class="std std-ref">Figure 4.25</span></a>. Addressing within the home network is exactly as we have seen above—all four interfaces in the home network have the same subnet address of 10.0.0/24. The address space 10.0.0.0/8 is one of three portions of the IP address space that is reserved in <a class="reference internal" href="../references.html#rfc-1918"><span class="std std-ref">[RFC 1918]</span></a> for a <strong>private network</strong> or a <strong>realm with private addresses</strong>, such as the home network in <a class="reference internal" href="#figure-4-25"><span class="std std-ref">Figure 4.25</span></a>. A realm with private addresses refers to a network whose addresses only have meaning to devices within that network. To see why this is important, consider the fact that there are hundreds of thousands of home networks, many using the same address space, 10.0.0.0/24. Devices within a given home network can send packets to each other using 10.0.0.0/24 addressing. However, packets forwarded beyond the home network into the larger global Internet clearly cannot use these addresses (as either a source or a destination address) because there are hundreds of thousands of networks using this block of addresses. That is, the 10.0.0.0/24 addresses can only have meaning within the given home network. But if private addresses only have meaning within a given network, how is addressing handled when packets are sent to or received from the global Internet, where addresses are necessarily unique? The answer lies in understanding NAT.</p>
+<figure class="align-center">
+<img alt="../_images/393-0.png" src="../_images/393-0.png" />
+</figure>
+<p id="figure-4-25"><strong>Figure 4.25 Network address translation</strong></p>
+<p>The NAT-enabled router does not look like a router to the outside world. Instead the NAT router behaves to the outside world as a single device with a single IP address. In <a class="reference internal" href="#figure-4-25"><span class="std std-ref">Figure 4.25</span></a>, all traffic
+leaving the home router for the larger Internet has a source IP address of 138.76.29.7, and all traffic entering the home router must have a destination address of 138.76.29.7. In essence, the NAT-enabled router is hiding the details of the home network from the outside world. (As an aside, you might wonder where the home network computers get their addresses and where the router gets its single IP address. Often, the answer is the same—DHCP! The router gets its address from the ISP’s DHCP server, and the router runs a DHCP server to provide addresses to computers within the NAT-DHCP-router- controlled home network’s address space.)</p>
+<p>If all datagrams arriving at the NAT router from the WAN have the same destination IP address (specifically, that of the WAN-side interface of the NAT router), then how does the router know the internal host to which it should forward a given datagram? The trick is to use a <strong>NAT translation table</strong> at the NAT router, and to include port numbers as well as IP addresses in the table entries.</p>
+<p>Consider the example in <a class="reference internal" href="#figure-4-25"><span class="std std-ref">Figure 4.25</span></a>. Suppose a user sitting in a home network behind host 10.0.0.1 requests a Web page on some Web server (port 80) with IP address 128.119.40.186. The host 10.0.0.1 assigns the (arbitrary) source port number 3345 and sends the datagram into the LAN. The NAT router receives the datagram, generates a new source port number 5001 for the datagram, replaces the source IP address with its WAN-side IP address 138.76.29.7, and replaces the original source port number 3345 with the new source port number 5001. When generating a new source port number, the NAT router can select any source port number that is not currently in the NAT translation table. (Note that because a port number field is 16 bits long, the NAT protocol can support over 60,000 simultaneous connections with a single WAN-side IP address for the router!) NAT in the router also adds an entry to its NAT translation table. The Web server, blissfully unaware that the arriving datagram containing the HTTP request has been manipulated by the NAT router, responds with a datagram whose destination address is the IP address of the NAT router, and whose destination port number is 5001. When this datagram arrives at the NAT router, the router indexes the NAT translation table using the destination IP address and destination port number to obtain the appropriate IP address (10.0.0.1) and destination port number (3345) for the browser in the home network. The router then rewrites the datagram’s destination address and destination port number, and forwards the datagram into the home network.</p>
+<p>NAT has enjoyed widespread deployment in recent years. But NAT is not without detractors. First, one might argue that, port numbers are meant to be used for addressing processes, not for addressing hosts. This violation can indeed cause problems for servers running on the home network, since, as we have seen in <a class="reference internal" href="../c2/index.html#c2"><span class="std std-ref">Chapter 2</span></a>, server processes wait for incoming requests at well-known port numbers and peers in a P2P protocol need to accept incoming connections when acting as servers. Technical solutions to these problems include <strong>NAT traversal</strong> tools <a class="reference internal" href="../references.html#rfc-5389"><span class="std std-ref">[RFC 5389]</span></a> and Universal Plug and Play (UPnP), a protocol that allows a host to discover and configure a nearby NAT <span class="xref std std-ref">[UPnP Forum 2016]</span>.</p>
+<p>More “philosophical” arguments have also been raised against NAT by architectural purists. Here, the concern is that routers are meant to be layer 3 (i.e., network-layer) devices, and should process packets only up to the network layer. NAT violates this principle that hosts should be talking directly with each other, without interfering nodes modifying IP addresses, much less port numbers. But like it or not, NAT has not become an important component of the Internet, as have other so-called <strong>middleboxes</strong> <a class="reference internal" href="../references.html#sekar-2011"><span class="std std-ref">[Sekar 2011]</span></a> that operate at the network layer but have functions that are quite different from routers. Middleboxes do not perform traditional datagram forwarding, but instead perform functions such as NAT, load balancing of traffic flows, traffic firewalling (see accompanying sidebar), and more. The generalized forwarding paradigm that we’ll study shortly in <a class="reference internal" href="s4.html#c4-4"><span class="std std-ref">Section 4.4</span></a> allows a number of these middlebox functions, as well as traditional router forwarding, to be accomplished in a common, integrated manner.</p>
+<div class="admonition-focus-on-security admonition">
+<p class="admonition-title">FOCUS ON SECURITY</p>
+<p>INSPECTING DATAGRAMS: FIREWALLS AND INTRUSION DETECTION SYSTEMS</p>
+<p>Suppose you are assigned the task of administering a home, departmental, university, or corporate network. Attackers, knowing the IP address range of your network, can easily send IP datagrams to addresses in your range. These datagrams can do all kinds of devious things, including mapping your network with ping sweeps and port scans, crashing vulnerable hosts with malformed packets, scanning for open TCP/UDP ports on servers in your network, and infecting hosts by including malware in the packets. As the network administrator, what are you going to do about all those bad guys out there, each capable of sending malicious packets into your network? Two popular defense mechanisms to malicious packet attacks are firewalls and intrusion detection systems (IDSs).</p>
+<p>As a network administrator, you may first try installing a firewall between your network and the Internet. (Most access routers today have firewall capability.) Firewalls inspect the datagram and segment header fields, denying suspicious datagrams entry into the internal network. For example, a firewall may be configured to block all ICMP echo request packets (see <a class="reference internal" href="../c5/s6.html#c5-6"><span class="std std-ref">Section 5.6</span></a>), thereby preventing an attacker from doing a traditional port scan across your IP address range. Firewalls can also block packets based on source and destination IP addresses and port numbers. Additionally, firewalls can be configured to track TCP connections, granting entry only to datagrams that belong to approved connections.</p>
+<p>Additional protection can be provided with an IDS. An IDS, typically situated at the network boundary, performs “deep packet inspection,” examining not only header fields but also the payloads in the datagram (including application-layer data). An IDS has a database of packet signatures that are known to be part of attacks. This database is automatically updated as new attacks are discovered. As packets pass through the IDS, the IDS attempts to match header fields and payloads to the signatures in its signature database. If such a match is found, an alert is created. An intrusion prevention system (IPS) is similar to an IDS, except that it actually blocks packets in addition to creating alerts. In <a class="reference internal" href="../c8/index.html#c8"><span class="std std-ref">Chapter 8</span></a>, we’ll explore firewalls and IDSs in more detail.</p>
+<p>Can firewalls and IDSs fully shield your network from all attacks? The answer is clearly no, as attackers continually find new attacks for which signatures are not yet available. But firewalls and traditional signature-based IDSs are useful in protecting your network from known attacks.</p>
+</div>
+</section>
+<section id="ipv6">
+<span id="c4-3-5"></span><h2>4.3.5 IPv6 端口<a class="headerlink" href="#ipv6" title="此标题的永久链接">#</a></h2>
+<p>4.3.5 IPv6</p>
+<p>In the early 1990s, the Internet Engineering Task Force began an effort to develop a successor to the IPv4 protocol. A prime motivation for this effort was the realization that the 32-bit IPv4 address space was beginning to be used up, with new subnets and IP nodes being attached to the Internet (and being allocated unique IP addresses) at a breathtaking rate. To respond to this need for a large IP address space, a new IP protocol, IPv6, was developed. The designers of IPv6 also took this opportunity to tweak and augment other aspects of IPv4, based on the accumulated operational experience with IPv4.</p>
+<p>The point in time when IPv4 addresses would be completely allocated (and hence no new networks could attach to the Internet) was the subject of considerable debate. The estimates of the two leaders of the IETF’s Address Lifetime Expectations working group were that addresses would become exhausted in 2008 and 2018, respectively <a class="reference internal" href="../references.html#solensky-1996"><span class="std std-ref">[Solensky 1996]</span></a>. In February 2011, IANA allocated out the last remaining pool of unassigned IPv4 addresses to a regional registry. While these registries still have available IPv4 addresses within their pool, once these addresses are exhausted, there are no more available address blocks that can be allocated from a central pool <a class="reference internal" href="../references.html#huston-2011a"><span class="std std-ref">[Huston 2011a]</span></a>. A recent survey of IPv4 address-space exhaustion, and the steps taken to prolong the life of the address space is <a class="reference internal" href="../references.html#richter-2015"><span class="std std-ref">[Richter 2015]</span></a>.</p>
+<p>Although the mid-1990s estimates of IPv4 address depletion suggested that a considerable amount of time might be left until the IPv4 address space was exhausted, it was realized that considerable time would be needed to deploy a new technology on such an extensive scale, and so the process to develop IP version 6 (IPv6) <a class="reference internal" href="../references.html#rfc-2460"><span class="std std-ref">[RFC 2460]</span></a> was begun <a class="reference internal" href="../references.html#rfc-1752"><span class="std std-ref">[RFC 1752]</span></a>. (An often-asked question is what happened to IPv5? It was initially envisioned that the ST-2 protocol would become IPv5, but ST-2 was later dropped.) An excellent source of information about IPv6 is <a class="reference internal" href="../references.html#huitema-1998"><span class="std std-ref">[Huitema 1998]</span></a>.</p>
+<section id="ipv6-datagram-format">
+<h3>IPv6 Datagram Format<a class="headerlink" href="#ipv6-datagram-format" title="此标题的永久链接">#</a></h3>
+<p>The format of the IPv6 datagram is shown in Figure 4.26. The most important changes introduced in IPv6 are evident in the datagram format:</p>
+<ul>
+<li><p><strong>Expanded addressing capabilities</strong>. IPv6 increases the size of the IP address from 32 to 128 bits. This ensures that the world won’t run out of IP addresses. Now, every grain of sand on the planet can be IP-addressable. In addition to unicast and multicast addresses, IPv6 has introduced a new type of address, called an <strong>anycast address</strong>, that allows a datagram to be delivered to any one of a group of hosts. (This feature could be used, for example, to send an HTTP GET to the nearest of a number of mirror sites that contain a given document.)</p></li>
+<li><p><strong>A streamlined 40-byte header</strong>. As discussed below, a number of IPv4 fields have been dropped or made optional. The resulting 40-byte fixed-length header allows for faster processing of the IP datagram by a router. A new encoding of options allows for more flexible options processing.</p></li>
+<li><p><strong>Flow labeling</strong>. IPv6 has an elusive definition of a <strong>flow</strong>. <a class="reference internal" href="../references.html#rfc-2460"><span class="std std-ref">RFC 2460</span></a> states that this allows “labeling of packets belonging to particular flows for which the sender requests special handling, such as a non-default quality of service or real-time service.” For example, audio and video transmission might likely be treated as a flow. On the other hand, the more traditional applications, such as file transfer and e-mail, might not be treated as flows. It is possible that the traffic carried by a high-priority user (for example, someone paying for better service for their traffic) might also be treated as a flow. What is clear, however, is that the designers of IPv6 foresaw the eventual need to be able to differentiate among the flows, even if the exact meaning of a flow had yet to be determined.</p>
+<figure class="align-center">
+<img alt="../_images/397-0.png" src="../_images/397-0.png" />
+</figure>
+<p id="figure-4-26"><strong>Figure 4.26 IPv6 datagram format</strong></p>
+</li>
+</ul>
+<p>As noted above, a comparison of <a class="reference internal" href="#figure-4-26"><span class="std std-ref">Figure 4.26</span></a> with <a class="reference internal" href="#figure-4-16"><span class="std std-ref">Figure 4.16</span></a> reveals the simpler, more streamlined structure of the IPv6 datagram. The following fields are defined in IPv6:</p>
+<ul class="simple">
+<li><p><strong>Version</strong>. This 4-bit field identifies the IP version number. Not surprisingly, IPv6 carries a value of 6 in this field. Note that putting a 4 in this field does not create a valid IPv4 datagram. (If it did, life would be a lot simpler—see the discussion below regarding the transition from IPv4 to IPv6.)</p></li>
+<li><p><strong>Traffic class</strong>. The 8-bit traffic class field, like the TOS field in IPv4, can be used to give priority to certain datagrams within a flow, or it can be used to give priority to datagrams from certain applications (for example, voice-over-IP) over datagrams from other applications (for example, SMTP e-mail).</p></li>
+<li><p><strong>Flow label</strong>. As discussed above, this 20-bit field is used to identify a flow of datagrams.</p></li>
+<li><p><strong>Payload length</strong>. This 16-bit value is treated as an unsigned integer giving the number of bytes in the IPv6 datagram following the fixed-length, 40-byte datagram header.</p></li>
+<li><p><strong>Next header</strong>. This field identifies the protocol to which the contents (data field) of this datagram will be delivered (for example, to TCP or UDP). The field uses the same values as the protocol field in the IPv4 header.</p></li>
+<li><p><strong>Hop limit</strong>. The contents of this field are decremented by one by each router that forwards the datagram. If the hop limit count reaches zero, the datagram is ­discarded.</p></li>
+<li><p><strong>Source and destination addresses</strong>. The various formats of the IPv6 128-bit address are described in RFC 4291.</p></li>
+<li><p><strong>Data</strong>. This is the payload portion of the IPv6 datagram. When the datagram reaches its destination, the payload will be removed from the IP datagram and passed on to the protocol specified in the next header field.</p></li>
+</ul>
+<p>The discussion above identified the purpose of the fields that are included in the IPv6 datagram. Comparing the IPv6 datagram format in <a class="reference internal" href="#figure-4-26"><span class="std std-ref">Figure 4.26</span></a> with the IPv4 datagram format that we saw in <a class="reference internal" href="#figure-4-16"><span class="std std-ref">Figure 4.16</span></a>, we notice that several fields appearing in the IPv4 datagram are no longer present in the IPv6 datagram:</p>
+<ul class="simple">
+<li><p><strong>Fragmentation/reassembly</strong>. IPv6 does not allow for fragmentation and reassembly at intermediate routers; these operations can be performed only by the source and destination. If an IPv6 datagram received by a router is too large to be forwarded over the outgoing link, the router simply drops the datagram and sends a “Packet Too Big” ICMP error message (see <a class="reference internal" href="../c5/s6.html#c5-6"><span class="std std-ref">Section 5.6</span></a>) back to the sender. The sender can then resend the data, using a smaller IP datagram size. Fragmentation and reassembly is a time-consuming operation; removing this functionality from the routers and placing it squarely in the end systems considerably speeds up IP forwarding within the network.</p></li>
+<li><p><strong>Header checksum</strong>. Because the transport-layer (for example, TCP and UDP) and link-layer (for example, Ethernet) protocols in the Internet layers perform checksumming, the designers of IP probably felt that this functionality was sufficiently redundant in the network layer that it could be removed. Once again, fast processing of IP packets was a central concern. Recall from our discussion of IPv4 in <a class="reference internal" href="#c4-3-1"><span class="std std-ref">Section 4.3.1</span></a> that since the IPv4 header contains a TTL field (similar to the hop limit field in IPv6), the IPv4 header checksum needed to be recomputed at every router. As with fragmentation and reassembly, this too was a costly operation in IPv4.</p></li>
+<li><p><strong>Options</strong>. An options field is no longer a part of the standard IP header. However, it has not gone away. Instead, the options field is one of the possible next headers pointed to from within the IPv6 header. That is, just as TCP or UDP protocol headers can be the next header within an IP packet, so too can an options field. The removal of the options field results in a fixed-length, 40-byte IP header.</p></li>
+</ul>
+</section>
+<section id="transitioning-from-ipv4-to-ipv6">
+<h3>Transitioning from IPv4 to IPv6<a class="headerlink" href="#transitioning-from-ipv4-to-ipv6" title="此标题的永久链接">#</a></h3>
+<p>Now that we have seen the technical details of IPv6, let us consider a very practical matter: How will the public Internet, which is based on IPv4, be transitioned to IPv6? The problem is that while new IPv6- capable systems can be made backward-compatible, that is, can send, route, and receive IPv4 datagrams, already deployed IPv4-capable systems are not capable of handling IPv6 datagrams. Several options are possible [<a class="reference internal" href="../references.html#huston-2011b"><span class="std std-ref">Huston 2011b</span></a>, <a class="reference internal" href="../references.html#rfc-4213"><span class="std std-ref">RFC 4213</span></a>].</p>
+<p>One option would be to declare a flag day—a given time and date when all Internet machines would be turned off and upgraded from IPv4 to IPv6. The last major technology transition (from using NCP to
+using TCP for reliable transport service) occurred almost 35 years ago. Even back then <a class="reference internal" href="../references.html#rfc-801"><span class="std std-ref">[RFC 801]</span></a>, when the Internet was tiny and still being administered by a small number of “wizards,” it was realized
+that such a flag day was not possible. A flag day involving billions of devices is even more unthinkable today.</p>
+<p>The approach to IPv4-to-IPv6 transition that has been most widely adopted in practice involves <strong>tunneling</strong> <a class="reference internal" href="../references.html#rfc-4213"><span class="std std-ref">[RFC 4213]</span></a>. The basic idea behind tunneling—a key concept with applications in many other scenarios beyond IPv4-to-IPv6 transition, including wide use in the all-IP cellular networks that we’ll cover in Chapter 7—is the following. Suppose two IPv6 nodes (in this example, B and E in <a class="reference internal" href="#figure-4-27"><span class="std std-ref">Figure 4.27</span></a>) want to interoperate using IPv6 datagrams but are connected to each other by intervening IPv4 routers. We refer to the intervening set of IPv4 routers between two IPv6 routers as a <strong>tunnel</strong>, as illustrated in <a class="reference internal" href="#figure-4-27"><span class="std std-ref">Figure 4.27</span></a>. With tunneling, the IPv6 node on the sending side of the tunnel (in this example, B) takes the entire IPv6 datagram and puts it in the data (payload) field of an IPv4 datagram. This IPv4 datagram is then addressed to the IPv6 node on the receiving side of the tunnel (in this example, E) and sent to the first node in the tunnel (in this example, C). The intervening IPv4 routers in the tunnel route this IPv4 datagram among themselves, just as they would any other datagram, blissfully unaware that the IPv4 datagram itself contains a complete IPv6 datagram. The IPv6 node on the receiving side of the tunnel eventually receives the IPv4 datagram (it is the destination of the IPv4 datagram!), determines that the IPv4 datagram contains an IPv6 datagram (by observing that the protocol number field in the IPv4 datagram is 41 <a class="reference internal" href="../references.html#rfc-4213"><span class="std std-ref">[RFC 4213]</span></a>, indicating that the IPv4 payload is a IPv6 datagram), extracts the IPv6 datagram, and then routes the IPv6 datagram exactly as it would if it had received the IPv6 datagram from a directly connected IPv6 neighbor.</p>
+<p>We end this section by noting that while the adoption of IPv6 was initially slow to take off [<a class="reference internal" href="../references.html#lawton-2001"><span class="std std-ref">Lawton 2001</span></a>; <a class="reference internal" href="../references.html#huston-2008b"><span class="std std-ref">Huston 2008b</span></a>], momentum has been building. NIST <a class="reference internal" href="../references.html#nist-ipv6-2015"><span class="std std-ref">[NIST IPv6 2015]</span></a> reports that more than a third of US government second-level domains are IPv6-enabled. On the client side, Google reports that only about 8 percent of the clients accessing Google services do so via IPv6 <a class="reference internal" href="../references.html#google-ipv6-2015"><span class="std std-ref">[Google IPv6 2015]</span></a>. But other recent measurements <a class="reference internal" href="../references.html#czyz-2014"><span class="std std-ref">[Czyz 2014]</span></a> indicate that IPv6 adoption is accelerating. The proliferation of devices such as IP-enabled phones and other portable devices provides an additional push for more widespread deployment of IPv6. Europe’s Third Generation Partnership Program <a class="reference internal" href="../references.html#gpp-2016"><span class="std std-ref">[3GPP 2016]</span></a> has specified IPv6 as the standard addressing scheme for mobile multimedia.</p>
+<figure class="align-center">
+<img alt="../_images/400-0.png" src="../_images/400-0.png" />
+</figure>
+<p id="figure-4-27"><strong>Figure 4.27 Tunneling</strong></p>
+<p>One important lesson that we can learn from the IPv6 experience is that it is enormously difficult to change network-layer protocols. Since the early 1990s, numerous new network-layer protocols have been trumpeted as the next major revolution for the Internet, but most of these protocols have had limited penetration to date. These protocols include IPv6, multicast protocols, and resource reservation protocols; a discussion of these latter two protocols can be found in the online supplement to this text. Indeed, introducing new protocols into the network layer is like replacing the foundation of a house—it is difficult to do without tearing the whole house down or at least temporarily relocating the house’s residents. On the other hand, the Internet has witnessed rapid deployment of new protocols at the application layer. The classic examples, of course, are the Web, instant messaging, streaming media, distributed games, and various forms of social media. Introducing new application-layer protocols is like adding a new layer of paint to a house—it is relatively easy to do, and if you choose an attractive color, others in the neighborhood will copy you. In summary, in the future we can certainly expect to see changes in the Internet’s network layer, but these changes will likely occur on a time scale that is much slower than the changes that will occur at the application layer.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="s4.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">4.4 广义转发和 SDN</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="s2.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">4.2 路由器里面有什么？</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a><ul>
+<li><a class="reference internal" href="#ipv4">4.3.1 IPv4 数据报格式</a></li>
+<li><a class="reference internal" href="#c4-3-2">4.3.2 IPv4 数据报碎片</a></li>
+<li><a class="reference internal" href="#c4-3-3">4.3.3 IPv4 寻址</a><ul>
+<li><a class="reference internal" href="#obtaining-a-block-of-addresses">Obtaining a Block of Addresses</a></li>
+<li><a class="reference internal" href="#obtaining-a-host-address-the-dynamic-host-configuration-protocol">Obtaining a Host Address: The Dynamic Host Configuration Protocol</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nat">4.3.4 网络地址转换 （NAT）</a></li>
+<li><a class="reference internal" href="#ipv6">4.3.5 IPv6 端口</a><ul>
+<li><a class="reference internal" href="#ipv6-datagram-format">IPv6 Datagram Format</a></li>
+<li><a class="reference internal" href="#transitioning-from-ipv4-to-ipv6">Transitioning from IPv4 to IPv6</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

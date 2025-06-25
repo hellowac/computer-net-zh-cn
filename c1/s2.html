@@ -1,0 +1,780 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="1.3 网络核心" href="s3.html" /><link rel="prev" title="1.1 什么是互联网？" href="s1.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>1.2 网络边缘 - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 1 章 计算机网络和 Internet</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线和移动网络</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全性</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="c1-2">
+<span id="id1"></span><h1>1.2 网络边缘<a class="headerlink" href="#c1-2" title="此标题的永久链接">#</a></h1>
+<p>In the previous section we presented a high-level overview of the Internet and networking protocols. We
+are now going to delve a bit more deeply into the components of a computer network (and the Internet,
+in particular). We begin in this section at the edge of a network and look at the components with which
+we are most ­familiar—namely, the computers, smartphones and other devices that we use on a daily
+basis. In the next section we’ll move from the network edge to the network core and examine switching
+and routing in computer networks.</p>
+<p>Recall from the previous section that in computer networking jargon, the computers and other devices
+connected to the Internet are often referred to as end systems. They are referred to as end systems
+because they sit at the edge of the Internet, as shown in <a class="reference internal" href="#end-system-interaction"><span class="std std-ref">Figure 1.3</span></a> . The Internet’s end systems include
+desktop computers (e.g., desktop PCs, Macs, and Linux boxes), servers (e.g., Web and e-mail servers),
+and mobile devices (e.g., laptops, smartphones, and tablets). Furthermore, an increasing number of
+non-traditional “things” are being attached to the Internet as end ­systems (see the Case History
+feature).</p>
+<p>End systems are also referred to as <em>hosts</em> because they host (that is, run) application programs such as
+a Web browser program, a Web server program, an e-mail client program, or an e-mail server program.
+Throughout this book we will use the terms hosts and end systems interchangeably; that is, <em>host = end system</em>. Hosts are sometimes further
+divided into two categories: <strong>clients</strong> and <strong>servers</strong>. Informally, clients tend to be desktop and mobile PCs,
+smartphones, and so on, whereas servers tend to be more powerful machines that store and distribute
+Web pages, stream video, relay e-mail, and so on. Today, most of the servers from which we receive
+search results, e-mail, Web pages, and videos reside in large <strong>data centers</strong>. For example, Google has
+50-100 data centers, including about 15 large centers, each with more than 100,000 servers.</p>
+<figure class="align-center" id="end-system-interaction">
+<span id="figure-1-3"></span><img alt="../_images/37-0.png" src="../_images/37-0.png" />
+</figure>
+<p><strong>Figure 1.3 End-system interaction</strong></p>
+<aside class="topic" id="internet-of-things">
+<p class="topic-title">CASE HISTORY</p>
+<p><em>THE INTERNET OF THINGS</em></p>
+<p>Can you imagine a world in which just about everything is wirelessly connected to the Internet?
+A world in which most people, cars, bicycles, eye glasses, watches, toys, hospital equipment,
+home sensors, classrooms, video surveillance systems, atmospheric sensors, store-shelf
+products, and pets are connected? This world of the Internet of Things (IoT) may actually be just
+around the corner.</p>
+<p>By some estimates, as of 2015 there are already 5 billion things connected to the Internet, and
+the number could reach 25 billion by 2020 <a class="reference internal" href="../references.html#gartner-2014"><span class="std std-ref">[Gartner 2014]</span></a>. These things include our
+smartphones, which already follow us around in our homes, offices, and cars, reporting our geo-
+locations and usage data to our ISPs and Internet applications. But in addition to our
+smartphones, a wide-variety of non-traditional “things” are already available as products. For
+example, there are Internet-connected wearables, including watches (from Apple and many
+others) and eye glasses. Internet-connected glasses can, for example, upload everything we see
+to the cloud, allowing us to share our visual experiences with people around the world in real-
+time. There are Internet-connected things already available for the smart home, including
+Internet-connected thermostats that can be controlled remotely from our smartphones, and
+Internet-connected body scales, enabling us to graphically review the progress of our diets from
+our smartphones. There are Internet-connected toys, including dolls that recognize and interpret
+a child’s speech and respond appropriately.</p>
+<p>The IoT offers potentially revolutionary benefits to users. But at the same time there are also
+huge security and privacy risks. For example, attackers, via the Internet, might be able to hack
+into IoT devices or into the servers collecting data from IoT devices. For example, an attacker
+could hijack an Internet-connected doll and talk directly with a child; or an attacker could hack
+into a database that stores ­personal health and activity information collected from wearable
+devices. These security and privacy concerns could undermine the consumer confidence
+necessary for the ­technologies to meet their full potential and may result in less widespread
+adoption <a class="reference internal" href="../references.html#ftc-2015"><span class="std std-ref">[FTC 2015]</span></a>.</p>
+</aside>
+<section id="c1-2-1">
+<span id="id2"></span><h2>1.2.1 接入网络<a class="headerlink" href="#c1-2-1" title="此标题的永久链接">#</a></h2>
+<p>1.2.1 Access Networks</p>
+<p>Having considered the applications and end systems at the “edge of the network,” let’s next consider the
+access network—the network that physically connects an end system to the first router (also known as
+the “edge router”) on a path from the end system to any other distant end system. <a class="reference internal" href="#access-networks"><span class="std std-ref">Figure 1.4</span></a> shows
+several types of access networks with thick, shaded lines and the settings (home, enterprise, and wide-area mobile wireless) in which they are used.</p>
+<figure class="align-center" id="access-networks">
+<span id="figure-1-4"></span><img alt="../_images/39-0.png" src="../_images/39-0.png" />
+</figure>
+<p><strong>Figure 1.4 Access networks</strong></p>
+<section id="home-access-dsl-cable-ftth-dial-up-and-satellite">
+<h3>Home Access: DSL, Cable, FTTH, Dial-Up, and Satellite<a class="headerlink" href="#home-access-dsl-cable-ftth-dial-up-and-satellite" title="此标题的永久链接">#</a></h3>
+<p>Home Access: DSL, Cable, FTTH, Dial-Up, and Satellite</p>
+<p>In developed countries as of 2014, more than 78 percent of the households have Internet access, with
+Korea, Netherlands, Finland, and Sweden leading the way with more than 80 percent of households
+having Internet access, almost all via a high-speed broadband connection <a class="reference internal" href="../references.html#itu-2015"><span class="std std-ref">[ITU 2015]</span></a>. Given this
+widespread use of home access networks let’s begin our overview of access networks by considering
+how homes connect to the Internet.</p>
+<p>Today, the two most prevalent types of broadband residential access are <strong>digital subscriber line (DSL)</strong>
+and cable. A residence typically obtains DSL Internet access from the same local telephone company
+(telco) that provides its wired local phone access. Thus, when DSL is used, a customer’s telco is also its
+ISP. As shown in <a class="reference internal" href="#dsl-internet-access"><span class="std std-ref">Figure 1.5</span></a>, each customer’s DSL modem uses the existing telephone line (twisted-
+pair copper wire, which we’ll discuss in <a class="reference internal" href="#c1-2-2"><span class="std std-ref">Section 1.2.2</span></a> ) to exchange data with a digital subscriber line
+access multiplexer (DSLAM) located in the telco’s local central office (CO). The home’s DSL modem
+takes digital data and translates it to high-­frequency tones for transmission over telephone wires to the
+CO; the analog signals from many such houses are translated back into digital format at the DSLAM.</p>
+<p>The residential telephone line carries both data and traditional telephone signals simultaneously, which
+are encoded at different frequencies:</p>
+<ul class="simple">
+<li><p>A high-speed downstream channel, in the 50 kHz to 1 MHz band</p></li>
+<li><p>A medium-speed upstream channel, in the 4 kHz to 50 kHz band</p></li>
+<li><p>An ordinary two-way telephone channel, in the 0 to 4 kHz band</p></li>
+</ul>
+<p>This approach makes the single DSL link appear as if there were three separate links, so that a
+telephone call and an Internet connection can share the DSL link at the same time.</p>
+<figure class="align-center" id="dsl-internet-access">
+<span id="figure-1-5"></span><img alt="../_images/40-0.png" src="../_images/40-0.png" />
+</figure>
+<p><strong>Figure 1.5 DSL Internet access</strong></p>
+<p>(We’ll describe this technique of frequency-division multiplexing in <a class="reference internal" href="s3.html#c1-3-1"><span class="std std-ref">Section 1.3.1</span></a>.) On the customer side,
+a splitter separates the data and telephone signals arriving to the home and forwards the data signal to
+the DSL modem. On the telco side, in the CO, the DSLAM separates the data and phone signals and
+sends the data into the Internet. Hundreds or even thousands of households connect to a single DSLAM
+<a class="reference internal" href="../references.html#dischinger-2007"><span class="std std-ref">[Dischinger 2007]</span></a>.</p>
+<p>The DSL standards define multiple transmission rates, including 12 Mbps downstream and 1.8 Mbps
+upstream <a class="reference internal" href="../references.html#itu-1999"><span class="std std-ref">[ITU 1999]</span></a>, and 55 Mbps downstream and 15 Mbps upstream <a class="reference internal" href="../references.html#itu-2006"><span class="std std-ref">[ITU 2006]</span></a>. Because the
+downstream and upstream rates are different, the access is said to be asymmetric. The actual
+downstream and upstream transmission rates achieved may be less than the rates noted above, as the
+DSL provider may purposefully limit a residential rate when tiered service (different rates, available at
+different prices) are offered. The maximum rate is also limited by the distance between the home and
+the CO, the gauge of the twisted-pair line and the degree of electrical interference. Engineers have
+expressly designed DSL for short distances between the home and the CO; generally, if the residence is
+not located within 5 to 10 miles of the CO, the residence must resort to an alternative form of Internet
+access.</p>
+<p>While DSL makes use of the telco’s existing local telephone infrastructure, <strong>cable Internet access</strong>
+makes use of the cable television company’s existing cable television infrastructure. A residence obtains
+cable Internet access from the same company that provides its cable television. As illustrated in <a class="reference internal" href="#a-hybrid-fiber-coaxial-access-network"><span class="std std-ref">Figure 1.6</span></a>
+, fiber optics connect the cable head end to neighborhood-level junctions, from which traditional
+coaxial cable is then used to reach individual houses and apartments. Each neighborhood junction
+typically supports 500 to 5,000 homes. Because both fiber and coaxial cable are employed in this
+system, it is often referred to as hybrid fiber coax (HFC).</p>
+<figure class="align-center" id="a-hybrid-fiber-coaxial-access-network">
+<span id="figure-1-6"></span><img alt="../_images/41-0.png" src="../_images/41-0.png" />
+</figure>
+<p><strong>Figure 1.6 A hybrid fiber-coaxial access network</strong></p>
+<p>Cable internet access requires special modems, called cable modems. As with a DSL modem, the cable
+modem is typically an external device and connects to the home PC through an Ethernet port. (We will
+discuss Ethernet in great detail in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a>.) At the cable head end, the cable modem termination
+system (CMTS) serves a similar function as the DSL network’s DSLAM—turning the analog signal sent
+from the cable modems in many downstream homes back into digital format. Cable modems divide the
+HFC network into two channels, a downstream and an upstream channel. As with DSL, access is
+typically asymmetric, with the downstream channel typically allocated a higher transmission rate than
+the upstream channel. The ­DOCSIS 2.0 standard defines downstream rates up to 42.8 Mbps and
+upstream rates of up to 30.7 Mbps. As in the case of DSL networks, the maximum achievable rate may
+not be realized due to lower contracted data rates or media impairments.</p>
+<p>One important characteristic of cable Internet access is that it is a shared broadcast medium. In
+particular, every packet sent by the head end travels downstream on every link to every home and every
+packet sent by a home travels on the upstream channel to the head end. For this reason, if several
+users are simultaneously downloading a video file on the downstream channel, the actual rate at which
+each user receives its video file will be significantly lower than the aggregate cable downstream rate. On
+the other hand, if there are only a few active users and they are all Web surfing, then each of the users
+may actually receive Web pages at the full cable downstream rate, because the users will rarely request
+a Web page at exactly the same time. Because the upstream channel is also shared, a distributed
+multiple access protocol is needed to coordinate transmissions and avoid collisions. (We’ll discuss this
+collision issue in some detail in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a>.)</p>
+<p>Although DSL and cable networks currently represent more than 85 percent of residential broadband
+access in the United States, an up-and-coming technology that provides even higher speeds is <strong>fiber to
+the home (FTTH)</strong> <span class="xref std std-ref">[FTTH Council 2016]</span>. As the name suggests, the FTTH concept is simple—provide
+an optical fiber path from the CO directly to the home. Many countries today—including the UAE, South
+Korea, Hong Kong, Japan, Singapore, Taiwan, Lithuania, and Sweden—now have household
+penetration rates exceeding 30% <span class="xref std std-ref">[FTTH Council 2016]</span> .</p>
+<p>There are several competing technologies for optical distribution from the CO to the homes. The
+simplest optical distribution network is called direct fiber, with one fiber leaving the CO for each home.
+More commonly, each fiber leaving the central office is actually shared by many homes; it is not until the
+fiber gets relatively close to the homes that it is split into individual customer-specific fibers. There are
+two competing optical-distribution network architectures that perform this splitting: active optical
+networks (AONs) and passive optical networks (PONs). AON is essentially switched Ethernet, which is
+discussed in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a> .</p>
+<p>Here, we briefly discuss PON, which is used in Verizon’s FIOS service. <a class="reference internal" href="#ftth-internet-access"><span class="std std-ref">Fig­ure 1.7</span></a> shows FTTH using
+the PON distribution architecture. Each home has an optical network terminator (ONT), which is
+connected by dedicated optical fiber to a neighborhood splitter. The splitter combines a number of
+homes (typically less than 100) onto a single, shared optical fiber, which connects to an optical line ­terminator (OLT) in the
+telco’s CO. The OLT, providing conversion between optical and electrical signals, connects to the
+Internet via a telco router. In the home, users connect a home router (typically a wireless router) to the
+ONT and access the ­Internet via this home router. In the PON architecture, all packets sent from OLT
+to the splitter are replicated at the splitter (similar to a cable head end).</p>
+<figure class="align-center" id="ftth-internet-access">
+<span id="figure-1-7"></span><img alt="../_images/43-0.png" src="../_images/43-0.png" />
+</figure>
+<p><strong>Figure 1.7 FTTH Internet access</strong></p>
+<p>FTTH can potentially provide Internet access rates in the gigabits per second range. However, most
+FTTH ISPs provide different rate offerings, with the higher rates naturally costing more money. The
+average downstream speed of US FTTH customers was approximately 20 Mbps in 2011 (compared
+with 13 Mbps for cable access networks and less than 5 Mbps for DSL) <span class="xref std std-ref">[FTTH Council 2011b]</span>.</p>
+<p>Two other access network technologies are also used to provide Internet access to the home. In
+locations where DSL, cable, and FTTH are not available (e.g., in some rural settings), a satellite link can
+be used to connect a residence to the Internet at speeds of more than 1 Mbps; StarBand and
+HughesNet are two such satellite access providers. Dial-up access over traditional phone lines is based
+on the same model as DSL—a home modem connects over a phone line to a modem in the ISP.
+Compared with DSL and other broadband access networks, dial-up access is excruciatingly slow at 56
+kbps.</p>
+</section>
+<section id="access-in-the-enterprise-and-the-home-ethernet-and-wifi">
+<h3>Access in the Enterprise (and the Home): Ethernet and WiFi<a class="headerlink" href="#access-in-the-enterprise-and-the-home-ethernet-and-wifi" title="此标题的永久链接">#</a></h3>
+<p>Access in the Enterprise (and the Home): Ethernet and WiFi</p>
+<p>On corporate and university campuses, and increasingly in home settings, a local area network (LAN) is
+used to connect an end system to the edge router. Although there are many types of LAN technologies,
+Ethernet is by far the most prevalent access technology in corporate, university, and home networks. As
+shown in <a class="reference internal" href="#ethernet-internet-access"><span class="std std-ref">Figure 1.8</span></a>, Ethernet users use twisted-pair copper wire to connect to an Ethernet switch, a
+technology discussed in detail in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a>. The Ethernet switch, or a network of such
+interconnected switches, is then in turn connected into the larger Internet. With Ethernet access, users
+typically have 100 Mbps or 1 Gbps access to the Ethernet switch, whereas servers may have 1 Gbps or
+even 10 Gbps access.</p>
+<figure class="align-center" id="ethernet-internet-access">
+<span id="figure-1-8"></span><img alt="../_images/44-0.png" src="../_images/44-0.png" />
+</figure>
+<p><strong>Figure 1.8 Ethernet Internet access</strong></p>
+<p>Increasingly, however, people are accessing the Internet wirelessly from laptops, smartphones, tablets,
+and other “things” (see earlier sidebar on “<a class="reference internal" href="#internet-of-things"><span class="std std-ref">Internet of Things</span></a>”). In a wireless LAN setting, wireless
+users transmit/receive packets to/from an access point that is connected into the enterprise’s network
+(most likely using wired Ethernet), which in turn is connected to the wired Internet. A wireless LAN user
+must typically be within a few tens of meters of the access point. Wireless LAN access based on IEEE
+802.11 technology, more colloquially known as WiFi, is now just about everywhere—universities,
+business offices, cafes, airports, homes, and even in airplanes. In many cities, one can stand on a street
+corner and be within range of ten or twenty base stations (for a browseable global map of 802.11 base
+stations that have been discovered and logged on a Web site by people who take great enjoyment in
+doing such things, see <a class="reference internal" href="../references.html#wigle-net-2016"><span class="std std-ref">[wigle.net 2016]</span></a>). As discussed in detail in <a class="reference internal" href="../c7/index.html#c7"><span class="std std-ref">Chapter 7</span></a>, 802.11 today provides a
+shared transmission rate of up to more than 100 Mbps.</p>
+<p>Even though Ethernet and WiFi access networks were initially deployed in enterprise (corporate,
+university) settings, they have recently become relatively common components of home networks. Many
+homes combine broadband residential access (that is, cable modems or DSL) with these inexpensive
+wireless LAN technologies to create powerful home networks <a class="reference internal" href="../references.html#edwards-2011"><span class="std std-ref">[Edwards 2011]</span></a>. <a class="reference internal" href="#a-typical-home-network"><span class="std std-ref">Figure 1.9</span></a> shows a
+typical home network. This home network consists of a roaming laptop as well as a wired PC; a base
+station (the wireless access point), which communicates with the wireless PC and other wireless
+devices in the home; a cable modem, providing broadband access to the Internet; and a router, which
+interconnects the base station and the stationary PC with the cable modem. This network allows
+household members to have broadband access to the Internet with one member roaming from the
+kitchen to the backyard to the bedrooms.</p>
+<figure class="align-center" id="a-typical-home-network">
+<span id="figure-1-9"></span><img alt="../_images/45-0.png" src="../_images/45-0.png" />
+</figure>
+<p><strong>Figure 1.9 A typical home network</strong></p>
+</section>
+<section id="wide-area-wireless-access-3g-and-lte">
+<h3>Wide-Area Wireless Access: 3G and LTE<a class="headerlink" href="#wide-area-wireless-access-3g-and-lte" title="此标题的永久链接">#</a></h3>
+<p>Wide-Area Wireless Access: 3G and LTE</p>
+<p>Increasingly, devices such as iPhones and Android devices are being used to message, share photos in
+social networks, watch movies, and stream music while on the run. These devices employ the same
+wireless infrastructure used for cellular telephony to send/receive packets through a base station that is
+operated by the cellular network provider. Unlike WiFi, a user need only be within a few tens of
+kilometers (as opposed to a few tens of meters) of the base station.</p>
+<p>Telecommunications companies have made enormous investments in so-called third-generation (3G)
+wireless, which provides packet-switched wide-area wireless Internet access at speeds in excess of 1
+Mbps. But even higher-speed wide-area access technologies—a fourth-generation (4G) of wide-area
+wireless networks—are already being deployed. LTE (for “Long-Term Evolution”—a candidate for Bad
+Acronym of the Year Award) has its roots in 3G technology, and can achieve rates in excess of 10
+Mbps. LTE downstream rates of many tens of Mbps have been reported in commercial deployments.
+We’ll cover the basic principles of wireless networks and mobility, as well as WiFi, 3G, and LTE
+technologies (and more!) in <a class="reference internal" href="../c7/index.html#c7"><span class="std std-ref">Chapter 7</span></a>.</p>
+</section>
+</section>
+<section id="c1-2-2">
+<span id="id3"></span><h2>1.2.2 物理介质<a class="headerlink" href="#c1-2-2" title="此标题的永久链接">#</a></h2>
+<p>1.2.2 Physical Media</p>
+<p>In the previous subsection, we gave an overview of some of the most important network access
+technologies in the Internet. As we described these technologies, we also indicated the physical media
+used. For example, we said that HFC uses a combination of fiber cable and coaxial cable. We said that
+DSL and Ethernet use copper wire. And we said that mobile access networks use the radio spectrum. In
+this subsection we provide a brief overview of these and other transmission media that are commonly
+used in the Internet.</p>
+<p>In order to define what is meant by a physical medium, let us reflect on the brief life of a bit. Consider a
+bit traveling from one end system, through a series of links and routers, to another end system. This
+poor bit gets kicked around and transmitted many, many times! The source end system first transmits
+the bit, and shortly thereafter the first router in the series receives the bit; the first router then transmits
+the bit, and shortly thereafter the second router receives the bit; and so on. Thus our bit, when traveling
+from source to destination, passes through a series of transmitter-receiver pairs. For each transmitter-
+receiver pair, the bit is sent by propagating electromagnetic waves or optical pulses across a <strong>physical
+medium</strong>. The physical medium can take many shapes and forms and does not have to be of the same
+type for each transmitter-receiver pair along the path. Examples of physical media include twisted-pair
+copper wire, coaxial cable, multimode fiber-optic cable, terrestrial radio spectrum, and satellite radio
+spectrum. Physical media fall into two categories: <strong>guided media</strong> and <strong>unguided media</strong>. With guided
+media, the waves are guided along a solid medium, such as a fiber-optic cable, a twisted-pair copper
+wire, or a coaxial cable. With unguided media, the waves propagate in the atmosphere and in outer
+space, such as in a wireless LAN or a digital satellite channel.</p>
+<p>But before we get into the characteristics of the various media types, let us say a few words about their
+costs. The actual cost of the physical link (copper wire, fiber-optic cable, and so on) is often relatively
+minor compared with other networking costs. In particular, the labor cost associated with the installation
+of the physical link can be orders of magnitude higher than the cost of the material. For this reason,
+many builders install twisted pair, optical fiber, and coaxial cable in every room in a building. Even if only
+one medium is initially used, there is a good chance that another medium could be used in the near
+future, and so money is saved by not having to lay additional wires in the future.</p>
+<section id="twisted-pair-copper-wire">
+<h3>Twisted-Pair Copper Wire<a class="headerlink" href="#twisted-pair-copper-wire" title="此标题的永久链接">#</a></h3>
+<p>Twisted-Pair Copper Wire</p>
+<p>The least expensive and most commonly used guided transmission medium is twisted-pair copper wire.
+For over a hundred years it has been used by telephone networks. In fact, more than 99 percent of the
+wired connections from the telephone handset to the local telephone switch use twisted-pair copper
+wire. Most of us have seen twisted pair in our homes (or those of our parents or grandparents!) and
+work environments. Twisted pair consists of two insulated copper wires, each about 1 mm thick,
+arranged in a regular spiral pattern. The wires are twisted together to reduce the electrical interference
+from similar pairs close by. Typically, a number of pairs are bundled together in a cable by wrapping the
+pairs in a protective shield. A wire pair constitutes a single communication link. <strong>Unshielded twisted
+pair (UTP)</strong> is commonly used for computer networks within a building, that is, for LANs. Data rates for
+LANs using twisted pair today range from 10 Mbps to 10 Gbps. The data rates that can be achieved
+depend on the thickness of the wire and the distance between transmitter and receiver.</p>
+<p>When fiber-optic technology emerged in the 1980s, many people disparaged twisted pair because of its
+relatively low bit rates. Some people even felt that fiber-optic technology would completely replace
+twisted pair. But twisted pair did not give up so easily. Modern twisted-pair technology, such as category
+6a cable, can achieve data rates of 10 Gbps for distances up to a hundred meters. In the end, twisted
+pair has emerged as the dominant solution for high-speed LAN networking.</p>
+<p>As discussed earlier, twisted pair is also commonly used for residential Internet access. We saw that
+dial-up modem technology enables access at rates of up to 56 kbps over twisted pair. We also saw that
+DSL (digital subscriber line) technology has enabled residential users to access the Internet at tens of
+Mbps over twisted pair (when users live close to the ISP’s central office).</p>
+</section>
+<section id="coaxial-cable">
+<h3>Coaxial Cable<a class="headerlink" href="#coaxial-cable" title="此标题的永久链接">#</a></h3>
+<p>Coaxial Cable</p>
+<p>Like twisted pair, coaxial cable consists of two copper conductors, but the two conductors are concentric
+rather than parallel. With this construction and special insulation and shielding, coaxial cable can
+achieve high data transmission rates. Coaxial cable is quite common in cable television systems. As we
+saw earlier, cable television systems have recently been coupled with cable modems to provide
+residential users with Internet access at rates of tens of Mbps. In cable television and cable Internet
+access, the transmitter shifts the digital signal to a specific frequency band, and the resulting analog
+signal is sent from the transmitter to one or more receivers. Coaxial cable can be used as a guided
+<strong>shared medium</strong>. Specifically, a number of end systems can be connected directly to the cable, with
+each of the end systems receiving whatever is sent by the other end systems.</p>
+</section>
+<section id="fiber-optics">
+<h3>Fiber Optics<a class="headerlink" href="#fiber-optics" title="此标题的永久链接">#</a></h3>
+<p>Fiber Optics</p>
+<p>An optical fiber is a thin, flexible medium that conducts pulses of light, with each pulse representing a
+bit. A single optical fiber can support tremendous bit rates, up to tens or even hundreds of gigabits per
+second. They are immune to electromagnetic interference, have very low signal attenuation up to 100
+kilometers, and are very hard to tap. These characteristics have made fiber optics the preferred long-
+haul guided transmission media, particularly for overseas links. Many of the long-distance telephone
+networks in the United States and elsewhere now use fiber optics exclusively. Fiber optics is also
+prevalent in the backbone of the Internet. However, the high cost of optical devices—such as
+transmitters, receivers, and switches—has hindered their deployment for short-haul transport, such as in
+a LAN or into the home in a residential access network. The Optical Carrier (OC) standard link speeds
+range from 51.8 Mbps to 39.8 Gbps; these specifications are often referred to as OC-n, where the link
+speed equals n ∞ 51.8 Mbps. Standards in use today include OC-1, OC-3, OC-12, OC-24, OC-48, OC-
+96, OC-192, OC-768. [<a class="reference internal" href="../references.html#mukherjee-2006"><span class="std std-ref">Mukherjee 2006</span></a>, <a class="reference internal" href="../references.html#ramaswami-2010"><span class="std std-ref">Ramaswami 2010</span></a>] provide coverage of various aspects of
+optical networking.</p>
+</section>
+<section id="terrestrial-radio-channels">
+<h3>Terrestrial Radio Channels<a class="headerlink" href="#terrestrial-radio-channels" title="此标题的永久链接">#</a></h3>
+<p>Terrestrial Radio Channels</p>
+<p>Radio channels carry signals in the electromagnetic spectrum. They are an attractive medium because
+they require no physical wire to be installed, can penetrate walls, provide connectivity to a mobile user,
+and can potentially carry a signal for long distances. The characteristics of a radio channel depend
+significantly on the propagation environment and the distance over which a signal is to be carried.
+Environmental considerations determine path loss and shadow fading (which decrease the signal
+strength as the signal travels over a distance and around/through obstructing objects), multipath fading
+(due to signal reflection off of interfering objects), and interference (due to other transmissions and
+electromagnetic signals).</p>
+<p>Terrestrial radio channels can be broadly classified into three groups: those that operate over very short
+distance (e.g., with one or two meters); those that operate in local areas, typically spanning from ten to a
+few hundred meters; and those that operate in the wide area, spanning tens of kilometers. Personal
+devices such as wireless headsets, keyboards, and medical devices operate over short distances; the
+wireless LAN technologies described in <a class="reference internal" href="#c1-2-1"><span class="std std-ref">Section 1.2.1</span></a> use local-area radio channels; the cellular access
+technologies use wide-area radio channels. We’ll discuss radio channels in detail in <a class="reference internal" href="../c7/index.html#c7"><span class="std std-ref">Chapter 7</span></a>.</p>
+</section>
+<section id="satellite-radio-channels">
+<h3>Satellite Radio Channels<a class="headerlink" href="#satellite-radio-channels" title="此标题的永久链接">#</a></h3>
+<p>Satellite Radio Channels</p>
+<p>A communication satellite links two or more Earth-based microwave transmitter/ receivers, known as
+ground stations. The satellite receives transmissions on one frequency band, regenerates the signal
+using a repeater (discussed below), and transmits the signal on another frequency. Two types of
+satellites are used in communications: <strong>geostationary satellites</strong> and <strong>low-earth orbiting (LEO)
+satellites</strong> <a class="reference internal" href="../references.html#wiki-satellite-2016"><span class="std std-ref">[Wiki Satellite 2016]</span></a>.</p>
+<p>Geostationary satellites permanently remain above the same spot on Earth. This stationary presence is
+achieved by placing the satellite in orbit at 36,000 kilometers above Earth’s surface. This huge distance
+from ground station through satellite back to ground station introduces a substantial signal propagation
+delay of 280 milliseconds. Nevertheless, satellite links, which can operate at speeds of hundreds of
+Mbps, are often used in areas without access to DSL or cable-based Internet access.</p>
+<p>LEO satellites are placed much closer to Earth and do not remain permanently above one spot on Earth.
+They rotate around Earth (just as the Moon does) and may communicate with each other, as well as
+with ground stations. To provide continuous coverage to an area, many satellites need to be placed in
+orbit. There are currently many low-altitude communication systems in development. LEO satellite
+technology may be used for Internet access sometime in the future.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="s3.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">1.3 网络核心</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="s1.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">1.1 什么是互联网？</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">1.2 网络边缘</a><ul>
+<li><a class="reference internal" href="#c1-2-1">1.2.1 接入网络</a><ul>
+<li><a class="reference internal" href="#home-access-dsl-cable-ftth-dial-up-and-satellite">Home Access: DSL, Cable, FTTH, Dial-Up, and Satellite</a></li>
+<li><a class="reference internal" href="#access-in-the-enterprise-and-the-home-ethernet-and-wifi">Access in the Enterprise (and the Home): Ethernet and WiFi</a></li>
+<li><a class="reference internal" href="#wide-area-wireless-access-3g-and-lte">Wide-Area Wireless Access: 3G and LTE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#c1-2-2">1.2.2 物理介质</a><ul>
+<li><a class="reference internal" href="#twisted-pair-copper-wire">Twisted-Pair Copper Wire</a></li>
+<li><a class="reference internal" href="#coaxial-cable">Coaxial Cable</a></li>
+<li><a class="reference internal" href="#fiber-optics">Fiber Optics</a></li>
+<li><a class="reference internal" href="#terrestrial-radio-channels">Terrestrial Radio Channels</a></li>
+<li><a class="reference internal" href="#satellite-radio-channels">Satellite Radio Channels</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    </body>
+</html>

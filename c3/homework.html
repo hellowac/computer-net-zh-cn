@@ -1,0 +1,661 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="Wireshark 实验室" href="wiresharklab.html" /><link rel="prev" title="3.8 总结" href="summary.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>家庭作业问题和疑问 - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络和 Internet</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 3 章 传输层</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">3.8 总结</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线和移动网络</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全性</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="id1">
+<h1>家庭作业问题和疑问<a class="headerlink" href="#id1" title="此标题的永久链接">#</a></h1>
+<p>Homework Problems and Questions</p>
+<section id="sections-3-13-3">
+<h2>SECTIONS 3.1–3.3<a class="headerlink" href="#sections-3-13-3" title="此标题的永久链接">#</a></h2>
+<p>R1. Suppose the network layer provides the following service. The network layer in the source host accepts a segment of maximum size 1,200 bytes and a destination host address from the transport layer. The network layer then guarantees to deliver the segment to the transport layer at the destination host. Suppose many network application processes can be running at the destination host.</p>
+<ol class="loweralpha simple">
+<li><p>Design the simplest possible transport-layer protocol that will get application data to the desired process at the destination host. Assume the operating system in the destination host has assigned a 4-byte port number to each running application process.</p></li>
+<li><p>Modify this protocol so that it provides a “return address” to the destination process.</p></li>
+<li><p>In your protocols, does the transport layer “have to do anything” in the core of the computer network?</p></li>
+</ol>
+<p>R2. Consider a planet where everyone belongs to a family of six, every family lives in its own house, each house has a unique address, and each person in a given house has a unique name. Suppose this planet has a mail service that delivers letters from source house to destination house. The mail service requires that (1) the letter be in an envelope, and that (2) the address of the destination house (and nothing more) be clearly written on the envelope. Suppose each family has a delegate family member who collects and distributes letters for the other family members. The letters do not necessarily provide any indication of the recipients of the letters.</p>
+<ol class="loweralpha simple">
+<li><p>Using the solution to Problem R1 above as inspiration, describe a protocol that the delegates can use to deliver letters from a sending family member to a receiving family member.</p></li>
+<li><p>In your protocol, does the mail service ever have to open the envelope and examine the letter in order to provide its service?</p></li>
+</ol>
+<p>R3. Consider a TCP connection between Host A and Host B. Suppose that the TCP segments traveling from Host A to Host B have source port number x and destination port number y. What are the source and destination port numbers for the segments traveling from Host B to Host A?</p>
+<p>R4. Describe why an application developer might choose to run an application over UDP rather than TCP.</p>
+<p>R5. Why is it that voice and video traffic is often sent over TCP rather than UDP in today’s Internet? (Hint: The answer we are looking for has nothing to do with TCP’s congestion-control mechanism.)</p>
+<p>R6. Is it possible for an application to enjoy reliable data transfer even when the application runs over UDP? If so, how?</p>
+<p>R7. Suppose a process in Host C has a UDP socket with port number 6789. Suppose both Host A and Host B each send a UDP segment to Host C with destination port number 6789. Will both of these segments be directed to the same socket at Host C? If so, how will the process at Host C know that these two segments originated from two different hosts?</p>
+<p>R8. Suppose that a Web server runs in Host C on port 80. Suppose this Web server uses persistent connections, and is currently receiving requests from two different Hosts, A and B. Are all of the requests being sent through the same socket at Host C? If they are being passed through different sockets, do both of the sockets have port 80? Discuss and explain.</p>
+</section>
+<section id="section-3-4">
+<h2>SECTION 3.4<a class="headerlink" href="#section-3-4" title="此标题的永久链接">#</a></h2>
+<p>R9. In our <code class="docutils literal notranslate"><span class="pre">rdt</span></code> protocols, why did we need to introduce sequence numbers?</p>
+<p>R10. In our <code class="docutils literal notranslate"><span class="pre">rdt</span></code> protocols, why did we need to introduce timers?</p>
+<p>R11. Suppose that the roundtrip delay between sender and receiver is constant and known to the sender. Would a timer still be necessary in protocol <code class="docutils literal notranslate"><span class="pre">rdt</span> <span class="pre">3.0</span></code>, assuming that packets can be lost? Explain.</p>
+<p>R12. Visit the Go-Back-N Java applet at the companion Web site.</p>
+<ol class="loweralpha simple">
+<li><p>Have the source send five packets, and then pause the animation before any of the five packets reach the destination. Then kill the first packet and resume the animation. Describe what happens.</p></li>
+<li><p>Repeat the experiment, but now let the first packet reach the destination and kill the first acknowledgment. Describe again what happens.</p></li>
+<li><p>Finally, try sending six packets. What happens?</p></li>
+</ol>
+<p>R13. Repeat R12, but now with the Selective Repeat Java applet. How are Selective Repeat and Go-Back-N different?</p>
+</section>
+<section id="section-3-5">
+<h2>SECTION 3.5<a class="headerlink" href="#section-3-5" title="此标题的永久链接">#</a></h2>
+<p>R14. True or false?</p>
+<ol class="loweralpha simple">
+<li><p>Host A is sending Host B a large file over a TCP connection. Assume Host B has no data to send Host A. Host B will not send acknowledgments to Host A because Host B cannot piggyback the acknowledgments on data.</p></li>
+<li><p>The size of the TCP <code class="docutils literal notranslate"><span class="pre">rwnd</span></code> never changes throughout the duration of the connection.</p></li>
+<li><p>Suppose Host A is sending Host B a large file over a TCP connection. The number of unacknowledged bytes that A sends cannot exceed the size of the receive buffer.</p></li>
+<li><p>Suppose Host A is sending a large file to Host B over a TCP connection. If the sequence number for a segment of this connection is m, then the sequence number for the subsequent segment will necessarily be m+1.</p></li>
+<li><p>The TCP segment has a field in its header for <code class="docutils literal notranslate"><span class="pre">rwnd</span></code>.</p></li>
+<li><p>Suppose that the last <code class="docutils literal notranslate"><span class="pre">SampleRTT</span></code> in a TCP connection is equal to 1 sec. The current value of <code class="docutils literal notranslate"><span class="pre">TimeoutInterval</span></code> for the connection will necessarily be ≥1 sec.</p></li>
+<li><p>Suppose Host A sends one segment with sequence number 38 and 4 bytes of data over a TCP connection to Host B. In this same segment the acknowledgment number is necessarily 42.</p></li>
+</ol>
+<p>R15. Suppose Host A sends two TCP segments back to back to Host B over a TCP connection. The first segment has sequence number 90; the second has sequence number 110.</p>
+<ol class="loweralpha simple">
+<li><p>How much data is in the first segment?</p></li>
+<li><p>Suppose that the first segment is lost but the second segment arrives at B. In the acknowledgment that Host B sends to Host A, what will be the acknowledgment number?</p></li>
+</ol>
+<p>R16. Consider the Telnet example discussed in <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">Section 3.5</span></a> . A few seconds after the user types the letter ‘C,’ the user types the letter ‘R.’ After typing the letter ‘R,’ how many segments are sent, and what is put in the sequence number and acknowledgment fields of the segments?</p>
+</section>
+<section id="section-3-7">
+<h2>SECTION 3.7<a class="headerlink" href="#section-3-7" title="此标题的永久链接">#</a></h2>
+<p>R17. Suppose two TCP connections are present over some bottleneck link of rate R bps. Both connections have a huge file to send (in the same direction over the bottleneck link). The transmissions of the files start at the same time. What transmission rate would TCP like to give to each of the connections?</p>
+<p>R18. True or false? Consider congestion control in TCP. When the timer expires at the sender, the value of <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> is set to one half of its previous value.</p>
+<p>R19. In the discussion of TCP splitting in the sidebar in <a class="reference internal" href="s7.html#c3-7"><span class="std std-ref">Section 3.7</span></a> , it was claimed that the response time with TCP splitting is approximately 4⋅RTTFE+RTTBE+processing time. Justify this claim.</p>
+</section>
+<section id="problems">
+<h2>Problems<a class="headerlink" href="#problems" title="此标题的永久链接">#</a></h2>
+<p>P1. Suppose Client A initiates a Telnet session with Server S. At about the same time, Client B also initiates a Telnet session with Server S. Provide possible source and destination port numbers for</p>
+<ol class="loweralpha simple">
+<li><p>The segments sent from A to S.</p></li>
+<li><p>The segments sent from B to S.</p></li>
+<li><p>The segments sent from S to A.</p></li>
+<li><p>The segments sent from S to B.</p></li>
+<li><p>If A and B are different hosts, is it possible that the source port number in the segments from A to S is the same as that from B to S?</p></li>
+<li><p>How about if they are the same host?</p></li>
+</ol>
+<p>P2. Consider <a class="reference internal" href="s2.html#figure-3-5"><span class="std std-ref">Figure 3.5</span></a> . What are the source and destination port values in the segments flowing from the server back to the clients’ processes? What are the IP addresses in the network-layer datagrams carrying the transport-layer segments?</p>
+<p>P3. UDP and TCP use 1s complement for their checksums. Suppose you have the following three 8-bit bytes: 01010011, 01100110, 01110100. What is the 1s complement of the sum of
+these 8-bit bytes? (Note that although UDP and TCP use 16-bit words in computing the checksum, for this problem you are being asked to consider 8-bit sums.) Show all work. Why is it that UDP takes the 1s complement of the sum; that is, why not just use the sum? With the 1s complement scheme, how does the receiver detect errors? Is it possible that a 1-bit error will go undetected? How about a 2-bit error?</p>
+<p>P4.</p>
+<ol class="loweralpha simple">
+<li><p>Suppose you have the following 2 bytes: 01011100 and 01100101. What is the 1s complement of the sum of these 2 bytes?</p></li>
+<li><p>Suppose you have the following 2 bytes: 11011010 and 01100101. What is the 1s complement of the sum of these 2 bytes?</p></li>
+<li><p>For the bytes in part (a), give an example where one bit is flipped in each of the 2 bytes and yet the 1s complement doesn’t change.</p></li>
+</ol>
+<p>P5. Suppose that the UDP receiver computes the Internet checksum for the received UDP segment and finds that it matches the value carried in the checksum field. Can the receiver be
+absolutely certain that no bit errors have occurred? Explain.</p>
+<p>P6. Consider our motivation for correcting protocol rdt2.1. Show that the receiver, shown in
+<a class="reference internal" href="#figure-3-57"><span class="std std-ref">Figure 3.57</span></a> , when operating with the sender shown in <a class="reference internal" href="s4.html#figure-3-11"><span class="std std-ref">Figure 3.11</span></a> , can lead the sender and receiver to enter into a deadlock state, where each is waiting for an event that will never occur.</p>
+<p>P7. In protocol rdt3.0, the ACK packets flowing from the receiver to the sender do not have sequence numbers (although they do have an ACK field that contains the sequence number of the packet they are acknowledging). Why is it that our ACK packets do not require sequence numbers?</p>
+<figure class="align-center">
+<img alt="../_images/334-0.png" src="../_images/334-0.png" />
+</figure>
+<p id="figure-3-57"><strong>Figure 3.57 An incorrect receiver for protocol rdt 2.1</strong></p>
+<p>P8. Draw the FSM for the receiver side of protocol <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code>.</p>
+<p>P9. Give a trace of the operation of protocol <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> when data packets and acknowledgment packets are garbled. Your trace should be similar to that used in <a class="reference internal" href="s4.html#figure-3-16"><span class="std std-ref">Figure 3.16</span></a> .</p>
+<p>P10. Consider a channel that can lose packets but has a maximum delay that is known. Modify protocol <code class="docutils literal notranslate"><span class="pre">rdt2.1</span></code> to include sender timeout and retransmit. Informally argue why your protocol can communicate correctly over this channel.</p>
+<p>P11. Consider the <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code> receiver in <a class="reference internal" href="s4.html#figure-3-14"><span class="std std-ref">Figure 3.14</span></a> , and the creation of a new packet in the self-transition (i.e., the transition from the state back to itself) in the Wait-for-0-from-below and the Wait-for-1-from-below states: <code class="docutils literal notranslate"><span class="pre">sndpkt=make_pkt(ACK,</span> <span class="pre">1,</span> <span class="pre">checksum)</span></code> and <code class="docutils literal notranslate"><span class="pre">sndpkt=make_pkt(ACK,</span> <span class="pre">0,</span> <span class="pre">checksum)</span></code>. Would the protocol work correctly if this action were removed from the self-transition in the Wait-for-1-from-below state? Justify your answer. What if this event were removed from the self-transition in the Wait-for-0-from-below state? [Hint: In this latter case, consider what would happen if the first sender-to-receiver packet were corrupted.]</p>
+<p>P12. The sender side of <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> simply ignores (that is, takes no action on) all received packets that are either in error or have the wrong value in the <code class="docutils literal notranslate"><span class="pre">acknum</span></code> field of an acknowledgment packet. Suppose that in such circumstances, <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> were simply to retransmit the current data packet. Would the protocol still work? (Hint: Consider what would happen if there were only bit errors; there are no packet losses but premature timeouts can occur. Consider how many times the nth packet is sent, in the limit as n approaches infinity.)</p>
+<p>P13. Consider the <code class="docutils literal notranslate"><span class="pre">rdt</span> <span class="pre">3.0</span></code> protocol. Draw a diagram showing that if the network connection between the sender and receiver can reorder messages (that is, that two messages propagating in the medium between the sender and receiver can be reordered), then the alternating-bit protocol will not work correctly (make sure you clearly identify the sense in which it will not work correctly). Your diagram should have the sender on the left and the receiver on the right, with the time axis running down the page, showing data (D) and acknowledgment (A) message exchange. Make sure you indicate the sequence number associated with any data or acknowledgment segment.</p>
+<p>P14. Consider a reliable data transfer protocol that uses only negative acknowledgments. Suppose the sender sends data only infrequently. Would a NAK-only protocol be preferable to a protocol that uses ACKs? Why? Now suppose the sender has a lot of data to send and the end- to-end connection experiences few losses. In this second case, would a NAK-only protocol be preferable to a protocol that uses ACKs? Why?</p>
+<p>P15. Consider the cross-country example shown in <a class="reference internal" href="s4.html#figure-3-17"><span class="std std-ref">Figure 3.17</span></a> . How big would the window size have to be for the channel utilization to be greater than 98 percent? Suppose that the size of a packet is 1,500 bytes, including both header fields and data.</p>
+<p>P16. Suppose an application uses <code class="docutils literal notranslate"><span class="pre">rdt</span> <span class="pre">3.0</span></code> as its transport layer protocol. As the stop-and-wait protocol has very low channel utilization (shown in the cross-country example), the designers of this application let the receiver keep sending back a number (more than two) of alternating ACK 0 and ACK 1 even if the corresponding data have not arrived at the receiver. Would this application design increase the channel utilization? Why? Are there any potential problems with this approach? Explain.</p>
+<p>P17. Consider two network entities, A and B, which are connected by a perfect bi-directional channel (i.e., any message sent will be received correctly; the channel will not corrupt, lose, or re-order packets). A and B are to deliver data messages to each other in an alternating manner: First, A must deliver a message to B, then B must deliver a message to A, then A must deliver a message to B and so on. If an entity is in a state where it should not attempt to deliver a message to the other side, and there is an event like <code class="docutils literal notranslate"><span class="pre">rdt_send(data)</span></code> call from above that attempts to pass data down for transmission to the other side, this call from above can simply be ignored with a call to <code class="docutils literal notranslate"><span class="pre">rdt_unable_to_send(data)</span></code>, which informs the higher layer that it is currently not able to send data. [Note: This simplifying assumption is made so you don’t have to worry about buffering data.] Draw a FSM specification for this protocol (one FSM for A, and one FSM for B!). Note that you do not have to worry about a reliability mechanism here; the main point of this question is to create a FSM specification that reflects the synchronized behavior of the two entities. You should use the following events and actions that have the same meaning as protocol rdt1.0 in <a class="reference internal" href="s4.html#figure-3-9"><span class="std std-ref">Figure 3.9</span></a> : <code class="docutils literal notranslate"><span class="pre">rdt_send(data),</span> <span class="pre">packet</span> <span class="pre">=</span> <span class="pre">make_pkt(data),</span> <span class="pre">udt_send(packet),</span> <span class="pre">rdt_rcv(packet),</span> <span class="pre">extract(packet,</span> <span class="pre">data),</span> <span class="pre">deliver_data(data)</span></code>. Make sure your protocol reflects the strict alternation of sending between A and B. Also, make sure to indicate the initial states for A and B in your FSM descriptions.</p>
+<p>P18. In the generic SR protocol that we studied in <a class="reference internal" href="s4.html#c3-4-4"><span class="std std-ref">Section 3.4.4</span></a> , the sender transmits a message as soon as it is available (if it is in the window) without waiting for an acknowledgment. Suppose now that we want an SR protocol that sends messages two at a time. That is, the sender will send a pair of messages and will send the next pair of messages only when it knows that both messages in the first pair have been received correctly.
+Suppose that the channel may lose messages but will not corrupt or reorder messages. Design an error-control protocol for the unidirectional reliable transfer of messages. Give an FSM description of the sender and receiver. Describe the format of the packets sent between sender
+and receiver, and vice versa. If you use any procedure calls other than those in <a class="reference internal" href="s4.html#c3-4"><span class="std std-ref">Section 3.4</span></a> (for example, <code class="docutils literal notranslate"><span class="pre">udt_send()</span></code>, <code class="docutils literal notranslate"><span class="pre">start_timer()</span></code>, <code class="docutils literal notranslate"><span class="pre">rdt_rcv()</span></code>, and so on), clearly state their actions. Give an example (a timeline trace of sender and receiver) showing how your protocol recovers from a lost packet.</p>
+<p>P19. Consider a scenario in which Host A wants to simultaneously send packets to Hosts B and C. A is connected to B and C via a broadcast channel—a packet sent by A is carried by the channel to both B and C. Suppose that the broadcast channel connecting A, B, and C can independently lose and corrupt packets (and so, for example, a packet sent from A might be correctly received by B, but not by C). Design a stop-and-wait-like error-control protocol for reliably transferring packets from A to B and C, such that A will not get new data from the upper layer until it knows that both B and C have correctly received the current packet. Give FSM descriptions of A and C. (Hint: The FSM for B should be essentially the same as for C.) Also, give a description of the packet format(s) used.</p>
+<p>P20. Consider a scenario in which Host A and Host B want to send messages to Host C. Hosts A and C are connected by a channel that can lose and corrupt (but not reorder) messages. Hosts B and C are connected by another channel (independent of the channel connecting A and C) with the same properties. The transport layer at Host C should alternate in delivering messages from A and B to the layer above (that is, it should first deliver the data from a packet from A, then the data from a packet from B, and so on). Design a stop-and-wait-like error-control protocol for reliably transferring packets from A and B to C, with alternating delivery at C as described above. Give FSM descriptions of A and C. (Hint: The FSM for B should be essentially the same as for A.) Also, give a description of the packet format(s) used.</p>
+<p>P21. Suppose we have two network entities, A and B. B has a supply of data messages that will be sent to A according to the following conventions. When A gets a request from the layer above to get the next data (D) message from B, A must send a request (R) message to B on the A-to-B channel. Only when B receives an R message can it send a data (D) message back to A on the B-to-A channel. A should deliver exactly one copy of each D message to the layer above. R messages can be lost (but not corrupted) in the A-to-B channel; D messages, once sent, are always delivered correctly. The delay along both channels is unknown and variable. Design (give an FSM description of) a protocol that incorporates the appropriate mechanisms to compensate for the loss-prone A-to-B channel and implements message passing to the layer above at entity A, as discussed above. Use only those mechanisms that are absolutely necessary.</p>
+<p>P22. Consider the GBN protocol with a sender window size of 4 and a sequence number range of 1,024. Suppose that at time t, the next in-order packet that the receiver is expecting has a sequence number of k. Assume that the medium does not reorder messages. Answer the following questions:</p>
+<ol class="loweralpha simple">
+<li><p>What are the possible sets of sequence numbers inside the sender’s window at time t? Justify your answer.</p></li>
+<li><p>What are all possible values of the ACK field in all possible messages currently propagating back to the sender at time t? Justify your answer.</p></li>
+</ol>
+<p>Consider the GBN and SR protocols. Suppose the sequence number space is of size k. What is the largest allowable sender window that will avoid the occurrence of problems such as that in <a class="reference internal" href="s4.html#figure-3-27"><span class="std std-ref">Figure 3.27</span></a> for each of these protocols?</p>
+<p>P24. Answer true or false to the following questions and briefly justify your answer:</p>
+<ol class="loweralpha simple">
+<li><p>With the SR protocol, it is possible for the sender to receive an ACK for a packet that falls outside of its current window.</p></li>
+<li><p>With GBN, it is possible for the sender to receive an ACK for a packet that falls outside of its current window.</p></li>
+<li><p>The alternating-bit protocol is the same as the SR protocol with a sender and receiver window size of 1.</p></li>
+<li><p>The alternating-bit protocol is the same as the GBN protocol with a sender and receiver window size of 1.</p></li>
+</ol>
+<p>P25. We have said that an application may choose UDP for a transport protocol because UDP offers finer application control (than TCP) of what data is sent in a segment and when.</p>
+<p>a. Why does an application have more control of what data is sent in a segment? b. Why does an application have more control on when the segment is sent?
+P26. Consider transferring an enormous file of L bytes from Host A to Host B. Assume an MSS of 536 bytes.
+a. What is the maximum value of L such that TCP sequence numbers are not exhausted? Recall that the TCP sequence number field has 4 bytes.
+b. For the L you obtain in (a), find how long it takes to transmit the file. Assume that a total of 66 bytes of transport, network, and data-link header are added to each segment before the resulting packet is sent out over a 155 Mbps link. Ignore flow control and congestion control so A can pump out the segments back to back and continuously.</p>
+<p>P27. Host A and B are communicating over a TCP connection, and Host B has already received from A all bytes up through byte 126. Suppose Host A then sends two segments to Host B back-to-back. The first and second segments contain 80 and 40 bytes of data, respectively. In the first segment, the sequence number is 127, the source port number is 302, and the destination port number is 80. Host B sends an acknowledgment whenever it receives a segment from Host A.</p>
+<ol class="loweralpha simple">
+<li><p>In the second segment sent from Host A to B, what are the sequence number, source port number, and destination port number?</p></li>
+<li><p>If the first segment arrives before the second segment, in the acknowledgment of the first arriving segment, what is the acknowledgment number, the source port number, and the destination port number?</p></li>
+<li><p>If the second segment arrives before the first segment, in the acknowledgment of the first arriving segment, what is the acknowledgment number?</p></li>
+<li><p>Suppose the two segments sent by A arrive in order at B. The first acknowledgment is lost and the second acknowledgment arrives after the first timeout interval. Draw a timing diagram, showing these segments and all other segments and acknowledgments sent. (Assume there is no additional packet loss.) For each segment in your figure, provide the sequence number and the number of bytes of data; for each acknowledgment that you add, provide the acknowledgment number.</p></li>
+</ol>
+<p>P28. Host A and B are directly connected with a 100 Mbps link. There is one TCP connection between the two hosts, and Host A is sending to Host B an enormous file over this connection. Host A can send its application data into its TCP socket at a rate as high as 120 Mbps but Host B can read out of its TCP receive buffer at a maximum rate of 50 Mbps. Describe the effect of TCP flow control.</p>
+<p>P29. SYN cookies were discussed in <a class="reference internal" href="s5.html#c3-5-6"><span class="std std-ref">Section 3.5.6</span></a>.</p>
+<ol class="loweralpha simple">
+<li><p>Why is it necessary for the server to use a special initial sequence number in the SYNACK?</p></li>
+<li><p>Suppose an attacker knows that a target host uses SYN cookies. Can the attacker create half-open or fully open connections by simply sending an ACK packet to the target? Why or why not?</p></li>
+<li><p>Suppose an attacker collects a large amount of initial sequence numbers sent by the server. Can the attacker cause the server to create many fully open connections by sending ACKs with those initial sequence numbers? Why?</p></li>
+</ol>
+<p>P30. Consider the network shown in Scenario 2 in <a class="reference internal" href="s6.html#c3-6-1"><span class="std std-ref">Section 3.6.1</span></a> . Suppose both sending hosts A and B have some fixed timeout values.</p>
+<ol class="loweralpha simple">
+<li><p>Argue that increasing the size of the finite buffer of the router might possibly decrease the throughput (λout).</p></li>
+<li><p>Now suppose both hosts dynamically adjust their timeout values (like what TCP does) based on the buffering delay at the router. Would increasing the buffer size help to increase the throughput? Why?</p></li>
+</ol>
+<p>P31. Suppose that the five measured <code class="docutils literal notranslate"><span class="pre">SampleRTT</span></code> values (see <a class="reference internal" href="s5.html#c3-5-3"><span class="std std-ref">Section 3.5.3</span></a> ) are 106 ms, 120 ms, 140 ms, 90 ms, and 115 ms. Compute the <code class="docutils literal notranslate"><span class="pre">EstimatedRTT</span></code> after each of these SampleRTT values is obtained, using a value of α=0.125 and assuming that the value of <code class="docutils literal notranslate"><span class="pre">EstimatedRTT</span></code> was 100 ms just before the first of these five samples were obtained. Compute also the <code class="docutils literal notranslate"><span class="pre">DevRTT</span></code> after each sample is obtained, assuming a value of β=0.25 and assuming the value of <code class="docutils literal notranslate"><span class="pre">DevRTT</span></code> was 5 ms just before the first of these five samples was obtained. Last, compute the TCP <code class="docutils literal notranslate"><span class="pre">TimeoutInterval</span></code> after each of these samples is obtained.</p>
+<p>P32. Consider the TCP procedure for estimating RTT. Suppose that α=0.1. Let <code class="docutils literal notranslate"><span class="pre">SampleRTT1</span></code> be the most recent sample RTT, let <code class="docutils literal notranslate"><span class="pre">SampleRTT2</span></code> be the next most recent sample RTT, and so on.</p>
+<p>a. For a given TCP connection, suppose four acknowledgments have been returned with corresponding sample RTTs: <code class="docutils literal notranslate"><span class="pre">SampleRTT4</span></code>, <code class="docutils literal notranslate"><span class="pre">SampleRTT3</span></code>, <code class="docutils literal notranslate"><span class="pre">SampleRTT2</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">SampleRTT1</span></code>. Express <code class="docutils literal notranslate"><span class="pre">EstimatedRTT</span></code> in terms of the four sample RTTs.
+b. Generalize your formula for n sample RTTs.
+c. For the formula in part (b) let n approach infinity. Comment on why this averaging procedure is called an exponential moving average.</p>
+<p>P33. In <a class="reference internal" href="s5.html#c3-5-3"><span class="std std-ref">Section 3.5.3</span></a> , we discussed TCP’s estimation of RTT. Why do you think TCP avoids measuring the SampleRTT for retransmitted segments?</p>
+<p>P34. What is the relationship between the variable SendBase in Section 3.5.4 and the variable
+LastByteRcvd in <a class="reference internal" href="s5.html#c3-5-5"><span class="std std-ref">Section 3.5.5</span></a> ?</p>
+<p>P35. What is the relationship between the variable LastByteRcvd in Section 3.5.5 and the
+variable y in <a class="reference internal" href="s5.html#c3-5-4"><span class="std std-ref">Section 3.5.4</span></a>?</p>
+<p>P36. In <a class="reference internal" href="s5.html#c3-5-4"><span class="std std-ref">Section 3.5.4</span></a> , we saw that TCP waits until it has received three duplicate ACKs before
+performing a fast retransmit. Why do you think the TCP designers chose not to perform a fast retransmit after the first duplicate ACK for a segment is received?</p>
+<p>P37. Compare GBN, SR, and TCP (no delayed ACK). Assume that the timeout values for all three protocols are sufficiently long such that 5 consecutive data segments and their corresponding ACKs can be received (if not lost in the channel) by the receiving host (Host B) and the sending host (Host A) respectively. Suppose Host A sends 5 data segments to Host B, and the 2nd segment (sent from A) is lost. In the end, all 5 data segments have been correctly received by Host B.</p>
+<ol class="loweralpha simple">
+<li><p>How many segments has Host A sent in total and how many ACKs has Host B sent in total? What are their sequence numbers? Answer this question for all three protocols.</p></li>
+<li><p>If the timeout values for all three protocol are much longer than 5 RTT, then which protocol successfully delivers all five data segments in shortest time interval?</p></li>
+</ol>
+<p>P38. In our description of TCP in <a class="reference internal" href="s7.html#figure-3-53"><span class="std std-ref">Figure 3.53</span></a> , the value of the threshold, <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code>, is set as <code class="docutils literal notranslate"><span class="pre">ssthresh=cwnd/2</span></code> in several places and <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> value is referred to as being set to half the window size when a loss event occurred. Must the rate at which the sender is sending when the loss event occurred be approximately equal to cwnd segments per RTT? Explain your answer. If your answer is no, can you suggest a different manner in which <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> should be set?</p>
+<p>P39. Consider <a class="reference internal" href="s6.html#figure-3-46"><span class="std std-ref">Figure 3.46(b)</span></a> . If λ′in increases beyond R/2, can λout increase beyond R/3?
+Explain. Now consider <a class="reference internal" href="s6.html#figure-3-46"><span class="std std-ref">Figure 3.46(c)</span></a> . If λ′in increases beyond R/2, can λout increase beyond R/4 under the assumption that a packet will be forwarded twice on average from the router to the receiver? Explain.</p>
+<p>P40. Consider <a class="reference internal" href="#figure-3-58"><span class="std std-ref">Figure 3.58</span></a> . Assuming TCP Reno is the protocol experiencing the behavior shown above, answer the following questions. In all cases, you should provide a short discussion justifying your answer.</p>
+<figure class="align-center">
+<img alt="../_images/videonote.png" src="../_images/videonote.png" />
+</figure>
+<p><strong>Examining the behavior of TCP</strong></p>
+<ol class="loweralpha">
+<li><p>Identify the intervals of time when TCP slow start is operating.</p></li>
+<li><p>Identify the intervals of time when TCP congestion avoidance is operating.</p></li>
+<li><p>After the 16th transmission round, is segment loss detected by a triple duplicate ACK or by a timeout?</p></li>
+<li><p>After the 22nd transmission round, is segment loss detected by a triple duplicate ACK or by a timeout?</p>
+<figure class="align-center">
+<img alt="../_images/340-1.png" src="../_images/340-1.png" />
+</figure>
+<p id="figure-3-58"><strong>Figure 3.58 TCP window size as a function of time</strong></p>
+</li>
+<li><p>What is the initial value of ssthresh at the first transmission round?</p></li>
+<li><p>What is the value of ssthresh at the 18th transmission round?</p></li>
+<li><p>What is the value of ssthresh at the 24th transmission round?</p></li>
+<li><p>During what transmission round is the 70th segment sent?</p></li>
+</ol>
+<p>i. Assuming a packet loss is detected after the 26th round by the receipt of a triple duplicate ACK, what will be the values of the congestion window size and of
+ssthresh ?
+j. Suppose TCP Tahoe is used (instead of TCP Reno), and assume that triple duplicate ACKs are received at the 16th round. What are the ssthresh and the congestion window size at the 19th round?
+k. Again suppose TCP Tahoe is used, and there is a timeout event at 22nd round. How many packets have been sent out from 17th round till 22nd round, inclusive?</p>
+<p>P41. Refer to <a class="reference internal" href="s7.html#figure-3-55"><span class="std std-ref">Figure 3.55</span></a> , which illustrates the convergence of TCP’s AIMD algorithm. Suppose that instead of a multiplicative decrease, TCP decreased the window size by a constant amount.
+Would the resulting AIAD algorithm converge to an equal share algorithm? Justify your answer using a diagram similar to <a class="reference internal" href="s7.html#figure-3-55"><span class="std std-ref">Figure 3.55</span></a> .</p>
+<p>P42. In <a class="reference internal" href="s5.html#c3-5-4"><span class="std std-ref">Section 3.5.4</span></a> , we discussed the doubling of the timeout interval after a timeout event. This mechanism is a form of congestion control. Why does TCP need a window-based congestion-control mechanism (as studied in <a class="reference internal" href="s7.html#c3-7"><span class="std std-ref">Section 3.7</span></a> ) in addition to this doubling-timeout- interval mechanism?</p>
+<p>P43. Host A is sending an enormous file to Host B over a TCP connection. Over this connection there is never any packet loss and the timers never expire. Denote the transmission rate of the link connecting Host A to the Internet by R bps. Suppose that the process in Host A is capable of sending data into its TCP socket at a rate S bps, where S=10⋅R. Further suppose that the TCP receive buffer is large enough to hold the entire file, and the send buffer can hold only one percent of the file. What would prevent the process in Host A from continuously passing data to its TCP socket at rate S bps? TCP flow control? TCP congestion control? Or something else? Elaborate.</p>
+<p>P44. Consider sending a large file from a host to another over a TCP connection that has no loss.</p>
+<ol class="loweralpha simple">
+<li><p>Suppose TCP uses AIMD for its congestion control without slow start. Assuming cwnd increases by 1 MSS every time a batch of ACKs is received and assuming approximately constant round-trip times, how long does it take for cwnd increase from 6 MSS to 12 MSS (assuming no loss events)?</p></li>
+<li><p>What is the average throughout (in terms of MSS and RTT) for this connection up through time=6 RTT?</p></li>
+</ol>
+<p>P45. Recall the macroscopic description of TCP throughput. In the period of time from when the connection’s rate varies from W/(2 · RTT) to W/RTT, only one packet is lost (at the very end of the period).</p>
+<ol class="loweralpha simple">
+<li><p>Show that the loss rate (fraction of packets lost) is equal to L=loss rate=138W2+34W</p></li>
+<li><p>Use the result above to show that if a connection has loss rate L, then its average rate is approximately given by ≈1.22⋅MSSRTTL</p></li>
+</ol>
+<p>P46. Consider that only a single TCP (Reno) connection uses one 10Mbps link which does not buffer any data. Suppose that this link is the only congested link between the sending and receiving hosts. Assume that the TCP sender has a huge file to send to the receiver, and the receiver’s receive buffer is much larger than the congestion window. We also make the following assumptions: each TCP segment size is 1,500 bytes; the two-way propagation delay of this connection is 150 msec; and this TCP connection is always in congestion avoidance phase, that is, ignore slow start.</p>
+<ol class="loweralpha simple">
+<li><p>What is the maximum window size (in segments) that this TCP connection can achieve?</p></li>
+<li><p>What is the average window size (in segments) and average throughput (in bps) of this TCP connection?</p></li>
+<li><p>How long would it take for this TCP connection to reach its maximum window again after recovering from a packet loss?</p></li>
+</ol>
+<p>P47. Consider the scenario described in the previous problem. Suppose that the 10Mbps link can buffer a finite number of segments. Argue that in order for the link to always be busy sending data, we would like to choose a buffer size that is at least the product of the link speed C and the two-way propagation delay between the sender and the receiver.</p>
+<p>P48. Repeat Problem 46, but replacing the 10 Mbps link with a 10 Gbps link. Note that in your answer to part c, you will realize that it takes a very long time for the congestion window size to reach its maximum window size after recovering from a packet loss. Sketch a solution to solve this problem.</p>
+<p>P49. Let T (measured by RTT) denote the time interval that a TCP connection takes to increase its congestion window size from W/2 to W, where W is the maximum congestion window size. Argue that T is a function of TCP’s average throughput.</p>
+<p>P50. Consider a simplified TCP’s AIMD algorithm where the congestion window size is measured in number of segments, not in bytes. In additive increase, the congestion window size increases by one segment in each RTT. In multiplicative decrease, the congestion window size decreases by half (if the result is not an integer, round down to the nearest integer). Suppose that two TCP connections, C1 and C2, share a single congested link of speed 30 segments per second. Assume that both C1 and C2 are in the congestion avoidance phase. Connection C1’s RTT is 50 msec and connection C2’s RTT is 100 msec. Assume that when the data rate in the link exceeds the link’s speed, all TCP connections experience data segment loss.</p>
+<ol class="loweralpha simple">
+<li><p>If both C1 and C2 at time t0 have a congestion window of 10 segments, what are their congestion window sizes after 1000 msec?</p></li>
+<li><p>In the long run, will these two connections get the same share of the bandwidth of the congested link? Explain.</p></li>
+</ol>
+<p>P51. Consider the network described in the previous problem. Now suppose that the two TCP connections, C1 and C2, have the same RTT of 100 msec. Suppose that at time t0, C1’s congestion window size is 15 segments but C2’s congestion window size is 10 segments.</p>
+<ol class="loweralpha simple">
+<li><p>What are their congestion window sizes after 2200 msec?</p></li>
+<li><p>In the long run, will these two connections get about the same share of the bandwidth of the congested link?</p></li>
+<li><p>We say that two connections are synchronized, if both connections reach their maximum window sizes at the same time and reach their minimum window sizes at the same time. In the long run, will these two connections get synchronized eventually? If so, what are their maximum window sizes?</p></li>
+<li><p>Will this synchronization help to improve the utilization of the shared link? Why? Sketch some idea to break this synchronization.</p></li>
+</ol>
+<p>P52. Consider a modification to TCP’s congestion control algorithm. Instead of additive increase, we can use multiplicative increase. A TCP sender increases its window size by a small positive constant a(0&lt;a&lt;1) whenever it receives a valid ACK. Find the functional relationship between loss rate L and maximum congestion window W. Argue that for this modified TCP, regardless of TCP’s average throughput, a TCP connection always spends the same amount of time to increase its congestion window size from W/2 to W.</p>
+<p>P53. In our discussion of TCP futures in <a class="reference internal" href="s7.html#c3-7"><span class="std std-ref">Section 3.7</span></a> , we noted that to achieve a throughput of 10 Gbps, TCP could only tolerate a segment loss probability of 2⋅10−10 (or equivalently, one loss event for every 5,000,000,000 segments). Show the derivation for the values of 2⋅10−10 (1 out of 5,000,000) for the RTT and MSS values given in <a class="reference internal" href="s7.html#c3-7"><span class="std std-ref">Section 3.7</span></a> . If TCP needed to support a 100 Gbps connection, what would the tolerable loss be?</p>
+<p>P54. In our discussion of TCP congestion control in <a class="reference internal" href="s7.html#c3-7"><span class="std std-ref">Section 3.7</span></a> , we implicitly assumed that the TCP sender always had data to send. Consider now the case that the TCP sender sends a large amount of data and then goes idle (since it has no more data to send) at t1. TCP remains idle for a relatively long period of time and then wants to send more data at t2. What are the advantages and disadvantages of having TCP use the <code class="docutils literal notranslate"><span class="pre">cwnd</span></code> and <code class="docutils literal notranslate"><span class="pre">ssthresh</span></code> values from t1 when starting to send data at t2? What alternative would you recommend? Why?</p>
+<p>P55. In this problem we investigate whether either UDP or TCP provides a degree of end-point authentication.</p>
+<ol class="loweralpha simple">
+<li><p>Consider a server that receives a request within a UDP packet and responds to that request within a UDP packet (for example, as done by a DNS server). If a client with IP address X spoofs its address with address Y, where will the server send its response?</p></li>
+<li><p>Suppose a server receives a SYN with IP source address Y, and after responding with a SYNACK, receives an ACK with IP source address Y with the correct acknowledgment number. Assuming the server chooses a random initial sequence number and there is no “man-in-the-middle,” can the server be certain that the client is indeed at Y (and not at some other address X that is spoofing Y)?</p></li>
+</ol>
+<p>P56. In this problem, we consider the delay introduced by the TCP slow-start phase. Consider a client and a Web server directly connected by one link of rate R. Suppose the client wants to retrieve an object whose size is exactly equal to 15 S, where S is the maximum segment size (MSS). Denote the round-trip time between client and server as RTT (assumed to be constant). Ignoring protocol headers, determine the time to retrieve the object (including TCP connection establishment) when</p>
+<ol class="loweralpha simple">
+<li><p>4 S/R&gt;S/R+RTT&gt;2S/R</p></li>
+<li><p>S/R+RTT&gt;4 S/R</p></li>
+<li><p>S/R&gt;RTT.</p></li>
+</ol>
+</section>
+<section id="programming-assignments">
+<h2>Programming Assignments<a class="headerlink" href="#programming-assignments" title="此标题的永久链接">#</a></h2>
+<section id="implementing-a-reliable-transport-protocol">
+<h3>Implementing a Reliable Transport Protocol<a class="headerlink" href="#implementing-a-reliable-transport-protocol" title="此标题的永久链接">#</a></h3>
+<p>In this laboratory programming assignment, you will be writing the sending and receiving transport-level code for implementing a simple reliable data transfer protocol. There are two versions of this lab, the alternating-bit-protocol version and the GBN version. This lab should be fun—your implementation will differ very little from what would be required in a real-world situation.</p>
+<p>Since you probably don’t have standalone machines (with an OS that you can modify), your code will have to execute in a simulated hardware/software environment. However, the programming interface provided to your routines—the code that would call your entities from above and from below—is very close to what is done in an actual UNIX environment. (Indeed, the software interfaces described in this programming assignment are much more realistic than the infinite loop senders and receivers that many texts describe.) Stopping and starting timers are also simulated, and timer interrupts will cause your timer handling routine to be activated.</p>
+<p>The full lab assignment, as well as code you will need to compile with your own code, are available at this book’s Web site: <a class="reference external" href="https://www.pearsonhighered.com/cs-resources">www.pearsonhighered.com/cs-resources</a>.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="wiresharklab.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Wireshark 实验室</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="summary.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">3.8 总结</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">家庭作业问题和疑问</a><ul>
+<li><a class="reference internal" href="#sections-3-13-3">SECTIONS 3.1–3.3</a></li>
+<li><a class="reference internal" href="#section-3-4">SECTION 3.4</a></li>
+<li><a class="reference internal" href="#section-3-5">SECTION 3.5</a></li>
+<li><a class="reference internal" href="#section-3-7">SECTION 3.7</a></li>
+<li><a class="reference internal" href="#problems">Problems</a></li>
+<li><a class="reference internal" href="#programming-assignments">Programming Assignments</a><ul>
+<li><a class="reference internal" href="#implementing-a-reliable-transport-protocol">Implementing a Reliable Transport Protocol</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    </body>
+</html>
