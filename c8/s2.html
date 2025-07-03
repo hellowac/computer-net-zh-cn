@@ -1,0 +1,652 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="8.3 消息完整性和数字签名" href="s3.html" /><link rel="prev" title="8.1 什么是网络安全？" href="s1.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>8.2 密码学原理 - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络和 Internet</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线和移动网络</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 8 章 计算机网络中的安全性</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="c8-2">
+<span id="id1"></span><h1>8.2 密码学原理<a class="headerlink" href="#c8-2" title="此标题的永久链接">#</a></h1>
+<p>8.2 Principles of Cryptography</p>
+<p>Although cryptography has a long history dating back at least as far as Julius Caesar, modern cryptographic techniques, including many of those used in the Internet, are based on advances made in the past 30 years. Kahn’s book, The Codebreakers <a class="reference internal" href="../references.html#kahn-1967"><span class="std std-ref">[Kahn 1967]</span></a>, and Singh’s book, The Code Book: The Science of Secrecy from Ancient Egypt to Quantum Cryptography <a class="reference internal" href="../references.html#singh-1999"><span class="std std-ref">[Singh 1999]</span></a>, provide a fascinating look at the long history of cryptography. A complete discussion of cryptography itself requires a complete book [<a class="reference internal" href="../references.html#kaufman-1995"><span class="std std-ref">Kaufman 1995</span></a>; <a class="reference internal" href="../references.html#schneier-1995"><span class="std std-ref">Schneier 1995</span></a>] and so we only touch on the essential aspects of cryptography, particularly as they are practiced on the Internet. We also note that while our focus in this section will be on the use of cryptography for confidentiality, we’ll see shortly that cryptographic techniques are inextricably woven into authentication, message integrity, nonrepudiation, and more.</p>
+<figure class="align-center">
+<img alt="../_images/660-0.png" src="../_images/660-0.png" />
+</figure>
+<p id="figure-8-2"><strong>Figure 8.2 Cryptographic components</strong></p>
+<p>Cryptographic techniques allow a sender to disguise data so that an intruder can gain no information from the intercepted data. The receiver, of course, must be able to recover the original data from the disguised data. <a class="reference internal" href="#figure-8-2"><span class="std std-ref">Figure 8.2</span></a> illustrates some of the important terminology.</p>
+<p>Suppose now that Alice wants to send a message to Bob. Alice’s message in its original form (for example, “Bob, I love you. Alice”) is known as p­ <strong>laintext</strong>, or <strong>cleartext</strong>. Alice encrypts her plaintext message using an <strong>encryption algorithm</strong> so that the encrypted message, known as <strong>ciphertext</strong>, looks unintelligible to any intruder. Interestingly, in many modern cryptographic systems, including those used in the Internet, the encryption technique itself is known—published, standardized, and available to everyone (for example, [<span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc1321.html"><strong>RFC 1321</strong></a>; <span class="target" id="index-1"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3447.html"><strong>RFC 3447</strong></a>; <span class="target" id="index-2"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2420.html"><strong>RFC 2420</strong></a>; <a class="reference internal" href="../references.html#nist-2001"><span class="std std-ref">NIST 2001</span></a>]), even a potential intruder! Clearly, if everyone knows the method for encoding data, then there must be some secret information that prevents an intruder from decrypting the transmitted data. This is where keys come in.</p>
+<p>In <a class="reference internal" href="#figure-8-2"><span class="std std-ref">Figure 8.2</span></a>, Alice provides a <strong>key</strong>, KA, a string of numbers or characters, as input to the encryption algorithm. The encryption algorithm takes the key and the plaintext message, m, as input and produces ciphertext as output. The notation KA(m) refers to the ciphertext form (encrypted using the key KA) of the plaintext message, m. The actual <strong>encryption algorithm</strong> that uses key KA will be evident from the context. Similarly, Bob will provide a key, KB, to the <strong>decryption algorithm</strong> that takes the ciphertext and Bob’s key as input and produces the original plaintext as output. That is, if Bob receives an encrypted
+message KA(m), he decrypts it by computing KB(KA(m))=m. In <strong>symmetric key systems</strong>, Alice’s and Bob’s keys are identical and are secret. In <strong>public key systems</strong>, a pair of keys is used. One of the keys is known to both Bob and Alice (indeed, it is known to the whole world). The other key is known only by either Bob or Alice (but not both). In the following two subsections, we consider symmetric key and public key systems in more detail.</p>
+<section id="c8-2-1">
+<span id="id2"></span><h2>8.2.1 对称密钥加密<a class="headerlink" href="#c8-2-1" title="此标题的永久链接">#</a></h2>
+<p>8.2.1 Symmetric Key Cryptography</p>
+<p>All cryptographic algorithms involve substituting one thing for another, for example, taking a piece of plaintext and then computing and substituting the appropriate ciphertext to create the encrypted message. Before studying a modern key-based cryptographic system, let us first get our feet wet by studying a very old, very simple symmetric key algorithm attributed to Julius Caesar, known as the <strong>Caesar cipher</strong> (a cipher is a method for encrypting data).</p>
+<p>For English text, the Caesar cipher would work by taking each letter in the plaintext message and substituting the letter that is k letters later (allowing wraparound; that is, having the letter z followed by the letter a) in the alphabet. For example if k=3, then the letter a in plaintext becomes d in ciphertext; b in plaintext becomes e in ciphertext, and so on. Here, the value of k serves as the key. As an example, the plaintext message “bob, i love you. Alice” becomes “ere, l oryh brx. dolfh” in ciphertext. While the ciphertext does indeed look like gibberish, it wouldn’t take long to break the code if you knew that the Caesar cipher was being used, as there are only 25 possible key values.</p>
+<p>An improvement on the Caesar cipher is the <strong>monoalphabetic cipher</strong>, which also substitutes one letter of the alphabet with another letter of the alphabet. ­However, rather than substituting according to a regular pattern (for example, substitution with an offset of k for all letters), any letter can be substituted for any other letter, as long as each letter has a unique substitute letter, and vice versa. The substitution rule in <a class="reference internal" href="#figure-8-3"><span class="std std-ref">Figure 8.3</span></a> shows one possible rule for encoding plaintext.</p>
+<p>The plaintext message “bob, i love you. Alice” becomes “nkn, s gktc wky. Mgsbc.” Thus, as in the case of the Caesar cipher, this looks like gibberish. A monoalphabetic cipher would also appear to be better than the Caesar cipher in that there are 26! (on the order of 1026) possible pairings of letters rather than 25 possible pairings. A brute-force approach of trying all 1026 possible pairings</p>
+<figure class="align-center">
+<img alt="../_images/662-0.png" src="../_images/662-0.png" />
+</figure>
+<p id="figure-8-3"><strong>Figure 8.3 A monoalphabetic cipher</strong></p>
+<p>would require far too much work to be a feasible way of breaking the encryption algorithm and decoding the message. However, by statistical analysis of the plaintext language, for example, knowing that the letters e and t are the most frequently occurring letters in typical English text (accounting for 13 percent and 9 percent of letter occurrences), and knowing that particular two-and three-letter occurrences of letters appear quite often together (for example, “in,” “it,” “the,” “ion,” “ing,” and so forth) make it relatively easy to break this code. If the intruder has some knowledge about the possible contents of the message, then it is even easier to break the code. For example, if Trudy the intruder is Bob’s wife and suspects Bob of having an affair with Alice, then she might suspect that the names “bob” and “alice” appear in the text. If Trudy knew for certain that those two names appeared in the ciphertext and had a copy of the example ciphertext message above, then she could immediately determine seven of the 26 letter pairings, requiring 109 fewer possibilities to be checked by a brute-force method. Indeed, if Trudy suspected Bob of having an affair, she might well expect to find some other choice words in the message as well.</p>
+<p>When considering how easy it might be for Trudy to break Bob and Alice’s encryption scheme, one can distinguish three different scenarios, depending on what information the intruder has.</p>
+<ul class="simple">
+<li><p><strong>Ciphertext-only attack</strong>. In some cases, the intruder may have access only to the intercepted ciphertext, with no certain information about the contents of the plaintext message. We have seen how statistical analysis can help in a <strong>ciphertext-only attack</strong> on an encryption scheme.</p></li>
+<li><p><strong>Known-plaintext attack</strong>. We saw above that if Trudy somehow knew for sure that “bob” and “alice” appeared in the ciphertext message, then she could have determined the (plaintext, ciphertext) pairings for the letters a, l, i, c, e, b, and o. Trudy might also have been fortunate enough to have recorded all of the ciphertext transmissions and then found Bob’s own decrypted version of one of the transmissions scribbled on a piece of paper. When an intruder knows some of the (plaintext, ciphertext) pairings, we refer to this as a <strong>known-plaintext attack</strong> on the encryption scheme.</p></li>
+<li><p><strong>Chosen-plaintext attack</strong>. In a <strong>chosen-plaintext attack</strong>, the intruder is able to choose the plaintext message and obtain its corresponding ciphertext form. For the simple encryption algorithms we’ve seen so far, if Trudy could get Alice to send the message, “The quick brown fox jumps over the lazy dog,” she could completely break the encryption scheme. We’ll see shortly that for more sophisticated encryption techniques, a chosen-plaintext attack does not necessarily mean that the encryption technique can be broken.</p></li>
+</ul>
+<p>Five hundred years ago, techniques improving on monoalphabetic encryption, known as <strong>polyalphabetic encryption</strong>, were invented. The idea behind polyalphabetic encryption is to use multiple monoalphabetic ciphers, with a specific</p>
+<figure class="align-center">
+<img alt="../_images/663-0.png" src="../_images/663-0.png" />
+</figure>
+<p id="figure-8-4"><strong>Figure 8.4 A monoalphabetic cipher</strong></p>
+<p>monoalphabetic cipher to encode a letter in a specific position in the plaintext message. Thus, the same letter, appearing in different positions in the plaintext message, might be encoded differently. An example of a polyalphabetic encryption scheme is shown in <a class="reference internal" href="#figure-8-4"><span class="std std-ref">Figure 8.4</span></a>. It has two Caesar ciphers (with k=5 and k=19), shown as rows. We might choose to use these two Caesar ciphers, C1 and C2, in the repeating pattern C1, C2, C2, C1, C2. That is, the first letter of plaintext is to be encoded using C1, the second and third using C2, the fourth using C1, and the fifth using C2. The pattern then repeats, with the sixth letter being encoded using C1, the seventh with C2, and so on. The plaintext message “bob, i love you.” is thus encrypted “ghu, n etox dhz.” Note that the first b in the plaintext message is encrypted using C1, while the second b is encrypted using C2. In this example, the encryption and decryption “key” is the knowledge of the two Caesar keys (k=5, k=19) and the pattern C1, C2, C2, C1, C2.</p>
+<section id="block-ciphers">
+<h3>Block Ciphers<a class="headerlink" href="#block-ciphers" title="此标题的永久链接">#</a></h3>
+<p>Let us now move forward to modern times and examine how symmetric key encryption is done today. There are two broad classes of symmetric encryption techniques: <strong>stream ciphers</strong> and <strong>block ciphers</strong>. We’ll briefly examine stream ciphers in <a class="reference internal" href="s7.html#c8-7"><span class="std std-ref">­Section 8.7</span></a> when we investigate security for wireless LANs. In this section, we focus on block ciphers, which are used in many secure Internet protocols, including PGP (for secure e-mail), SSL (for securing TCP connections), and IPsec (for securing the network-layer transport).</p>
+<p>In a block cipher, the message to be encrypted is processed in blocks of k bits. For example, if k=64, then the message is broken into 64-bit blocks, and each block is encrypted independently. To encode a block, the cipher uses a one-to-one mapping to map the k-bit block of cleartext to a k-bit block of ciphertext. Let’s look at an example. Suppose that k=3, so that the block cipher maps 3-bit inputs (cleartext) to 3-bit outputs (ciphertext). One possible mapping is given in <a class="reference internal" href="#table-8-1"><span class="std std-ref">Table 8.1</span></a>. Notice that this is a one-to-one mapping; that is, there is a different output for each input. This block cipher breaks the message up into 3-bit blocks and encrypts each block according to the above mapping. You should verify that the message 010110001111 gets encrypted into 101000111001.</p>
+<p>Continuing with this 3-bit block example, note that the mapping in <a class="reference internal" href="#table-8-1"><span class="std std-ref">Table 8.1</span></a> is just one mapping of many possible mappings. How many possible mappings are there? To answer this question, observe that a mapping is nothing more than a permutation of all the possible inputs. There are 23(=8) possible inputs (listed under the input columns). These eight inputs can be permuted in 8!=40,320 different ways. Since each of these permutations specifies a mapping, there are 40,320 possible mappings. We can view each of these mappings as a key—if Alice and Bob both know the mapping (the key), they can encrypt and decrypt the messages sent between them.</p>
+<p id="table-8-1"><strong>Table 8.1 A specific 3-bit block cipher</strong></p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>input</p></td>
+<td><p>output</p></td>
+<td><p>input</p></td>
+<td><p>output</p></td>
+</tr>
+<tr class="row-even"><td><p>000</p></td>
+<td><p>110</p></td>
+<td><p>100</p></td>
+<td><p>011</p></td>
+</tr>
+<tr class="row-odd"><td><p>001</p></td>
+<td><p>111</p></td>
+<td><p>101</p></td>
+<td><p>010</p></td>
+</tr>
+<tr class="row-even"><td><p>010</p></td>
+<td><p>101</p></td>
+<td><p>110</p></td>
+<td><p>000</p></td>
+</tr>
+<tr class="row-odd"><td><p>011</p></td>
+<td><p>100</p></td>
+<td><p>111</p></td>
+<td><p>001</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The brute-force attack for this cipher is to try to decrypt ciphtertext by using all mappings. With only 40,320 mappings (when k=3), this can quickly be accomplished on a desktop PC. To thwart brute-force attacks, block ciphers typically use much larger blocks, consisting of k=64 bits or even larger. Note that the number of possible mappings for a general k-block cipher is 2k!, which is astronomical for even moderate values of k (such as k=64).</p>
+<p>Although full-table block ciphers, as just described, with moderate values of k can produce robust symmetric key encryption schemes, they are unfortunately difficult to implement. For k=64 and for a given mapping, Alice and Bob would need to maintain a table with 264 input values, which is an infeasible task. Moreover, if Alice and Bob were to change keys, they would have to each regenerate the table. Thus, a full-table block cipher, providing predetermined mappings between all inputs and outputs (as in the example above), is simply out of the question.</p>
+<p>Instead, block ciphers typically use functions that simulate randomly permuted tables. An example (adapted from <a class="reference internal" href="../references.html#kaufman-1995"><span class="std std-ref">[Kaufman 1995]</span></a>) of such a function for k=64 bits is shown in <a class="reference internal" href="#figure-8-5"><span class="std std-ref">Figure 8.5</span></a>. The function first breaks a 64-bit block into 8 chunks, with each chunk consisting of 8 bits. Each 8-bit chunk is processed by an 8-bit to 8-bit table, which is of manageable size. For example, the first chunk is processed by the table denoted by T1. Next, the 8 output chunks are reassembled into a 64-bit block. The positions of the 64 bits in the block are then scrambled (permuted) to produce a 64-bit output. This output is fed back to the 64-bit input, where another cycle begins. After n such cycles, the function provides a 64-bit block of ciphertext. The purpose of the rounds is to make each input bit affect most (if not all) of the final output bits. (If only one round were used, a given input bit would affect only 8 of the 64 output bits.) The key for this block cipher algorithm would be the eight permutation tables (assuming the scramble function is publicly known).</p>
+<figure class="align-center">
+<img alt="img/685-0.png" src="img/685-0.png" />
+</figure>
+<p id="figure-8-5"><strong>Figure 8.5 An example of a block cipher</strong></p>
+<p>Today there are a number of popular block ciphers, including DES (standing for Data Encryption Standard), 3DES, and AES (standing for Advanced Encryption Standard). Each of these standards uses functions, rather than predetermined tables, along the lines of <a class="reference internal" href="#figure-8-5"><span class="std std-ref">Figure 8.5</span></a> (albeit more complicated and specific to each cipher). Each of these algorithms also uses a string of bits for a key. For example, DES uses 64-bit blocks with a 56-bit key. AES uses 128-bit blocks and can operate with keys that are 128, 192, and 256 bits long. An algorithm’s key determines the specific “mini-table” mappings and permutations within the algorithm’s internals. The brute-force attack for each of these ciphers is to cycle through all the keys, applying the decryption algorithm with each key. Observe that with a key length of n, there are 2n possible keys. NIST <a class="reference internal" href="../references.html#nist-2001"><span class="std std-ref">[NIST 2001]</span></a> estimates that a machine that could crack 56-bit DES in one second (that is, try all 256 keys in one second) would take approximately 149 trillion years to crack a 128-bit AES key.</p>
+</section>
+<section id="cipher-block-chaining">
+<h3>Cipher-Block Chaining<a class="headerlink" href="#cipher-block-chaining" title="此标题的永久链接">#</a></h3>
+<p>In computer networking applications, we typically need to encrypt long messages (or long streams of data). If we apply a block cipher as described by simply chopping up the message into k-bit blocks and independently encrypting each block, a subtle but important problem occurs. To see this, observe that two or more of the cleartext blocks can be identical. For example, the cleartext in two or more blocks could be “HTTP/1.1”. For these identical blocks, a block cipher would, of course, produce the same ciphertext. An attacker could potentially guess the cleartext when it sees identical ciphertext blocks and may even be able to decrypt the entire message by identifying identical ciphtertext blocks and using knowledge about the underlying protocol structure <a class="reference internal" href="../references.html#kaufman-1995"><span class="std std-ref">[Kaufman 1995]</span></a>.</p>
+<p>To address this problem, we can mix some randomness into the ciphertext so that identical plaintext blocks produce different ciphertext blocks. To explain this idea, let m(i) denote the ith plaintext block, c(i) denote the ith ciphertext block, and a⊕b denote the exclusive-or (XOR) of two bit strings, a and b. (Recall that the 0⊕0=1⊕1=0 and 0⊕1=1⊕0=1, and the XOR of two bit strings is done on a bit-by-bit basis. So, for example, 10101010⊕11110000=01011010.) Also, denote the block-cipher encryption algorithm with key S as KS. The basic idea is as follows. The sender creates a random k-bit number r(i) for the ith block and calculates c(i)=KS(m(i)⊕r(i)). Note that a new k-bit random number is chosen for each block. The sender then sends c(1), r(1), c(2), r(2), c(3), r(3), and so on. Since the receiver receives c(i) and r(i), it can recover each block of the plaintext by computing m(i)=KS(c(i))⊕r(i). It is important to note that, although r(i) is sent in the clear and thus can be sniffed by Trudy, she cannot obtain the plaintext m(i), since she does not know the key KS. Also note that if two plaintext blocks m(i) and m(j) are the same, the corresponding ciphertext blocks c(i) and c(j) will be different (as long as the random numbers r(i) and r(j) are different, which occurs with very high probability).</p>
+<p>As an example, consider the 3-bit block cipher in <a class="reference internal" href="#table-8-1"><span class="std std-ref">Table 8.1</span></a>. Suppose the plaintext is 010010010. If Alice encrypts this directly, without including the randomness, the resulting ciphertext becomes 101101101. If Trudy sniffs this ciphertext, because each of the three cipher blocks is the same, she can correctly surmise that each of the three plaintext blocks are the same. Now suppose instead Alice generates the random blocks r(1)=001, r(2)=111, and r(3)=100 and uses the above technique to generate the ciphertext c(1)=100, c(2)=010, and c(3)=000. Note that the three ciphertext blocks are different even though the plaintext blocks are the same. Alice then sends c(1), r(1), c(2), and r(2). You should verify that Bob can obtain the original plaintext using the shared key KS.</p>
+<p>The astute reader will note that introducing randomness solves one problem but creates another: namely, Alice must transmit twice as many bits as before. Indeed, for each cipher bit, she must now also send a random bit, doubling the required bandwidth. In order to have our cake and eat it too, block ciphers typically use a technique called <strong>Cipher Block Chaining (CBC)</strong>. The basic idea is to send only one random value along with the very first message, and then have the sender and receiver use the computed coded blocks in place of the subsequent random number. Specifically, CBC operates as follows:</p>
+<ol class="arabic simple">
+<li><p>Before encrypting the message (or the stream of data), the sender generates a random k-bit string, called the Initialization Vector (IV). Denote this initialization vector by c(0). The sender sends the IV to the receiver in cleartext.</p></li>
+<li><p>For the first block, the sender calculates m(1)⊕c(0), that is, calculates the exclusive-or of the first block of cleartext with the IV. It then runs the result through the block-cipher algorithm to get the corresponding ciphertext block; that is, c(1)=KS(m(1)⊕c(0)). The sender sends the encrypted block c(1) to the receiver.</p></li>
+<li><p>For the ith block, the sender generates the ith ciphertext block from c(i)= KS(m(i)⊕c(i−1)).</p></li>
+</ol>
+<p>Let’s now examine some of the consequences of this approach. First, the receiver will still be able to
+recover the original message. Indeed, when the receiver receives c(i), it decrypts it with KS to obtain s(i)=m(i)⊕c(i−1); since the receiver also knows c(i−1), it then obtains the cleartext block from m(i)=s(i)⊕c(i−1). Second, even if two cleartext blocks are identical, the corresponding ciphtertexts (almost always) will be different. Third, although the sender sends the IV in the clear, an intruder will still not be able to decrypt the ciphertext blocks, since the intruder does not know the secret key, S. Finally, the sender only sends one overhead block (the IV), thereby negligibly increasing the bandwidth usage for long messages (consisting of hundreds of blocks).</p>
+<p>As an example, let’s now determine the ciphertext for the 3-bit block cipher in <a class="reference internal" href="#table-8-1"><span class="std std-ref">Table 8.1</span></a> with plaintext 010010010 and IV=c(0)=001. The sender first uses the IV to calculate c(1)=KS(m(1)⊕c(0))=100. The sender then calculates c(2)= KS(m(2)⊕c(1))=KS(010⊕100)=000, and C(3)=KS(m(3)⊕c(2))=KS(010⊕000)=101. The reader should verify that the receiver, knowing the IV and KS can recover the original plaintext.</p>
+<p>CBC has an important consequence when designing secure network protocols: we’ll need to provide a mechanism within the protocol to distribute the IV from sender to receiver. We’ll see how this is done for several protocols later in this chapter.</p>
+</section>
+</section>
+<section id="c8-2-2">
+<span id="id3"></span><h2>8.2.2 公钥加密 6048.3 消息完整性和数字签名<a class="headerlink" href="#c8-2-2" title="此标题的永久链接">#</a></h2>
+<p>8.2.2 Public Key Encryption 6048.3 Message Integrity and Digital Signatures</p>
+<p>For more than 2,000 years (since the time of the Caesar cipher and up to the 1970s), encrypted communication required that the two communicating parties share a common secret—the symmetric key used for encryption and decryption. One difficulty with this approach is that the two parties must somehow agree on the shared key; but to do so requires (presumably secure) communication! Perhaps the parties could first meet and agree on the key in person (for example, two of Caesar’s centurions might meet at the Roman baths) and thereafter communicate with encryption. In a networked world, however, communicating parties may never meet and may never converse except over the network. Is it possible for two parties to communicate with encryption without having a shared secret key that is known in advance? In 1976, Diffie and Hellman <a class="reference internal" href="../references.html#diffie-1976"><span class="std std-ref">[Diffie 1976]</span></a> demonstrated an algorithm (known now as Diffie-Hellman Key Exchange) to do just that—a radically different and marvelously elegant approach toward secure communication that has led to the development of today’s public key cryptography systems. We’ll see shortly that public key cryptography systems also have several wonderful properties that make them useful not only for encryption, but for authentication and digital signatures as well. Interestingly, it has recently come to light that ideas similar to those in <a class="reference internal" href="../references.html#diffie-1976"><span class="std std-ref">[Diffie 1976]</span></a> and <a class="reference internal" href="../references.html#rsa-1978"><span class="std std-ref">[RSA 1978]</span></a> had been independently developed in the early 1970s in a series of secret reports by researchers at the Communications-Electronics Security Group in the United ­Kingdom [Ellis 1987]. As is often the case, great ideas can spring up independently in many places; fortunately, public key advances took place not only in private, but also in the public view, as well.</p>
+<figure class="align-center">
+<img alt="../_images/668-0.png" src="../_images/668-0.png" />
+</figure>
+<p id="figure-8-6"><strong>Figure 8.6 Public key cryptography</strong></p>
+<p>The use of public key cryptography is conceptually quite simple. Suppose Alice wants to communicate with Bob. As shown in <a class="reference internal" href="#figure-8-6"><span class="std std-ref">Figure 8.6</span></a>, rather than Bob and Alice sharing a single secret key (as in the case of symmetric key systems), Bob (the recipient of Alice’s messages) instead has two keys—a <strong>public key</strong> that is available to everyone in the world (including Trudy the intruder) and a <strong>private key</strong> that is known only to Bob. We will use the notation KB+ and KB− to refer to Bob’s public and private keys, respectively. In order to communicate with Bob, Alice first fetches Bob’s public key. Alice then encrypts her message, m, to Bob using Bob’s public key and a known (for example, standardized) encryption algorithm; that is, Alice computes KB−(m). Bob receives Alice’s encrypted message and uses his private key and a known (for example, standardized) decryption algorithm to decrypt Alice’s encrypted message. That is, Bob computes KB−(KB+(m)). We will see below that there are encryption/decryption algorithms and techniques for choosing public and private keys such that KB−(KB+(m))=m; that is, applying Bob’s public key, KB+, to a message, m (to get KB−(m)), and then applying Bob’s private key, KB−, to the encrypted version of m (that is, computing KB−(KB+(m))) gives back m. This is a remarkable result! In this manner, Alice can use Bob’s publicly available key to send a secret message to Bob without either of them having to distribute any secret keys! We will see shortly that we can interchange the public key and private key encryption and get the same remarkable result––that is, KB−(B+(m))=KB+(KB−(m))=m.</p>
+<p>The use of public key cryptography is thus conceptually simple. But two immediate worries may spring to mind. A first concern is that although an intruder intercepting Alice’s encrypted message will see only gibberish, the intruder knows both the key (Bob’s public key, which is available for all the world to see) and the algorithm that Alice used for encryption. Trudy can thus mount a chosen-plaintext attack, using the known standardized encryption algorithm and Bob’s publicly available encryption key to encode any message she chooses! Trudy might well try, for example, to encode messages, or parts of messages, that she suspects that Alice might send. Clearly, if public key cryptography is to work, key selection and encryption/decryption must be done in such a way that it is impossible (or at least so hard as to be nearly impossible) for an intruder to either determine Bob’s private key or somehow otherwise decrypt or guess Alice’s message to Bob. A second concern is that since Bob’s encryption key is public, anyone can send an encrypted message to Bob, including Alice or someone claiming to be Alice. In the case of a single shared secret key, the fact that the sender knows the secret key implicitly identifies the sender to the receiver. In the case of public key cryptography, however, this is no longer the case since anyone can send an encrypted message to Bob using Bob’s publicly available key. A digital signature, a topic we will study in <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">Section 8.3</span></a>, is needed to bind a sender to a message.</p>
+<section id="rsa">
+<h3>RSA<a class="headerlink" href="#rsa" title="此标题的永久链接">#</a></h3>
+<p>While there may be many algorithms that address these concerns, the <strong>RSA ­algorithm</strong> (named after its founders, Ron Rivest, Adi Shamir, and Leonard Adleman) has become almost synonymous with public key cryptography. Let’s first see how RSA works and then examine why it works.</p>
+<p>RSA makes extensive use of arithmetic operations using modulo-n arithmetic. So let’s briefly review modular arithmetic. Recall that x mod n simply means the remainder of x when divided by n; so, for example, 19 mod 5=4. In modular arithmetic, one performs the usual operations of addition, multiplication, and exponentiation. However, the result of each operation is replaced by the integer remainder that is left when the result is divided by n. Adding and multiplying with modular arithmetic is facilitated with the following handy facts:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[ (a mod n)+(b mod n)]mod n=(a+b)mod n[ (a mod n)−(b mod n)]mod n=(a−b)mod n[ (a mod n)⋅(b mod n)]mod n=(a⋅b) mod n
+</pre></div>
+</div>
+<p>It follows from the third fact that (a mod n)d n=ad mod n, which is an identity that we will soon find very useful.</p>
+<p>Now suppose that Alice wants to send to Bob an RSA-encrypted message, as shown in Figure 8.6. In our discussion of RSA, let’s always keep in mind that a message is nothing but a bit pattern, and every bit pattern can be uniquely represented by an integer number (along with the length of the bit pattern). For example, suppose a message is the bit pattern 1001; this message can be represented by the decimal integer 9. Thus, when encrypting a message with RSA, it is equivalent to encrypting the unique integer number that represents the message.</p>
+<p>There are two interrelated components of RSA:</p>
+<ul class="simple">
+<li><p>The choice of the public key and the private key</p></li>
+<li><p>The encryption and decryption algorithm</p></li>
+</ul>
+<p>To generate the public and private RSA keys, Bob performs the following steps:</p>
+<ol class="arabic simple">
+<li><p>Choose two large prime numbers, p and q. How large should p and q be? The larger the values, the more difficult it is to break RSA, but the longer it takes to perform the encoding and decoding. RSA Laboratories recommends that the product of p and q be on the order of 1,024 bits. For a discussion of how to find large prime numbers, see <a class="reference internal" href="../references.html#caldwell-2012"><span class="std std-ref">[Caldwell 2012]</span></a>.</p></li>
+<li><p>Compute n=pq and z=(p−1)(q−1).</p></li>
+<li><p>Choose a number, e, less than n, that has no common factors (other than 1) with z. (In this case, e and z are said to be relatively prime.) The letter e is used since this value will be used in encryption.</p></li>
+<li><p>Find a number, d, such that ed−1 is exactly divisible (that is, with no ­remainder) by z. The letter d is used because this value will be used in decryption. Put another way, given e, we choose d such that ed modz=1</p></li>
+<li><p>The public key that Bob makes available to the world, KB+, is the pair of numbers (n, e); his private key, KB−, is the pair of numbers (n, d).</p></li>
+</ol>
+<p>The encryption by Alice and the decryption by Bob are done as follows:</p>
+<ul class="simple">
+<li><p>Suppose Alice wants to send Bob a bit pattern represented by the integer number m (with m&lt;n). To encode, Alice performs the exponentiation me, and then computes the integer remainder when me is divided by n. In other words, the encrypted value, c, of Alice’s plaintext message, m, is c=memod n The bit pattern corresponding to this ciphertext c is sent to Bob.</p></li>
+<li><p>To decrypt the received ciphertext message, c, Bob computes m=cdmod n</p></li>
+</ul>
+<p>which requires the use of his private key (n, d).</p>
+<p id="table-8-2"><strong>Table 8.2 Alice’s RSA encryption, e=5, n=35</strong></p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Plaintext Letter</p></td>
+<td><p>m: numeric representation</p></td>
+<td><p><span class="math notranslate nohighlight">\(m^e\)</span></p></td>
+<td><p>Ciphertext c=me mod n</p></td>
+</tr>
+<tr class="row-even"><td><p>l</p></td>
+<td><p>12</p></td>
+<td><p>248832</p></td>
+<td><p>17</p></td>
+</tr>
+<tr class="row-odd"><td><p>o</p></td>
+<td><p>15</p></td>
+<td><p>759375</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>v</p></td>
+<td><p>22</p></td>
+<td><p>5153632</p></td>
+<td><p>22</p></td>
+</tr>
+<tr class="row-odd"><td><p>e</p></td>
+<td><p>5</p></td>
+<td><p>3125</p></td>
+<td><p>10</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>As a simple example of RSA, suppose Bob chooses p=5 and q=7. ­(Admittedly, these values are far too small to be secure.) Then n=35 and z=24. Bob chooses e=5, since 5 and 24 have no common factors. Finally, Bob chooses d=29, since 5⋅29−1 (that is, ed−1) is exactly divisible by 24. Bob makes the two values, n=35 and e=5, public and keeps the value d=29 secret. Observing these two public values, suppose Alice now wants to send the letters l, o, v, and e to Bob. Interpreting each letter as a number between 1 and 26 (with a being 1, and z being 26), Alice and Bob perform the encryption and decryption shown in <span class="xref std std-ref">Tables 8.2</span> and <span class="xref std std-ref">8.3</span>, respectively. Note that in this example, we consider each of the four letters as a distinct message. A more realistic example would be to convert the four letters into their 8-bit ASCII representations and then encrypt the integer corresponding to the resulting 32-bit bit pattern. (Such a realistic example generates numbers that are much too long to print in a textbook!)</p>
+<p>Given that the “toy” example in <span class="xref std std-ref">Tables 8.2</span> and <span class="xref std std-ref">8.3</span> has already produced some extremely large numbers, and given that we saw earlier that p and q should each be several hundred bits long, several practical issues regarding RSA come to mind. How does one choose large prime numbers? How does one then choose e and d? How does one perform exponentiation with large numbers? A discussion of these important issues is beyond the scope of this book; see <a class="reference internal" href="../references.html#kaufman-1995"><span class="std std-ref">[Kaufman 1995]</span></a> and the references therein for details.</p>
+<p id="table-8-3"><strong>Table 8.3  Bob’s RSA decryption, d=29, n=35</strong></p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Ciphertext c</p></td>
+<td><p><span class="math notranslate nohighlight">\(c^d\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(m = c^d mod n\)</span></p></td>
+<td><p>Plaintext Letter</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>4819685721067509150915091411825223071697</p></td>
+<td><p>12</p></td>
+<td><p>l</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>127834039403948858939111232757568359375</p></td>
+<td><p>15</p></td>
+<td><p>o</p></td>
+</tr>
+<tr class="row-even"><td><p>22</p></td>
+<td><p>851643319086537701956194499721106030592</p></td>
+<td><p>22 v</p></td>
+<td><p>v</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>1000000000000000000000000000000</p></td>
+<td><p>5</p></td>
+<td><p>e</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="session-keys">
+<h3>Session Keys<a class="headerlink" href="#session-keys" title="此标题的永久链接">#</a></h3>
+<p>We note here that the exponentiation required by RSA is a rather time-consuming process. By contrast, DES is at least 100 times faster in software and between 1,000 and 10,000 times faster in hardware <a class="reference internal" href="../references.html#rsa-fast-2012"><span class="std std-ref">[RSA Fast 2012]</span></a>. As a result, RSA is often used in practice in combination with symmetric key cryptography. For example, if Alice wants to send Bob a large amount of encrypted data, she could do the following. First Alice chooses a key that will be used to encode the data itself; this key is referred to as a <strong>session key</strong>, and is denoted by KS. Alice must inform Bob of the session key, since this is the shared ­symmetric key they will use with a symmetric key cipher (e.g., with DES or AES). Alice encrypts the session key using Bob’s public key, that is, computes c=(KS)e mod n. Bob receives the RSA-encrypted session key, c, and decrypts it to obtain the session key, KS. Bob now knows the session key that Alice will use for her encrypted data transfer.</p>
+</section>
+<section id="why-does-rsa-work">
+<h3>Why Does RSA Work?<a class="headerlink" href="#why-does-rsa-work" title="此标题的永久链接">#</a></h3>
+<p>RSA encryption/decryption appears rather magical. Why should it be that by applying the encryption algorithm and then the decryption algorithm, one recovers the original message? In order to understand why RSA works, again denote n=pq, where p and q are the large prime numbers used in the RSA algorithm.</p>
+<p>Recall that, under RSA encryption, a message (uniquely represented by an ­integer), m, is exponentiated to the power e using modulo-n arithmetic, that is,</p>
+<blockquote>
+<div><p>c=memod n</p>
+</div></blockquote>
+<p>Decryption is performed by raising this value to the power d, again using modulo-n arithmetic. The result of an encryption step followed by a decryption step is thus (me mod n)d mod n. Let’s now see what we can say about this quantity. As mentioned earlier, one important property of modulo arithmetic is (a mod n)d mod n=ad mod n for any values a, n, and d. Thus, using a=me in this property, we have</p>
+<blockquote>
+<div><p>(memod n)dmod n=medmod n</p>
+</div></blockquote>
+<p>It therefore remains to show that medmod n=m. Although we’re trying to remove some of the magic about why RSA works, to establish this, we’ll need to use a rather magical result from number theory here. Specifically, we’ll need the result that says if p and q are prime, n=pq, and z=(p−1)(q−1), then <span class="math notranslate nohighlight">\(x^y\)</span> mod n is the same as <span class="math notranslate nohighlight">\(x^{(y mod z)}  mod n\)</span> <a class="reference internal" href="../references.html#kaufman-1995"><span class="std std-ref">[Kaufman 1995]</span></a>. Applying this result with x=m and y=ed we have</p>
+<blockquote>
+<div><p>medmod n=m(edmod z)mod n</p>
+</div></blockquote>
+<p>But remember that we have chosen e and d such that edmod z=1. This gives us</p>
+<blockquote>
+<div><p>medmod n=m1mod n=m</p>
+</div></blockquote>
+<p>which is exactly the result we are looking for! By first exponentiating to the power of e (that is, encrypting) and then exponentiating to the power of d (that is, ­decrypting), we obtain the original value, m. Even more wonderful is the fact that if we first exponentiate to the power of d and then exponentiate to the power of e—that is, we reverse the order of encryption and decryption, performing the decryption operation first and then applying the encryption operation—we also obtain the original value, m. This wonderful result follows immediately from the modular arithmetic:</p>
+<blockquote>
+<div><p>(mdmod n)emod n=mdemod n=medmod n=(memod n)dmod n</p>
+</div></blockquote>
+<p>The security of RSA relies on the fact that there are no known algorithms for quickly factoring a number, in this case the public value n, into the primes p and q. If one knew p and q, then given the public value e, one could easily compute the secret key, d. On the other hand, it is not known whether or not there exist fast algorithms for factoring a number, and in this sense, the security of RSA is not guaranteed.</p>
+<p>Another popular public-key encryption algorithm is the Diffie-Hellman algorithm, which we will briefly explore in the homework problems. Diffie-Hellman is not as versatile as RSA in that it cannot be used to encrypt messages of arbitrary length; it can be used, however, to establish a symmetric session key, which is in turn used to encrypt messages.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="s3.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">8.3 消息完整性和数字签名</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="s1.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">8.1 什么是网络安全？</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">8.2 密码学原理</a><ul>
+<li><a class="reference internal" href="#c8-2-1">8.2.1 对称密钥加密</a><ul>
+<li><a class="reference internal" href="#block-ciphers">Block Ciphers</a></li>
+<li><a class="reference internal" href="#cipher-block-chaining">Cipher-Block Chaining</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#c8-2-2">8.2.2 公钥加密 6048.3 消息完整性和数字签名</a><ul>
+<li><a class="reference internal" href="#rsa">RSA</a></li>
+<li><a class="reference internal" href="#session-keys">Session Keys</a></li>
+<li><a class="reference internal" href="#why-does-rsa-work">Why Does RSA Work?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

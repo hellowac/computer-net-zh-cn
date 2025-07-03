@@ -1,0 +1,504 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="8.7 网络层安全: IPsec 和虚拟专用网络" href="s7.html" /><link rel="prev" title="8.5 保护电子邮件" href="s5.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>8.6 保护 TCP 连接: SSL - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络和 Internet</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线和移动网络</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 8 章 计算机网络中的安全性</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="tcp-ssl">
+<span id="c8-6"></span><h1>8.6 保护 TCP 连接: SSL<a class="headerlink" href="#tcp-ssl" title="此标题的永久链接">#</a></h1>
+<p>8.6 Securing TCP Connections: SSL</p>
+<p>In the previous section, we saw how cryptographic techniques can provide confidentiality, data integrity, and end-point authentication to a specific application, namely, e-mail. In this section, we’ll drop down a layer in the protocol stack and examine how cryptography can enhance TCP with security services, including confidentiality, data integrity, and end-point authentication. This enhanced version of TCP is commonly known as <strong>Secure Sockets Layer (SSL)</strong>. A slightly modified version of SSL version 3, called <strong>Transport Layer Security (TLS)</strong>, has been standardized by the IETF [<span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc4346.html"><strong>RFC 4346</strong></a>].</p>
+<p>The SSL protocol was originally designed by Netscape, but the basic ideas behind securing TCP had
+predated Netscape’s work (for example, see Woo <a class="reference internal" href="../references.html#woo-1994"><span class="std std-ref">[Woo 1994]</span></a>). Since its inception, SSL has enjoyed broad deployment. SSL is supported by all popular Web browsers and Web servers, and it is used by Gmail and essentially all Internet commerce sites (including Amazon, eBay, and TaoBao). Hundreds of billions of dollars are spent over SSL every year. In fact, if you have ever purchased anything over the Internet with your credit card, the communication between your browser and the server for this purchase almost certainly went over SSL. (You can identify that SSL is being used by your browser when the URL begins with https: rather than http.)</p>
+<p>To understand the need for SSL, let’s walk through a typical Internet commerce scenario. Bob is surfing the Web and arrives at the Alice Incorporated site, which is selling perfume. The Alice Incorporated site displays a form in which Bob is supposed to enter the type of perfume and quantity desired, his address, and his payment card number. Bob enters this information, clicks on Submit, and expects to receive (via ordinary postal mail) the purchased perfumes; he also expects to receive a charge for his order in his next payment card statement. This all sounds good, but if no security measures are taken, Bob could be in for a few surprises. If no confidentiality (encryption) is used, an intruder could intercept Bob’s order and obtain his payment card information. The intruder could then make purchases at Bob’s expense.</p>
+<ul class="simple">
+<li><p>If no confidentiality (encryption) is used, an intruder could intercept Bob’s order and obtain his payment card information. The intruder could then make purchases at Bob’s expense.</p></li>
+<li><p>If no data integrity is used, an intruder could modify Bob’s order, having him purchase ten times more bottles of perfume than desired.</p></li>
+<li><p>Finally, if no server authentication is used, a server could display Alice Incorporated’s famous logo when in actuality the site maintained by Trudy, who is masquerading as Alice Incorporated. After receiving Bob’s order, Trudy could take Bob’s money and run. Or Trudy could carry out an identity theft by collecting Bob’s name, address, and credit card number.</p></li>
+</ul>
+<p>SSL addresses these issues by enhancing TCP with confidentiality, data integrity, server authentication, and client authentication.</p>
+<p>SSL is often used to provide security to transactions that take place over HTTP. However, because SSL secures TCP, it can be employed by any application that runs over TCP. SSL provides a simple Application Programmer Interface (API) with sockets, which is similar and analogous to TCP’s API. When an application wants to employ SSL, the application includes SSL classes/libraries. As shown in <a class="reference internal" href="#figure-8-24"><span class="std std-ref">Figure 8.24</span></a>, although SSL technically resides in the application layer, from the developer’s perspective it is a transport protocol that provides TCP’s services enhanced with security services.</p>
+<section id="c8-6-1">
+<span id="id1"></span><h2>8.6.1 大局观<a class="headerlink" href="#c8-6-1" title="此标题的永久链接">#</a></h2>
+<p>8.6.1 The Big Picture</p>
+<p>We begin by describing a simplified version of SSL, one that will allow us to get a big-picture understanding of the why and how of SSL. We will refer to this simplified version of SSL as “almost-SSL.” After describing almost-SSL, in the next subsection we’ll then describe the real SSL, filling in the details. Almost-SSL (and SSL) has three phases: handshake, key derivation, and data transfer. We now describe these three phases for a communication session between a client (Bob) and a server (Alice), with Alice having a private/public key pair and a certificate that binds her identity to her public key.</p>
+<figure class="align-center">
+<img alt="../_images/699-0.png" src="../_images/699-0.png" />
+</figure>
+<p id="figure-8-24"><strong>Figure 8.24 Although SSL technically resides in the application layer, from the developer’s perspective it is a transport-layer ­protocol</strong></p>
+<section id="handshake">
+<h3>Handshake<a class="headerlink" href="#handshake" title="此标题的永久链接">#</a></h3>
+<p>During the handshake phase, Bob needs to (a) establish a TCP connection with Alice, (b) verify that Alice is really Alice, and (c) send Alice a master secret key, which will be used by both Alice and Bob to generate all the symmetric keys they need for the SSL session. These three steps are shown in <a class="reference internal" href="#figure-8-25"><span class="std std-ref">Figure 8.25</span></a>. Note that once the TCP connection is established, Bob sends Alice a hello message. Alice then responds with her certificate, which contains her public key. As discussed in <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">Section 8.3</span></a>, because the certificate has been certified by a CA, Bob knows for sure that the public key in the certificate belongs to Alice. Bob then generates a Master Secret (MS) (which will only be used for this SSL session), encrypts the MS with Alice’s public key to create the Encrypted Master Secret (EMS), and sends the EMS to Alice. Alice decrypts the EMS with her private key to get the MS. After this phase, both Bob and Alice (and no one else) know the master secret for this SSL session.</p>
+<figure class="align-center">
+<img alt="../_images/700-0.png" src="../_images/700-0.png" />
+</figure>
+<p id="figure-8-25"><strong>Figure 8.25 The almost-SSL handshake, beginning with a TCP ­connection</strong></p>
+</section>
+<section id="key-derivation">
+<h3>Key Derivation<a class="headerlink" href="#key-derivation" title="此标题的永久链接">#</a></h3>
+<p>In principle, the MS, now shared by Bob and Alice, could be used as the symmetric session key for all subsequent encryption and data integrity checking. It is, however, generally considered safer for Alice and Bob to each use different cryptographic keys, and also to use different keys for encryption and integrity checking. Thus, both Alice and Bob use the MS to generate four keys:</p>
+<ul class="simple">
+<li><p>EB= session encryption key for data sent from Bob to Alice</p></li>
+<li><p>MB= session MAC key for data sent from Bob to Alice</p></li>
+<li><p>EA= session encryption key for data sent from Alice to Bob</p></li>
+<li><p>MA= session MAC key for data sent from Alice to Bob</p></li>
+</ul>
+<p>Alice and Bob each generate the four keys from the MS. This could be done by simply slicing the MS into four keys. (But in real SSL it is a little more complicated, as we’ll see.) At the end of the key derivation phase, both Alice and Bob have all four keys. The two encryption keys will be used to encrypt data; the two MAC keys will be used to verify the integrity of the data.</p>
+</section>
+<section id="data-transfer">
+<h3>Data Transfer<a class="headerlink" href="#data-transfer" title="此标题的永久链接">#</a></h3>
+<p>Now that Alice and Bob share the same four session keys (EB, MB, EA, and MA), they can start to send secured data to each other over the TCP connection. Since TCP is a byte-stream protocol, a natural approach would be for SSL to encrypt application data on the fly and then pass the encrypted data on the fly to TCP. But if we were to do this, where would we put the MAC for the integrity check? We certainly do not want to wait until the end of the TCP session to verify the integrity of all of Bob’s data that was sent over the entire session! To address this issue, SSL breaks the data stream into records, appends a MAC to each record for integrity checking, and then encrypts the record +MAC. To create the MAC, Bob inputs the record data along with the key MB into a hash function, as discussed in <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">Section 8.3</span></a>. To encrypt the package record +MAC, Bob uses his session encryption key EB. This encrypted package is then passed to TCP for transport over the Internet.</p>
+<p>Although this approach goes a long way, it still isn’t bullet-proof when it comes to providing data integrity for the entire message stream. In particular, suppose Trudy is a woman-in-the-middle and has the ability to insert, delete, and replace segments in the stream of TCP segments sent between Alice and Bob. Trudy, for example, could capture two segments sent by Bob, reverse the order of the segments, adjust the TCP sequence numbers (which are not encrypted), and then send the two reverse-ordered segments to Alice. Assuming that each TCP segment encapsulates exactly one record, let’s now take a look at how Alice would process these segments.</p>
+<ol class="arabic simple">
+<li><p>TCP running in Alice would think everything is fine and pass the two records to the SSL sublayer.</p></li>
+<li><p>SSL in Alice would decrypt the two records.</p></li>
+<li><p>SSL in Alice would use the MAC in each record to verify the data integrity of the two records.</p></li>
+<li><p>SSL would then pass the decrypted byte streams of the two records to the application layer; but the complete byte stream received by Alice would not be in the correct order due to reversal of the records!</p></li>
+</ol>
+<p>You are encouraged to walk through similar scenarios for when Trudy removes segments or when Trudy replays segments.</p>
+<p>The solution to this problem, as you probably guessed, is to use sequence numbers. SSL does this as follows. Bob maintains a sequence number counter, which begins at zero and is incremented for each SSL record he sends. Bob doesn’t actually include a sequence number in the record itself, but when he calculates the MAC, he includes the sequence number in the MAC calculation. Thus, the MAC is now a hash of the data plus the MAC key MB plus the current sequence number. Alice tracks Bob’s sequence numbers, allowing her to verify the data integrity of a record by including the appropriate sequence number in the MAC calculation. This use of SSL sequence numbers prevents Trudy from carrying out a woman-in-the-middle attack, such as reordering or replaying segments. (Why?)</p>
+</section>
+<section id="ssl-record">
+<h3>SSL Record<a class="headerlink" href="#ssl-record" title="此标题的永久链接">#</a></h3>
+<p>The SSL record (as well as the almost-SSL record) is shown in <a class="reference internal" href="#figure-8-26"><span class="std std-ref">Figure 8.26</span></a>. The record consists of a type field, version field, length field, data field, and MAC field. Note that the first three fields are not encrypted. The type field indicates whether the record is a handshake message or a message that contains application data. It is also used to close the SSL connection, as discussed below. SSL at the receiving end uses the length field to extract the SSL records out of the incoming TCP byte stream. The version field is self-explanatory.</p>
+</section>
+</section>
+<section id="c8-6-2">
+<span id="id2"></span><h2>8.6.2 更完整的画面<a class="headerlink" href="#c8-6-2" title="此标题的永久链接">#</a></h2>
+<p>8.6.2 A More Complete Picture</p>
+<p>The previous subsection covered the almost-SSL protocol; it served to give us a basic understanding of the why and how of SSL. Now that we have a basic understanding of SSL, we can dig a little deeper and examine the essentials of the actual SSL protocol. In parallel to reading this description of the SSL protocol, you are encouraged to complete the Wireshark SSL lab, available at the textbook’s Web site.</p>
+<figure class="align-center">
+<img alt="../_images/702-0.png" src="../_images/702-0.png" />
+</figure>
+<p id="figure-8-26"><strong>Figure 8.26 Record format for SSL</strong></p>
+<section id="ssl-handshake">
+<h3>SSL Handshake<a class="headerlink" href="#ssl-handshake" title="此标题的永久链接">#</a></h3>
+<p>SSL does not mandate that Alice and Bob use a specific symmetric key algorithm, a specific public-key algorithm, or a specific MAC. Instead, SSL allows Alice and Bob to agree on the cryptographic algorithms at the beginning of the SSL session, during the handshake phase. Additionally, during the handshake phase, Alice and Bob send nonces to each other, which are used in the creation of the session keys (EB, MB, EA, and MA). The steps of the real SSL handshake are as follows:</p>
+<ol class="arabic simple">
+<li><p>The client sends a list of cryptographic algorithms it supports, along with a ­client nonce.</p></li>
+<li><p>From the list, the server chooses a symmetric algorithm (for example, AES), a public key algorithm (for example, RSA with a specific key length), and a MAC algorithm. It sends back to the client its choices, as well as a certificate and a server nonce.</p></li>
+<li><p>The client verifies the certificate, extracts the server’s public key, generates a Pre-Master Secret (PMS), encrypts the PMS with the server’s public key, and sends the encrypted PMS to the server.</p></li>
+<li><p>Using the same key derivation function (as specified by the SSL standard), the client and server independently compute the Master Secret (MS) from the PMS and nonces. The MS is then sliced up to generate the two encryption and two MAC keys. Furthermore, when the chosen symmetric cipher employs CBC (such as 3DES or AES), then two Initialization Vectors (IVs)— one for each side of the connection—are also obtained from the MS. Henceforth, all ­messages sent between client and server are encrypted and authenticated (with the MAC).</p></li>
+<li><p>The client sends a MAC of all the handshake messages.</p></li>
+<li><p>The server sends a MAC of all the handshake messages.</p></li>
+</ol>
+<p>The last two steps protect the handshake from tampering. To see this, observe that in step 1, the client typically offers a list of algorithms—some strong, some weak. This list of algorithms is sent in cleartext, since the encryption algorithms and keys have not yet been agreed upon. Trudy, as a woman-in-the- middle, could delete the stronger algorithms from the list, forcing the client to select a weak algorithm. To prevent such a tampering attack, in step 5 the client sends a MAC of the concatenation of all the handshake messages it sent and received. The server can compare this MAC with the MAC of the handshake messages it received and sent. If there is an inconsistency, the server can terminate the connection. Similarly, the server sends a MAC of the handshake messages it has seen, allowing the client to check for inconsistencies.</p>
+<p>You may be wondering why there are nonces in steps 1 and 2. Don’t sequence numbers suffice for preventing the segment replay attack? The answer is yes, but they don’t alone prevent the “connection replay attack.” Consider the following connection replay attack. Suppose Trudy sniffs all messages between Alice and Bob. The next day, Trudy masquerades as Bob and sends to Alice exactly the same sequence of messages that Bob sent to Alice on the previous day. If Alice doesn’t use nonces, she will respond with exactly the same sequence of messages she sent the previous day. Alice will not suspect any funny business, as each message she receives will pass the integrity check. If Alice is an e- commerce server, she will think that Bob is placing a second order (for exactly the same thing). On the other hand, by including a nonce in the protocol, Alice will send different nonces for each TCP session, causing the encryption keys to be different on the two days. Therefore, when Alice receives played-back SSL records from Trudy, the records will fail the integrity checks, and the bogus e-commerce transaction will not succeed. In summary, in SSL, nonces are used to defend against the “connection replay attack” and sequence numbers are used to defend against replaying individual packets during an ongoing session.</p>
+</section>
+<section id="connection-closure">
+<h3>Connection Closure<a class="headerlink" href="#connection-closure" title="此标题的永久链接">#</a></h3>
+<p>At some point, either Bob or Alice will want to end the SSL session. One approach would be to let Bob end the SSL session by simply terminating the underlying TCP connection—that is, by having Bob send a TCP FIN segment to Alice. But such a naive design sets the stage for the truncation attack whereby Trudy once again gets in the middle of an ongoing SSL session and ends the session early with a TCP FIN. If Trudy were to do this, Alice would think she received all of Bob’s data when ­actuality she only received a portion of it. The solution to this problem is to indicate in the type field whether the record serves to terminate the SSL session. (Although the SSL type is sent in the clear, it is authenticated at the receiver using the record’s MAC.) By including such a field, if Alice were to receive a TCP FIN before ­receiving a closure SSL record, she would know that something funny was going on.</p>
+<p>This completes our introduction to SSL. We’ve seen that it uses many of the cryptography principles discussed in <a class="reference internal" href="s2.html#c8-2"><span class="std std-ref">Sections 8.2</span></a> and <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">8.3</span></a>. Readers who want to explore SSL on yet a deeper level can read Rescorla’s highly readable book on SSL <a class="reference internal" href="../references.html#rescorla-2001"><span class="std std-ref">[Rescorla 2001]</span></a>.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="s7.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">8.7 网络层安全: IPsec 和虚拟专用网络</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="s5.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">8.5 保护电子邮件</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">8.6 保护 TCP 连接: SSL</a><ul>
+<li><a class="reference internal" href="#c8-6-1">8.6.1 大局观</a><ul>
+<li><a class="reference internal" href="#handshake">Handshake</a></li>
+<li><a class="reference internal" href="#key-derivation">Key Derivation</a></li>
+<li><a class="reference internal" href="#data-transfer">Data Transfer</a></li>
+<li><a class="reference internal" href="#ssl-record">SSL Record</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#c8-6-2">8.6.2 更完整的画面</a><ul>
+<li><a class="reference internal" href="#ssl-handshake">SSL Handshake</a></li>
+<li><a class="reference internal" href="#connection-closure">Connection Closure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    </body>
+</html>

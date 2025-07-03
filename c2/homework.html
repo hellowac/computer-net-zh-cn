@@ -1,0 +1,649 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="Socket 编程作业" href="socketpro.html" /><link rel="prev" title="2.9 总结" href="summary.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>家庭作业问题和疑问 - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络和 Internet</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 2 章 应用层</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">2.9 总结</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线和移动网络</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全性</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="id1">
+<h1>家庭作业问题和疑问<a class="headerlink" href="#id1" title="此标题的永久链接">#</a></h1>
+<p>Homework Problems and Questions</p>
+<section id="section-2-1">
+<h2>SECTION 2.1<a class="headerlink" href="#section-2-1" title="此标题的永久链接">#</a></h2>
+<p>R1. List five nonproprietary Internet applications and the application-layer protocols that they use.</p>
+<p>R2. What is the difference between network architecture and application architecture?</p>
+<p>R3. For a communication session between a pair of processes, which process is the client and which is the server?</p>
+<p>R4. For a P2P file-sharing application, do you agree with the statement, “There is no notion of client and server sides of a communication session”? Why or why not?</p>
+<p>R5. What information is used by a process running on one host to identify a process running on another host?</p>
+<p>R6. Suppose you wanted to do a transaction from a remote client to a server as fast as possible. Would you use UDP or TCP? Why?</p>
+<p>R7. Referring to <a class="reference internal" href="s1.html#figure-2-4"><span class="std std-ref">Figure 2.4</span></a> , we see that none of the applications listed in <a class="reference internal" href="s1.html#figure-2-4"><span class="std std-ref">Figure 2.4</span></a> requires both no data loss and timing. Can you conceive of an application that requires no data loss and that is also highly time-sensitive?</p>
+<p>R8. List the four broad classes of services that a transport protocol can provide. For each of the service classes, indicate if either UDP or TCP (or both) provides such a service.</p>
+<p>R9. Recall that TCP can be enhanced with SSL to provide process-to-process security services, including encryption. Does SSL operate at the transport layer or the application layer? If the application developer wants TCP to be enhanced with SSL, what does the developer have to do?</p>
+<section id="section-2-22-5">
+<h3>SECTION 2.2–2.5<a class="headerlink" href="#section-2-22-5" title="此标题的永久链接">#</a></h3>
+<p>R10. What is meant by a handshaking protocol?</p>
+<p>R11. Why do HTTP, SMTP, and POP3 run on top of TCP rather than on UDP?</p>
+<p>R12. Consider an e-commerce site that wants to keep a purchase record for each of its customers. Describe how this can be done with cookies.</p>
+<p>R13. Describe how Web caching can reduce the delay in receiving a requested object. Will Web caching reduce the delay for all objects requested by a user or for only some of the objects? Why?</p>
+<p>R14. Telnet into a Web server and send a multiline request message. Include in the request message the <strong>If-modified-since:</strong> header line to force a response message with the <strong>304 Not Modified</strong> status code.</p>
+<p>R15. List several popular messaging apps. Do they use the same protocols as SMS?</p>
+<p>R16. Suppose Alice, with a Web-based e-mail account (such as Hotmail or Gmail), sends a message to Bob, who accesses his mail from his mail server using POP3. Discuss how the message gets from Alice’s host to Bob’s host. Be sure to list the series of application-layer protocols that are used to move the message between the two hosts.</p>
+<p>R17. Print out the header of an e-mail message you have recently received. How many <strong>Received:</strong> header lines are there? Analyze each of the header lines in the message.</p>
+<p>R18. From a user’s perspective, what is the difference between the download-and-delete mode and the download-and-keep mode in POP3?</p>
+<p>R19. Is it possible for an organization’s Web server and mail server to have exactly the same alias for a hostname (for example, <strong>foo.com</strong>)? What would be the type for the RR that contains the hostname of the mail server?</p>
+<p>R20. Look over your received e-mails, and examine the header of a message sent from a user with a .edu e-mail address. Is it possible to determine from the header the IP address of the host from which the message was sent? Do the same for a message sent from a Gmail account.</p>
+</section>
+<section id="section-2-5">
+<h3>SECTION 2.5<a class="headerlink" href="#section-2-5" title="此标题的永久链接">#</a></h3>
+<p>R21. In BitTorrent, suppose Alice provides chunks to Bob throughout a 30-second interval. Will Bob necessarily return the favor and provide chunks to Alice in this same interval? Why or why not?</p>
+<p>R22. Consider a new peer Alice that joins BitTorrent without possessing any chunks. Without any chunks, she cannot become a top-four uploader for any of the other peers, since she has nothing to upload. How then will Alice get her first chunk?</p>
+<p>R23. What is an overlay network? Does it include routers? What are the edges in the overlay network?</p>
+</section>
+<section id="section-2-6">
+<h3>SECTION 2.6<a class="headerlink" href="#section-2-6" title="此标题的永久链接">#</a></h3>
+<p>R24. CDNs typically adopt one of two different server placement philosophies. Name and briefly describe them.</p>
+<p>R25. Besides network-related considerations such as delay, loss, and bandwidth performance, there are other important factors that go into designing a CDN server selection strategy. What are they?</p>
+</section>
+<section id="section-2-7">
+<h3>SECTION 2.7<a class="headerlink" href="#section-2-7" title="此标题的永久链接">#</a></h3>
+<p>R26. In <a class="reference internal" href="s7.html#c2-7"><span class="std std-ref">Section 2.7</span></a>, the UDP server described needed only one socket, whereas the TCP server
+needed two sockets. Why? If the TCP server were to support n simultaneous connections, each from a different client host, how many sockets would the TCP server need?</p>
+<p>R27. For the client-server application over TCP described in <a class="reference internal" href="s7.html#c2-7"><span class="std std-ref">Section 2.7</span></a> , why must the server program be executed before the client program? For the client-server application over UDP, why may the client program be executed before the server program?</p>
+</section>
+<section id="problems">
+<h3>Problems<a class="headerlink" href="#problems" title="此标题的永久链接">#</a></h3>
+<p>P1. True or false?</p>
+<ol class="loweralpha simple">
+<li><p>A user requests a Web page that consists of some text and three images. For this page, the client will send one request message and receive four response messages.</p></li>
+<li><p>Two distinct Web pages (for example, www.mit.edu/research.html and www.mit.edu/students.html) can be sent over the same persistent connection.</p></li>
+<li><p>With nonpersistent connections between browser and origin server, it is possible for a single TCP segment to carry two distinct HTTP request messages.</p></li>
+<li><p>The <strong>Date:</strong> header in the HTTP response message indicates when the object in the response was last modified.</p></li>
+<li><p>HTTP response messages never have an empty message body.</p></li>
+</ol>
+<p>P2. SMS, iMessage, and WhatsApp are all smartphone real-time messaging systems. After doing some research on the Internet, for each of these systems write one paragraph about the protocols they use. Then write a paragraph explaining how they differ.</p>
+<p>P3. Consider an HTTP client that wants to retrieve a Web document at a given URL. The IP address of the HTTP server is initially unknown. What transport and application-layer protocols besides HTTP are needed in this scenario?</p>
+<p>P4. Consider the following string of ASCII characters that were captured by Wireshark when the browser sent an HTTP GET message (i.e., this is the actual content of an HTTP GET message). The characters &lt;cr&gt;&lt;lf&gt; are carriage return and line-feed characters (that is, the italized character string &lt;cr&gt; in the text below represents the single carriage-return character that was contained at that point in the HTTP header). Answer the following questions, indicating where in the HTTP GET message below you find the answer.</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>GET /cs453/index.html HTTP/1.1&lt;cr&gt;&lt;lf&gt;Host: gai
+a.cs.umass.edu&lt;cr&gt;&lt;lf&gt;User-Agent: Mozilla/5.0 (
+Windows;U; Windows NT 5.1; en-US; rv:1.7.2) Gec
+ko/20040804 Netscape/7.2 (ax) &lt;cr&gt;&lt;lf&gt;Accept:ex
+t/xml, application/xml, application/xhtml+xml, text
+/html;q=0.9, text/plain;q=0.8, image/png,*/*;q=0.5
+&lt;cr&gt;&lt;lf&gt;Accept-Language: en-us, en;q=0.5&lt;cr&gt;&lt;lf&gt;Accept-
+Encoding: zip, deflate&lt;cr&gt;&lt;lf&gt;Accept-Charset: ISO
+-8859-1, utf-8;q=0.7,*;q=0.7&lt;cr&gt;&lt;lf&gt;Keep-Alive: 300&lt;cr&gt;
+&lt;lf&gt;Connection:keep-alive&lt;cr&gt;&lt;lf&gt;&lt;cr&gt;&lt;lf&gt;
+</pre></div>
+</div>
+<ol class="loweralpha simple">
+<li><p>What is the URL of the document requested by the browser?</p></li>
+<li><p>What version of HTTP is the browser running?</p></li>
+<li><p>Does the browser request a non-persistent or a persistent connection?</p></li>
+<li><p>What is the IP address of the host on which the browser is running?</p></li>
+<li><p>What type of browser initiates this message? Why is the browser type needed in an HTTP request message?</p></li>
+</ol>
+<p>P5. The text below shows the reply sent from the server in response to the HTTP GET message in the question above. Answer the following questions, indicating where in the message below you find the answer.</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span>HTTP/1.1 200 OK&lt;cr&gt;&lt;lf&gt;Date: Tue, 07 Mar 2008
+12:39:45GMT&lt;cr&gt;&lt;lf&gt;Server: Apache/2.0.52 (Fedora)
+&lt;cr&gt;&lt;lf&gt;Last-Modified: Sat, 10 Dec2005 18:27:46
+GMT&lt;cr&gt;&lt;lf&gt;ETag: ”526c3-f22-a88a4c80”&lt;cr&gt;&lt;lf&gt;Accept-
+Ranges: bytes&lt;cr&gt;&lt;lf&gt;Content-Length: 3874&lt;cr&gt;&lt;lf&gt;
+Keep-Alive: timeout=max=100&lt;cr&gt;&lt;lf&gt;Connection:
+Keep-Alive&lt;cr&gt;&lt;lf&gt;Content-Type: text/html; charset=
+ISO-8859-1&lt;cr&gt;&lt;lf&gt;&lt;cr&gt;&lt;lf&gt;&lt;!doctype html public ”-
+//w3c//dtd html 4.0 transitional//en”&gt;&lt;lf&gt;&lt;html&gt;&lt;lf&gt;
+&lt;head&gt;&lt;lf&gt; &lt;meta http-equiv=”Content-Type”
+content=”text/html; charset=iso-8859-1”&gt;&lt;lf&gt; &lt;meta
+name=”GENERATOR” content=”Mozilla/4.79 [en] (Windows NT
+5.0; U) Netscape]”&gt;&lt;lf&gt; &lt;title&gt;CMPSCI 453 / 591 /
+NTU-ST550ASpring 2005 homepage&lt;/title&gt;&lt;lf&gt;&lt;/head&gt;&lt;lf&gt;
+&lt;much more document text following here (not shown)&gt;
+</pre></div>
+</div>
+<ol class="loweralpha simple">
+<li><p>Was the server able to successfully find the document or not? What time was the document reply provided?</p></li>
+<li><p>When was the document last modified?</p></li>
+<li><p>How many bytes are there in the document being returned?</p></li>
+<li><p>What are the first 5 bytes of the document being returned? Did the server agree to a persistent connection?</p></li>
+</ol>
+<p>P6. Obtain the HTTP/1.1 specification (<a class="reference internal" href="../references.html#rfc-2616"><span class="std std-ref">RFC 2616</span></a>). Answer the following questions:</p>
+<ol class="loweralpha simple">
+<li><p>Explain the mechanism used for signaling between the client and server to indicate that a persistent connection is being closed. Can the client, the server, or both signal the close of a connection?</p></li>
+<li><p>What encryption services are provided by HTTP?</p></li>
+<li><p>Can a client open three or more simultaneous connections with a given server?</p></li>
+<li><p>Either a server or a client may close a transport connection between them if either one detects the connection has been idle for some time. Is it possible that one side starts closing a connection while the other side is transmitting data via this connection? Explain.</p></li>
+</ol>
+<p>P7. Suppose within your Web browser you click on a link to obtain a Web page. The IP address for the associated URL is not cached in your local host, so a DNS lookup is necessary to obtain the IP address. Suppose that n DNS servers are visited before your host receives the IP address from DNS; the successive visits incur an RTT of RTT1,…,RTTn. Further suppose that the Web page associated with the link contains exactly one object, consisting of a small amount of HTML text. Let RTT0 denote the RTT between the local host and the server containing the object. Assuming zero transmission time of the object, how much time elapses from when the client clicks on the link until the client receives the object?</p>
+<p>P8. Referring to Problem P7, suppose the HTML file references eight very small objects on the same server. Neglecting transmission times, how much time elapses with</p>
+<ol class="loweralpha simple">
+<li><p>Non-persistent HTTP with no parallel TCP connections?</p></li>
+<li><p>Non-persistent HTTP with the browser configured for 5 parallel connections?</p></li>
+<li><p>Persistent HTTP?</p></li>
+</ol>
+<p>P9. Consider <a class="reference internal" href="s2.html#figure-2-12"><span class="std std-ref">Figure 2.12</span></a> , for which there is an institutional network connected to the Internet. Suppose that the average object size is 850,000 bits and that the average request rate from the institution’s browsers to the origin servers is 16 requests per second. Also suppose that the amount of time it takes from when the router on the Internet side of the access link forwards an HTTP request until it receives the response is three seconds on average (see <a class="reference internal" href="s2.html#c2-2-5"><span class="std std-ref">Section 2.2.5</span></a>). Model the total average response time as the sum of the average access delay (that is, the delay from Internet router to institution router) and the average Internet delay. For the average access delay, use Δ/(1-Δβ), where Δ is the average time required to send an object over the access link and b is the arrival rate of objects to the access link.</p>
+<ol class="loweralpha simple">
+<li><p>Find the total average response time.</p></li>
+<li><p>Now suppose a cache is installed in the institutional LAN. Suppose the miss rate is 0.4. Find the total response time.</p></li>
+</ol>
+<p>P10. Consider a short, 10-meter link, over which a sender can transmit at a rate of 150 bits/sec in both directions. Suppose that packets containing data are 100,000 bits long, and packets containing only control (e.g., ACK or handshaking) are 200 bits long. Assume that N parallel connections each get 1/N of the link bandwidth. Now consider the HTTP protocol, and suppose that each downloaded object is 100 Kbits long, and that the initial downloaded object contains 10 referenced objects from the same sender. Would parallel downloads via parallel instances of non-persistent HTTP make sense in this case? Now consider persistent HTTP. Do you expect significant gains over the non-persistent case? Justify and explain your answer.</p>
+<p>P11. Consider the scenario introduced in the previous problem. Now suppose that the link is shared by Bob with four other users. Bob uses parallel instances of non-persistent HTTP, and the other four users use non-persistent HTTP without parallel downloads.</p>
+<ol class="loweralpha simple">
+<li><p>Do Bob’s parallel connections help him get Web pages more quickly? Why or why not?</p></li>
+<li><p>If all five users open five parallel instances of non-persistent HTTP, then would Bob’s parallel connections still be beneficial? Why or why not?</p></li>
+</ol>
+<p>P12. Write a simple TCP program for a server that accepts lines of input from a client and prints the lines onto the server’s standard output. (You can do this by modifying the TCPServer.py program in the text.) Compile and execute your program. On any other machine that contains a Web browser, set the proxy server in the browser to the host that is running your server program; also configure the port number appropriately. Your browser should now send its GET request messages to your server, and your server should display the messages on its standard output. Use this platform to determine whether your browser generates conditional GET messages for objects that are locally cached.</p>
+<p>P13. What is the difference between <strong>MAIL FROM:</strong> in SMTP and <strong>From:</strong> in the mail message itself?</p>
+<p>P14. How does SMTP mark the end of a message body? How about HTTP? Can HTTP use the same method as SMTP to mark the end of a message body? Explain.</p>
+<p>P15. Read RFC 5321 for SMTP. What does MTA stand for? Consider the following received spam e-mail (modified from a real spam e-mail). Assuming only the originator of this spam e-mail is malicious and all other hosts are honest, identify the malacious host that has generated this spam e-mail.</p>
+<div class="highlight-smtp notranslate"><div class="highlight"><pre><span></span>From - Fri Nov 07 13:41:30 2008
+Return-Path: &lt;tennis5@pp33head.com&gt;
+Received: from barmail.cs.umass.edu (barmail.cs.umass.edu
+[128.119.240.3]) by cs.umass.edu (8.13.1/8.12.6) for
+&lt;hg@cs.umass.edu&gt;; Fri, 7 Nov 2008 13:27:10 -0500
+Received: from asusus-4b96 (localhost [127.0.0.1]) by
+barmail.cs.umass.edu (Spam Firewall) for &lt;hg@cs.umass.edu&gt;; Fri, 7
+Nov 2008 13:27:07 -0500 (EST)
+Received: from asusus-4b96 ([58.88.21.177]) by barmail.cs.umass.edu
+for &lt;hg@cs.umass.edu&gt;; Fri, 07 Nov 2008 13:27:07 -0500 (EST)
+Received: from [58.88.21.177] by inbnd55.exchangeddd.com; Sat, 8
+Nov 2008 01:27:07 +0700
+From: ”Jonny” &lt;tennis5@pp33head.com&gt;
+To: &lt;hg@cs.umass.edu&gt;
+
+Subject: How to secure your savings
+</pre></div>
+</div>
+<p>P16. Read the POP3 RFC, <span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc1939.html"><strong>RFC 1939</strong></a>. What is the purpose of the UIDL POP3 command?</p>
+<p>P17. Consider accessing your e-mail with POP3.</p>
+<ol class="loweralpha">
+<li><p>Suppose you have configured your POP mail client to operate in the download-and- delete mode. Complete the following transaction:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>C: list
+S: 1 498
+S: 2 912
+S: .
+C: retr 1
+S: blah blah ...
+S: ..........blah
+S: . ?
+?
+</pre></div>
+</div>
+</li>
+<li><p>Suppose you have configured your POP mail client to operate in the download-and-keep mode. Complete the following transaction:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>C: list
+S: 1 498
+S: 2 912
+S: .
+C: retr 1
+S: blah blah ...
+S: ..........blah
+S: . ?
+?
+</pre></div>
+</div>
+</li>
+<li><p>Suppose you have configured your POP mail client to operate in the download-and-keep mode. Using your transcript in part (b), suppose you retrieve messages 1 and 2, exit POP, and then five minutes later you again access POP to retrieve new e-mail. Suppose that in the five-minute interval no new messages have been sent to you. Provide a transcript of this second POP session.</p></li>
+</ol>
+<p>P18.</p>
+<ol class="loweralpha simple">
+<li><p>What is a whois database?</p></li>
+<li><p>Use various whois databases on the Internet to obtain the names of two DNS servers. Indicate which whois databases you used.</p></li>
+<li><p>Use nslookup on your local host to send DNS queries to three DNS servers: your local DNS server and the two DNS servers you found in part (b). Try querying for Type A, NS, and MX reports. Summarize your findings.</p></li>
+<li><p>Use nslookup to find a Web server that has multiple IP addresses. Does the Web server of your institution (school or company) have multiple IP addresses?</p></li>
+<li><p>Use the ARIN whois database to determine the IP address range used by your university.</p></li>
+<li><p>Describe how an attacker can use whois databases and the nslookup tool to perform reconnaissance on an institution before launching an attack.</p></li>
+<li><p>Discuss why whois databases should be publicly available.</p></li>
+</ol>
+<p>P19. In this problem, we use the useful dig tool available on Unix and Linux hosts to explore the hierarchy of DNS servers. Recall that in <span class="xref std std-ref">Figure 2.19</span> , a DNS server in the DNS hierarchy delegates a DNS query to a DNS server lower in the hierarchy, by sending back to the DNS client the name of that lower-level DNS server. First read the man page for dig, and then answer the following questions.</p>
+<ol class="loweralpha simple">
+<li><p>Starting with a root DNS server (from one of the root servers [a-m].root-servers.net), initiate a sequence of queries for the IP address for your department’s Web server by using <em>dig</em>. Show the list of the names of DNS servers in the delegation chain in answering your query.</p></li>
+<li><p>Repeat part (a) for several popular Web sites, such as google.com, yahoo.com, or amazon.com.</p></li>
+</ol>
+<p>P20. Suppose you can access the caches in the local DNS servers of your department. Can you propose a way to roughly determine the Web servers (outside your department) that are most popular among the users in your department? Explain.</p>
+<p>P21. Suppose that your department has a local DNS server for all computers in the department. You are an ordinary user (i.e., not a network/system administrator). Can you determine if an external Web site was likely accessed from a computer in your department a couple of seconds ago? Explain.</p>
+<p>P22. Consider distributing a file of F=15 Gbits to N peers. The server has an upload rate of us=30 Mbps, and each peer has a download rate of di=2 Mbps and an upload rate of u. For N=10, 100, and 1,000 and u=300 Kbps, 700 Kbps, and 2 Mbps, prepare a chart giving the minimum distribution time for each of the combinations of N and u for both client-server distribution and P2P distribution.</p>
+<p>P23. Consider distributing a file of F bits to N peers using a client-server architecture. Assume a fluid model where the server can simultaneously transmit to multiple peers, transmitting to each peer at different rates, as long as the combined rate does not exceed us.</p>
+<ol class="loweralpha simple">
+<li><p>Suppose that us/N≤dmin. Specify a distribution scheme that has a distribution time of NF/us.</p></li>
+<li><p>Suppose that us/N≥dmin. Specify a distribution scheme that has a distribution time of F/dmin.</p></li>
+<li><p>Conclude that the minimum distribution time is in general given by max{NF/us, F/dmin}.</p></li>
+</ol>
+<p>P24. Consider distributing a file of F bits to N peers using a P2P architecture. Assume a fluid model. For simplicity assume that dmin is very large, so that peer download bandwidth is never a bottleneck.</p>
+<ol class="loweralpha simple">
+<li><p>Suppose that us≤(us+u1+…+uN)/N. Specify a distribution scheme that has a distribution time of F/us.</p></li>
+<li><p>Suppose that us≥(us+u1+…+uN)/N. Specify a distribution scheme that has a distribution time of NF/(us+u1+…+uN).</p></li>
+<li><p>Conclude that the minimum distribution time is in general given by max{F/us, NF/(us+u1+…+uN)}.</p></li>
+</ol>
+<p>P25. Consider an overlay network with N active peers, with each pair of peers having an active TCP connection. Additionally, suppose that the TCP connections pass through a total of M routers. How many nodes and edges are there in the corresponding overlay network?</p>
+<p>P26. Suppose Bob joins a BitTorrent torrent, but he does not want to upload any data to any other peers (so called free-riding).</p>
+<ol class="loweralpha simple">
+<li><p>Bob claims that he can receive a complete copy of the file that is shared by the swarm. Is Bob’s claim possible? Why or why not?</p></li>
+<li><p>Bob further claims that he can further make his “free-riding” more efficient by using a collection of multiple computers (with distinct IP addresses) in the computer lab in his department. How can he do that?</p></li>
+</ol>
+<p>P27. Consider a DASH system for which there are N video versions (at N different rates and qualities) and N audio versions (at N different rates and qualities). Suppose we want to allow the player to choose at any time any of the N video versions and any of the N audio versions.</p>
+<ol class="loweralpha simple">
+<li><p>If we create files so that the audio is mixed in with the video, so server sends only one media stream at given time, how many files will the server need to store (each a different URL)?</p></li>
+<li><p>If the server instead sends the audio and video streams separately and has the client synchronize the streams, how many files will the server need to store?</p></li>
+</ol>
+<p>P28. Install and compile the Python programs TCPClient and UDPClient on one host and TCPServer and UDPServer on another host.</p>
+<ol class="loweralpha simple">
+<li><p>Suppose you run TCPClient before you run TCPServer. What happens? Why?</p></li>
+<li><p>Suppose you run UDPClient before you run UDPServer. What happens? Why?</p></li>
+<li><p>What happens if you use different port numbers for the client and server sides?</p></li>
+</ol>
+<p>P29. Suppose that in UDPClient.py, after we create the socket, we add the line:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clientSocket</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">5432</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Will it become necessary to change UDPServer.py? What are the port numbers for the sockets in UDPClient and UDPServer? What were they before making this change?</p>
+<p>P30. Can you configure your browser to open multiple simultaneous connections to a Web site? What are the advantages and disadvantages of having a large number of simultaneous TCP connections?</p>
+<p>P31. We have seen that Internet TCP sockets treat the data being sent as a byte stream but UDP sockets recognize message boundaries. What are one advantage and one disadvantage of byte-oriented API versus having the API explicitly recognize and preserve application-defined message boundaries?</p>
+<p>P32. What is the Apache Web server? How much does it cost? What functionality does it currently have? You may want to look at Wikipedia to answer this question.</p>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="socketpro.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Socket 编程作业</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="summary.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">2.9 总结</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">家庭作业问题和疑问</a><ul>
+<li><a class="reference internal" href="#section-2-1">SECTION 2.1</a><ul>
+<li><a class="reference internal" href="#section-2-22-5">SECTION 2.2–2.5</a></li>
+<li><a class="reference internal" href="#section-2-5">SECTION 2.5</a></li>
+<li><a class="reference internal" href="#section-2-6">SECTION 2.6</a></li>
+<li><a class="reference internal" href="#section-2-7">SECTION 2.7</a></li>
+<li><a class="reference internal" href="#problems">Problems</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    </body>
+</html>

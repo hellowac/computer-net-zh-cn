@@ -1,0 +1,485 @@
+<!doctype html>
+<html class="no-js" lang="zh-CN">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="索引" href="../genindex.html" /><link rel="search" title="搜索" href="../search.html" /><link rel="next" title="Wireshark 实验室" href="wiresharklab.html" /><link rel="prev" title="7.9 总结" href="summary.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2023.03.27 -->
+        <title>家庭作业问题和疑问 - 计算机网络：自顶向下 1.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">计算机网络：自顶向下 1.0 文档</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">计算机网络：自顶向下 1.0 文档</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="搜索" name="q" aria-label="搜索">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络和 Internet</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的延迟、丢失和吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层及其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络和互联网的历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">采访：伦纳德·克莱因洛克</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 和 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 Internet 上的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS - Internet 的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 点对点应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流和内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">采访: Marc Andreessen</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 简介和传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 多路复用和解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输: TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">采访: Van Jacobson</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器里面有什么？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 互联网协议 (IP): IPv4、寻址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 广义转发和 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">采访: Vinton G. Cerf</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 Internet 中的 AS 内部路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由: BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：互联网控制消息协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理和 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">采访: Jennifer Rexford</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层和 LAN</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测和纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多访问链路和协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">采访: Simon S. Lam</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">第 7 章 无线和移动网络</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">7.1 介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">7.3 WiFi: 802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">7.5 移动性管理：原则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">7.7 管理蜂窝网络中的移动性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html">7.8 无线和移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">7.9 总结</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">采访: Deborah Estrin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全性</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 端点身份验证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 保护电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 保护无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 操作安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">采访: Steven M. Bellovin</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体联网</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用程序</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流式传输存储的视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 IP 语音</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用程序的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 总结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">采访: Henning Schulzrinne</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="id1">
+<h1>家庭作业问题和疑问<a class="headerlink" href="#id1" title="此标题的永久链接">#</a></h1>
+<p>Homework Problems and Questions</p>
+<dl>
+<dt>Section 7.1</dt><dd><p>R1. What does it mean for a wireless network to be operating in “infrastructure mode”? If the network is not in infrastructure mode, what mode of operation is it in, and what is the difference between that mode of operation and infrastructure mode?</p>
+<p>R2. What are the four types of wireless networks identified in our taxonomy in <a class="reference internal" href="s1.html#c7-1"><span class="std std-ref">Section 7.1</span></a> ? Which of these types of wireless networks have you used?</p>
+</dd>
+<dt>Section 7.2</dt><dd><p>R3. What are the differences between the following types of wireless channel impairments: path loss, multipath propagation, interference from other sources?</p>
+<p>R4. As a mobile node gets farther and farther away from a base station, what are two actions that a base station could take to ensure that the loss probability of a transmitted frame does not increase?</p>
+</dd>
+<dt>Sections 7.3 and 7.4</dt><dd><p>R5. Describe the role of the beacon frames in 802.11.</p>
+<p>R6. True or false: Before an 802.11 station transmits a data frame, it must first send an RTS frame and receive a corresponding CTS frame.</p>
+<p>R7. Why are acknowledgments used in 802.11 but not in wired Ethernet?</p>
+<p>R8. True or false: Ethernet and 802.11 use the same frame structure.</p>
+<p>R9. Describe how the RTS threshold works.</p>
+<p>R10. Suppose the IEEE 802.11 RTS and CTS frames were as long as the standard DATA and ACK frames. Would there be any advantage to using the CTS and RTS frames? Why or why not?</p>
+<p>R11. <a class="reference internal" href="s3.html#c7-3-4"><span class="std std-ref">Section 7.3.4</span></a> discusses 802.11 mobility, in which a wireless station moves from one BSS to another within the same subnet. When the APs are interconnected with a switch, an AP may need to send a frame with a spoofed MAC address to get the switch to forward the frame properly. Why?</p>
+<p>R12. What are the differences between a master device in a Bluetooth network and a base station in an 802.11 network?</p>
+<p>R13. What is meant by a super frame in the 802.15.4 Zigbee standard?</p>
+<p>R14. What is the role of the “core network” in the 3G cellular data architecture?</p>
+<p>R15. What is the role of the RNC in the 3G cellular data network architecture? What role does the RNC play in the cellular voice network?</p>
+<p>R16. What is the role of the eNodeB, MME, P-GW, and S-GW in 4G architecture?</p>
+<p>R17. What are three important differences between the 3G and 4G cellular ­architectures?</p>
+</dd>
+<dt>Sections 7.5 and 7.6</dt><dd><p>R18. If a node has a wireless connection to the Internet, does that node have to be mobile? Explain. Suppose that a user with a laptop walks around her house with her laptop, and always accesses the Internet through the same access point. Is this user mobile from a network standpoint? Explain.</p>
+<p>R19. What is the difference between a permanent address and a care-of address? Who assigns a care-of address?</p>
+<p>R20. Consider a TCP connection going over Mobile IP. True or false: The TCP connection phase between the correspondent and the mobile host goes through the mobile’s home network, but the data transfer phase is directly between the correspondent and the mobile host, bypassing the home network.</p>
+</dd>
+<dt>Section 7.7</dt><dd><p>R21. What are the purposes of the HLR and VLR in GSM networks? What elements of mobile IP are similar to the HLR and VLR?</p>
+<p>R22. What is the role of the anchor MSC in GSM networks?</p>
+</dd>
+<dt>Section 7.8</dt><dd><p>R23. What are three approaches that can be taken to avoid having a single ­wireless link degrade the performance of an end-to-end transport-layer TCP ­connection?</p>
+</dd>
+</dl>
+<section id="problems">
+<h2>Problems<a class="headerlink" href="#problems" title="此标题的永久链接">#</a></h2>
+<p>P1. Consider the single-sender CDMA example in <a class="reference internal" href="s2.html#figure-7-5"><span class="std std-ref">Figure 7.5</span></a> . What would be the sender’s output (for the 2 data bits shown) if the sender’s CDMA code were (1,−1,1,−1,1,−1,1,−1)?</p>
+<p>P2. Consider sender 2 in <a class="reference internal" href="s2.html#figure-7-6"><span class="std std-ref">Figure 7.6</span></a> . What is the sender’s output to the channel (before it is added to the signal from sender 1), Zi,m2?</p>
+<p>P3. Suppose that the receiver in <a class="reference internal" href="s2.html#figure-7-6"><span class="std std-ref">Figure 7.6</span></a> wanted to receive the data being sent by sender 2. Show (by calculation) that the receiver is indeed able to recover sender 2’s data from the aggregate channel signal by using sender 2’s code.</p>
+<p>P4. For the two-sender, two-receiver example, give an example of two CDMA codes containing 1 and 21 values that do not allow the two receivers to extract the original transmitted bits from the two CDMA senders.</p>
+<p>P5. Suppose there are two ISPs providing WiFi access in a particular café, with each ISP operating its own AP and having its own IP address block.</p>
+<ol class="loweralpha simple">
+<li><p>Further suppose that by accident, each ISP has configured its AP to operate over channel 11. Will the 802.11 protocol completely break down in this situation? Discuss what happens when two stations, each associated with a different ISP, attempt to transmit at the same time.</p></li>
+<li><p>Now suppose that one AP operates over channel 1 and the other over channel 11. How do your answers change?</p></li>
+</ol>
+<p>P6. In step 4 of the CSMA/CA protocol, a station that successfully transmits a frame begins the CSMA/CA protocol for a second frame at step 2, rather than at step 1. What rationale might the designers of CSMA/CA have had in mind by having such a station not transmit the second frame immediately (if the channel is sensed idle)?</p>
+<p>P7. Suppose an 802.11b station is configured to always reserve the channel with the RTS/CTS sequence. Suppose this station suddenly wants to ­transmit 1,000 bytes of data, and all other stations are idle at this time. As a ­function of SIFS and DIFS, and ignoring propagation delay and assuming no bit errors, calculate the time required to transmit the frame and receive the acknowledgment.</p>
+<p>P8. Consider the scenario shown in <a class="reference internal" href="#figure-7-34"><span class="std std-ref">Figure 7.34</span></a> , in which there are four wireless nodes, A, B, C, and D. The radio coverage of the four nodes is shown via the shaded ovals; all nodes share the same frequency. When A transmits, it can only be heard/received by B; when B transmits, both A and C can hear/receive from B; when C transmits, both B and D can hear/receive from C; when D transmits, only C can hear/receive from D.</p>
+<figure class="align-center">
+<img alt="../_images/649-0.png" src="../_images/649-0.png" />
+</figure>
+<p id="figure-7-34"><strong>Figure 7.34 Scenario for problem P8</strong></p>
+<p>Suppose now that each node has an infinite supply of messages that it wants to send to each of the other nodes. If a message’s destination is not an immediate neighbor, then the message must be relayed. For example, if A wants to send to D, a message from A must first be sent to B, which then sends the message to C, which then sends the message to D. Time is slotted, with a message transmission time taking exactly one time slot, e.g., as in slotted Aloha. During a slot, a node can do one of the following: (i) send a message, (ii) receive a message (if exactly one message is being sent to it), (iii) remain silent. As always, if a node hears two or more simultaneous transmissions, a collision occurs and none of the transmitted messages are received successfully. You can assume here that there are no bit-level errors, and thus if exactly one message is sent, it will be received correctly by those within the transmission radius of the sender.</p>
+<ol class="loweralpha simple">
+<li><p>Suppose now that an omniscient controller (i.e., a controller that knows the state of every node in the network) can command each node to do whatever it (the omniscient controller) wishes, i.e., to send a message, to receive a message, or to remain silent. Given this omniscient controller, what is the maximum rate at which a data message can be transferred from C to A, given that there are no other messages between any other source/destination pairs?</p></li>
+<li><p>Suppose now that A sends messages to B, and D sends messages to C. What is the combined maximum rate at which data messages can flow from A to B and from D to C?</p></li>
+<li><p>Suppose now that A sends messages to B, and C sends messages to D. What is the combined maximum rate at which data messages can flow from A to B and from C to D?</p></li>
+<li><p>Suppose now that the wireless links are replaced by wired links. Repeat questions (a) through (c) again in this wired scenario.</p></li>
+<li><p>Now suppose we are again in the wireless scenario, and that for every data message sent from source to destination, the destination will send an ACK message back to the source (e.g., as in TCP). Also suppose that each ACK message takes up one slot. Repeat questions (a)–(c) above for this scenario.</p></li>
+</ol>
+<p>P9. Describe the format of the 802.15.1 Bluetooth frame. You will have to do some reading outside of the text to find this information. Is there anything in the frame format that inherently limits the number of active nodes in an 802.15.1 network to eight active nodes? Explain.</p>
+<p>P10. Consider the following idealized LTE scenario. The downstream channel (see <a class="reference internal" href="s4.html#figure-7-21"><span class="std std-ref">Figure 7.21</span></a> ) is slotted in time, across F frequencies. There are four nodes, A, B, C, and D, reachable from the base station at rates of 10 Mbps, 5 Mbps, 2.5 Mbps, and 1 Mbps, respectively, on the downstream channel. These rates assume that the base station utilizes all time slots available on all F frequencies to send to just one station. The base station has an infinite amount of data to send to each of the nodes, and can send to any one of these four nodes using any of the F frequencies during any time slot in the ­downstream sub-frame.</p>
+<ol class="loweralpha simple">
+<li><p>What is the maximum rate at which the base station can send to the nodes, assuming it can send to any node it chooses during each time slot? Is your solution fair? Explain and define what you mean by “fair.”</p></li>
+<li><p>If there is a fairness requirement that each node must receive an equal amount of data during each one second interval, what is the average transmission rate by the base station (to all nodes) during the downstream sub-frame? Explain how you arrived at your answer.</p></li>
+<li><p>Suppose that the fairness criterion is that any node can receive at most twice as much data as any other node during the sub-frame. What is the average transmission rate by the base station (to all nodes) during the sub-frame? Explain how you arrived at your answer.</p></li>
+</ol>
+<p>P11. In <a class="reference internal" href="s5.html#c7-5"><span class="std std-ref">Section 7.5</span></a> , one proposed solution that allowed mobile users to maintain their IP addresses as they moved among foreign networks was to have a foreign network advertise a highly specific route to the mobile user and use the existing routing infrastructure to propagate this information throughout the network. We identified scalability as one concern. Suppose that when a mobile user moves from one network to another, the new foreign network advertises a specific route to the mobile user, and the old foreign network withdraws its route. Consider how routing information propagates in a distance-vector algorithm (particularly for the case of interdomain routing among networks that span the globe).</p>
+<ol class="loweralpha simple">
+<li><p>Will other routers be able to route datagrams immediately to the new foreign network as soon as the foreign network begins advertising its route?</p></li>
+<li><p>Is it possible for different routers to believe that different foreign networks contain the mobile user?</p></li>
+<li><p>Discuss the timescale over which other routers in the network will eventually learn the path to the mobile users.</p></li>
+</ol>
+<p>P12. Suppose the correspondent in <a class="reference internal" href="s5.html#figure-7-23"><span class="std std-ref">Figure 7.23</span></a> were mobile. Sketch the additional network- layer infrastructure that would be needed to route the datagram from the original mobile user to the (now mobile) correspondent. Show the structure of the datagram(s) between the original mobile user and the (now mobile) correspondent, as in <a class="reference internal" href="s5.html#figure-7-24"><span class="std std-ref">Figure 7.24</span></a> .</p>
+<p>P13. In mobile IP, what effect will mobility have on end-to-end delays of datagrams between the source and destination?</p>
+<p>P14. Consider the chaining example discussed at the end of <a class="reference internal" href="s7.html#c7-7-2"><span class="std std-ref">Section 7.7.2</span></a> . Suppose a mobile user visits foreign networks A, B, and C, and that a correspondent begins a connection to the mobile user when it is resident in foreign ­network A. List the sequence of messages between foreign agents, and between foreign agents and the home agent as the mobile user moves from network A to network B to network C. Next, suppose chaining is not performed, and the correspondent (as well as the home agent) must be explicitly notified of the changes in the mobile user’s care-of address. List the sequence of messages that would need to be exchanged in this second scenario.</p>
+<p>P15. Consider two mobile nodes in a foreign network having a foreign agent. Is it possible for the two mobile nodes to use the same care-of address in mobile IP? Explain your answer.</p>
+<p>P16. In our discussion of how the VLR updated the HLR with information about the mobile’s current location, what are the advantages and disadvantages of providing the MSRN as opposed to the address of the VLR to the HLR?</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="wiresharklab.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Wireshark 实验室</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="summary.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">7.9 总结</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Jim Kurose/Keith Ross
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">家庭作业问题和疑问</a><ul>
+<li><a class="reference internal" href="#problems">Problems</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script src="../_static/translations.js"></script>
+    </body>
+</html>
