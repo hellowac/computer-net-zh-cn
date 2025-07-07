@@ -172,6 +172,10 @@ Comparing Transmission and Propagation Delay
    
 初学者常常难以理解传输时延与传播时延的区别。其实二者差别虽小但至关重要。传输时延取决于分组长度和链路带宽，与两个节点间距离无关；而传播时延则取决于两个节点的距离，与分组大小和带宽无关。
 
+.. admonition:: 译注-动画例子
+
+   在线程序小例子: https://media.pearsoncmg.com/aw/ecs_kurose_compnetwork_7/cw/content/interactiveanimations/transmission-vs-propogation-delay/transmission-propagation-delay-ch1/index.html
+
 我们来看一个类比帮助理解：
 
 设一条高速公路每隔 100 公里设一收费站，如 :ref:`图 1.17 <Figure 1.17>` 所示。公路区段类比链路，收费站类比路由器。假设汽车在收费站之间以恒定 100 km/h 速度行驶。若有 10 辆车组成车队，类比一个分组中的 10 个比特；每辆车代表一个比特。每个收费站以每 12 秒一辆车的速率放行车辆，车队在到达收费站时需等待所有车辆集合完毕才能开始依次通过。
@@ -281,6 +285,10 @@ Comparing Transmission and Propagation Delay
 1.4.2 Queuing Delay and Packet Loss
 
 在所有结点时延中，最复杂且最有趣的部分是 **排队时延（queuing delay）**，记作 :math:`d_{queue}`。事实上，排队时延在计算机网络中的重要性极高，以至于已有数千篇论文和众多专著专门研究它 [:ref:`Bertsekas 1991 <Bertsekas 1991>`; :ref:`Daigle 1991 <Daigle 1991>`; :ref:`Kleinrock 1975 <Kleinrock 1975>`, :ref:`Kleinrock 1976 <Kleinrock 1976>`; :ref:`Ross 1995 <Ross 1995>`]。本节仅对排队时延做高层次的直观讨论，若读者兴趣更浓厚，不妨进一步阅读这些著作，甚至撰写博士论文！
+
+.. admonition:: 译注-排队和丢失交互式动画
+
+   在线程序小例子: https://media.pearsoncmg.com/aw/ecs_kurose_compnetwork_7/cw/content/interactiveanimations/queuing-loss-applet/index.html
 
 与其他三种时延（:math:`d_{proc}`、 :math:`d_{trans}`、 :math:`d_{prop}`）不同，排队时延在不同分组之间可能变化极大。例如，若 10 个分组同时到达一个空队列，第一个被发送的分组将无排队时延，而最后一个则需等待前面 9 个分组传输完，排队时延较大。因此，分析排队时延时通常使用统计指标，如平均排队时延、时延方差、排队时延超过某个阈值的概率等。
 
@@ -549,7 +557,7 @@ Traceroute 实际上会对每个结点重复上述操作三次，即总共发送
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 End System, Application, and Other Delays
 
-除处理、传输和传播时延外，端系统还可能存在一些显著时延。例如，在共享介质（如 WiFi 或有线调制解调器）环境中，端系统可能会为协调介质接入而 **故意延迟** 发送分组。我们将在:ref:`第 6 章 <c6>`详细讨论这类协议。
+除处理、传输和传播时延外，端系统还可能存在一些显著时延。例如，在共享介质（如 WiFi 或有线调制解调器）环境中，端系统可能会为协调介质接入而 **故意延迟** 发送分组。我们将在 :ref:`第 6 章 <c6>` 详细讨论这类协议。
 
 另一个重要因素是 **媒体打包时延（packetization delay）** ，在语音传输（VoIP）应用中尤为显著。VoIP 发送端在发送前需先填满一个分组的音频数据，此过程耗时即为打包时延。该时延会影响用户对通话质量的主观体验。
 
