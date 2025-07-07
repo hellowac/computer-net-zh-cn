@@ -50,5 +50,5 @@ html_title='计算机网络: 自顶向下'
 highlight_language = 'python'  # 默认语言（可选）
 pygments_style = 'sphinx'  # Sphinx 默认样式
 
-togglebutton_hint = '中文'
+togglebutton_hint = '原文'
 togglebutton_hint_hide = '收起'
