@@ -9,12 +9,11 @@
 .. tab:: 英文
 
 
-Let’s quickly set the context for our study of the network control plane by recalling :ref:`Figures 4.2 <Figures 4.2>` and `4.3 <Figures 4.3>`. There, we saw that the forwarding table (in the case of ­destination-based forwarding) and the flow table (in the case of generalized forwarding) were the principal elements that linked the network layer’s data and control planes. We learned that these tables specify the local data-plane forwarding behavior of a router. We saw that in the case of generalized forwarding, the actions taken (:ref:`Section 4.4.2 <c4.4.2>`) could include not only forwarding a packet to a router’s output port, but also dropping a packet, replicating a packet, and/or rewriting layer 2, 3 or 4 packet-header fields.
+Let’s quickly set the context for our study of the network control plane by recalling :ref:`Figures 4.2 <Figure 4.2>` and :ref:`4.3 <Figure 4.3>`. There, we saw that the forwarding table (in the case of ­destination-based forwarding) and the flow table (in the case of generalized forwarding) were the principal elements that linked the network layer’s data and control planes. We learned that these tables specify the local data-plane forwarding behavior of a router. We saw that in the case of generalized forwarding, the actions taken (:ref:`Section 4.4.2 <c4.4.2>`) could include not only forwarding a packet to a router’s output port, but also dropping a packet, replicating a packet, and/or rewriting layer 2, 3 or 4 packet-header fields.
 
 In this chapter, we’ll study how those forwarding and flow tables are computed, maintained and installed. In our introduction to the network layer in :ref:`Section 4.1 <c4.1>`, we learned that there are two possible approaches for doing so.
 
-- **Per-router control**. :ref:`Figure 5.1 <Figure 5.1>` illustrates the case where a routing algorithm runs in each and every router; both a forwarding and a routing function are contained within each router. Each router has a routing component that communicates with the routing components in other routers to compute the values for its forwarding table. This per-router control approach has been used in the Internet for decades. The OSPF and BGP protocols that we’ll study
-in :ref:`Sections 5.3 <c5.3>` and :ref:`5.4 <c5.4>` are based on this per-router approach to control.
+- **Per-router control**. :ref:`Figure 5.1 <Figure 5.1>` illustrates the case where a routing algorithm runs in each and every router; both a forwarding and a routing function are contained within each router. Each router has a routing component that communicates with the routing components in other routers to compute the values for its forwarding table. This per-router control approach has been used in the Internet for decades. The OSPF and BGP protocols that we’ll study in :ref:`Sections 5.3 <c5.3>` and :ref:`5.4 <c5.4>` are based on this per-router approach to control.
 
   .. figure:: ../img/423-0.png 
      :align: center 
