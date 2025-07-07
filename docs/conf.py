@@ -19,9 +19,11 @@ release = '1.0'
 # extensions
 # https://www.sphinx-doc.org/en/master/usage/extensions/index.html
 extensions = [
+    'sphinx.ext.intersphinx',
     'sphinx.ext.autodoc', 
     'sphinx.ext.todo', 
     'sphinx.ext.coverage',
+    'sphinxcontrib.youtube',
     'sphinx_copybutton',
     'sphinx_inline_tabs',
     'sphinx_togglebutton',
