@@ -1202,7 +1202,7 @@ References
 
 [Netflix Open Connect 2016] Netflix Open Connect CDN, 2016, https://openconnect.netflix.com/
 
-.. _Netflix Video:
+.. _Netflix Video 1:
 
 [Netflix Video 1] Designing Netflix’s Content Delivery System, D. Fulllager, 2014, https://www.youtube.com/watch?v=LkLLpYdDINA
 

@@ -157,11 +157,11 @@ BitTorrent 是一个流行的 P2P 文件分发协议 :ref:`[Chao 2011] <Chao 201
 
 任意时刻，每个对等方仅拥有部分数据块，且各对等方拥有的块集合不同。Alice 会周期性地向其邻居请求块列表（通过 TCP 连接）。如果 Alice 有 L 个邻居，则会获得 L 个块列表。Alice 据此向邻居请求自己尚未拥有的块。
 
-任意时刻，Alice 拥有部分块，并知道其邻居各自拥有哪些块。基于此信息，Alice 面临两个关键决策：第一，从邻居处优先请求哪些块？第二，向哪些邻居发送请求的块？在决定请求哪些块时，Alice 使用一种称为 **稀有优先**（rarest first）的方法。该方法旨在从尚未拥有的块中识别邻居中最稀有（副本最少）的块，并优先请求这些块。这样可以尽快扩散稀有块，趋于（大致）在整个 torrent 中平衡各块副本数量。
+任意时刻，Alice 拥有部分块，并知道其邻居各自拥有哪些块。基于此信息，Alice 面临两个关键决策：第一，从邻居处优先请求哪些块？第二，向哪些邻居发送请求的块？在决定请求哪些块时，Alice 使用一种称为 **稀有优先** （rarest first）的方法。该方法旨在从尚未拥有的块中识别邻居中最稀有（副本最少）的块，并优先请求这些块。这样可以尽快扩散稀有块，趋于（大致）在整个 torrent 中平衡各块副本数量。
 
-在决定响应哪些请求时，BitTorrent 使用一种巧妙的交易算法。基本思想是：Alice 优先响应当前上传速率最高的邻居。具体而言，Alice 持续测量每个邻居的上传速率，并选出上传速率最高的 4 个对等方。这 4 个对等方将获得 Alice 的块回传。每隔 10 秒，Alice 重新计算速率并更新这 4 个邻居。在 BitTorrent 术语中，这些对等方称为 **unchoked**。此外，每隔 30 秒，Alice 会随机选出另一个邻居（例如 Bob）并向其发送块。Bob 被称为 **optimistically unchoked**。由于 Alice 向 Bob 发送数据，Alice 可能成为 Bob 的上传速率前 4 名之一，进而 Bob 会开始向 Alice 发送数据。若 Bob 的上传速率足够高，他也可能成为 Alice 的前 4 上传者。也就是说，Alice 每 30 秒会随机选取一个交易对象并开始交易。若彼此满意，将互列为“前 4 名”，并持续交易，直至其中一方找到更优对象。这样上传能力匹配的对等方更容易彼此发现。随机选择机制也使新对等方获得块以供交换。除这 5 个（4 个 top + 1 个探索者）外的其他邻居将被 **choked**，即不接收 Alice 的任何块。BitTorrent 还有许多机制未在此详述，如片段（pieces）、流水线（pipelining）、随机优先选择、结束模式（endgame mode）以及防冷落（anti-snubbing）:ref:`[Cohen 2003] <Cohen 2003>`。
+在决定响应哪些请求时，BitTorrent 使用一种巧妙的交易算法。基本思想是：Alice 优先响应当前上传速率最高的邻居。具体而言，Alice 持续测量每个邻居的上传速率，并选出上传速率最高的 4 个对等方。这 4 个对等方将获得 Alice 的块回传。每隔 10 秒，Alice 重新计算速率并更新这 4 个邻居。在 BitTorrent 术语中，这些对等方称为 **unchoked**。此外，每隔 30 秒，Alice 会随机选出另一个邻居（例如 Bob）并向其发送块。Bob 被称为 **optimistically unchoked**。由于 Alice 向 Bob 发送数据，Alice 可能成为 Bob 的上传速率前 4 名之一，进而 Bob 会开始向 Alice 发送数据。若 Bob 的上传速率足够高，他也可能成为 Alice 的前 4 上传者。也就是说，Alice 每 30 秒会随机选取一个交易对象并开始交易。若彼此满意，将互列为“前 4 名”，并持续交易，直至其中一方找到更优对象。这样上传能力匹配的对等方更容易彼此发现。随机选择机制也使新对等方获得块以供交换。除这 5 个（4 个 top + 1 个探索者）外的其他邻居将被 **choked**，即不接收 Alice 的任何块。BitTorrent 还有许多机制未在此详述，如片段（pieces）、流水线（pipelining）、随机优先选择、结束模式（endgame mode）以及防冷落（anti-snubbing） :ref:`[Cohen 2003] <Cohen 2003>`。
 
-上述交易激励机制常被称为 tit-for-tat :ref:`[Cohen 2003] <Cohen 2003>`。虽然有研究指出该激励机制可被绕过 [ :ref:`Liogkas 2006 <Liogkas 2006>`；:ref:`Locher 2006 <Locher 2006>`；:ref:`Piatek 2007 <Piatek 2007>`]，BitTorrent 生态依然极为成功，数百万对等方在成千上万个 torrent 中活跃共享。如果 BitTorrent 没有采用 tit-for-tat 或其变体，即使其它机制完全相同，BitTorrent 可能根本不会存活，因为大多数用户会成为搭便车者 :ref:`[Saroiu 2002] <Saroiu 2002>`。
+上述交易激励机制常被称为 tit-for-tat :ref:`[Cohen 2003] <Cohen 2003>`。虽然有研究指出该激励机制可被绕过 [ :ref:`Liogkas 2006 <Liogkas 2006>`； :ref:`Locher 2006 <Locher 2006>`；:ref:`Piatek 2007 <Piatek 2007>`]，BitTorrent 生态依然极为成功，数百万对等方在成千上万个 torrent 中活跃共享。如果 BitTorrent 没有采用 tit-for-tat 或其变体，即使其它机制完全相同，BitTorrent 可能根本不会存活，因为大多数用户会成为搭便车者 :ref:`[Saroiu 2002] <Saroiu 2002>`。
 
 在本节结尾，我们简要提及 P2P 的另一应用：分布式哈希表（DHT）。分布式哈希表是一个简单数据库，其记录分布在 P2P 系统的对等方中。DHT 被广泛实现（例如 BitTorrent 中），并成为重要研究主题。其概览见配套网站中的视频说明。
 
