@@ -4,131 +4,219 @@
 ==========================================================================
 8.6 Securing TCP Connections: SSL
 
-.. tab:: 中文
+在上一节中，我们看到密码学技术如何为特定应用（即电子邮件）提供机密性、数据完整性和端点认证。在本节中，我们将协议栈下移一层，探讨密码学如何增强 TCP 的安全服务，包括机密性、数据完整性和端点认证。这种增强版的 TCP 通常被称为 **安全套接字层（SSL）**。SSL 3 版本的一个略作修改的版本称为 **传输层安全（TLS）**，已被 IETF 标准化 [:rfc:`4346`]。
 
-.. tab:: 英文
+SSL 协议最初由 Netscape 设计，但保护 TCP 的基本思想早于 Netscape 的工作（例如参见 Woo :ref:`[Woo 1994] <Woo 1994>`）。自诞生以来，SSL 得到了广泛部署。所有流行的网页浏览器和 Web 服务器都支持 SSL，Gmail 及几乎所有互联网商业网站（包括亚马逊、eBay 和淘宝）都在使用它。每年通过 SSL 支付的金额达数千亿美元。事实上，如果你曾用信用卡在互联网上购买过东西，你的浏览器与服务器之间的通信几乎肯定是通过 SSL 进行的。（当浏览器地址以 https: 开头而非 http: 时，即可识别 SSL 的使用。）
 
-In the previous section, we saw how cryptographic techniques can provide confidentiality, data integrity, and end-point authentication to a specific application, namely, e-mail. In this section, we’ll drop down a layer in the protocol stack and examine how cryptography can enhance TCP with security services, including confidentiality, data integrity, and end-point authentication. This enhanced version of TCP is commonly known as **Secure Sockets Layer (SSL)**. A slightly modified version of SSL version 3, called **Transport Layer Security (TLS)**, has been standardized by the IETF [:rfc:`4346`].
+为了理解 SSL 的必要性，我们来看一个典型的互联网商业场景。Bob 正在浏览网页，来到 Alice Incorporated 网站，该网站正在出售香水。Alice Incorporated 网站显示了一个表单，要求 Bob 输入香水类型和数量、地址以及支付卡号。Bob 输入信息，点击提交，并期望通过普通邮寄收到购买的香水，同时在下一张信用卡账单中看到相应扣款。这听起来没问题，但若没有采取安全措施，Bob 可能会遇到意外：
 
-The SSL protocol was originally designed by Netscape, but the basic ideas behind securing TCP had
-predated Netscape’s work (for example, see Woo :ref:`[Woo 1994] <Woo 1994>`). Since its inception, SSL has enjoyed broad deployment. SSL is supported by all popular Web browsers and Web servers, and it is used by Gmail and essentially all Internet commerce sites (including Amazon, eBay, and TaoBao). Hundreds of billions of dollars are spent over SSL every year. In fact, if you have ever purchased anything over the Internet with your credit card, the communication between your browser and the server for this purchase almost certainly went over SSL. (You can identify that SSL is being used by your browser when the URL begins with https: rather than http.)
+- 如果没有机密性（加密），入侵者可能拦截 Bob 的订单，获取他的支付卡信息，进而冒充 Bob 购物。
+- 如果没有数据完整性保障，入侵者可能篡改 Bob 的订单，使其购买的香水数量增加十倍。
+- 最后，如果没有服务器认证，某个服务器可能显示 Alice Incorporated 的著名标志，实际上该网站由冒充 Alice Incorporated 的 Trudy 维护。收到 Bob 的订单后，Trudy 可能卷款潜逃，或者通过收集 Bob 的姓名、地址和信用卡号实施身份盗窃。
 
-To understand the need for SSL, let’s walk through a typical Internet commerce scenario. Bob is surfing the Web and arrives at the Alice Incorporated site, which is selling perfume. The Alice Incorporated site displays a form in which Bob is supposed to enter the type of perfume and quantity desired, his address, and his payment card number. Bob enters this information, clicks on Submit, and expects to receive (via ordinary postal mail) the purchased perfumes; he also expects to receive a charge for his order in his next payment card statement. This all sounds good, but if no security measures are taken, Bob could be in for a few surprises. If no confidentiality (encryption) is used, an intruder could intercept Bob’s order and obtain his payment card information. The intruder could then make purchases at Bob’s expense.
+SSL 通过增强 TCP，实现机密性、数据完整性、服务器认证和客户端认证，从而解决上述问题。
 
-- If no confidentiality (encryption) is used, an intruder could intercept Bob’s order and obtain his payment card information. The intruder could then make purchases at Bob’s expense.
-- If no data integrity is used, an intruder could modify Bob’s order, having him purchase ten times more bottles of perfume than desired.
-- Finally, if no server authentication is used, a server could display Alice Incorporated’s famous logo when in actuality the site maintained by Trudy, who is masquerading as Alice Incorporated. After receiving Bob’s order, Trudy could take Bob’s money and run. Or Trudy could carry out an identity theft by collecting Bob’s name, address, and credit card number.
+SSL 通常用于为通过 HTTP 进行的交易提供安全保障。但由于 SSL 保护的是 TCP，它可以被任何基于 TCP 的应用程序使用。SSL 提供了一个简单的套接字应用程序接口（API），与 TCP 的 API 类似且对应。当应用程序希望使用 SSL 时，需包含 SSL 类库。如 :ref:`图 8.24 <Figure 8.24>` 所示，虽然从技术上讲 SSL 位于应用层，但从开发者角度看，它是一个传输协议，提供了带有安全服务的增强版 TCP 服务。
 
-SSL addresses these issues by enhancing TCP with confidentiality, data integrity, server authentication, and client authentication.
+.. toggle::
 
-SSL is often used to provide security to transactions that take place over HTTP. However, because SSL secures TCP, it can be employed by any application that runs over TCP. SSL provides a simple Application Programmer Interface (API) with sockets, which is similar and analogous to TCP’s API. When an application wants to employ SSL, the application includes SSL classes/libraries. As shown in :ref:`Figure 8.24 <Figure 8.24>`, although SSL technically resides in the application layer, from the developer’s perspective it is a transport protocol that provides TCP’s services enhanced with security services.
+   In the previous section, we saw how cryptographic techniques can provide confidentiality, data integrity, and end-point authentication to a specific application, namely, e-mail. In this section, we’ll drop down a layer in the protocol stack and examine how cryptography can enhance TCP with security services, including confidentiality, data integrity, and end-point authentication. This enhanced version of TCP is commonly known as **Secure Sockets Layer (SSL)**. A slightly modified version of SSL version 3, called **Transport Layer Security (TLS)**, has been standardized by the IETF [:rfc:`4346`].
+   
+   The SSL protocol was originally designed by Netscape, but the basic ideas behind securing TCP had
+   predated Netscape’s work (for example, see Woo :ref:`[Woo 1994] <Woo 1994>`). Since its inception, SSL has enjoyed broad deployment. SSL is supported by all popular Web browsers and Web servers, and it is used by Gmail and essentially all Internet commerce sites (including Amazon, eBay, and TaoBao). Hundreds of billions of dollars are spent over SSL every year. In fact, if you have ever purchased anything over the Internet with your credit card, the communication between your browser and the server for this purchase almost certainly went over SSL. (You can identify that SSL is being used by your browser when the URL begins with https: rather than http.)
+   
+   To understand the need for SSL, let’s walk through a typical Internet commerce scenario. Bob is surfing the Web and arrives at the Alice Incorporated site, which is selling perfume. The Alice Incorporated site displays a form in which Bob is supposed to enter the type of perfume and quantity desired, his address, and his payment card number. Bob enters this information, clicks on Submit, and expects to receive (via ordinary postal mail) the purchased perfumes; he also expects to receive a charge for his order in his next payment card statement. This all sounds good, but if no security measures are taken, Bob could be in for a few surprises. If no confidentiality (encryption) is used, an intruder could intercept Bob’s order and obtain his payment card information. The intruder could then make purchases at Bob’s expense.
+   
+   - If no confidentiality (encryption) is used, an intruder could intercept Bob’s order and obtain his payment card information. The intruder could then make purchases at Bob’s expense.
+   - If no data integrity is used, an intruder could modify Bob’s order, having him purchase ten times more bottles of perfume than desired.
+   - Finally, if no server authentication is used, a server could display Alice Incorporated’s famous logo when in actuality the site maintained by Trudy, who is masquerading as Alice Incorporated. After receiving Bob’s order, Trudy could take Bob’s money and run. Or Trudy could carry out an identity theft by collecting Bob’s name, address, and credit card number.
+   
+   SSL addresses these issues by enhancing TCP with confidentiality, data integrity, server authentication, and client authentication.
+   
+   SSL is often used to provide security to transactions that take place over HTTP. However, because SSL secures TCP, it can be employed by any application that runs over TCP. SSL provides a simple Application Programmer Interface (API) with sockets, which is similar and analogous to TCP’s API. When an application wants to employ SSL, the application includes SSL classes/libraries. As shown in :ref:`Figure 8.24 <Figure 8.24>`, although SSL technically resides in the application layer, from the developer’s perspective it is a transport protocol that provides TCP’s services enhanced with security services.
 
 .. _c8.6.1:
 
-8.6.1 大局观
+8.6.1 整体概览
 ----------------------------------------------------------------------------------
 8.6.1 The Big Picture
 
-.. tab:: 中文
+我们先描述一个简化版本的 SSL，这将帮助我们从宏观上理解 SSL 的原因和实现方式。我们将这个简化版本称为“近似 SSL”。描述完近似 SSL 后，在下一小节中我们将详细介绍真正的 SSL，补充细节。近似 SSL（以及 SSL）包含三个阶段：握手、密钥推导和数据传输。下面描述客户端（Bob）与服务器（Alice）之间通信会话的这三个阶段，其中 Alice 拥有一对私钥/公钥及一个将其身份绑定到公钥的证书。
 
-.. tab:: 英文
-
-We begin by describing a simplified version of SSL, one that will allow us to get a big-picture understanding of the why and how of SSL. We will refer to this simplified version of SSL as “almost-SSL.” After describing almost-SSL, in the next subsection we’ll then describe the real SSL, filling in the details. Almost-SSL (and SSL) has three phases: handshake, key derivation, and data transfer. We now describe these three phases for a communication session between a client (Bob) and a server (Alice), with Alice having a private/public key pair and a certificate that binds her identity to her public key.
+.. _Figure 8.24:
 
 .. figure:: ../img/699-0.png 
     :align: center 
 
-.. _Figure 8.24:
+**图 8.24 虽然 SSL 技术上位于应用层，但从开发者视角来看，它是一个传输层协议**
 
-**Figure 8.24 Although SSL technically resides in the application layer, from the developer’s perspective it is a transport-layer ­protocol**
+.. toggle::
 
-Handshake
+   We begin by describing a simplified version of SSL, one that will allow us to get a big-picture understanding of the why and how of SSL. We will refer to this simplified version of SSL as “almost-SSL.” After describing almost-SSL, in the next subsection we’ll then describe the real SSL, filling in the details. Almost-SSL (and SSL) has three phases: handshake, key derivation, and data transfer. We now describe these three phases for a communication session between a client (Bob) and a server (Alice), with Alice having a private/public key pair and a certificate that binds her identity to her public key.
+   
+   .. figure:: ../img/699-0.png 
+       :align: center 
+
+   **Figure 8.24 Although SSL technically resides in the application layer, from the developer’s perspective it is a transport-layer ­protocol**
+
+握手
 ~~~~~~~~~~~
+Handshake
 
-During the handshake phase, Bob needs to (a) establish a TCP connection with Alice, (b) verify that Alice is really Alice, and (c) send Alice a master secret key, which will be used by both Alice and Bob to generate all the symmetric keys they need for the SSL session. These three steps are shown in :ref:`Figure 8.25 <Figure 8.25>`. Note that once the TCP connection is established, Bob sends Alice a hello message. Alice then responds with her certificate, which contains her public key. As discussed in :ref:`Section 8.3 <c8.3>`, because the certificate has been certified by a CA, Bob knows for sure that the public key in the certificate belongs to Alice. Bob then generates a Master Secret (MS) (which will only be used for this SSL session), encrypts the MS with Alice’s public key to create the Encrypted Master Secret (EMS), and sends the EMS to Alice. Alice decrypts the EMS with her private key to get the MS. After this phase, both Bob and Alice (and no one else) know the master secret for this SSL session.
+在握手阶段，Bob 需要：（a）与 Alice 建立 TCP 连接，（b）验证 Alice 确实是 Alice，（c）向 Alice 发送一个主密钥，供双方生成 SSL 会话所需的所有对称密钥。三个步骤如 :ref:`图 8.25 <Figure 8.25>` 所示。注意，一旦建立了 TCP 连接，Bob 会向 Alice 发送一个 hello 消息，Alice 随后回复包含其公钥的证书。正如 :ref:`第 8.3 节 <c8.3>` 所讨论，由于该证书由 CA 认证，Bob 确信证书中的公钥确实属于 Alice。随后 Bob 生成一个主密钥（MS）（仅用于本 SSL 会话），用 Alice 的公钥加密该主密钥生成加密主密钥（EMS），并将 EMS 发送给 Alice。Alice 用私钥解密 EMS 得到 MS。至此，Bob 和 Alice（且无他人）都知道本次 SSL 会话的主密钥。
+
+.. _Figure 8.25:
 
 .. figure:: ../img/700-0.png 
     :align: center 
 
-.. _Figure 8.25:
+**图 8.25 近似 SSL 握手，从 TCP 连接开始**
 
-**Figure 8.25 The almost-SSL handshake, beginning with a TCP ­connection**
+.. toggle::
+
+    During the handshake phase, Bob needs to (a) establish a TCP connection with Alice, (b) verify that Alice is really Alice, and (c) send Alice a master secret key, which will be used by both Alice and Bob to generate all the symmetric keys they need for the SSL session. These three steps are shown in :ref:`Figure 8.25 <Figure 8.25>`. Note that once the TCP connection is established, Bob sends Alice a hello message. Alice then responds with her certificate, which contains her public key. As discussed in :ref:`Section 8.3 <c8.3>`, because the certificate has been certified by a CA, Bob knows for sure that the public key in the certificate belongs to Alice. Bob then generates a Master Secret (MS) (which will only be used for this SSL session), encrypts the MS with Alice’s public key to create the Encrypted Master Secret (EMS), and sends the EMS to Alice. Alice decrypts the EMS with her private key to get the MS. After this phase, both Bob and Alice (and no one else) know the master secret for this SSL session.
+
+    .. figure:: ../img/700-0.png 
+        :align: center 
+
+    **Figure 8.25 The almost-SSL handshake, beginning with a TCP ­connection**
 
 
+密钥推导
+~~~~~~~~~~~~~~~~
 Key Derivation
+
+原则上，Bob 和 Alice 共享的 MS 可作为后续所有加密和数据完整性校验的对称会话密钥。但通常认为更安全的做法是，Alice 和 Bob 各自使用不同的加密密钥，同时对加密和完整性校验使用不同密钥。因此，Alice 和 Bob 利用 MS 生成四个密钥：
+
+- EB = Bob 发往 Alice 的数据的会话加密密钥
+- MB = Bob 发往 Alice 的数据的会话消息认证码（MAC）密钥
+- EA = Alice 发往 Bob 的数据的会话加密密钥
+- MA = Alice 发往 Bob 的数据的会话 MAC 密钥
+
+Alice 和 Bob 各自从 MS 中生成这四个密钥。可以简单地将 MS 切分为四个密钥（但实际 SSL 会稍微复杂些，后面会看到）。密钥推导结束时，Alice 和 Bob 都拥有全部四个密钥。两个加密密钥用于数据加密；两个 MAC 密钥用于数据完整性验证。
+
+.. toggle::
+
+   In principle, the MS, now shared by Bob and Alice, could be used as the symmetric session key for all subsequent encryption and data integrity checking. It is, however, generally considered safer for Alice and Bob to each use different cryptographic keys, and also to use different keys for encryption and integrity checking. Thus, both Alice and Bob use the MS to generate four keys:
+   
+   - EB= session encryption key for data sent from Bob to Alice
+   - MB= session MAC key for data sent from Bob to Alice 
+   - EA= session encryption key for data sent from Alice to Bob
+   - MA= session MAC key for data sent from Alice to Bob
+   
+   Alice and Bob each generate the four keys from the MS. This could be done by simply slicing the MS into four keys. (But in real SSL it is a little more complicated, as we’ll see.) At the end of the key derivation phase, both Alice and Bob have all four keys. The two encryption keys will be used to encrypt data; the two MAC keys will be used to verify the integrity of the data.
+
+数据传输
 ~~~~~~~~~~~~~~~~
-
-In principle, the MS, now shared by Bob and Alice, could be used as the symmetric session key for all subsequent encryption and data integrity checking. It is, however, generally considered safer for Alice and Bob to each use different cryptographic keys, and also to use different keys for encryption and integrity checking. Thus, both Alice and Bob use the MS to generate four keys:
-
-- EB= session encryption key for data sent from Bob to Alice
-- MB= session MAC key for data sent from Bob to Alice 
-- EA= session encryption key for data sent from Alice to Bob
-- MA= session MAC key for data sent from Alice to Bob
-
-Alice and Bob each generate the four keys from the MS. This could be done by simply slicing the MS into four keys. (But in real SSL it is a little more complicated, as we’ll see.) At the end of the key derivation phase, both Alice and Bob have all four keys. The two encryption keys will be used to encrypt data; the two MAC keys will be used to verify the integrity of the data.
-
 Data Transfer
-~~~~~~~~~~~~~~~~
 
-Now that Alice and Bob share the same four session keys (EB, MB, EA, and MA), they can start to send secured data to each other over the TCP connection. Since TCP is a byte-stream protocol, a natural approach would be for SSL to encrypt application data on the fly and then pass the encrypted data on the fly to TCP. But if we were to do this, where would we put the MAC for the integrity check? We certainly do not want to wait until the end of the TCP session to verify the integrity of all of Bob’s data that was sent over the entire session! To address this issue, SSL breaks the data stream into records, appends a MAC to each record for integrity checking, and then encrypts the record +MAC. To create the MAC, Bob inputs the record data along with the key MB into a hash function, as discussed in :ref:`Section 8.3 <c8.3>`. To encrypt the package record +MAC, Bob uses his session encryption key EB. This encrypted package is then passed to TCP for transport over the Internet.
+现在 Alice 和 Bob 共享相同的四个会话密钥（EB、MB、EA 和 MA），他们即可开始通过 TCP 连接发送安全数据。由于 TCP 是字节流协议，自然的做法是 SSL 实时加密应用数据，再实时传递给 TCP。但如果这么做，完整性校验的 MAC 应该放在哪里？显然，我们不希望等到 TCP 会话结束时才校验所有数据的完整性！为解决此问题，SSL 将数据流分为记录（record），对每条记录附加 MAC 以校验完整性，再将记录与 MAC 一起加密。计算 MAC 时，Bob 输入记录数据和密钥 MB 至哈希函数（参见 :ref:`第 8.3 节 <c8.3>`）。Bob 用会话加密密钥 EB 加密记录 + MAC 包，然后将该加密包交给 TCP 通过互联网传输。
 
-Although this approach goes a long way, it still isn’t bullet-proof when it comes to providing data integrity for the entire message stream. In particular, suppose Trudy is a woman-in-the-middle and has the ability to insert, delete, and replace segments in the stream of TCP segments sent between Alice and Bob. Trudy, for example, could capture two segments sent by Bob, reverse the order of the segments, adjust the TCP sequence numbers (which are not encrypted), and then send the two reverse-ordered segments to Alice. Assuming that each TCP segment encapsulates exactly one record, let’s now take a look at how Alice would process these segments.
+虽然此方法效果显著，但在提供整个消息流数据完整性时仍非万无一失。设想 Trudy 是中间人，能插入、删除、替换 Alice 和 Bob 之间 TCP 段流。举例来说，Trudy 抓取 Bob 发出的两个 TCP 段，交换它们顺序，调整（未加密的）TCP 序号，然后将顺序颠倒的两个段发送给 Alice。假设每个 TCP 段恰好封装一个记录，下面看看 Alice 如何处理这些段。
 
-1. TCP running in Alice would think everything is fine and pass the two records to the SSL sublayer.
-2. SSL in Alice would decrypt the two records.
-3. SSL in Alice would use the MAC in each record to verify the data integrity of the two records.
-4. SSL would then pass the decrypted byte streams of the two records to the application layer; but the complete byte stream received by Alice would not be in the correct order due to reversal of the records!
+1. Alice 上运行的 TCP 认为一切正常，将两个记录传递给 SSL 子层。
+2. Alice 的 SSL 解密两个记录。
+3. Alice 的 SSL 使用每条记录中的 MAC 验证数据完整性。
+4. SSL 将两个记录解密后的字节流传给应用层；但由于记录顺序被颠倒，Alice 接收的完整字节流顺序错误！
 
-You are encouraged to walk through similar scenarios for when Trudy removes segments or when Trudy replays segments.
+你可以自行模拟 Trudy 删除段或重放段的类似情景。
 
-The solution to this problem, as you probably guessed, is to use sequence numbers. SSL does this as follows. Bob maintains a sequence number counter, which begins at zero and is incremented for each SSL record he sends. Bob doesn’t actually include a sequence number in the record itself, but when he calculates the MAC, he includes the sequence number in the MAC calculation. Thus, the MAC is now a hash of the data plus the MAC key MB plus the current sequence number. Alice tracks Bob’s sequence numbers, allowing her to verify the data integrity of a record by including the appropriate sequence number in the MAC calculation. This use of SSL sequence numbers prevents Trudy from carrying out a woman-in-the-middle attack, such as reordering or replaying segments. (Why?)
+解决方案，如你所料，是使用序列号。SSL 按如下方式实现：Bob 维护一个序列号计数器，从零开始，每发送一个 SSL 记录计数器加一。Bob 不直接把序列号包含在记录中，而是在计算 MAC 时将序列号计入计算。因此，MAC 是数据 + MAC 密钥 MB + 当前序列号的哈希。Alice 跟踪 Bob 的序列号，利用序列号验证记录的完整性。SSL 序列号的使用阻止了 Trudy 的中间人攻击，如重排或重放段。（为什么？）
 
-SSL Record
+.. toggle::
+
+    Now that Alice and Bob share the same four session keys (EB, MB, EA, and MA), they can start to send secured data to each other over the TCP connection. Since TCP is a byte-stream protocol, a natural approach would be for SSL to encrypt application data on the fly and then pass the encrypted data on the fly to TCP. But if we were to do this, where would we put the MAC for the integrity check? We certainly do not want to wait until the end of the TCP session to verify the integrity of all of Bob’s data that was sent over the entire session! To address this issue, SSL breaks the data stream into records, appends a MAC to each record for integrity checking, and then encrypts the record +MAC. To create the MAC, Bob inputs the record data along with the key MB into a hash function, as discussed in :ref:`Section 8.3 <c8.3>`. To encrypt the package record +MAC, Bob uses his session encryption key EB. This encrypted package is then passed to TCP for transport over the Internet.
+
+    Although this approach goes a long way, it still isn’t bullet-proof when it comes to providing data integrity for the entire message stream. In particular, suppose Trudy is a woman-in-the-middle and has the ability to insert, delete, and replace segments in the stream of TCP segments sent between Alice and Bob. Trudy, for example, could capture two segments sent by Bob, reverse the order of the segments, adjust the TCP sequence numbers (which are not encrypted), and then send the two reverse-ordered segments to Alice. Assuming that each TCP segment encapsulates exactly one record, let’s now take a look at how Alice would process these segments.
+
+    1. TCP running in Alice would think everything is fine and pass the two records to the SSL sublayer.
+    2. SSL in Alice would decrypt the two records.
+    3. SSL in Alice would use the MAC in each record to verify the data integrity of the two records.
+    4. SSL would then pass the decrypted byte streams of the two records to the application layer; but the complete byte stream received by Alice would not be in the correct order due to reversal of the records!
+
+    You are encouraged to walk through similar scenarios for when Trudy removes segments or when Trudy replays segments.
+
+    The solution to this problem, as you probably guessed, is to use sequence numbers. SSL does this as follows. Bob maintains a sequence number counter, which begins at zero and is incremented for each SSL record he sends. Bob doesn’t actually include a sequence number in the record itself, but when he calculates the MAC, he includes the sequence number in the MAC calculation. Thus, the MAC is now a hash of the data plus the MAC key MB plus the current sequence number. Alice tracks Bob’s sequence numbers, allowing her to verify the data integrity of a record by including the appropriate sequence number in the MAC calculation. This use of SSL sequence numbers prevents Trudy from carrying out a woman-in-the-middle attack, such as reordering or replaying segments. (Why?)
+
+SSL 记录
 ~~~~~~~~~~~
+SSL Record
 
-The SSL record (as well as the almost-SSL record) is shown in :ref:`Figure 8.26 <Figure 8.26>`. The record consists of a type field, version field, length field, data field, and MAC field. Note that the first three fields are not encrypted. The type field indicates whether the record is a handshake message or a message that contains application data. It is also used to close the SSL connection, as discussed below. SSL at the receiving end uses the length field to extract the SSL records out of the incoming TCP byte stream. The version field is self-explanatory.
+SSL 记录（及近似 SSL 记录）如 :ref:`图 8.26 <Figure 8.26>` 所示。记录由类型字段、版本字段、长度字段、数据字段和 MAC 字段组成。前三个字段不加密。类型字段表明记录是握手消息还是包含应用数据的消息，也用于关闭 SSL 连接（下文讨论）。接收端的 SSL 利用长度字段从传入的 TCP 字节流中提取 SSL 记录。版本字段含义自明。
+
+.. toggle::
+
+    The SSL record (as well as the almost-SSL record) is shown in :ref:`Figure 8.26 <Figure 8.26>`. The record consists of a type field, version field, length field, data field, and MAC field. Note that the first three fields are not encrypted. The type field indicates whether the record is a handshake message or a message that contains application data. It is also used to close the SSL connection, as discussed below. SSL at the receiving end uses the length field to extract the SSL records out of the incoming TCP byte stream. The version field is self-explanatory.
 
 
 .. _c8.6.2:
 
-8.6.2 更完整的画面
+8.6.2 更完整的概述
 ----------------------------------------------------------------------------------
 8.6.2 A More Complete Picture
 
-.. tab:: 中文
+上一小节介绍了近似 SSL 协议，帮助我们对 SSL 的原因和实现方式有了基本了解。现在我们可以更深入地探讨真正的 SSL 协议要点。在阅读本节描述的同时，建议完成教材网站上提供的 Wireshark SSL 实验。
 
-.. tab:: 英文
-
-The previous subsection covered the almost-SSL protocol; it served to give us a basic understanding of the why and how of SSL. Now that we have a basic understanding of SSL, we can dig a little deeper and examine the essentials of the actual SSL protocol. In parallel to reading this description of the SSL protocol, you are encouraged to complete the Wireshark SSL lab, available at the textbook’s Web site.
+.. _Figure 8.26:
 
 .. figure:: ../img/702-0.png 
     :align: center 
 
-.. _Figure 8.26:
+**图 8.26 SSL 的记录格式**
 
-**Figure 8.26 Record format for SSL**
+.. toggle::
+
+   The previous subsection covered the almost-SSL protocol; it served to give us a basic understanding of the why and how of SSL. Now that we have a basic understanding of SSL, we can dig a little deeper and examine the essentials of the actual SSL protocol. In parallel to reading this description of the SSL protocol, you are encouraged to complete the Wireshark SSL lab, available at the textbook’s Web site.
+   
+   .. figure:: ../img/702-0.png 
+       :align: center 
+   
+   **Figure 8.26 Record format for SSL**
 
 
-SSL Handshake
+SSL 握手
 ~~~~~~~~~~~~~~~
+SSL Handshake
 
-SSL does not mandate that Alice and Bob use a specific symmetric key algorithm, a specific public-key algorithm, or a specific MAC. Instead, SSL allows Alice and Bob to agree on the cryptographic algorithms at the beginning of the SSL session, during the handshake phase. Additionally, during the handshake phase, Alice and Bob send nonces to each other, which are used in the creation of the session keys (EB, MB, EA, and MA). The steps of the real SSL handshake are as follows:
+SSL 并不强制 Alice 和 Bob 使用特定的对称密钥算法、特定的公钥算法或特定的 MAC 算法。相反，SSL 允许双方在 SSL 会话开始时（握手阶段）协商加密算法。此外，在握手阶段，Alice 和 Bob 会互相发送随机数（nonce），用于生成会话密钥（EB、MB、EA 和 MA）。真正 SSL 握手的步骤如下：
 
-1. The client sends a list of cryptographic algorithms it supports, along with a ­client nonce.
-2. From the list, the server chooses a symmetric algorithm (for example, AES), a public key algorithm (for example, RSA with a specific key length), and a MAC algorithm. It sends back to the client its choices, as well as a certificate and a server nonce.
-3. The client verifies the certificate, extracts the server’s public key, generates a Pre-Master Secret (PMS), encrypts the PMS with the server’s public key, and sends the encrypted PMS to the server.
-4. Using the same key derivation function (as specified by the SSL standard), the client and server independently compute the Master Secret (MS) from the PMS and nonces. The MS is then sliced up to generate the two encryption and two MAC keys. Furthermore, when the chosen symmetric cipher employs CBC (such as 3DES or AES), then two Initialization Vectors (IVs)— one for each side of the connection—are also obtained from the MS. Henceforth, all ­messages sent between client and server are encrypted and authenticated (with the MAC).
-5. The client sends a MAC of all the handshake messages.
-6. The server sends a MAC of all the handshake messages.
+1. 客户端发送支持的加密算法列表以及客户端随机数。
+2. 服务器从列表中选择对称算法（例如 AES）、公钥算法（例如具有特定密钥长度的 RSA）和 MAC 算法，并将选择结果、证书和服务器随机数返回给客户端。
+3. 客户端验证证书，提取服务器公钥，生成预主密钥（PMS），用服务器公钥加密 PMS，并将加密后的 PMS 发送给服务器。
+4. 客户端和服务器使用相同的密钥推导函数（SSL 标准规定）独立地从 PMS 和随机数计算主密钥（MS）。MS 再被分割生成两个加密密钥和两个 MAC 密钥。此外，当所选对称密码采用 CBC 模式（如 3DES 或 AES）时，还会从 MS 中获得两个初始化向量（IV），分别用于连接的两端。此后，客户端和服务器之间所有消息均被加密和认证（含 MAC）。
+5. 客户端发送所有握手消息的 MAC。
+6. 服务器发送所有握手消息的 MAC。
 
-The last two steps protect the handshake from tampering. To see this, observe that in step 1, the client typically offers a list of algorithms—some strong, some weak. This list of algorithms is sent in cleartext, since the encryption algorithms and keys have not yet been agreed upon. Trudy, as a woman-in-the- middle, could delete the stronger algorithms from the list, forcing the client to select a weak algorithm. To prevent such a tampering attack, in step 5 the client sends a MAC of the concatenation of all the handshake messages it sent and received. The server can compare this MAC with the MAC of the handshake messages it received and sent. If there is an inconsistency, the server can terminate the connection. Similarly, the server sends a MAC of the handshake messages it has seen, allowing the client to check for inconsistencies.
+后两步保护握手过程不被篡改。比如步骤 1 中，客户端通常提供一份算法列表——包含强算法和弱算法。该列表以明文发送，因为加密算法和密钥尚未协商完成。中间人 Trudy 可能删除列表中的强算法，迫使客户端选用弱算法。为防止此类篡改攻击，步骤 5 中客户端发送其所发送和接收的所有握手消息的串联的 MAC。服务器可以将此 MAC 与其发送和接收的握手消息的 MAC 比较，如不一致，服务器可终止连接。同样，服务器发送它看到的握手消息的 MAC，客户端据此检测不一致。
 
-You may be wondering why there are nonces in steps 1 and 2. Don’t sequence numbers suffice for preventing the segment replay attack? The answer is yes, but they don’t alone prevent the “connection replay attack.” Consider the following connection replay attack. Suppose Trudy sniffs all messages between Alice and Bob. The next day, Trudy masquerades as Bob and sends to Alice exactly the same sequence of messages that Bob sent to Alice on the previous day. If Alice doesn’t use nonces, she will respond with exactly the same sequence of messages she sent the previous day. Alice will not suspect any funny business, as each message she receives will pass the integrity check. If Alice is an e- commerce server, she will think that Bob is placing a second order (for exactly the same thing). On the other hand, by including a nonce in the protocol, Alice will send different nonces for each TCP session, causing the encryption keys to be different on the two days. Therefore, when Alice receives played-back SSL records from Trudy, the records will fail the integrity checks, and the bogus e-commerce transaction will not succeed. In summary, in SSL, nonces are used to defend against the “connection replay attack” and sequence numbers are used to defend against replaying individual packets during an ongoing session.
+你可能会疑惑，为什么步骤 1 和 2 中要有随机数？序列号难道不能阻止分段重放攻击吗？答案是序列号能阻止分段重放，但无法阻止“连接重放攻击”。设想以下连接重放攻击：Trudy 监听 Alice 和 Bob 之间的所有消息，第二天冒充 Bob 向 Alice 发送与前一天 Bob 发送给 Alice 的完全相同的消息序列。如果 Alice 不使用随机数，她会以完全相同的消息序列响应前一天的消息。Alice 不会怀疑异常，因为她收到的每条消息都通过了完整性检查。若 Alice 是电子商务服务器，她会认为 Bob 正在下第二个完全相同的订单。相反，协议中包含随机数，Alice 每次 TCP 会话发送不同的随机数，导致两天的加密密钥不同。因此，Alice 接收到 Trudy 重放的 SSL 记录时，记录完整性检查失败，虚假的电子商务交易不会成功。总结来说，SSL 使用随机数防御“连接重放攻击”，使用序列号防御会话中单个数据包重放。
 
-Connection Closure
+.. toggle::
+
+    SSL does not mandate that Alice and Bob use a specific symmetric key algorithm, a specific public-key algorithm, or a specific MAC. Instead, SSL allows Alice and Bob to agree on the cryptographic algorithms at the beginning of the SSL session, during the handshake phase. Additionally, during the handshake phase, Alice and Bob send nonces to each other, which are used in the creation of the session keys (EB, MB, EA, and MA). The steps of the real SSL handshake are as follows:
+
+    1. The client sends a list of cryptographic algorithms it supports, along with a ­client nonce.
+    2. From the list, the server chooses a symmetric algorithm (for example, AES), a public key algorithm (for example, RSA with a specific key length), and a MAC algorithm. It sends back to the client its choices, as well as a certificate and a server nonce.
+    3. The client verifies the certificate, extracts the server’s public key, generates a Pre-Master Secret (PMS), encrypts the PMS with the server’s public key, and sends the encrypted PMS to the server.
+    4. Using the same key derivation function (as specified by the SSL standard), the client and server independently compute the Master Secret (MS) from the PMS and nonces. The MS is then sliced up to generate the two encryption and two MAC keys. Furthermore, when the chosen symmetric cipher employs CBC (such as 3DES or AES), then two Initialization Vectors (IVs)— one for each side of the connection—are also obtained from the MS. Henceforth, all ­messages sent between client and server are encrypted and authenticated (with the MAC).
+    5. The client sends a MAC of all the handshake messages.
+    6. The server sends a MAC of all the handshake messages.
+
+    The last two steps protect the handshake from tampering. To see this, observe that in step 1, the client typically offers a list of algorithms—some strong, some weak. This list of algorithms is sent in cleartext, since the encryption algorithms and keys have not yet been agreed upon. Trudy, as a woman-in-the- middle, could delete the stronger algorithms from the list, forcing the client to select a weak algorithm. To prevent such a tampering attack, in step 5 the client sends a MAC of the concatenation of all the handshake messages it sent and received. The server can compare this MAC with the MAC of the handshake messages it received and sent. If there is an inconsistency, the server can terminate the connection. Similarly, the server sends a MAC of the handshake messages it has seen, allowing the client to check for inconsistencies.
+
+    You may be wondering why there are nonces in steps 1 and 2. Don’t sequence numbers suffice for preventing the segment replay attack? The answer is yes, but they don’t alone prevent the “connection replay attack.” Consider the following connection replay attack. Suppose Trudy sniffs all messages between Alice and Bob. The next day, Trudy masquerades as Bob and sends to Alice exactly the same sequence of messages that Bob sent to Alice on the previous day. If Alice doesn’t use nonces, she will respond with exactly the same sequence of messages she sent the previous day. Alice will not suspect any funny business, as each message she receives will pass the integrity check. If Alice is an e- commerce server, she will think that Bob is placing a second order (for exactly the same thing). On the other hand, by including a nonce in the protocol, Alice will send different nonces for each TCP session, causing the encryption keys to be different on the two days. Therefore, when Alice receives played-back SSL records from Trudy, the records will fail the integrity checks, and the bogus e-commerce transaction will not succeed. In summary, in SSL, nonces are used to defend against the “connection replay attack” and sequence numbers are used to defend against replaying individual packets during an ongoing session.
+
+连接关闭
 ~~~~~~~~~~~~~~~~~~~~
+Connection Closure
 
-At some point, either Bob or Alice will want to end the SSL session. One approach would be to let Bob end the SSL session by simply terminating the underlying TCP connection—that is, by having Bob send a TCP FIN segment to Alice. But such a naive design sets the stage for the truncation attack whereby Trudy once again gets in the middle of an ongoing SSL session and ends the session early with a TCP FIN. If Trudy were to do this, Alice would think she received all of Bob’s data when ­actuality she only received a portion of it. The solution to this problem is to indicate in the type field whether the record serves to terminate the SSL session. (Although the SSL type is sent in the clear, it is authenticated at the receiver using the record’s MAC.) By including such a field, if Alice were to receive a TCP FIN before ­receiving a closure SSL record, she would know that something funny was going on.
+某个时刻，Bob 或 Alice 会希望结束 SSL 会话。一种方法是让 Bob 通过终止底层 TCP 连接（即发送 TCP FIN 段）结束 SSL 会话。但这种简单设计为截断攻击埋下隐患，Trudy 可能再次成为中间人，提前用 TCP FIN 结束正在进行的 SSL 会话。如果 Trudy 如此，Alice 会以为她已收到 Bob 的所有数据，实际上只收到部分数据。解决方案是在类型字段指明该记录是否用于终止 SSL 会话。（尽管 SSL 类型以明文发送，但接收端使用记录的 MAC 认证该字段。）若 Alice 在收到关闭 SSL 记录前先收到 TCP FIN，她就会知道异常情况。
 
-This completes our introduction to SSL. We’ve seen that it uses many of the cryptography principles discussed in :ref:`Sections 8.2 <c8.2>` and :ref:`8.3 <c8.3>`. Readers who want to explore SSL on yet a deeper level can read Rescorla’s highly readable book on SSL :ref:`[Rescorla 2001] <Rescorla 2001>`.
+以上完成了 SSL 的介绍。我们看到它利用了 :ref:`第 8.2 节 <c8.2>` 和 :ref:`第 8.3 节 <c8.3>` 中讨论的多项密码学原理。想深入了解 SSL 的读者可参考 Rescorla 的优秀著作 :ref:`[Rescorla 2001] <Rescorla 2001>`。
+
+.. toggle::
+
+   At some point, either Bob or Alice will want to end the SSL session. One approach would be to let Bob end the SSL session by simply terminating the underlying TCP connection—that is, by having Bob send a TCP FIN segment to Alice. But such a naive design sets the stage for the truncation attack whereby Trudy once again gets in the middle of an ongoing SSL session and ends the session early with a TCP FIN. If Trudy were to do this, Alice would think she received all of Bob’s data when ­actuality she only received a portion of it. The solution to this problem is to indicate in the type field whether the record serves to terminate the SSL session. (Although the SSL type is sent in the clear, it is authenticated at the receiver using the record’s MAC.) By including such a field, if Alice were to receive a TCP FIN before ­receiving a closure SSL record, she would know that something funny was going on.
+   
+   This completes our introduction to SSL. We’ve seen that it uses many of the cryptography principles discussed in :ref:`Sections 8.2 <c8.2>` and :ref:`8.3 <c8.3>`. Readers who want to explore SSL on yet a deeper level can read Rescorla’s highly readable book on SSL :ref:`[Rescorla 2001] <Rescorla 2001>`.
 
