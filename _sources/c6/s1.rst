@@ -1,0 +1,85 @@
+.. _c6.1:
+
+6.1 链路层简介
+=================================================================
+6.1 Introduction to the Link Layer
+
+让我们从一些重要的术语开始。本章中我们将方便地把任何运行链路层（即第2层）协议的设备称为 **节点**。节点包括主机、路由器、交换机和 WiFi 接入点（将在 :ref:`第7章 <c7>` 中讨论）。我们还将把沿通信路径连接相邻节点的通信通道称为 **链路**。为了将数据报从源主机传输到目的主机，它必须沿端到端路径上的每一条链路逐步传输。例如，在 :ref:`图 6.1 <Figure 6.1>` 下方显示的公司网络中，考虑从某个无线主机向某台服务器发送数据报。这个数据报实际上会经过六条链路：从发送主机到 WiFi 接入点之间的 WiFi 链路，从接入点到链路层交换机之间的以太网链路，从链路层交换机到路由器之间的链路，两台路由器之间的链路，从路由器到链路层交换机之间的以太网链路，最后是从交换机到服务器之间的以太网链路。在给定的链路上，发送节点将数据报封装在一个 **链路层帧** 中并将其传输到链路中。
+
+为了进一步理解链路层及其与网络层的关系，让我们考虑一个交通运输类比。设想一位旅行代理正在为一位从美国新泽西州普林斯顿前往瑞士洛桑的游客安排行程。旅行代理决定游客最便捷的路线是先乘坐豪华轿车从普林斯顿到纽约肯尼迪机场，然后乘坐飞机从肯尼迪机场到日内瓦机场，最后乘坐火车从日内瓦机场到洛桑火车站。一旦旅行代理完成三段行程的预订，普林斯顿的豪华轿车公司负责将游客送至肯尼迪机场，航空公司负责将游客送至日内瓦，而瑞士铁路服务负责将游客从日内瓦送至洛桑。这三段行程都是在两个“相邻”地点之间的“直达”旅行。注意，这三段运输由不同公司管理，并使用完全不同的运输方式（轿车、飞机和火车）。尽管运输方式不同，它们都提供了从一个地点到相邻地点的基本服务。在这个运输类比中，游客相当于一个数据报，每段运输相当于一条链路，运输方式相当于一个链路层协议，而旅行代理相当于一个路由协议。
+
+.. _Figure 6.1:
+
+.. figure:: ../img/496-0.png
+   :align: center
+
+**图 6.1 从无线主机到服务器的六跳链路层传输**
+
+.. toggle::
+
+   Let’s begin with some important terminology. We’ll find it convenient in this chapter to refer to any device that runs a link-layer (i.e., layer 2) protocol as a **node**. Nodes include hosts, routers, switches, and WiFi access points (discussed in :ref:`Chapter 7 <c7>`). We will also refer to the communication channels that connect adjacent nodes along the communication path as **links**. In order for a datagram to be transferred from source host to destination host, it must be moved over each of the individual links in the end-to-end path. As an example, in the company network shown at the bottom of :ref:`Figure 6.1 <Figure 6.1>`, consider sending a datagram from one of the wireless hosts to one of the servers. This datagram will actually pass through six links: a WiFi link between sending host and WiFi access point, an Ethernet link between the access point and a link-layer switch; a link between the link-layer switch and the router, a link between the two routers; an Ethernet link between the router and a link-layer switch; and finally an Ethernet link between the switch and the server. Over a given link, a transmitting node encapsulates the datagram in a **link-layer frame** and transmits the frame into the link.
+
+   In order to gain further insight into the link layer and how it relates to the ­network layer, let’s consider a transportation analogy. Consider a travel agent who is planning a trip for a tourist traveling from Princeton, New Jersey, to Lausanne, Switzerland. The travel agent decides that it is most convenient for the tourist to take a limousine from Princeton to JFK airport, then a plane from JFK airport to Geneva’s airport, and finally a train from Geneva’s airport to Lausanne’s train station. Once the travel agent makes the three reservations, it is the responsibility of the Princeton limousine company to get the tourist from Princeton to JFK; it is the responsibility of the airline company to get the tourist from JFK to Geneva; and it is the responsibility of the Swiss train service to get the tourist from Geneva to Lausanne. Each of the three segments of the trip is “direct” between two “adjacent” locations. Note that the three transportation segments are managed by different companies and use entirely different transportation modes (limousine, plane, and train). Although the transportation modes are different, they each provide the basic service of moving passengers from one location to an adjacent location. In this transportation analogy, the tourist is a datagram, each transportation segment is a link, the transportation mode is a link-layer protocol, and the travel agent is a routing protocol.
+
+   .. figure:: ../img/496-0.png
+      :align: center
+
+   **Figure 6.1 Six link-layer hops between wireless host and server**
+
+.. _c6.1.1:
+
+6.1.1 链路层提供的服务
+-----------------------------------------------------------------------
+6.1.1 The Services Provided by the Link Layer
+
+尽管任何链路层的基本服务都是将数据报通过一条通信链路从一个节点传送到相邻节点，不同的链路层协议所提供的服务细节可能有所不同。链路层协议可能提供的服务包括：
+
+- **帧封装（Framing）**。几乎所有的链路层协议在通过链路传输前会将每个网络层数据报封装在一个链路层帧中。帧包括一个数据字段（用于插入网络层数据报）以及若干个头字段。帧的结构由链路层协议指定。在本章后半部分讨论具体链路层协议时，我们将看到几种不同的帧格式。
+- **链路接入（Link access）**。介质访问控制（MAC）协议规定了帧如何被传输到链路上的规则。对于点对点链路（即链路的一端只有一个发送者，另一端只有一个接收者），MAC 协议非常简单（甚至可能不存在）——只要链路空闲，发送者就可以发送帧。更有趣的情况是多个节点共享同一条广播链路的场景，即所谓的多路访问问题。在这种情况下，MAC 协议的作用是协调多个节点的帧传输。
+- **可靠传输（Reliable delivery）**。当链路层协议提供可靠传输服务时，它保证每个网络层数据报都能无差错地通过链路传输。回想一下某些传输层协议（如 TCP）也提供可靠传输服务。与传输层的可靠传输类似，链路层的可靠传输可以通过确认和重传实现（参见 :ref:`第3.4节 <c3.4>`）。在链路层上提供可靠传输服务通常用于易出错的链路，如无线链路，其目的是在出错链路上局部修复错误，而不是迫使传输层或应用层协议进行端到端重传。然而，对于误码率极低的链路（如光纤、同轴电缆和多数双绞铜线链路），链路层的可靠传输被认为是一种不必要的开销。因此，许多有线链路层协议并不提供可靠传输服务。
+- **差错检测与纠正（Error detection and correction）**。接收节点的链路层硬件可能会错误地判断帧中的某个位为0，而实际被传输的是1，反之亦然。这类比特错误通常由信号衰减和电磁噪声引起。由于没有必要转发带有错误的数据报，许多链路层协议提供检测此类比特错误的机制。这种机制通过在帧中添加差错检测位，并由接收节点执行差错检测实现。回顾 :ref:`第3章 <c3>` 和 :ref:`第4章 <c4>`，Internet 的传输层和网络层也提供了一种有限形式的差错检测——Internet 校验和。链路层的差错检测通常更为复杂，并由硬件实现。差错纠正类似于差错检测，不同之处在于接收方不仅检测出帧中出现了比特错误，还能准确确定错误的位置并进行纠正。
+
+.. toggle::
+
+   Although the basic service of any link layer is to move a datagram from one node to an adjacent node over a single communication link, the details of the provided service can vary from one link-layer protocol to the next. Possible services that can be offered by a link-layer protocol include:
+
+   - **Framing**. Almost all link-layer protocols encapsulate each network-layer datagram within a link-layer frame before transmission over the link. A frame consists of a data field, in which the network-layer datagram is inserted, and a number of header fields. The structure of the frame is specified by the link-layer protocol. We’ll see several different frame formats when we examine specific link-layer protocols in the second half of this chapter.
+   - **Link access**. A medium access control (MAC) protocol specifies the rules by which a frame is transmitted onto the link. For point-to-point links that have a single sender at one end of the link and a single receiver at the other end of the link, the MAC protocol is simple (or nonexistent)—the sender can send a frame whenever the link is idle. The more interesting case is when multiple nodes share a single broadcast link—the so-called multiple access problem. Here, the MAC protocol serves to coordinate the frame transmissions of the many nodes.
+   - **Reliable delivery**. When a link-layer protocol provides reliable delivery service, it guarantees to move each network-layer datagram across the link without error. Recall that certain transport-layer protocols (such as TCP) also provide a reliable delivery service. Similar to a transport-layer reliable delivery service, a link-layer reliable delivery service can be achieved with acknowledgments and retransmissions (see :ref:`Section 3.4 <c3.4>`). A link-layer reliable delivery service is often used for links that are prone to high error rates, such as a wireless link, with the goal of correcting an error locally—on the link where the error occurs—rather than forcing an end-to-end retransmission of the data by a transport- or application-layer protocol. However, link-layer reliable delivery can be considered an unnecessary overhead for low bit-error links, including fiber, coax, and many twisted-pair copper links. For this reason, many wired link-layer protocols do not provide a reliable delivery service.
+   - **Error detection and correction**. The link-layer hardware in a receiving node can incorrectly decide that a bit in a frame is zero when it was transmitted as a one, and vice versa. Such bit errors are introduced by signal attenuation and electromagnetic noise. Because there is no need to forward a datagram that has an error, many link-layer protocols provide a mechanism to detect such bit errors. This is done by having the transmitting node include error-detection bits in the frame, and having the receiving node perform an error check. Recall from :ref:`Chapters 3 <c3>` and :ref:`4 <c4>` that the Internet’s transport layer and network layer also provide a limited form of error detection—the Internet checksum. Error detection in the link layer is usually more sophisticated and is implemented in hardware. Error correction is similar to error detection, except that a receiver not only detects when bit errors have occurred in the frame but also determines exactly where in the frame the errors have occurred (and then corrects these errors).
+
+.. _c6.1.2:
+
+6.1.2 链路层是如何实现的？
+-----------------------------------------------------------------------
+6.1.2 Where Is the Link Layer Implemented?
+
+在深入研究链路层之前，让我们通过探讨链路层的实现位置来结束本节介绍。我们将关注终端系统，因为我们在 :ref:`第4章 <c4>` 中了解到路由器的链路层是由线路卡实现的。那么，主机的链路层是由硬件实现还是由软件实现？它是独立的卡或芯片吗？它是如何与主机的其他硬件及操作系统组件进行交互的？
+
+:ref:`图 6.2 <Figure 6.2>` 展示了一个典型的主机架构。在大多数情况下，链路层由一个 **网络适配器** 实现，也称为 **网络接口卡（NIC）**。网络适配器的核心是链路层控制器，通常是一个专用芯片，它实现了许多链路层服务（如帧封装、链路接入、差错检测等）。因此，链路层控制器的功能大多由硬件实现。例如，Intel 的 710 适配器 :ref:`[Intel 2016] <Intel 2016>` 实现了我们将在 :ref:`第6.5节 <c6.5>` 中学习的以太网协议；Atheros AR5006 控制器 :ref:`[Atheros 2016] <Atheros 2016>` 实现了我们将在 :ref:`第7章 <c7>` 中学习的 802.11 WiFi 协议。在 20 世纪 90 年代以前，大多数网络适配器都是独立的卡片（如 PCMCIA 卡或插入 PC 的 PCI 插槽的插件卡），但现在越来越多的网络适配器被集成到主板中，即所谓的主板集成局域网配置。
+
+在发送端，控制器从协议栈高层在主机内存中创建和存储的数据报出发，将其封装在链路层帧中（填充帧的各个字段），然后根据链路接入协议将帧传输到通信链路中。在接收端，控制器接收整个帧并提取网络层数据报。如果链路层执行差错检测，则由发送控制器设置帧头中的差错检测位，由接收控制器执行差错检测。
+
+:ref:`图 6.2 <Figure 6.2>` 展示了网络适配器如何连接到主机总线（如 PCI 或 PCI-X 总线），在主机其他组件看来就像是其他 I/O 设备。图中还显示，虽然链路层大部分是由硬件实现，但部分链路层是由在主机 CPU 上运行的软件实现的。链路层的软件组件实现了较高层次的功能，如组装链路层地址信息和激活控制器硬件。在接收端，链路层软件响应控制器的中断（例如接收到一个或多个帧），处理差错情况，并将数据报向上传递给网络层。因此，链路层是软硬件的结合点——协议栈中软件与硬件相遇的地方。:ref:`[Intel 2016] <Intel 2016>` 提供了从软件编程角度对 XL710 控制器的易读概述（以及详细描述）。
+
+.. _Figure 6.2:
+
+.. figure:: ../img/499-0.png
+   :align: center
+
+**图 6.2 网络适配器：它与主机其他组件及协议栈功能的关系**
+
+.. toggle::
+
+   Before diving into our detailed study of the link layer, let’s conclude this introduction by considering the question of where the link layer is implemented. We’ll focus here on an end system, since we learned in :ref:`Chapter 4 <c4>` that the link layer is implemented in a router’s line card. Is a host’s link layer implemented in hardware or software? Is it implemented on a separate card or chip, and how does it interface with the rest of a host’s hardware and operating system components?
+
+   :ref:`Figure 6.2 <Figure 6.2>` shows a typical host architecture. For the most part, the link layer is implemented in a **network adapter**, also sometimes known as a **network interface card (NIC)**. At the heart of the network adapter is the link-layer controller, usually a single, special-purpose chip that implements many of the link-layer services (framing, link access, error detection, and so on). Thus, much of a link-layer controller’s functionality is implemented in hardware. For example, Intel’s 710 adapter :ref:`[Intel 2016] <Intel 2016>` implements the Ethernet protocols we’ll study in :ref:`Section 6.5 <c6.5>`; the Atheros AR5006 :ref:`[Atheros 2016] <Atheros 2016>` controller implements the 802.11 WiFi protocols we’ll study in :ref:`Chapter 7 <c7>`. Until the late 1990s, most network adapters were physically separate cards (such as a PCMCIA card or a plug-in card fitting into a PC’s PCI card slot) but increasingly, network adapters are being integrated onto the host’s motherboard —a so-called LAN-on-motherboard configuration.
+
+   On the sending side, the controller takes a datagram that has been created and stored in host memory by the higher layers of the protocol stack, encapsulates the datagram in a link-layer frame (filling in the frame’s various fields), and then transmits the frame into the communication link, following the link- access protocol. On the receiving side, a controller receives the entire frame, and extracts the network- layer datagram. If the link layer performs error detection, then it is the sending controller that sets the error-detection bits in the frame header and it is the receiving controller that performs error detection.
+
+   :ref:`Figure 6.2 <Figure 6.2>` shows a network adapter attaching to a host’s bus (e.g., a PCI or PCI-X bus), where it looks much like any other I/O device to the other host components. :ref:`Figure 6.2 <Figure 6.2>` also shows that while most of the link layer is implemented in hardware, part of the link layer is implemented in software that runs on the host’s CPU. The software components of the link layer implement higher-level link-layer functionality such as assembling link-layer addressing information and activating the controller hardware. On the receiving side, link-layer software responds to controller interrupts (e.g., due to the receipt of one or more frames), handling error conditions and passing a datagram up to the network layer. Thus, the link layer is a combination of hardware and software—the place in the protocol stack where software meets hardware. :ref:`[Intel 2016] <Intel 2016>` provides a readable overview (as well as a detailed description) of the XL710 controller from a software-programming point of view.
+
+   .. figure:: ../img/499-0.png
+      :align: center
+
+   **Figure 6.2 Network adapter: Its relationship to other host components and to protocol stack functionality**

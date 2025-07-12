@@ -1,0 +1,1079 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>1.3 网络核心 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c1/s3';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="1.4 分组交换网络中的时延、丢包与吞吐量" href="s4.html" />
+    <link rel="prev" title="1.2 网络边缘" href="s2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 1 章 计算机网络与因特网</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c1/s3.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>1.3 网络核心</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-3-1">1.3.1 分组交换</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">存储-转发传输</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">排队时延与分组丢失</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">转发表与路由协议</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-3-2">1.3.2 电路交换</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">电路交换中的复用</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">分组交换与电路交换对比</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-3-3">1.3.3 网络的网络</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c1-3">
+<span id="id1"></span><h1>1.3 网络核心<a class="headerlink" href="#c1-3" title="此标题的永久链接">#</a></h1>
+<p>1.3 The Network Core</p>
+<p>在我们已经了解了互联网的边缘之后，现在让我们深入探讨网络核心——由分组交换机和链路构成的网状结构，连接了互联网的各个终端系统。<a class="reference internal" href="#figure-1-10"><span class="std std-ref">图 1.10</span></a> 使用加粗阴影线高亮显示了网络核心部分。</p>
+<figure class="align-center" id="the-network-core">
+<span id="figure-1-10"></span><img alt="../_images/49-0.png" src="../_images/49-0.png" />
+</figure>
+<p><strong>图 1.10 网络核心</strong></p>
+<div class="toggle docutils container">
+<p>Having examined the Internet’s edge, let us now delve more deeply inside the network core—the mesh of packet switches and links that interconnects the Internet’s end systems. <a class="reference internal" href="#figure-1-10"><span class="std std-ref">Figure 1.10</span></a> highlights the network core with thick, shaded lines.</p>
+<figure class="align-center" id="id2">
+<img alt="../_images/49-0.png" src="../_images/49-0.png" />
+</figure>
+<p><strong>Figure 1.10 The network core</strong></p>
+</div>
+<section id="c1-3-1">
+<span id="id3"></span><h2>1.3.1 分组交换<a class="headerlink" href="#c1-3-1" title="此标题的永久链接">#</a></h2>
+<p>1.3.1 Packet Switching</p>
+<p>在网络应用中，终端系统彼此交换 <strong>消息（messages）</strong>。消息可以包含应用设计者想要传输的任何内容。消息可以是控制信息（例如我们在 <a class="reference internal" href="s1.html#figure-1-2"><span class="std std-ref">图 1.2</span></a> 的握手例子中的 “Hi” 消息），也可以是数据，例如电子邮件、JPEG 图像或 MP3 音频文件。为了将消息从源终端系统发送到目的终端系统，源系统会将长消息分割为较小的数据块，称为 <strong>分组（packets）</strong>。在从源到目的的路径中，每个分组都通过通信链路和 <strong>分组交换机（packet switches）</strong> （主要包括 <strong>路由器（routers）</strong> 和 <strong>链路层交换机（link-layer switches）</strong>）传输。每个通信链路上传输分组的速率等于该链路的 <em>全部</em> 传输速率。因此，如果一个源终端系统或分组交换机在速率为 <em>R</em> 位/秒的链路上传输一个 <em>L</em> 位的分组，则传输该分组所需时间为 <em>L / R</em> 秒。</p>
+<div class="toggle docutils container">
+<p>In a network application, end systems exchange <strong>messages</strong> with each other. Messages can contain
+anything the application designer wants. Messages may perform a control function (for example, the “Hi”
+messages in our handshaking example in <a class="reference internal" href="s1.html#figure-1-2"><span class="std std-ref">Figure 1.2</span></a> ) or can contain data, such as an e-mail message,
+a JPEG image, or an MP3 audio file. To send a message from a source end system to a destination end
+system, the source breaks long messages into smaller chunks of data known as <strong>packets</strong>. Between
+source and destination, each packet travels through communication links and <strong>packet switches</strong> (for
+which there are two predominant types, <strong>routers</strong> and <strong>link-layer switches</strong>). Packets are transmitted over
+each communication link at a rate equal to the <em>full</em> transmission rate of the link. So, if a source end
+system or a packet switch is sending a packet of <em>L</em> bits over a link with transmission rate <em>R</em> bits/sec, then
+the time to transmit the packet is <em>L / R</em> seconds.</p>
+</div>
+<section id="id4">
+<h3>存储-转发传输<a class="headerlink" href="#id4" title="此标题的永久链接">#</a></h3>
+<p>Store-and-Forward Transmission</p>
+<p>大多数分组交换机在链路的输入端采用 <strong>存储-转发传输（store-and-forward transmission）</strong>。该方式要求交换机在开始传输分组的第一个比特之前，必须完整接收整个分组。为了更详细地了解这种机制，考虑一个简单网络，该网络由两个终端系统和一个中间路由器组成，如 <a class="reference internal" href="#figure-1-11"><span class="std std-ref">图 1.11</span></a> 所示。路由器通常连接多个链路，本例中只需将一个输入链路上的分组转发到唯一的输出链路上。源端系统有三个由 L 位组成的分组要发送。在图中的时间快照时，源已经传输了部分分组 1，分组 1 的前部已经到达路由器。由于采用存储-转发机制，路由器尚不能传输已接收的比特，而必须首先将其缓冲（即“存储”）。只有在完整接收整个分组后，路由器才能开始将其转发到输出链路。为了了解传输时延，我们现在来计算从源开始发送分组到目的端系统完全接收到该分组所需的总时间。（此处我们忽略传播时延，这将在 <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">第 1.4 节</span></a> 中讨论。）源在时间 0 开始发送，在 <em>L/R</em> 秒时，源完成发送，路由器也接收到整个分组；此后，路由器开始向目的系统发送该分组，并在 <em>2L/R</em> 秒时完成发送。因此，总时延为 <em>2L/R</em>。如果路由器在接收到部分比特后就立即转发，而不等待整个分组，则时延为 <em>L/R</em>。但如我们将在 <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">第 1.4 节</span></a> 中讨论的，路由器需要接收、存储并 <em>处理</em> 整个分组后才进行转发。</p>
+<figure class="align-center" id="id5">
+<span id="figure-1-11"></span><img alt="../_images/49-0.png" src="../_images/49-0.png" />
+</figure>
+<p><strong>图 1.11 存储-转发分组交换</strong></p>
+<p>现在我们来计算从源开始发送第一个分组到目的端系统接收到所有三个分组所需的总时间。与前面一样，在 <em>L/R</em> 秒时，路由器开始转发第一个分组，同时源也开始发送第二个分组。到 <em>2L/R</em> 秒时，目的端系统收到第一个分组，路由器接收到第二个分组。以此类推，到 <em>4L/R</em> 秒时，目的端系统收到了全部三个分组。</p>
+<p>现在考虑一般情况：一个分组从源到目的需经过 <em>N</em> 条传输速率为 <em>R</em> 的链路（中间有 N-1 个路由器）。根据上述逻辑，端到端时延为：</p>
+<div class="highlight-text notranslate" id="code-1-1"><div class="highlight"><pre><span></span>dend-to-end = N * L / R                                                        (1.1)
+</pre></div>
+</div>
+<p>你现在可以尝试推导：在 <em>N</em> 条链路上传输 <em>P</em> 个分组的总时延为多少。</p>
+<div class="toggle docutils container">
+<p>Most packet switches use <strong>store-and-forward transmission</strong> at the inputs to the links. Store-and-forward
+transmission means that the packet switch must receive the entire packet before it can begin to transmit
+the first bit of the packet onto the outbound link. To explore store-and-forward transmission in more
+detail, consider a simple network consisting of two end systems connected by a single router, as shown
+in <a class="reference internal" href="#figure-1-11"><span class="std std-ref">Figure 1.11</span></a>. A router will typically have many incident links, since its job is to switch an incoming
+packet onto an outgoing link; in this simple example, the router has the rather simple task of transferring
+a packet from one (input) link to the only other attached link. In this example, the source has three
+packets, each consisting of L bits, to send to the destination. At the snapshot of time shown in <a class="reference internal" href="#figure-1-11"><span class="std std-ref">Figure 1.11</span></a>, the source has transmitted some of packet 1, and the front of packet 1 has already arrived at the
+router. Because the router employs store-and-forwarding, at this instant of time, the router cannot
+transmit the bits it has received; instead it must first buffer (i.e., “store”) the packet’s bits. Only after the
+router has received <em>all</em> of the packet’s bits can it begin to transmit (i.e., “forward”) the packet onto the
+outbound link. To gain some insight into store-and-forward transmission, let’s now calculate the amount
+of time that elapses from when the source begins to send the packet until the destination has received
+the entire packet. (Here we will ignore propagation delay—the time it takes for the bits to travel across
+the wire at near the speed of light—which will be discussed in <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">Section 1.4</span></a> .) The source begins to
+transmit at time 0; at time <em>L/R</em> seconds, the source has transmitted the entire packet, and the entire
+packet has been received and stored at the router (since there is no propagation delay). At time L/R
+seconds, since the router has just received the entire packet, it can begin to transmit the packet onto the
+outbound link towards the destination; at time <em>2L/R</em>, the router has transmitted the entire packet, and the
+entire packet has been received by the destination. Thus, the total delay is <em>2L/R</em>. If the
+switch instead forwarded bits as soon as they arrive (without first receiving the entire packet), then the
+total delay would be <em>L/R</em> since bits are not held up at the router. But, as we will discuss in <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">Section 1.4</span></a>,
+routers need to receive, store, and <em>process</em> the entire packet before forwarding.</p>
+<figure class="align-center" id="id6">
+<img alt="../_images/49-0.png" src="../_images/49-0.png" />
+</figure>
+<p><strong>Figure 1.11 Store-and-forward packet switching</strong></p>
+<p>Now let’s calculate the amount of time that elapses from when the source begins to send the first packet
+until the destination has received all three packets. As before, at time <em>L/R</em>, the router begins to forward
+the first packet. But also at time <em>L/R</em> the source will begin to send the second packet, since it has just
+finished sending the entire first packet. Thus, at time <em>2L/R</em>, the destination has received the first packet
+and the router has received the second packet. Similarly, at time <em>3L/R</em>, the destination has received the
+first two packets and the router has received the third packet. Finally, at time <em>4L/R</em> the destination has
+received all three packets!</p>
+<p>Let’s now consider the general case of sending one packet from source to destination over a path
+consisting of <em>N</em> links each of rate R (thus, there are N-1 routers between source and destination).
+Applying the same logic as above, we see that the end-to-end delay is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>dend-to-end=NLR                                                                  (1.1)
+</pre></div>
+</div>
+<p>You may now want to try to determine what the delay would be for <em>P</em> packets sent over a series of <em>N</em> links.</p>
+</div>
+</section>
+<section id="id7">
+<h3>排队时延与分组丢失<a class="headerlink" href="#id7" title="此标题的永久链接">#</a></h3>
+<p>Queuing Delays and Packet Loss</p>
+<p>每个分组交换机连接多个链路。对于每条链路，交换机都有一个 <strong>输出缓冲区（output buffer）</strong> （或称 <strong>输出队列 output queue</strong>），用于存储即将通过该链路发送的分组。输出缓冲在分组交换中发挥着关键作用。如果一个到达的分组要通过一条正忙于发送其他分组的链路，则该分组必须等待。这会引入输出缓冲的 <strong>排队时延（queuing delay）</strong>。该时延是变化的，取决于网络的拥塞程度。</p>
+<figure class="align-center" id="packet-switching">
+<span id="figure-1-12"></span><img alt="../_images/52-0.png" src="../_images/52-0.png" />
+</figure>
+<p><strong>图 1.12 分组交换</strong></p>
+<p>由于缓冲空间是有限的，若缓冲已被其他分组占满，则新到的分组可能无法进入缓冲区。这种情况下就会发生 <strong>分组丢失（packet loss）</strong> —— 要么丢弃新到的分组，要么丢弃已排队的某个分组。</p>
+<p><a class="reference internal" href="#figure-1-12"><span class="std std-ref">图 1.12</span></a> 展示了一个简单的分组交换网络。与 <a class="reference internal" href="#figure-1-11"><span class="std std-ref">图 1.11</span></a> 一样，分组用三维“块”表示，其宽度表示分组的比特数。假设主机 A 和主机 B 都在向主机 E 发送分组，先通过 100 Mbps 的以太网链路发送到第一个路由器，然后由该路由器转发到 15 Mbps 链路上。如果某一时间段内，路由器收到的总速率（换算为 bit/s）超过了 15 Mbps，那么这些分组将在输出缓冲中排队等待，造成拥塞。例如，若 A 和 B 同时连续发送五个分组，大部分分组都需要在队列中等待。这种情况就如我们在现实生活中排队等候银行柜员或高速公路收费站一样。我们将在 <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">第 1.4 节</span></a> 中进一步探讨这种排队时延。</p>
+<div class="toggle docutils container">
+<p>Each packet switch has multiple links attached to it. For each attached link, the packet switch has an
+<strong>output buffer</strong> (also called an <strong>output queue</strong>), which stores packets that the router is about to send into
+that link. The output buffers play a key role in packet switching. If an arriving packet needs to be
+transmitted onto a link but finds the link busy with the transmission of another packet, the arriving packet
+must wait in the output buffer. Thus, in addition to the store-and-forward delays, packets suffer output
+buffer <strong>queuing delays</strong>. These delays are variable and depend on the level of congestion in the network.</p>
+<figure class="align-center" id="id8">
+<img alt="../_images/52-0.png" src="../_images/52-0.png" />
+</figure>
+<p><strong>Figure 1.12 Packet switching</strong></p>
+<p>Since the amount of buffer space is finite, an arriving packet may find that the buffer is completely full with other packets waiting for transmission. In this case, <strong>packet loss</strong> will occur—either the arriving packet or one of the already-queued packets will be dropped.</p>
+<p><a class="reference internal" href="#figure-1-12"><span class="std std-ref">Figure 1.12</span></a> illustrates a simple packet-switched network. As in <a class="reference internal" href="#figure-1-11"><span class="std std-ref">Figure 1.11</span></a>, packets are represented by
+three-dimensional slabs. The width of a slab represents the number of bits in the packet. In this figure,
+all packets have the same width and hence the same length. Suppose Hosts A and B are sending
+packets to Host E. Hosts A and B first send their packets along 100 Mbps Ethernet links to the first
+router. The router then directs these packets to the 15 Mbps link. If, during a short interval of time, the
+arrival rate of packets to the router (when converted to bits per second) exceeds 15 Mbps, congestion
+will occur at the router as packets queue in the link’s output buffer before being transmitted onto the link.
+For example, if Host A and B each send a burst of five packets back-to-back at the same time, then
+most of these packets will spend some time waiting in the queue. The situation is, in fact, entirely
+analogous to many common-day situations—for example, when we wait in line for a bank teller or wait in
+front of a tollbooth. We’ll examine this queuing delay in more detail in <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">Section 1.4</span></a>.</p>
+</div>
+</section>
+<section id="id9">
+<h3>转发表与路由协议<a class="headerlink" href="#id9" title="此标题的永久链接">#</a></h3>
+<p>Forwarding Tables and Routing Protocols</p>
+<p>前面我们提到，路由器将到达的分组从一个链路转发到另一个链路。但它是如何决定该分组应转发到哪条链路的呢？不同类型的计算机网络中，分组转发方式不同。下面简要介绍互联网中的做法。</p>
+<p>在互联网中，每个终端系统都有一个称为 IP 地址的地址。当源系统要向目的系统发送分组时，会在分组的首部中写入目的 IP 地址。就像邮政地址一样，IP 地址具有层次结构。当分组到达某个路由器时，该路由器检查该地址的一部分，并将分组转发给相邻路由器。具体地说，每个路由器都有一个 <strong>转发表（forwarding table）</strong>，用于将目标地址（或其一部分）映射到该路由器的输出链路。当分组到达时，路由器使用目的地址查表，决定应通过哪条链路转发。</p>
+<p>这个过程类似于开车不看地图而一路问路。例如，Joe 从费城开车到佛罗里达奥兰多的 156 Lakeside Drive。他首先问加油站工作人员如何前往，该工作人员提取地址中的佛罗里达部分并告诉他进入 I-95 南段高速，然后在佛州再问路。Joe 在杰克逊维尔再次问路，得到前往 Daytona Beach 的指示；在 Daytona Beach 又问路，最后在奥兰多问到了具体街道和门牌号。这些“问路人”就像是路由器。</p>
+<p>我们了解到，路由器通过目的地址查找转发表，确定转发链路。但转发表是如何配置的？是否需要人工逐一配置？互联网采用的是自动化方式，使用若干特殊的 <strong>路由协议（routing protocols）</strong> 来设置转发表。比如，某个协议可能计算从每个路由器到所有目的地的最短路径，并据此设置转发表。</p>
+<p>你是否想亲自看看在互联网上分组的端到端路径？可以访问网站 <a class="reference external" href="http://www.traceroute.org/">www.traceroute.org</a>，选择一个国家的源点，然后追踪到你电脑的路径。（有关 Traceroute 的详细内容见 <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">第 1.4 节</span></a>。）</p>
+<div class="toggle docutils container">
+<p>Earlier, we said that a router takes a packet arriving on one of its attached communication links and
+forwards that packet onto another one of its attached communication links. But how does the router
+determine which link it should forward the packet onto? Packet forwarding is actually done in different
+ways in different types of computer networks. Here, we briefly describe how it is done in the Internet.</p>
+<p>In the Internet, every end system has an address called an IP address. When a source end system
+wants to send a packet to a destination end system, the source includes the destination’s IP address in
+the packet’s header. As with postal addresses, this address has a hierarchical structure. When a packet
+arrives at a router in the network, the router examines a portion of the packet’s destination address and
+forwards the packet to an adjacent router. More specifically, each router has a <strong>forwarding table</strong> that
+maps destination addresses (or portions of the destination addresses) to that router’s outbound links.
+When a packet arrives at a router, the router examines the address and searches its forwarding table,
+using this destination address, to find the appropriate outbound link. The router then directs the packet
+to this outbound link.</p>
+<p>The end-to-end routing process is analogous to a car driver who does not use maps but instead prefers
+to ask for directions. For example, suppose Joe is driving from Philadelphia to 156 Lakeside Drive in
+Orlando, Florida. Joe first drives to his neighborhood gas station and asks how to get to 156 Lakeside
+Drive in Orlando, Florida. The gas station attendant extracts the Florida portion of the address and tells
+Joe that he needs to get onto the interstate highway I-95 South, which has an entrance just next to the
+gas station. He also tells Joe that once he enters Florida, he should ask someone else there. Joe then
+takes I-95 South until he gets to Jacksonville, Florida, at which point he asks another gas station
+attendant for directions. The attendant extracts the Orlando portion of the address and tells Joe that he
+should continue on I-95 to Daytona Beach and then ask someone else. In Daytona Beach, another gas
+station attendant also extracts the Orlando portion of the address and tells Joe that he should take I-4
+directly to Orlando. Joe takes I-4 and gets off at the Orlando exit. Joe goes to another gas station
+attendant, and this time the attendant extracts the Lakeside Drive portion of the address and tells Joe
+the road he must follow to get to Lakeside Drive. Once Joe reaches Lakeside Drive, he asks a kid on a
+bicycle how to get to his destination. The kid extracts the 156 portion of the address and points to the
+house. Joe finally reaches his ultimate destination. In the above analogy, the gas station attendants and
+kids on bicycles are analogous to routers.</p>
+<p>We just learned that a router uses a packet’s destination address to index a forwarding table and
+determine the appropriate outbound link. But this statement begs yet another question: How do
+forwarding tables get set? Are they configured by hand in each and every router, or does the Internet
+use a more automated procedure? This issue will be studied in depth in <a class="reference internal" href="../c5/index.html#c5"><span class="std std-ref">Chapter 5</span></a>. But to whet your
+appetite here, we’ll note now that the Internet has a number of special <strong>routing protocols</strong> that are used
+to automatically set the forwarding tables. A routing protocol may, for example, determine the shortest
+path from each router to each destination and use the shortest path results to configure the forwarding
+tables in the routers.</p>
+<p>How would you actually like to see the end-to-end route that packets take in the Internet? We now invite
+you to get your hands dirty by interacting with the Trace-route program. Simply visit the site
+<a class="reference external" href="http://www.traceroute.org/">www.traceroute.org</a> , choose a source in a particular country, and trace the route from that source to
+your computer. (For a discussion of Traceroute, see <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">Section 1.4</span></a>.)</p>
+</div>
+</section>
+</section>
+<section id="c1-3-2">
+<span id="id11"></span><h2>1.3.2 电路交换<a class="headerlink" href="#c1-3-2" title="此标题的永久链接">#</a></h2>
+<p>1.3.2 Circuit Switching</p>
+<p>在链路与交换机构成的网络中，传输数据有两种基本方式： <strong>电路交换（circuit switching）</strong> 与 <strong>分组交换（packet switching）</strong>。前一小节已介绍了分组交换网络，本节我们转而关注电路交换网络。</p>
+<p>在电路交换网络中，为了在通信会话期间为终端系统间的通信提供服务，路径上的所需资源（如缓冲区、链路传输速率）在会话期间会被 <em>预留</em>。而在分组交换网络中，这些资源 <em>不会</em> 被预留；通信会话的消息按需使用资源，因此可能不得不等待（即排队）以使用某条链路。一个简单的类比是两家餐厅，一家需要预订，另一家不接受也不需要预订。对于需要预订的餐厅，我们出门前必须先打电话确认，但到达餐厅后原则上可以立刻入座点餐。而不需要预订的餐厅虽然无需提前准备，但到了之后可能需要排队等待。</p>
+<p>传统电话网络是电路交换网络的例子。设想某人想通过电话网络发送语音或传真给另一人。在发送之前，网络必须在发送方和接收方之间建立一条连接。这是一条真正的连接，路径上的交换机会为其维持连接状态。在电话术语中，这种连接称为 <strong>电路（circuit）</strong>。建立电路的同时，网络也会在路径上的链路中预留一段恒定传输速率（代表链路传输能力的一部分），用于整个会话期间的通信。因此，发送方可以以保证的恒定速率将数据传送至接收方。</p>
+<p><a class="reference internal" href="#figure-1-13"><span class="std std-ref">图 1.13</span></a> 展示了一个电路交换网络。图中，四个电路交换机通过四条链路互联。每条链路可以支持四条电路，因此每条链路最多支持四个同时连接。各主机（如 PC 或工作站）直接连接到某个交换机。当两个主机需要通信时，网络会在它们之间建立一条专用的 <strong>端到端连接</strong>。例如，主机 A 想与主机 B 通信，网络必须分别在两条链路中预留一条电路。在此例中，端到端连接分别使用第一条链路的第二条电路和第二条链路的第四条电路。因为每条链路支持四条电路，每个连接在通信期间可独占链路总带宽的四分之一。例如，如果相邻交换机之间的链路速率为 1 Mbps，则每条端到端的电路连接拥有 250 kbps 的专用带宽。</p>
+<figure class="align-center" id="a-simple-circuit-switched-network-consisting-of-four-switches-and-four-links">
+<span id="figure-1-13"></span><img alt="../_images/55-0.png" src="../_images/55-0.png" />
+</figure>
+<p><strong>图 1.13 一个由四个交换机和四条链路构成的简单电路交换网络</strong></p>
+<p>相比之下，在分组交换网络（如互联网）中，若某主机想向另一主机发送分组，该分组同样会经过一系列通信链路传输。但与电路交换不同，分组无需预留任何链路资源。如果某条链路因同时有其他分组要传输而发生拥塞，则该分组将在发送侧链路缓冲中等待并产生延迟。互联网采取的是尽力而为的方式来及时传递分组，但并不提供任何保证。</p>
+<div class="toggle docutils container">
+<p>There are two fundamental approaches to moving data through a network of links and switches: <strong>circuit
+switching</strong> and <strong>packet switching</strong>. Having covered packet-switched networks in the previous
+subsection, we now turn our attention to circuit-switched networks.</p>
+<p>In circuit-switched networks, the resources needed along a path (buffers, link transmission rate) to
+provide for communication between the end systems are <em>reserved</em> for the duration of the communication
+session between the end systems. In packet-switched networks, these resources are <em>not</em> reserved; a
+session’s messages use the resources on demand and, as a consequence, may have to wait (that is,
+queue) for access to a communication link. As a simple analogy, consider two restaurants, one that
+requires reservations and another that neither requires reservations nor accepts them. For the
+restaurant that requires reservations, we have to go through the hassle of calling before we leave home.
+But when we arrive at the restaurant we can, in principle, immediately be seated and order our meal.
+For the restaurant that does not require reservations, we don’t need to bother to reserve a table. But
+when we arrive at the restaurant, we may have to wait for a table before we can be seated.</p>
+<p>Traditional telephone networks are examples of circuit-switched networks. ­Consider what happens
+when one person wants to send information (voice or facsimile) to another over a telephone network.
+Before the sender can send the information, the network must establish a connection between the
+sender and the receiver. This is a bona fide connection for which the switches on the path between the
+sender and receiver maintain connection state for that connection. In the jargon of telephony, this
+connection is called a <strong>circuit</strong>. When the network establishes the circuit, it also reserves a constant
+transmission rate in the network’s links (representing a fraction of each link’s transmission capacity) for
+the duration of the connection. Since a given transmission rate has been reserved for this sender-to-
+receiver connection, the sender can transfer the data to the receiver at the guaranteed constant rate.</p>
+<p><a class="reference internal" href="#figure-1-13"><span class="std std-ref">Figure 1.13</span></a> illustrates a circuit-switched network. In this network, the four circuit switches are
+interconnected by four links. Each of these links has four circuits, so that each link can support four
+simultaneous connections. The hosts (for example, PCs and workstations) are each directly connected
+to one of the switches. When two hosts want to communicate, the network establishes a dedicated <strong>end-
+to-end connection</strong> between the two hosts. Thus, in order for Host A to communicate with Host B, the
+network must first reserve one circuit on each of two links. In this example, the dedicated end-to-end
+connection uses the second circuit in the first link and the fourth circuit in the second link. Because each
+link has four circuits, for each link used by the end-to-end connection, the connection gets one fourth of
+the link’s total transmission capacity for the duration of the connection. Thus, for example, if each link
+between adjacent switches has a transmission rate of 1 Mbps, then each end-to-end circuit-switch
+connection gets 250 kbps of dedicated transmission rate.</p>
+<figure class="align-center" id="id12">
+<img alt="../_images/55-0.png" src="../_images/55-0.png" />
+</figure>
+<p><strong>Figure 1.13 A simple circuit-switched network consisting of four switches and four links</strong></p>
+<p>In contrast, consider what happens when one host wants to send a packet to another host over a
+packet-switched network, such as the Internet. As with circuit switching, the packet is transmitted over a
+series of communication links. But different from circuit switching, the packet is sent into the network
+without reserving any link resources whatsoever. If one of the links is congested because other packets
+need to be transmitted over the link at the same time, then the packet will have to wait in a buffer at the
+sending side of the transmission link and suffer a delay. The Internet makes its best effort to deliver
+packets in a timely manner, but it does not make any guarantees.</p>
+</div>
+<section id="id13">
+<h3>电路交换中的复用<a class="headerlink" href="#id13" title="此标题的永久链接">#</a></h3>
+<p>Multiplexing in Circuit-Switched Networks</p>
+<p>链路中的电路通常采用 <strong>频分复用（FDM）</strong> 或 <strong>时分复用（TDM）</strong> 实现。FDM 将链路的频谱划分为多个频带，每条连接在整个会话期间占用一个频带。在电话网络中，通常每条连接占用 4 kHz（即 4000 Hz）带宽，这一带宽也称为 <strong>带宽（bandwidth）</strong>。FM 广播电台也使用 FDM，将 88 MHz 至 108 MHz 的频谱划分给不同电台。</p>
+<p>TDM 则将时间划分为固定长度的帧，每帧再划分为固定数量的时隙。网络在建立连接后，会在每帧中为该连接分配一个专用时隙，该时隙仅供该连接使用。</p>
+<figure class="align-center" id="figure-1-14">
+<img alt="../_images/56-0.png" src="../_images/56-0.png" />
+</figure>
+<p><strong>图 1.14 FDM 每条电路持续占据部分带宽，TDM 每条电路在短暂时隙内周期性占用全部带宽</strong></p>
+<p><a class="reference internal" href="#figure-1-14"><span class="std std-ref">图 1.14</span></a> 展示了一条支持最多四条电路的链路的 FDM 与 TDM 示例。FDM 将频域分为四个带宽为 4 kHz 的频段。TDM 将时间划分为帧，每帧含有四个时隙；每条电路在每帧中占据同一专用时隙。TDM 中电路的传输速率等于帧率乘以每个时隙的比特数。例如，如果链路每秒传输 8000 帧，每个时隙 8 比特，则每条电路的速率为 64 kbps。</p>
+<p>分组交换的支持者认为电路交换存在资源浪费问题，因为在 <strong>静默期（silent periods）</strong> 期间，专用电路处于空闲状态，其他连接无法使用其资源。例如，通话过程中一方沉默时，其占用的频段或时隙无法用于其他连接。再如放射科医生远程查看 X 光图像时，虽然连接已建立，但在观察图像期间网络资源处于未使用状态，从而造成浪费。此外，建立端到端电路并分配带宽也较复杂，需使用专门的信令协议协调路径上所有交换机的操作。</p>
+<p>在结束电路交换讨论之前，我们来看一个数值例子。假设主机 A 要通过电路交换网络向主机 B 发送一个 640,000 位的文件。网络中所有链路使用 TDM，含 24 个时隙，位率为 1.536 Mbps。假设建立端到端电路需 500 毫秒。每条电路的传输速率为 1.536 Mbps / 24 = 64 kbps，因此发送文件需 640,000 / 64,000 = 10 秒。加上建立连接所需时间，总共约 10.5 秒。注意该传输时间与链路数无关：无论中间经过 1 条链路还是 100 条，传输时间仍为 10 秒。（实际端到端时延还包括传播时延，详见 <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">第 1.4 节</span></a>。）</p>
+<div class="toggle docutils container">
+<p>A circuit in a link is implemented with either <strong>frequency-division multiplexing (FDM)</strong> or <strong>time-division
+multiplexing (TDM)</strong>. With FDM, the frequency spectrum of a link is divided up among the connections
+established across the link. Specifically, the link dedicates a frequency band to each connection for the
+duration of the connection. In telephone networks, this frequency band typically has a width of 4 kHz
+(that is, 4,000 hertz or 4,000 cycles per second). The width of the band is called, not surprisingly, the
+<strong>bandwidth</strong>. FM radio stations also use FDM to share the frequency spectrum between 88 MHz and 108
+MHz, with each station being allocated a specific frequency band.</p>
+<p>For a TDM link, time is divided into frames of fixed duration, and each frame is divided into a fixed
+number of time slots. When the network establishes a connection across a link, the network dedicates
+one time slot in every frame to this connection. These slots are dedicated for the sole use of that
+connection, with one time slot available for use (in every frame) to transmit the connection’s data.</p>
+<figure class="align-center" id="with-fdm-each-circuit-continuously-gets-a-fraction-of-the-bandwidth-with-tdm-each-circuit-gets-all-of-the-bandwidth-periodically-during-brief-intervals-of-time-that-is-during-slots">
+<img alt="../_images/56-0.png" src="../_images/56-0.png" />
+</figure>
+<p><strong>Figure 1.14 With FDM, each circuit continuously gets a fraction of the bandwidth. With TDM, each circuit gets all of the bandwidth periodically during brief intervals of time (that is, during slots)</strong></p>
+<p><a class="reference internal" href="#figure-1-14"><span class="std std-ref">Figure 1.14</span></a> illustrates FDM and TDM for a specific network link supporting up to four circuits. For FDM,
+the frequency domain is segmented into four bands, each of bandwidth 4 kHz. For TDM, the time
+domain is segmented into frames, with four time slots in each frame; each circuit is assigned the same
+dedicated slot in the revolving TDM frames. For TDM, the transmission rate of a circuit is equal to the
+frame rate multiplied by the number of bits in a slot. For example, if the link transmits 8,000 frames per
+second and each slot consists of 8 bits, then the transmission rate of each circuit is 64 kbps.</p>
+<p>Proponents of packet switching have always argued that circuit switching is wasteful because the
+dedicated circuits are idle during <strong>silent periods</strong>. For example, when one person in a telephone call
+stops talking, the idle network resources (frequency bands or time slots in the links along the
+connection’s route) cannot be used by other ongoing connections. As another example of how these
+resources can be underutilized, consider a radiologist who uses a circuit-switched network to remotely
+access a series of x-rays. The radiologist sets up a connection, requests an image, contemplates the
+image, and then requests a new image. Network resources are allocated to the connection but are not
+used (i.e., are wasted) during the radiologist’s contemplation periods. Proponents of packet switching
+also enjoy pointing out that establishing end-to-end circuits and reserving end-to-end transmission
+capacity is complicated and requires complex signaling software to coordinate the operation of the
+switches along the end-to-end path.</p>
+<p>Before we finish our discussion of circuit switching, let’s work through a numerical example that should
+shed further insight on the topic. Let us consider how long it takes to send a file of 640,000 bits from
+Host A to Host B over a circuit-switched network. Suppose that all links in the network use TDM with 24
+slots and have a bit rate of 1.536 Mbps. Also suppose that it takes 500 msec to establish an end-to-end
+circuit before Host A can begin to transmit the file. How long does it take to send the file? Each circuit
+has a transmission rate of (1.536 Mbps)/24=64 kbps, so it takes (640,000 bits)/(64 kbps)=10 seconds to
+transmit the file. To this 10 seconds we add the circuit establishment time, giving 10.5 seconds to send
+the file. Note that the transmission time is independent of the number of links: The transmission time
+would be 10 seconds if the end-to-end circuit passed through one link or a hundred links. (The actual
+end-to-end delay also includes a propagation delay; see <a class="reference internal" href="s4.html#c1-4"><span class="std std-ref">Section 1.4</span></a> .)</p>
+</div>
+</section>
+<section id="id14">
+<h3>分组交换与电路交换对比<a class="headerlink" href="#id14" title="此标题的永久链接">#</a></h3>
+<p>Packet Switching Versus Circuit Switching</p>
+<p>我们已分别介绍电路交换与分组交换，下面进行对比。分组交换的批评者认为其不适合实时服务（如电话或视频会议），因为其端到端时延是可变且不可预测的，主要由于排队时延不确定。而支持者则认为：（1）分组交换比电路交换更好地共享带宽；（2）其实现更简单、高效且成本更低。关于该对比的深入讨论可参见 <a class="reference internal" href="../references.html#molinero-fernandez-2002"><span class="std std-ref">[Molinero-Fernandez 2002]</span></a>。一般而言，不喜欢预约餐厅的人更偏爱分组交换。</p>
+<p>为什么分组交换更高效？来看一个简单例子。假设用户共享 1 Mbps 链路，每个用户在活动时以 100 kbps 速率产生数据，在非活动时不产生数据。设用户仅有 10% 时间处于活跃状态（其余时间喝咖啡）。在电路交换中，每个用户始终需预留 100 kbps，例如使用 TDM 时，若一秒划分为十个 100ms 时隙，则每用户占一个时隙，最多支持 10 (=1 Mbps / 100 kbps) 个用户。</p>
+<p>而在分组交换中，用户活跃概率为 0.1。若有 35 个用户，超过 10 个用户同时活跃的概率约为 0.0004（详见 <span class="xref std std-ref">课后练习 P8</span>）。在 10 个及以下用户同时活跃时，链路总输入速率不超过 1 Mbps，分组传输几乎无延迟，表现类似电路交换。当活跃用户超过 10 个时，输出队列开始增长，直至输入速率回落。由于高于 10 个用户同时活跃的概率极小，分组交换在维持相似性能的同时支持用户数量是电路交换的三倍以上。</p>
+<p>再看第二个例子。假设有 10 个用户，其中一个用户突然发送 1000 个 1000 位的分组，其余用户保持静默。若采用 10 时隙的 TDM 电路交换，每帧中仅有一个时隙可用于该用户，其余时隙空闲。传输所有分组需 10 秒。而在分组交换中，该用户可独占 1 Mbps 链路速率，在 1 秒内传完全部数据。</p>
+<p>上述例子说明：在多数据流共享链路带宽时，分组交换的性能可优于电路交换。电路交换预先分配带宽，不管是否真正使用，未用部分被浪费；分组交换按需分配，仅在有分组需传输时才占用带宽。</p>
+<p>虽然今天的通信网络中两者并存，但总体趋势偏向分组交换。甚至许多传统电路交换电话网络也逐渐向分组交换演进，尤其是在昂贵的国际段落中，通常采用分组交换方式。</p>
+<div class="toggle docutils container">
+<p>Having described circuit switching and packet switching, let us compare the two. Critics of packet
+switching have often argued that packet switching is not suitable for real-time services (for example,
+telephone calls and video conference calls) because of its variable and unpredictable end-to-end delays
+(due primarily to variable and unpredictable queuing delays). Proponents of packet switching argue that
+(1) it offers better sharing of transmission capacity than circuit switching and (2) it is simpler, more
+efficient, and less costly to implement than circuit switching. An interesting discussion of packet
+switching versus circuit switching is <a class="reference internal" href="../references.html#molinero-fernandez-2002"><span class="std std-ref">[Molinero-Fernandez 2002]</span></a>. Generally speaking, people who do
+not like to hassle with ­restaurant reservations prefer packet switching to circuit switching.</p>
+<p>Why is packet switching more efficient? Let’s look at a simple example. Suppose users share a 1 Mbps
+link. Also suppose that each user alternates between periods of activity, when a user generates data at
+a constant rate of 100 kbps, and periods of inactivity, when a user generates no data. Suppose further
+that a user is active only 10 percent of the time (and is idly drinking coffee during the remaining 90
+percent of the time). With circuit switching, 100 kbps must be reserved for each user at all times. For
+example, with circuit-switched TDM, if a one-second frame is divided into 10 time slots of 100 ms each,
+then each user would be allocated one time slot per frame.</p>
+<p>Thus, the circuit-switched link can support only 10(=1 Mbps/100 kbps) simultaneous users. With packet
+switching, the probability that a specific user is active is 0.1 (that is, 10 percent). If there are 35 users,
+the probability that there are 11 or more simultaneously active users is approximately 0.0004.
+(<span class="xref std std-ref">Homework Problem P8</span> outlines how this probability is obtained.) When there are 10 or fewer
+simultaneously active users (which happens with probability 0.9996), the aggregate arrival rate of data is
+less than or equal to 1 Mbps, the output rate of the link. Thus, when there are 10 or fewer active users,
+users’ packets flow through the link essentially without delay, as is the case with circuit switching. When
+there are more than 10 simultaneously active users, then the aggregate arrival rate of packets exceeds
+the output capacity of the link, and the output queue will begin to grow. (It continues to grow until the
+aggregate input rate falls back below 1 Mbps, at which point the queue will begin to diminish in length.)
+Because the probability of having more than 10 simultaneously active users is minuscule in this
+example, packet switching provides essentially the same performance as circuit switching, <em>but does so
+while allowing for more than three times the number of users.</em></p>
+<p>Let’s now consider a second simple example. Suppose there are 10 users and that one user suddenly
+generates one thousand 1,000-bit packets, while other users remain quiescent and do not generate
+packets. Under TDM circuit switching with 10 slots per frame and each slot consisting of 1,000 bits, the
+active user can only use its one time slot per frame to transmit data, while the remaining nine time slots
+in each frame remain idle. It will be 10 seconds before all of the active user’s one million bits of data has
+been transmitted. In the case of packet switching, the active user can continuously send its packets at
+the full link rate of 1 Mbps, since there are no other users generating packets that need to be
+multiplexed with the active user’s packets. In this case, all of the active user’s data will be transmitted
+within 1 second.</p>
+<p>The above examples illustrate two ways in which the performance of packet switching can be superior to
+that of circuit switching. They also highlight the crucial difference between the two forms of sharing a
+link’s transmission rate among multiple data streams. Circuit switching pre-allocates use of the
+transmission link regardless of demand, with allocated but unneeded link time going unused. Packet
+switching on the other hand allocates link use <em>on demand</em>. Link transmission capacity will be shared on
+a packet-by-packet basis only among those users who have packets that need to be transmitted over
+the link.</p>
+<p>Although packet switching and circuit switching are both prevalent in today’s telecommunication
+networks, the trend has certainly been in the direction of packet switching. Even many of today’s circuit-
+switched telephone networks are slowly migrating toward packet switching. In particular, telephone
+networks often use packet switching for the expensive overseas portion of a telephone call.</p>
+</div>
+</section>
+</section>
+<section id="c1-3-3">
+<span id="id15"></span><h2>1.3.3 网络的网络<a class="headerlink" href="#c1-3-3" title="此标题的永久链接">#</a></h2>
+<p>1.3.3 A Network of Networks</p>
+<p>我们前面看到，端系统（如个人电脑、智能手机、Web 服务器、邮件服务器等）是通过接入 ISP 连接到互联网的。接入 ISP 可以通过多种接入技术（包括 DSL、有线电视、FTTH、Wi-Fi 和蜂窝网络）提供有线或无线连接。需要注意的是，接入 ISP 不一定是电信或有线电视公司；它也可以是大学（为学生、教职员工提供互联网接入），或者公司（为员工提供接入）。</p>
+<p>但仅仅将终端用户和内容提供者连接到接入 ISP，并不能解决让数十亿终端系统互联的整个难题。要完成这块拼图，还必须让这些接入 ISP 相互连接。要做到这一点，需要构建一个 <em>网络的网络（network of networks）</em>。理解这一术语，是理解互联网的关键。</p>
+<p>随着时间推移，构成互联网的网络体系结构逐步演化为一个极为复杂的结构。这种演化在很大程度上由经济和国家政策推动，而非完全出于性能考虑。为了理解今天的互联网结构，我们将逐步构建一系列网络结构，每一种都更接近当今复杂的互联网。请记住总体目标：连接所有接入 ISP，以便所有终端系统能够互相发送分组。</p>
+<p>一种天真的做法是让每个接入 ISP 与所有其他接入 ISP 直接连接。但这种全互联网状结构对接入 ISP 来说成本过高，因为这要求它们分别与世界上数十万个其他接入 ISP 建立通信链路。</p>
+<p>我们提出的第一个结构，称为 <em>网络结构 1（Network Structure 1）</em>，将所有接入 ISP 连接到一个 <em>全球传输 ISP（global transit ISP）</em>。这个假想的全球传输 ISP 是由遍布全球的路由器和通信链路构成的网络，且在每个接入 ISP 附近至少部署一个路由器。当然，构建如此庞大的网络代价昂贵。为了盈利，该全球 ISP 会向每个接入 ISP 收取连接费用，费用与该 ISP 与全球 ISP 的流量量相关（但不一定成正比）。由于接入 ISP 向全球传输 ISP 支付费用，因此称接入 ISP 为 <strong>客户（customer）</strong>，而全球传输 ISP 为 <strong>提供者（provider）</strong>。</p>
+<p>如果某公司构建并运营了一个盈利的全球传输 ISP，其他公司自然也会竞争，构建自己的全球传输 ISP。这就形成了 <em>网络结构 2（Network Structure 2）</em>，由数十万个接入 ISP 和 <em>多个</em> 全球传输 ISP 组成。接入 ISP 更倾向于网络结构 2，因为它们可以根据价格和服务在多个全球传输 ISP 之间做出选择。但要注意，全球传输 ISP 之间也必须互联：否则连接到不同全球传输 ISP 的接入 ISP 无法通信。</p>
+<p>刚描述的网络结构 2 是一个两层层级结构，顶层为全球传输 ISP，底层为接入 ISP。这种结构假定全球传输 ISP 能且愿意接近每一个接入 ISP。但现实中，即便有些 ISP 在全球范围内覆盖广泛，并直接连接很多接入 ISP，也没有任何 ISP 能在全球所有城市部署节点。相反，在每个地区可能存在一个 <strong>区域 ISP（regional ISP）</strong>，负责连接该地区的接入 ISP。每个区域 ISP 再连接到 <strong>一级 ISP（tier-1 ISP）</strong>。一级 ISP 类似于我们假想的全球传输 ISP；但一级 ISP 实际存在，它们不一定覆盖全球每个城市。一级 ISP 的数量约为十几个，包括 Level 3、AT&amp;T、Sprint 和 NTT。有趣的是，没有组织对一级 ISP 身份进行正式认证——俗话说，如果你需要问自己是不是圈内人，那你多半不是。</p>
+<p>回到网络的网络结构，不仅存在多个竞争的一级 ISP，在同一地区也可能存在多个区域 ISP。在这种层级结构中，每个接入 ISP 向其连接的区域 ISP 付费，每个区域 ISP 向其连接的一级 ISP 付费。（接入 ISP 也可以直接连接到一级 ISP，此时向其付费。）因此在每一层级都存在客户-提供者关系。注意，一级 ISP 位于层级顶端，不向任何其他 ISP 付费。</p>
+<p>此外，有些地区可能还有更大范围的区域 ISP（例如覆盖整个国家），供较小的区域 ISP 连接，然后再连接到一级 ISP。例如在中国，各城市的接入 ISP 连接到省级 ISP，省级 ISP 再连接到国家级 ISP，最终连接到一级 ISP <a class="reference internal" href="../references.html#tian-2012"><span class="std std-ref">[Tian 2012]</span></a>。我们将这种多层级但仍较粗略的互联网结构称为 <em>网络结构 3（Network Structure 3）</em>。</p>
+<p>若要构建一个更贴近当今互联网的网络，我们需要在网络结构 3 基础上加入接入点（PoP）、多宿（multi-homing）、对等（peering）以及互联网交换点（IXP）。PoP 存在于除接入 ISP 以外的所有层级。<strong>PoP（point of presence）</strong> 是指服务提供者网络中一组位于同一地点的路由器，客户 ISP 可连接至此处。客户网络要连接某个提供者的 PoP，可以从第三方电信运营商租用高速链路，将其路由器直接接入 PoP 的路由器。</p>
+<p>除一级 ISP 外的 ISP 均可选择 <strong>多宿（multi-home）</strong>，即连接两个或多个上游 ISP。例如接入 ISP 可连接两个区域 ISP，或连接两个区域 ISP 再加一个一级 ISP；同样，区域 ISP 可连接多个一级 ISP。当 ISP 采用多宿方式时，即便某个提供者故障，也可继续通过其他连接接入互联网。</p>
+<p>如前所述，客户 ISP 需向提供者 ISP 支付费用以获得全球互联能力，金额与其交换的流量相关。为了降低成本，位于同一层级、地理位置接近的两个 ISP 可选择 <strong>对等（peering）</strong>，即直接连接各自网络，使它们之间的流量不再通过上游中转。通常，两家对等的 ISP 之间是 <strong>无结算（settlement-free）</strong> 的，即互不收费。如前所述，一级 ISP 之间也是无结算对等。关于对等与客户-提供者关系的通俗讨论，参见 <a class="reference internal" href="../references.html#van-der-berg-2008"><span class="std std-ref">[Van der Berg 2008]</span></a>。</p>
+<p>基于同样考虑，第三方公司还可以建立 <strong>互联网交换点（IXP）</strong>，即多个 ISP 实现对等的集中接入点。IXP 通常位于独立建筑中，内部配备交换设备 <a class="reference internal" href="../references.html#ager-2012"><span class="std std-ref">[Ager 2012]</span></a>。截至目前，全球已有超过 400 个 IXP <a class="reference internal" href="../references.html#ixp-list-2016"><span class="std std-ref">[IXP List 2016]</span></a>。我们将包括接入 ISP、区域 ISP、一级 ISP、PoP、多宿、对等、IXP 在内的这一生态称为 <em>网络结构 4（Network Structure 4）</em>。</p>
+<p>最终我们到达 <em>网络结构 5（Network Structure 5）</em>，即当今互联网。如 <a class="reference internal" href="#figure-1-15"><span class="std std-ref">图 1.15</span></a> 所示，网络结构 5 在结构 4 基础上新增了 <strong>内容提供商网络（content-provider networks）</strong>。Google 是这类网络的代表。截至目前，据估计 Google 在北美、欧洲、亚洲、南美和澳洲部署了 50 至 100 个数据中心。其中一些大型数据中心包含超过十万台服务器，小型数据中心也有数百台。Google 所有数据中心通过其私有 TCP/IP 网络互联，该网络虽然覆盖全球，但与公共互联网分离。重要的是，该私有网络仅承载与 Google 服务器有关的流量。</p>
+<p>如 <a class="reference internal" href="#figure-1-15"><span class="std std-ref">图 1.15</span></a> 所示，Google 私有网络尝试通过与下层 ISP 建立对等（免费）连接，来 <em>绕过</em> 互联网的上层结构，这些连接可为直接连接，或通过 IXP 完成 <a class="reference internal" href="../references.html#labovitz-2010"><span class="std std-ref">[Labovitz 2010]</span></a>。但由于很多接入 ISP 仍需通过一级 ISP 才能访问，Google 网络也会连接一级 ISP，并为此支付流量费用。通过建设自有网络，内容提供商不仅能减少向上层 ISP 支付的费用，还能更好地控制其服务最终如何传递到用户手中。Google 网络结构详见 <a class="reference internal" href="../c2/s6.html#c2-6"><span class="std std-ref">第 2.6 节</span></a>。</p>
+<p>总之，当今互联网——一个“网络的网络”——结构复杂，包括十余个一级 ISP 和数十万个下层 ISP。这些 ISP 在覆盖范围上差异显著，有的跨洲跨洋，有的仅限于本地区域。下层 ISP 连接上层 ISP，上层 ISP 彼此互联。用户与内容提供商是下层 ISP 的客户，下层 ISP 是上层 ISP 的客户。近年来，主要内容提供商也开始建设自有网络，并尽可能直接连接至下层 ISP。</p>
+<figure class="align-center" id="figure-1-15">
+<img alt="../_images/61-0.png" src="../_images/61-0.png" />
+</figure>
+<p><strong>图 1.15 ISP 间互联结构</strong></p>
+<div class="toggle docutils container">
+<p>We saw earlier that end systems (PCs, smartphones, Web servers, mail servers, and so on) connect
+into the Internet via an access ISP. The access ISP can provide either wired or wireless connectivity,
+using an array of access technologies including DSL, cable, FTTH, Wi-Fi, and cellular. Note that the
+access ISP does not have to be a telco or a cable company; instead it can be, for example, a university
+(providing Internet access to students, staff, and faculty), or a company (providing access for its
+employees). But connecting end users and content providers into an access ISP is only a small piece of
+solving the puzzle of connecting the billions of end systems that make up the Internet. To complete this
+puzzle, the access ISPs themselves must be interconnected. This is done by creating a <em>network of
+networks</em>—understanding this phrase is the key to understanding the Internet.</p>
+<p>Over the years, the network of networks that forms the Internet has evolved into a very complex
+structure. Much of this evolution is driven by economics and national policy, rather than by performance
+considerations. In order to understand today’s Internet network structure, let’s incrementally build a
+series of network structures, with each new structure being a better approximation of the complex
+Internet that we have today. Recall that the overarching goal is to interconnect the access ISPs so that
+all end systems can send packets to each other. One naive approach would be to have each access
+ISP directly connect with every other access ISP. Such a mesh design is, of course, much too costly for
+the access ISPs, as it would require each access ISP to have a separate communication link to each of
+the hundreds of thousands of other access ISPs all over the world.</p>
+<p>Our first network structure, <em>Network Structure 1</em>, interconnects all of the access ISPs with a <em>single global
+transit ISP</em>. Our (imaginary) global transit ISP is a network of routers and communication links that not
+only spans the globe, but also has at least one router near each of the hundreds of thousands of access
+ISPs. Of course, it would be very costly for the global ISP to build such an extensive network. To be
+profitable, it would naturally charge each of the access ISPs for connectivity, with the pricing reflecting
+(but not necessarily directly proportional to) the amount of traffic an access ISP exchanges with the
+global ISP. Since the access ISP pays the global transit ISP, the access ISP is said to be a <strong>customer</strong>
+and the global transit ISP is said to be a <strong>provider</strong>.</p>
+<p>Now if some company builds and operates a global transit ISP that is profitable, then it is natural for
+other companies to build their own global transit ISPs and compete with the original global transit ISP.
+This leads to <em>Network Structure 2</em>, which consists of the hundreds of thousands of access ISPs and
+<em>multiple</em> global ­transit ISPs. The access ISPs certainly prefer Network Structure 2 over Network
+Structure 1 since they can now choose among the competing global transit providers as a function of
+their pricing and services. Note, however, that the global transit ISPs themselves must interconnect:
+Otherwise access ISPs connected to one of the global transit providers would not be able to
+communicate with access ISPs connected to the other global transit providers.</p>
+<p>Network Structure 2, just described, is a two-tier hierarchy with global transit providers residing at the
+top tier and access ISPs at the bottom tier. This assumes that global transit ISPs are not only capable of
+getting close to each and every access ISP, but also find it economically desirable to do so. In reality,
+although some ISPs do have impressive global coverage and do directly connect with many access
+ISPs, no ISP has presence in each and every city in the world. Instead, in any given region, there may
+be a <strong>regional ISP</strong> to which the access ISPs in the region connect. Each regional ISP then connects to
+<strong>tier-1 ISPs</strong>. Tier-1 ISPs are similar to our (imaginary) global transit ISP; but tier-1 ISPs, which actually
+do exist, do not have a presence in every city in the world. There are approximately a dozen tier-1 ISPs,
+including Level 3 Communications, AT&amp;T, Sprint, and NTT. Interestingly, no group officially sanctions
+tier-1 status; as the saying goes—if you have to ask if you’re a member of a group, you’re probably not.</p>
+<p>Returning to this network of networks, not only are there multiple competing tier-1 ISPs, there may be
+multiple competing regional ISPs in a region. In such a hierarchy, each access ISP pays the regional
+ISP to which it connects, and each regional ISP pays the tier-1 ISP to which it connects. (An access ISP
+can also connect directly to a tier-1 ISP, in which case it pays the tier-1 ISP). Thus, there is customer-
+provider relationship at each level of the hierarchy. Note that the tier-1 ISPs do not pay anyone as they
+are at the top of the hierarchy. To further complicate matters, in some regions, there may be a larger
+regional ISP (possibly spanning an entire country) to which the smaller regional ISPs in that region
+connect; the larger regional ISP then connects to a tier-1 ISP. For example, in China, there are access
+ISPs in each city, which connect to provincial ISPs, which in turn connect to national ISPs, which finally
+connect to tier-1 ISPs <a class="reference internal" href="../references.html#tian-2012"><span class="std std-ref">[Tian 2012]</span></a>. We refer to this multi-tier hierarchy, which is still only a crude
+approximation of today’s Internet, as <em>Network Structure 3</em>.</p>
+<p>To build a network that more closely resembles today’s Internet, we must add points of presence
+(PoPs), multi-homing, peering, and Internet exchange points (IXPs) to the hierarchical Network
+Structure 3. PoPs exist in all levels of the hierarchy, except for the bottom (access ISP) level. A <strong>PoP</strong> is
+simply a group of one or more routers (at the same location) in the provider’s network where customer
+ISPs can connect into the provider ISP. For a customer network to connect to a provider’s PoP, it can
+lease a high-speed link from a third-party telecommunications provider to directly connect one of its
+routers to a router at the PoP. Any ISP (except for tier-1 ISPs) may choose to <strong>multi-home</strong>, that is, to
+connect to two or more provider ISPs. So, for example, an access ISP may multi-home with two regional
+ISPs, or it may multi-home with two regional ISPs and also with a tier-1 ISP. Similarly, a regional ISP
+may multi-home with multiple tier-1 ISPs. When an ISP multi-homes, it can continue to send and receive
+packets into the Internet even if one of its providers has a failure.</p>
+<p>As we just learned, customer ISPs pay their provider ISPs to obtain global Internet interconnectivity. The
+amount that a customer ISP pays a provider ISP reflects the amount of traffic it exchanges with the
+provider. To reduce these costs, a pair of nearby ISPs at the same level of the hierarchy can <strong>peer</strong>, that
+is, they can directly connect their networks together so that all the traffic between them passes over the
+direct connection rather than through upstream intermediaries. When two ISPs peer, it is typically
+settlement-free, that is, neither ISP pays the other. As noted earlier, tier-1 ISPs also peer with one
+another, settlement-free. For a readable discussion of peering and customer-provider relationships, see
+<a class="reference internal" href="../references.html#van-der-berg-2008"><span class="std std-ref">[Van der Berg 2008]</span></a>. Along these same lines, a third-party company can create an <strong>Internet Exchange Point (IXP)</strong>, which is a meeting point where multiple ISPs can peer together. An IXP is typically in a
+stand-alone building with its own switches <a class="reference internal" href="../references.html#ager-2012"><span class="std std-ref">[Ager 2012]</span></a>. There are over 400 IXPs in the Internet today
+<a class="reference internal" href="../references.html#ixp-list-2016"><span class="std std-ref">[IXP List 2016]</span></a>. We refer to this ecosystem—consisting of access ISPs, regional ISPs, tier-1 ISPs,
+PoPs, multi-homing, peering, and IXPs—as <em>Network Structure 4</em>.</p>
+<p>We now finally arrive at Network Structure 5, which describes today’s Internet. Network Structure 5,
+illustrated in <a class="reference internal" href="#figure-1-15"><span class="std std-ref">Figure 1.15</span></a>, builds on top of Network Structure 4 by adding <strong>content-provider networks</strong>.
+Google is currently one of the leading examples of such a content-provider network. As of this writing, it
+is estimated that Google has 50–100 data centers distributed across North America, Europe, Asia,
+South America, and Australia. Some of these data centers house over one hundred thousand servers,
+while other data centers are smaller, housing only hundreds of servers. The Google data centers are all
+interconnected via Google’s private TCP/IP network, which spans the entire globe but is nevertheless
+separate from the public Internet. Importantly, the Google private network only carries traffic to/from
+Google servers. As shown in <a class="reference internal" href="#figure-1-15"><span class="std std-ref">Figure 1.15</span></a>, the Google private network attempts to “bypass” the upper
+tiers of the Internet by peering (settlement free) with lower-tier ISPs, either by directly connecting with
+them or by connecting with them at IXPs <a class="reference internal" href="../references.html#labovitz-2010"><span class="std std-ref">[Labovitz 2010]</span></a>. However, because many access ISPs can
+still only be reached by transiting through tier-1 networks, the Google network also connects to tier-1
+ISPs, and pays those ISPs for the traffic it exchanges with them. By creating its own network, a content
+provider not only reduces its payments to upper-tier ISPs, but also has greater control of how its
+services are ultimately delivered to end users. Google’s network infrastructure is described in greater
+detail in <a class="reference internal" href="../c2/s6.html#c2-6"><span class="std std-ref">Section 2.6</span></a>.</p>
+<p>In summary, today’s Internet—a network of networks—is complex, consisting of a dozen or so tier-1
+ISPs and hundreds of thousands of lower-tier ISPs. The ISPs are diverse in their coverage, with some
+spanning multiple continents and oceans, and others limited to narrow geographic regions. The lower-
+tier ISPs connect to the higher-tier ISPs, and the higher-tier ISPs interconnect with one another. Users
+and content providers are customers of lower-tier ISPs, and lower-tier ISPs are customers of higher-tier
+ISPs. In recent years, major content providers have also created their own networks and connect
+directly into lower-tier ISPs where possible.</p>
+<figure class="align-center" id="interconnection-of-isps">
+<img alt="../_images/61-0.png" src="../_images/61-0.png" />
+</figure>
+<p><strong>Figure 1.15 Interconnection of ISPs</strong></p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s2.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">1.2 网络边缘</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s4.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">1.4 分组交换网络中的时延、丢包与吞吐量</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-3-1">1.3.1 分组交换</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">存储-转发传输</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">排队时延与分组丢失</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">转发表与路由协议</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-3-2">1.3.2 电路交换</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">电路交换中的复用</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">分组交换与电路交换对比</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-3-3">1.3.3 网络的网络</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

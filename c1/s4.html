@@ -1,0 +1,1176 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>1.4 分组交换网络中的时延、丢包与吞吐量 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c1/s4';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="1.5 协议层与其服务模型" href="s5.html" />
+    <link rel="prev" title="1.3 网络核心" href="s3.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 1 章 计算机网络与因特网</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c1/s4.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>1.4 分组交换网络中的时延、丢包与吞吐量</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-4-1">1.4.1 分组交换网络中的时延概述</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">时延类型</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">处理时延</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">排队时延</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">传输时延</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">传播时延</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">比较传输时延与传播时延</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-4-2">1.4.2 排队时延与分组丢失</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">分组丢失</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-4-3">1.4.3 端到端时延</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traceroute">Traceroute 路由跟踪</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">端系统、应用程序及其他时延</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-4-4">1.4.4 计算机网络中的吞吐量</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c1-4">
+<span id="id1"></span><h1>1.4 分组交换网络中的时延、丢包与吞吐量<a class="headerlink" href="#c1-4" title="此标题的永久链接">#</a></h1>
+<p>1.4 Delay, Loss, and Throughput in Packet-Switched Networks</p>
+<p>我们在 <a class="reference internal" href="s1.html#c1-1"><span class="std std-ref">第 1.1 节</span></a> 中曾提到，互联网可以被看作是一个为运行在端系统上的分布式应用提供服务的基础设施。理想情况下，我们希望互联网服务能够在任意两个端系统之间瞬间传输任意多的数据，且数据不丢失。遗憾的是，这是一个难以实现的目标。实际上，计算机网络不可避免地会限制端系统之间的 <strong>吞吐量</strong> （即每秒传输的数据量），引入 <strong>时延</strong> ，甚至会造成 <strong>分组丢失</strong> 。</p>
+<p>一方面，物理规律引入时延、丢包以及吞吐量约束似乎令人沮丧；但另一方面，正因为这些问题的存在，计算机网络才充满了各种复杂问题，足以撑起一门课程，甚至催生数千篇博士论文！在本节中，我们将开始分析并量化计算机网络中的时延、丢包与吞吐量。</p>
+<div class="toggle docutils container">
+<p>Back in <a class="reference internal" href="s1.html#c1-1"><span class="std std-ref">Section 1.1</span></a> we said that the Internet can be viewed as an infrastructure that provides services
+to distributed applications running on end systems. Ideally, we would like Internet services to be able to
+move as much data as we want between any two end systems, instantaneously, without any loss of
+data. Alas, this is a lofty goal, one that is unachievable in reality. Instead, computer networks necessarily
+constrain throughput (the amount of data per second that can be transferred) between end systems,
+introduce delays between end systems, and can actually lose packets. On one hand, it is unfortunate
+that the physical laws of reality introduce delay and loss as well as constrain throughput. On the other
+hand, because computer networks have these problems, there are many fascinating issues surrounding
+how to deal with the problems—more than enough issues to fill a course on computer networking and to
+motivate thousands of PhD theses! In this section, we’ll begin to examine and quantify delay, loss, and
+throughput in computer networks.</p>
+</div>
+<section id="c1-4-1">
+<span id="id2"></span><h2>1.4.1 分组交换网络中的时延概述<a class="headerlink" href="#c1-4-1" title="此标题的永久链接">#</a></h2>
+<p>1.4.1 Overview of Delay in Packet-Switched Networks</p>
+<p>回忆一下，一个分组从主机（源）出发，经过一系列路由器，最终到达另一个主机（目的地）。当分组沿路径从一个节点（主机或路由器）传输到下一个节点时，在每个节点都会经历若干类型的时延。最重要的几种包括： <strong>结点处理时延（nodal processing delay）</strong>、 <strong>排队时延（queuing delay）</strong>、 <strong>传输时延（transmission delay）</strong> 和 <strong>传播时延（propagation delay）</strong>。这些时延加总即为 <strong>总结点时延（total nodal delay）</strong>。</p>
+<p>许多互联网应用的性能（如搜索、网页浏览、电子邮件、地图、即时通信和语音 IP 电话）都严重依赖于网络时延。若要深入理解分组交换和计算机网络，就必须理解这些时延的性质与重要性。</p>
+<div class="toggle docutils container">
+<p>Recall that a packet starts in a host (the source), passes through a series of routers, and ends its
+journey in another host (the destination). As a packet travels from one node (host or router) to the
+subsequent node (host or router) along this path, the packet suffers from several types of delays at each
+node along the path. The most important of these delays are the <strong>nodal processing delay</strong>, <strong>queuing
+delay</strong>, <strong>transmission delay</strong>, and <strong>propagation delay</strong>; together, these delays accumulate to give a <strong>total
+nodal delay</strong>. The performance of many Internet applications—such as search, Web browsing, e-mail,
+maps, instant messaging, and voice-over-IP—are greatly affected by network delays. In order to acquire
+a deep understanding of packet switching and computer networks, we must understand the nature and
+importance of these delays.</p>
+</div>
+<section id="id3">
+<h3>时延类型<a class="headerlink" href="#id3" title="此标题的永久链接">#</a></h3>
+<p>Types of Delay</p>
+<p>让我们结合 <a class="reference internal" href="#figure-1-16"><span class="std std-ref">图 1.16</span></a> 来探讨这些时延。在从源到目的地的端到端路径中，假设分组从上游节点经过路由器 A 发送到路由器 B。我们希望分析路由器 A 处的总结点时延。</p>
+<p>请注意，路由器 A 有一条指向路由器 B 的出链路，在此链路之前还有一个 <strong>队列（queue）</strong> 或称 <strong>缓冲区（buffer）</strong> 。当分组从上游节点到达路由器 A 时，路由器 A 会检查分组头部以确定其应该转发到哪个出链路，并将其导向该链路。在本例中，分组应发往指向路由器 B 的链路。只有在该链路当前没有其他分组正在传输，且队列中无等待分组时，该分组才能立即传输；否则将进入队列排队。</p>
+<figure class="align-center" id="figure-1-16">
+<img alt="../_images/63-0.png" src="../_images/63-0.png" />
+</figure>
+<p><strong>图 1.16 路由器 A 处的结点时延</strong></p>
+<div class="toggle docutils container">
+<p>Let’s explore these delays in the context of <a class="reference internal" href="#figure-1-16"><span class="std std-ref">Figure 1.16</span></a>. As part of its end-to-end route between source
+and destination, a packet is sent from the upstream node through router A to router B. Our goal is to
+characterize the nodal delay at router A. Note that router A has an outbound link leading to router B.
+This link is preceded by a queue (also known as a buffer). When the packet arrives at router A from the
+upstream node, router A examines the packet’s header to determine the appropriate outbound link for
+the packet and then directs the packet to this link. In this example, the outbound link for the packet is the
+one that leads to router B. A packet can be transmitted on a link only if there is no other packet currently
+being transmitted on the link and if there are no other packets preceding it in the queue; if the link is
+currently busy or if there are other packets already queued for the link, the newly arriving packet will
+then join the queue.</p>
+<figure class="align-center" id="the-nodal-delay-at-router-a">
+<img alt="../_images/63-0.png" src="../_images/63-0.png" />
+</figure>
+<p><strong>Figure 1.16 The nodal delay at router A</strong></p>
+</div>
+</section>
+<section id="id4">
+<h3>处理时延<a class="headerlink" href="#id4" title="此标题的永久链接">#</a></h3>
+<p>Processing Delay</p>
+<p>检查分组头部并确定其转发方向所需的时间称为 <strong>处理时延（processing delay）</strong>。处理时延还包括其他因素，如检测分组比特错误所需时间。高速路由器中的处理时延通常在微秒或更短时间内。处理完成后，路由器会将分组送入指向路由器 B 的出链路的队列。（在 <a class="reference internal" href="../c4/index.html#c4"><span class="std std-ref">第 4 章</span></a> 中我们将详细研究路由器的工作原理。）</p>
+<div class="toggle docutils container">
+<p>The time required to examine the packet’s header and determine where to direct the packet is part of
+the <strong>processing delay</strong>. The processing delay can also include other factors, such as the time needed to
+check for bit-level errors in the packet that occurred in transmitting the packet’s bits from the upstream
+node to router A. Processing delays in high-speed routers are typically on the order of microseconds or
+less. After this nodal processing, the router directs the packet to the queue that precedes the link to
+router B. (In <a class="reference internal" href="../c4/index.html#c4"><span class="std std-ref">Chapter 4</span></a> we’ll study the details of how a router operates.)</p>
+</div>
+</section>
+<section id="id5">
+<h3>排队时延<a class="headerlink" href="#id5" title="此标题的永久链接">#</a></h3>
+<p>Queuing Delay</p>
+<p>在队列中，分组会经历 <strong>排队时延（queuing delay）</strong>，即等待被传输到链路上的时间。该时延取决于该分组之前已有多少分组在等待传输。如果队列为空，且没有其他分组正在传输，则排队时延为零。反之，若流量繁忙且队列中已有多个分组，排队时延则会增加。我们将看到，到达队列的分组数量与流量强度和特性密切相关。排队时延通常在微秒到毫秒之间。</p>
+<div class="toggle docutils container">
+<p>At the queue, the packet experiences a <strong>queuing delay</strong> as it waits to be transmitted onto the link. The
+length of the queuing delay of a specific packet will depend on the number of earlier-arriving packets
+that are queued and waiting for transmission onto the link. If the queue is empty and no other packet is
+currently being transmitted, then our packet’s queuing delay will be zero. On the other hand, if the traffic
+is heavy and many other packets are also waiting to be transmitted, the queuing delay will be long. We
+will see shortly that the number of packets that an arriving packet might expect to find is a function of the
+intensity and nature of the traffic arriving at the queue. ­Queuing delays can be on the order of
+microseconds to milliseconds in practice.</p>
+</div>
+</section>
+<section id="id6">
+<h3>传输时延<a class="headerlink" href="#id6" title="此标题的永久链接">#</a></h3>
+<p>Transmission Delay</p>
+<p>假设采用先进先出（FIFO）方式传输分组，分组必须等前面的所有分组传输完后才能传输。设分组长度为 L 位，链路传输速率为 R 比特/秒，则 <strong>传输时延（transmission delay）</strong> 为 L/R，即将所有比特“推出”链路所需时间。比如，对于 10 Mbps 的以太网链路，R = 10 Mbps；对于 100 Mbps 的以太网，R = 100 Mbps。实际中的传输时延范围也是微秒到毫秒级。</p>
+<div class="toggle docutils container">
+<p>Assuming that packets are transmitted in a first-come-first-served manner, as is common in packet-
+switched networks, our packet can be transmitted only after all the packets that have arrived before it
+have been transmitted. Denote the length of the packet by L bits, and denote the transmission rate of
+the link from router A to router B by R bits/sec. For example, for a 10 Mbps Ethernet link, the rate is
+R=10 Mbps; for a 100 Mbps Ethernet link, the rate is R=100 Mbps. The transmission delay is L/R. This
+is the amount of time required to push (that is, transmit) all of the packet’s bits into the link.
+Transmission delays are typically on the order of microseconds to milliseconds in practice.</p>
+</div>
+</section>
+<section id="id7">
+<h3>传播时延<a class="headerlink" href="#id7" title="此标题的永久链接">#</a></h3>
+<p>Propagation Delay</p>
+<p>当比特被推出链路后，需经过一段时间传播到下一个节点。 <strong>传播时延（propagation delay）</strong> 是比特从链路起点传播到下一个节点所需时间。传播速率取决于链路介质（如光纤、双绞线等），通常在：</p>
+<blockquote>
+<div><p>2x10⁸ 米/秒 到 3x10⁸ 米/秒</p>
+</div></blockquote>
+<p>之间，约等于或略低于光速。</p>
+<p>传播时延等于节点间距离 d 与传播速率 s 的比值，即 d/s。当最后一个比特到达节点 B 时，该分组已完整抵达，并由路由器 B 执行转发。广域网中的传播时延通常为毫秒级。</p>
+<div class="toggle docutils container">
+<p>Once a bit is pushed into the link, it needs to propagate to router B. The time required to propagate from
+the beginning of the link to router B is the <strong>propagation delay</strong>. The bit propagates at the propagation
+speed of the link. The propagation speed depends on the physical medium of the link (that is, fiber
+optics, twisted-pair copper wire, and so on) and is in the range of</p>
+<blockquote>
+<div><p>2⋅108 meters/sec to 3⋅108 meters/sec</p>
+</div></blockquote>
+<p>which is equal to, or a little less than, the speed of light. The propagation delay is the distance between
+two routers divided by the propagation speed. That is, the propagation delay is d/s, where d is the
+distance between router A and router B and s is the propagation speed of the link. Once the last bit of
+the packet propagates to node B, it and all the preceding bits of the packet are stored in router B. The
+whole process then continues with router B now performing the forwarding. In wide-area networks,
+propagation delays are on the order of milliseconds.</p>
+</div>
+</section>
+<section id="id8">
+<h3>比较传输时延与传播时延<a class="headerlink" href="#id8" title="此标题的永久链接">#</a></h3>
+<p>Comparing Transmission and Propagation Delay</p>
+<div class="video_wrapper align-center" style="text-align: center">
+<iframe allowfullscreen="true" src="https://www.youtube.com/embed/hm1y4LsphQQ" style="border: 0; height: 345px; width: 560px">
+</iframe></div><a class="reference external image-reference" href="https://www.youtube.com/watch?v=hm1y4LsphQQ"><img alt="../_images/videonote.png" class="align-center" src="../_images/videonote.png" /></a>
+<p>初学者常常难以理解传输时延与传播时延的区别。其实二者差别虽小但至关重要。传输时延取决于分组长度和链路带宽，与两个节点间距离无关；而传播时延则取决于两个节点的距离，与分组大小和带宽无关。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">译注-动画例子</p>
+<p>在线程序小例子: <a class="reference external" href="https://media.pearsoncmg.com/aw/ecs_kurose_compnetwork_7/cw/content/interactiveanimations/transmission-vs-propogation-delay/transmission-propagation-delay-ch1/index.html">https://media.pearsoncmg.com/aw/ecs_kurose_compnetwork_7/cw/content/interactiveanimations/transmission-vs-propogation-delay/transmission-propagation-delay-ch1/index.html</a></p>
+</div>
+<p>我们来看一个类比帮助理解：</p>
+<p>设一条高速公路每隔 100 公里设一收费站，如 <a class="reference internal" href="#figure-1-17"><span class="std std-ref">图 1.17</span></a> 所示。公路区段类比链路，收费站类比路由器。假设汽车在收费站之间以恒定 100 km/h 速度行驶。若有 10 辆车组成车队，类比一个分组中的 10 个比特；每辆车代表一个比特。每个收费站以每 12 秒一辆车的速率放行车辆，车队在到达收费站时需等待所有车辆集合完毕才能开始依次通过。</p>
+<p>推送整支车队所需时间为 10 车 / (5 车/分钟) = 2 分钟，即类比传输时延。</p>
+<p>车从一个收费站行驶到下一个所需时间为 100 公里 / 100 km/h = 1 小时，即类比传播时延。</p>
+<p>因此，从车队在第一个收费站排队开始，到其全部到达下一个收费站，需时 62 分钟。</p>
+<figure class="align-center" id="figure-1-17">
+<img alt="../_images/65-0.png" src="../_images/65-0.png" />
+</figure>
+<p><strong>图 1.17 车队类比</strong></p>
+<p>我们稍作扩展。若收费站处理速度慢于汽车行驶速度会怎样？例如车速为 1000 km/h，收费站每分钟通过 1 车，则两个收费站间行驶时间为 6 分钟，而整个车队通过收费站需 10 分钟。这时，前几辆车在第一个收费站尚未离开，最后几辆车就已到达下一个收费站。这种情况也会出现在分组网络中：一个分组的前几个比特已到达路由器，而剩余比特仍在前一个路由器等待发送。</p>
+<p>如果“一图胜千言”，那么动画应能胜过百万字。本文教材网站提供了演示传播与传输时延差异的交互式 Java 小程序，读者可自行访问学习。另见 <a class="reference internal" href="../references.html#smith-2009"><span class="std std-ref">[Smith 2009]</span></a>，其中也有通俗的时延讨论。</p>
+<p>若用 <span class="math notranslate nohighlight">\(d_{proc}\)</span> 、<span class="math notranslate nohighlight">\(d_{queue}\)</span> 、<span class="math notranslate nohighlight">\(d_{trans}\)</span> 、<span class="math notranslate nohighlight">\(d_{prop}\)</span> 分别表示处理、排队、传输、传播时延，则结点总时延为：</p>
+<div class="math notranslate nohighlight">
+\[d_{nodal} = d_{proc} + d_{queue} + d_{trans} + d_{prop}\]</div>
+<p>这些时延在实际中可能差异很大。例如，在同一校园内两路由器之间，<span class="math notranslate nohighlight">\(d_{proc}\)</span> 可忽略不计（仅几个微秒）；但若是通过地球同步卫星连接的路由器，<span class="math notranslate nohighlight">\(d_{prop}\)</span> 可能高达数百毫秒，成为主导因素。</p>
+<p>同样，<span class="math notranslate nohighlight">\(d_{trans}\)</span> 也可能从极小到显著不等。在 10 Mbps 或更高速率链路中（如局域网），<span class="math notranslate nohighlight">\(d_{trans}\)</span> 通常可忽略；但在拨号调制解调器等低速链路中，发送大包可能产生数百毫秒时延。</p>
+<p>传播时延 <span class="math notranslate nohighlight">\(d_{prop}\)</span> 通常也很小，但却决定了路由器最大吞吐率，即其转发分组的最大速率。</p>
+<div class="toggle docutils container">
+<a class="reference external image-reference" href="https://www.youtube.com/watch?v=hm1y4LsphQQ"><img alt="img/videonote" class="align-center" src="img/videonote" /></a>
+<p>Exploring propagation delay and transmission delay</p>
+<p>Newcomers to the field of computer networking sometimes have difficulty understanding the difference
+between transmission delay and propagation delay. The difference is subtle but important. The
+transmission delay is the amount of time required for the router to push out the packet; it is a function of
+the packet’s length and the transmission rate of the link, but has nothing to do with the distance between
+the two routers. The propagation delay, on the other hand, is the time it takes a bit to propagate from
+one router to the next; it is a function of the distance between the two routers, but has nothing to do with
+the packet’s length or the transmission rate of the link.</p>
+<p>An analogy might clarify the notions of transmission and propagation delay. Consider a highway that has
+a tollbooth every 100 kilometers, as shown in <a class="reference internal" href="#figure-1-17"><span class="std std-ref">Figure 1.17</span></a>. You can think of the highway segments
+between tollbooths as links and the tollbooths as routers. Suppose that cars travel (that is, propagate)
+on the highway at a rate of 100 km/hour (that is, when a car leaves a tollbooth, it instantaneously
+accelerates to 100 km/hour and maintains that speed between tollbooths). Suppose next that 10 cars,
+traveling together as a caravan, follow each other in a fixed order. You can think of each car as a bit and
+the caravan as a packet. Also suppose that each tollbooth services (that is, transmits) a car at a rate of one car per 12 seconds, and that it is late at night
+so that the caravan’s cars are the only cars on the highway. Finally, suppose that whenever the first car
+of the caravan arrives at a tollbooth, it waits at the entrance until the other nine cars have arrived and
+lined up behind it. (Thus the entire caravan must be stored at the tollbooth before it can begin to be
+forwarded.) The time required for the tollbooth to push the entire caravan onto the highway is
+(10 cars)/(5 cars/minute)=2 minutes. This time is analogous to the transmission delay in a router. The
+time required for a car to travel from the exit of one tollbooth to the next tollbooth is
+100 km/(100 km/hour)=1 hour. This time is analogous to propagation delay. Therefore, the time from
+when the caravan is stored in front of a tollbooth until the caravan is stored in front of the next tollbooth
+is the sum of transmission delay and propagation delay—in this example, 62 minutes.</p>
+<figure class="align-center" id="caravan-analogy">
+<img alt="../_images/65-0.png" src="../_images/65-0.png" />
+</figure>
+<p><strong>Figure 1.17 Caravan analogy</strong></p>
+<p>Let’s explore this analogy a bit more. What would happen if the tollbooth service time for a caravan were
+greater than the time for a car to travel between tollbooths? For example, suppose now that the cars
+travel at the rate of 1,000 km/hour and the tollbooth services cars at the rate of one car per minute. Then
+the traveling delay between two tollbooths is 6 minutes and the time to serve a caravan is 10 minutes. In
+this case, the first few cars in the caravan will arrive at the second tollbooth before the last cars in the
+caravan leave the first tollbooth. This situation also arises in packet-switched networks—the first bits in a
+packet can arrive at a router while many of the remaining bits in the packet are still waiting to be
+transmitted by the preceding router.</p>
+<p>If a picture speaks a thousand words, then an animation must speak a million words. The Web site for
+this textbook provides an interactive Java applet that nicely illustrates and contrasts transmission delay
+and propagation delay. The reader is highly encouraged to visit that applet. <a class="reference internal" href="../references.html#smith-2009"><span class="std std-ref">[Smith 2009]</span></a> also provides
+a very readable discussion of propagation, queueing, and transmission delays.</p>
+<p>If we let <span class="math notranslate nohighlight">\(d_{proc}\)</span>, <span class="math notranslate nohighlight">\(d_{queue}\)</span>, <span class="math notranslate nohighlight">\(d_{trans}\)</span>, and <span class="math notranslate nohighlight">\(d_{prop}\)</span> denote the processing, queuing, transmission, and propagation delays, then the total nodal delay is given by</p>
+<div class="math notranslate nohighlight">
+\[d_{nodal} = d_{proc} + d_{queue} + d_{trans} + d_{prop}\]</div>
+<p>The contribution of these delay components can vary significantly. For example, <span class="math notranslate nohighlight">\(d_{proc}\)</span> can be negligible
+(for example, a couple of microseconds) for a link connecting two routers on the same university
+campus; however, <span class="math notranslate nohighlight">\(d_{proc}\)</span> is hundreds of milliseconds for two routers interconnected by a geostationary
+satellite link, and can be the dominant term in <span class="math notranslate nohighlight">\(d_{nodal}\)</span>. Similarly,  <span class="math notranslate nohighlight">\(d_{trans}\)</span> can range from negligible to
+significant. Its contribution is typically negligible for transmission rates of 10 Mbps and higher (for
+example, for LANs); however, it can be hundreds of milliseconds for large Internet packets sent over
+low-speed dial-up modem links. The processing delay, <span class="math notranslate nohighlight">\(d_{prop}\)</span>, is often negligible; however, it strongly
+influences a router’s maximum throughput, which is the maximum rate at which a router can forward
+packets.</p>
+</div>
+</section>
+</section>
+<section id="c1-4-2">
+<span id="id9"></span><h2>1.4.2 排队时延与分组丢失<a class="headerlink" href="#c1-4-2" title="此标题的永久链接">#</a></h2>
+<p>1.4.2 Queuing Delay and Packet Loss</p>
+<p>在所有结点时延中，最复杂且最有趣的部分是 <strong>排队时延（queuing delay）</strong>，记作 <span class="math notranslate nohighlight">\(d_{queue}\)</span>。事实上，排队时延在计算机网络中的重要性极高，以至于已有数千篇论文和众多专著专门研究它 [<a class="reference internal" href="../references.html#bertsekas-1991"><span class="std std-ref">Bertsekas 1991</span></a>; <a class="reference internal" href="../references.html#daigle-1991"><span class="std std-ref">Daigle 1991</span></a>; <a class="reference internal" href="../references.html#kleinrock-1975"><span class="std std-ref">Kleinrock 1975</span></a>, <a class="reference internal" href="../references.html#kleinrock-1976"><span class="std std-ref">Kleinrock 1976</span></a>; <span class="xref std std-ref">Ross 1995</span>]。本节仅对排队时延做高层次的直观讨论，若读者兴趣更浓厚，不妨进一步阅读这些著作，甚至撰写博士论文！</p>
+<div class="admonition- admonition">
+<p class="admonition-title">译注-排队和丢失交互式动画</p>
+<p>在线程序小例子: <a class="reference external" href="https://media.pearsoncmg.com/aw/ecs_kurose_compnetwork_7/cw/content/interactiveanimations/queuing-loss-applet/index.html">https://media.pearsoncmg.com/aw/ecs_kurose_compnetwork_7/cw/content/interactiveanimations/queuing-loss-applet/index.html</a></p>
+</div>
+<p>与其他三种时延（<span class="math notranslate nohighlight">\(d_{proc}\)</span>、 <span class="math notranslate nohighlight">\(d_{trans}\)</span>、 <span class="math notranslate nohighlight">\(d_{prop}\)</span>）不同，排队时延在不同分组之间可能变化极大。例如，若 10 个分组同时到达一个空队列，第一个被发送的分组将无排队时延，而最后一个则需等待前面 9 个分组传输完，排队时延较大。因此，分析排队时延时通常使用统计指标，如平均排队时延、时延方差、排队时延超过某个阈值的概率等。</p>
+<p>排队时延何时会很大？何时又可以忽略？这取决于到达队列的 <strong>流量速率</strong> 、链路的 <strong>传输速率</strong> ，以及流量的特性（例如是否周期性到达或以突发方式到达）。为便于理解，设 a 为平均到达分组速率（单位为分组/秒），设 R 为链路传输速率（单位为比特/秒），每个分组长度为 L 比特，则平均到达比特速率为 La（单位为比特/秒）。</p>
+<p>再假设队列足够大，可容纳无限个分组。 <strong>流量强度（traffic intensity）</strong> 定义为 La/R。若 La/R &gt; 1，即分组到达速率超过链路的传输能力，队列将无限增长，排队时延趋于无穷。因此，流量工程的黄金法则是： <strong>设计系统时应确保 La/R ≤ 1</strong>。</p>
+<p>若 La/R ≤ 1，则排队时延与到达流量的具体模式有关。例如，若分组周期性到达，且间隔刚好为 L/R 秒，则每次分组都遇到空队列，排队时延为零。反之，若分组周期性突发到达，如每隔 (L/R)N 秒有 N 个分组同时到达，则第一个分组无排队时延，第二个排队 L/R 秒，第 n 个排队 (n-1)L/R 秒。这个例子中的 <strong>平均排队时延</strong> 可留作练习。</p>
+<p>上述周期性模型有些理想化。现实中，分组到达通常是随机的，即分组间间隔呈随机分布。在这种更贴近实际的情况下，仅靠 La/R 并不能完全描述排队时延的统计特性。但 La/R 仍有助于形成直觉。例如，若 La/R 接近 0，表示分组稀疏，基本不会遇到队列，平均排队时延近似为 0。而当 La/R 接近 1 时，会出现某些时段分组速率超过链路容量，导致队列堆积；虽然后续可能清空，但平均排队长度将不断增加。</p>
+<p><a class="reference internal" href="#figure-1-18"><span class="std std-ref">图 1.18</span></a> 直观展示了平均排队时延与流量强度的关系。</p>
+<figure class="align-center" id="figure-1-18">
+<img alt="../_images/68-0.png" src="../_images/68-0.png" />
+</figure>
+<p><strong>图 1.18 平均排队时延对流量强度的依赖性</strong></p>
+<p>图中一个重要特性是：<strong>当流量强度接近 1 时，平均排队时延迅速上升</strong>。也就是说，流量强度每增加一个百分点，时延可能指数级增加。你或许在高速公路上体验过类似现象——当道路本就拥堵时，哪怕交通量略微增加，延迟也可能变得难以忍受。</p>
+<p>若想更好地感受排队时延，建议访问教材网站的交互式 Java 小程序。当设置到达速率超过链路容量（La/R &gt; 1）时，可观察到队列逐渐增长。</p>
+<div class="toggle docutils container">
+<p>The most complicated and interesting component of nodal delay is the queuing delay, dqueue. In fact,
+queuing delay is so important and interesting in computer networking that thousands of papers and
+numerous books have been written about it [ <a class="reference internal" href="../references.html#bertsekas-1991"><span class="std std-ref">Bertsekas 1991</span></a>; <a class="reference internal" href="../references.html#daigle-1991"><span class="std std-ref">Daigle 1991</span></a>; <a class="reference internal" href="../references.html#kleinrock-1975"><span class="std std-ref">Kleinrock 1975</span></a>, <a class="reference internal" href="../references.html#kleinrock-1976"><span class="std std-ref">Kleinrock 1976</span></a>; <span class="xref std std-ref">Ross 1995</span>]. We give only a high-level, intuitive discussion of queuing delay here; the more
+curious reader may want to browse through some of the books (or even eventually write a PhD thesis on
+the subject!). Unlike the other three delays (namely, <span class="math notranslate nohighlight">\(d_{proc}\)</span>, <span class="math notranslate nohighlight">\(d_{trans}\)</span>, and <span class="math notranslate nohighlight">\(d_{prop}\)</span>), the queuing delay can vary
+from packet to packet. For example, if 10 packets arrive at an empty queue at the same time, the first
+packet transmitted will suffer no queuing delay, while the last packet transmitted will suffer a relatively
+large queuing delay (while it waits for the other nine packets to be transmitted). Therefore, when
+characterizing queuing delay, one typically uses statistical measures, such as average queuing delay,
+variance of queuing delay, and the probability that the queuing delay exceeds some specified value.</p>
+<p>When is the queuing delay large and when is it insignificant? The answer to this question depends on
+the rate at which traffic arrives at the queue, the transmission rate of the link, and the nature of the
+arriving traffic, that is, whether the traffic arrives periodically or arrives in bursts. To gain some insight
+here, let a denote the average rate at which packets arrive at the queue (a is in units of packets/sec).
+Recall that R is the transmission rate; that is, it is the rate (in bits/sec) at which bits are pushed out of the
+queue. Also suppose, for simplicity, that all packets consist of <em>L</em> bits. Then the average rate at which bits
+arrive at the queue is <em>La</em> bits/sec. Finally, assume that the queue is very big, so that it can hold
+essentially an infinite number of bits. The ratio <em>La/R</em>, called the traffic intensity, often plays an
+important role in estimating the extent of the queuing delay. If <em>La/R</em> &gt; 1, then the average rate at which
+bits arrive at the queue exceeds the rate at which the bits can be transmitted from the queue. In this
+unfortunate situation, the queue will tend to increase without bound and the queuing delay will approach
+infinity! Therefore, one of the golden rules in traffic engineering is: <em>Design your system so that the traffic
+intensity is no greater than 1.</em></p>
+<p>Now consider the case <em>La/R</em> ≤ 1. Here, the nature of the arriving traffic impacts the queuing delay. For
+example, if packets arrive periodically—that is, one packet arrives every <em>L/R</em> seconds—then every
+packet will arrive at an empty queue and there will be no queuing delay. On the other hand, if packets
+arrive in bursts but periodically, there can be a significant average queuing delay. For example, suppose
+N packets arrive simultaneously every (<em>L/R</em>)N seconds. Then the first packet transmitted has no queuing
+delay; the second packet transmitted has a queuing delay of <em>L/R</em> seconds; and more generally, the nth
+packet transmitted has a queuing delay of <em>(n−1)L/R</em> seconds. We leave it as an exercise for you to
+calculate the average queuing delay in this example.</p>
+<p>The two examples of periodic arrivals described above are a bit academic. ­Typically, the arrival
+process to a queue is random; that is, the arrivals do not follow any pattern and the packets are spaced
+apart by random amounts of time. In this more realistic case, the quantity La/R is not usually sufficient to
+fully characterize the queuing delay statistics. Nonetheless, it is useful in gaining an intuitive
+understanding of the extent of the queuing delay. In particular, if the traffic intensity is close to zero, then
+packet arrivals are few and far between and it is unlikely that an arriving packet will find another packet
+in the queue. Hence, the average queuing delay will be close to zero. On the other hand, when the
+traffic intensity is close to 1, there will be intervals of time when the arrival rate exceeds the transmission
+capacity (due to variations in packet arrival rate), and a queue will form during these periods of time;
+when the arrival rate is less than the transmission capacity, the length of the queue will shrink.
+Nonetheless, as the traffic intensity approaches 1, the average queue length gets larger and larger. The
+qualitative dependence of average queuing delay on the traffic intensity is shown in <a class="reference internal" href="#figure-1-18"><span class="std std-ref">Figure 1.18</span></a>.</p>
+<p>One important aspect of <a class="reference internal" href="#figure-1-18"><span class="std std-ref">Figure 1.18</span></a> is the fact that as the traffic intensity approaches 1, the average
+queuing delay increases rapidly. A small percentage increase in the intensity will result in a much larger
+percentage-wise increase in delay. Perhaps you have experienced this phenomenon on the highway. If
+you regularly drive on a road that is typically congested, the fact that the road is typically
+congested means that its traffic intensity is close to 1. If some event causes an even slightly larger-than-
+usual amount of traffic, the delays you experience can be huge.</p>
+<figure class="align-center">
+<img alt="../_images/68-0.png" src="../_images/68-0.png" />
+</figure>
+<p><strong>Figure 1.18 Dependence of average queuing delay on traffic intensity</strong></p>
+<p>To really get a good feel for what queuing delays are about, you are encouraged once again to visit the
+textbook Web site, which provides an interactive Java applet for a queue. If you set the packet arrival
+rate high enough so that the traffic intensity exceeds 1, you will see the queue slowly build up over time.</p>
+</div>
+<section id="id10">
+<h3>分组丢失<a class="headerlink" href="#id10" title="此标题的永久链接">#</a></h3>
+<p>Packet Loss</p>
+<p>前文中我们假设队列容量无限，但现实中路由器前的队列容量是有限的，且由路由器设计与成本决定。</p>
+<p>因此， <strong>当流量强度接近 1 时，分组不会经历无限排队，而是可能直接被丢弃</strong> 。也就是说，当队列已满，新到达的分组将被路由器 <strong>丢弃（drop）</strong> ，即发生 <strong>分组丢失（packet loss）</strong> 。在教材网站提供的队列演示中也可观察到该现象。</p>
+<p>从端系统角度看，分组丢失表现为“分组已发出却永远未到达目的地”。丢包率随着流量强度增加而上升。因此，结点性能不仅用时延衡量，也常用 <strong>分组丢失概率</strong> 衡量。在后续章节中我们将看到，为了确保数据完整传输，端系统会尝试对丢失分组进行端到端的 <strong>重传（retransmission）</strong>。</p>
+<div class="toggle docutils container">
+<p>In our discussions above, we have assumed that the queue is capable of holding an infinite number of
+packets. In reality a queue preceding a link has finite capacity, although the queuing capacity greatly
+depends on the router design and cost. Because the queue capacity is finite, packet delays do not really
+approach infinity as the traffic intensity approaches 1. Instead, a packet can arrive to find a full queue.
+With no place to store such a packet, a router will <strong>drop</strong> that packet; that is, the packet will be <strong>lost</strong>. This
+overflow at a queue can again be seen in the Java applet for a queue when the traffic intensity is greater
+than 1.</p>
+<p>From an end-system viewpoint, a packet loss will look like a packet having been transmitted into the
+network core but never emerging from the network at the destination. The fraction of lost packets
+increases as the traffic intensity increases. Therefore, performance at a node is often measured not only
+in terms of delay, but also in terms of the probability of packet loss. As we’ll discuss in the subsequent
+chapters, a lost packet may be retransmitted on an end-to-end basis in order to ensure that all data are
+eventually transferred from source to destination.</p>
+</div>
+</section>
+</section>
+<section id="c1-4-3">
+<span id="id11"></span><h2>1.4.3 端到端时延<a class="headerlink" href="#c1-4-3" title="此标题的永久链接">#</a></h2>
+<p>1.4.3 End-to-End Delay</p>
+<p>前文讨论集中在结点时延，即在单个路由器上的时延。现在我们考虑从源主机到目的主机的 <strong>总时延（end-to-end delay）</strong>。</p>
+<p>为便于理解，假设源与目的主机之间有 <span class="math notranslate nohighlight">\(N - 1\)</span> 个路由器。假设当前网络不拥塞（可忽略排队时延），每个路由器及源主机的处理时延为 <span class="math notranslate nohighlight">\(d_{proc}\)</span>，每条链路的传输速率为 R（单位为比特/秒），传播时延为 <span class="math notranslate nohighlight">\(d_{prop}\)</span>，则端到端总时延为：</p>
+<div class="math notranslate nohighlight" id="equation-1-2">
+\[d_{end-to-end} = N(d_{proc} + d_{trans} + d_{prop}) \qquad (1.2)\]</div>
+<p>其中 <span class="math notranslate nohighlight">\(d_{trans} = L/R\)</span>，L 为分组大小。</p>
+<p>注意，<a class="reference internal" href="#equation-1-2"><span class="std std-ref">公式 1.2</span></a> 是 <span class="xref std std-ref">公式 1.1</span> 的推广，后者未考虑处理与传播时延。留作练习：进一步推广该公式以支持结点具有异构时延及平均排队时延的情况。</p>
+<div class="toggle docutils container">
+<p>Our discussion up to this point has focused on the nodal delay, that is, the delay at a single router. Let’s
+now consider the total delay from source to destination. To get a handle on this concept, suppose there
+are N-1 routers between the source host and the destination host. Let’s also suppose for the moment
+that the network is uncongested (so that queuing delays are negligible), the processing delay at each
+router and at the source host is <span class="math notranslate nohighlight">\(d_{proc}\)</span>, the transmission rate out of each router and out of the source host
+is <em>R</em> bits/sec, and the propagation on each link is <span class="math notranslate nohighlight">\(d_{prop}\)</span>. The nodal delays accumulate and give an end-to-
+end delay,</p>
+<div class="math notranslate nohighlight">
+\[d_{end} − end = N(d_{proc}+d_{trans}+d_{prop}) \space\space\space\space\space\space\space\space\space\space (1.2)\]</div>
+<p>where, once again, <span class="math notranslate nohighlight">\(d_{trans}\)</span> =L/R , where L is the packet size. Note that <a class="reference internal" href="#equation-1-2"><span class="std std-ref">Equation 1.2</span></a> is a generalization of
+<span class="xref std std-ref">Equation 1.1</span>, which did not take into account processing and propagation delays. We leave it to you to
+generalize <a class="reference internal" href="#equation-1-2"><span class="std std-ref">Equation 1.2</span></a> to the case of ­heterogeneous delays at the nodes and to the presence of an
+average queuing delay at each node.</p>
+</div>
+<section id="traceroute">
+<h3>Traceroute 路由跟踪<a class="headerlink" href="#traceroute" title="此标题的永久链接">#</a></h3>
+<p>Traceroute</p>
+<img alt="../_images/69-0.png" class="align-center" src="../_images/69-0.png" />
+<p><strong>使用 Traceroute 发现网络路径与测量网络时延</strong></p>
+<p>为了亲身体验计算机网络中的端到端时延，我们可以使用 <cite>Traceroute</cite> 工具。该工具可在任意互联网主机运行。</p>
+<p>当用户指定目标主机名后，源主机会向该目的地主机发送多个特殊分组。这些分组在前往目的地的过程中，会经过一系列路由器。当某个路由器收到其中之一，它会向源主机返回一条包含其名称与地址的简短信息。</p>
+<p>更具体地说，若源与目的地主机间有 <span class="math notranslate nohighlight">\(N - 1\)</span> 个路由器，则源主机会向网络发送 N 个特殊分组，每个分组的目的地址为目标主机。这 N 个分组编号从 1 到 N。当第 n 个路由器收到编号为 n 的分组时，不再转发，而是直接向源主机发送响应信息。当第 N 个分组抵达目标主机时，它也会回复源主机。</p>
+<p>源主机记录从发送每个分组到接收到返回信息之间的往返时间（RTT），同时记录返回信息中提供的路由器或目的主机的名称与地址。通过这种方式，源主机可重建分组从源到目的地所经历的路径，并获取沿途每个结点的往返时延。</p>
+<p>Traceroute 实际上会对每个结点重复上述操作三次，即总共发送 <span class="math notranslate nohighlight">\(3N\)</span> 个分组。RFC 1393 对 Traceroute 的细节进行了说明。</p>
+<p>下面是一个 Traceroute 输出示例，源主机为马萨诸塞大学的 <span class="xref std std-ref">gaia.cs.umass.edu</span>，目标主机为布鲁克林理工大学的 <span class="xref std std-ref">cis.poly.edu</span>：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1  cs-gw (128.119.240.254) 1.009 ms 0.899 ms 0.993 ms
+2  128.119.3.154 (128.119.3.154) 0.931 ms 0.441 ms 0.651 ms
+3  border4-rt-gi-1-3.gw.umass.edu (128.119.2.194) 1.032 ms 0.484 ms 0.451 ms
+4  acr1-ge-2-1-0.Boston.cw.net (208.172.51.129) 10.006 ms 8.150 ms 8.460 ms
+5  agr4-loopback.NewYork.cw.net (206.24.194.104) 12.272 ms 14.344 ms 13.267 ms
+6  acr2-loopback.NewYork.cw.net (206.24.194.62) 13.225 ms 12.292 ms 12.148 ms
+7  pos10-2.core2.NewYork1.Level3.net (209.244.160.133) 12.218 ms 11.823 ms 11.793 ms
+8  gige9-1-52.hsipaccess1.NewYork1.Level3.net (64.159.17.39) 13.081 ms 11.556 ms 13.297 ms
+9  p0-0.polyu.bbnplanet.net (4.25.109.122) 12.716 ms 13.052 ms 12.786 ms
+10 cis.poly.edu (128.238.32.126) 14.080 ms 13.035 ms 12.802 ms
+</pre></div>
+</div>
+<p>输出共有六列：第一列为路径中第 n 个路由器编号；第二列为路由器主机名；第三列为其 IP 地址；后三列为三次实验中测得的往返时延（毫秒）。若某个结点返回信息少于三次（例如发生分组丢失），Traceroute 会在该行末尾标记星号，且仅显示实际测得的时延数值。</p>
+<p>从结果可见，源与目的主机之间有 9 个路由器。其中每个路由器均有 IP 地址，部分具有主机名。例如第 3 个路由器为 <cite>border4-rt-gi-1-3.gw.umass.edu</cite>，其地址为 <cite>128.119.2.194</cite>。在三次实验中，该路由器的往返时延分别为 1.03 ms、0.48 ms 和 0.45 ms。注意，这些时延包含了之前讨论的所有组成部分，包括传输时延、传播时延、处理时延和排队时延。</p>
+<p>由于排队时延随时间波动，编号为 n 的分组的 RTT 可能大于 n+1 的 RTT。例如上述输出中，第 6 个路由器的 RTT 明显大于第 7 个！</p>
+<p>想亲自尝试 Traceroute？强烈建议访问 <a class="reference external" href="http://www.traceroute.org">http://www.traceroute.org</a>，它提供丰富的 Web 接口供用户选择源主机并追踪任意目标主机路径。</p>
+<p>此外，也有一些图形化的 Traceroute 工具，例如我们推荐的 PingPlotter [ <a class="reference internal" href="../references.html#pingplotter-2016"><span class="std std-ref">PingPlotter 2016</span></a> ]。</p>
+<div class="toggle docutils container">
+<img alt="../_images/69-0.png" class="align-center" src="../_images/69-0.png" />
+<p><strong>Using Traceroute to discover network paths and measure network delay</strong></p>
+<p>To get a hands-on feel for end-to-end delay in a computer network, we can make use of the Traceroute
+program. Traceroute is a simple program that can run in any Internet host. When the user specifies a
+destination hostname, the program in the source host sends multiple, special packets toward that
+destination. As these packets work their way toward the destination, they pass through a series of
+routers. When a router receives one of these special packets, it sends back to the source a short
+message that contains the name and address of the router.</p>
+<p>More specifically, suppose there are <em>N−1</em> routers between the source and the destination. Then the
+source will send <em>N</em> special packets into the network, with each packet addressed to the ultimate
+destination. These <em>N</em> special packets are marked <em>1</em> through <em>N</em>, with the first packet marked 1 and the last
+packet marked <em>N</em>. When the nth router receives the nth packet marked n, the router does not forward
+the packet toward its destination, but instead sends a message back to the source. When the
+destination host receives the Nth packet, it too returns a message back to the source. The source
+records the time that elapses between when it sends a packet and when it receives the corresponding
+return message; it also records the name and address of the router (or the destination host) that returns
+the message. In this manner, the source can reconstruct the route taken by packets flowing from source
+to destination, and the source can determine the round-trip delays to all the intervening routers.
+Traceroute actually repeats the experiment just described three times, so the source actually sends <em>3 •
+N</em> packets to the destination. RFC 1393 describes Traceroute in detail.</p>
+<p>Here is an example of the output of the Traceroute program, where the route was being traced from the
+source host <a class="reference external" href="http://gaia.cs.umass.edu/">gaia.cs.umass.edu</a> (at the University of ­Massachusetts) to the host <a class="reference external" href="http://cis.poly.edu/">cis.poly.edu</a> (at Polytechnic University in Brooklyn). The output has six columns: the first column is the n value
+described above, that is, the number of the router along the route; the second column is the name of the
+router; the third column is the address of the router (of the form xxx.xxx.xxx.xxx); the last three columns
+are the round-trip delays for three experiments. If the source receives fewer than three messages from
+any given router (due to packet loss in the network), Traceroute places an asterisk just after the router
+number and reports fewer than three round-trip times for that router.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1  cs-gw (128.119.240.254) 1.009 ms 0.899 ms 0.993 ms
+2  128.119.3.154 (128.119.3.154) 0.931 ms 0.441 ms 0.651 ms
+3  -border4-rt-gi-1-3.gw.umass.edu (128.119.2.194) 1.032 ms 0.484 ms 0.451 ms
+4  -acr1-ge-2-1-0.Boston.cw.net (208.172.51.129) 10.006 ms 8.150 ms 8.460 ms
+5  -agr4-loopback.NewYork.cw.net (206.24.194.104) 12.272 ms 14.344 ms 13.267 ms
+6  -acr2-loopback.NewYork.cw.net (206.24.194.62) 13.225 ms 12.292 ms 12.148 ms
+7  -pos10-2.core2.NewYork1.Level3.net (209.244.160.133) 12.218 ms 11.823 ms 11.793 ms
+8  -gige9-1-52.hsipaccess1.NewYork1.Level3.net (64.159.17.39) 13.081 ms 11.556 ms 13.297 ms
+9  -p0-0.polyu.bbnplanet.net (4.25.109.122) 12.716 ms 13.052 ms 12.786 ms
+10 cis.poly.edu (128.238.32.126) 14.080 ms 13.035 ms 12.802 ms
+</pre></div>
+</div>
+<p>In the trace above there are nine routers between the source and the destination. Most of these routers
+have a name, and all of them have addresses. For example, the name of Router 3 is <cite>border4-rt-gi-1-3.gw.umass.edu</cite> and its address is <cite>128.119.2.194</cite> . Looking at the data provided for this same
+router, we see that in the first of the three trials the round-trip delay between the source and the router
+was 1.03 msec. The round-trip delays for the subsequent two trials were 0.48 and 0.45 msec. These
+round-trip delays include all of the delays just discussed, including transmission delays, propagation
+delays, router processing delays, and queuing delays. Because the queuing delay is varying with time,
+the round-trip delay of packet <em>n</em> sent to a router n can sometimes be longer than the round-trip delay of
+packet <em>n+1</em> sent to router <em>n+1</em>. Indeed, we observe this phenomenon in the above example: the delays
+to Router 6 are larger than the delays to Router 7!</p>
+<p>Want to try out Traceroute for yourself? We highly recommended that you visit <a class="reference external" href="http://www.traceroute.org">http://www.traceroute.org</a>, which provides a Web interface to an extensive list of sources for route tracing.
+You choose a source and supply the hostname for any destination. The Traceroute program then does
+all the work. There are a number of free software programs that provide a graphical interface to
+Traceroute; one of our favorites is PingPlotter [ <a class="reference internal" href="../references.html#pingplotter-2016"><span class="std std-ref">PingPlotter 2016</span></a> ].</p>
+</div>
+</section>
+<section id="id12">
+<h3>端系统、应用程序及其他时延<a class="headerlink" href="#id12" title="此标题的永久链接">#</a></h3>
+<p>End System, Application, and Other Delays</p>
+<p>除处理、传输和传播时延外，端系统还可能存在一些显著时延。例如，在共享介质（如 WiFi 或有线调制解调器）环境中，端系统可能会为协调介质接入而 <strong>故意延迟</strong> 发送分组。我们将在 <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">第 6 章</span></a> 详细讨论这类协议。</p>
+<p>另一个重要因素是 <strong>媒体打包时延（packetization delay）</strong> ，在语音传输（VoIP）应用中尤为显著。VoIP 发送端在发送前需先填满一个分组的音频数据，此过程耗时即为打包时延。该时延会影响用户对通话质量的主观体验。</p>
+<p>本章的作业题中将进一步探讨这一问题。</p>
+<div class="toggle docutils container">
+<p>In addition to processing, transmission, and propagation delays, there can be additional significant
+delays in the end systems. For example, an end system wanting to transmit a packet into a shared
+medium (e.g., as in a WiFi or cable modem scenario) may purposefully delay its transmission as part of
+its protocol for sharing the medium with other end systems; we’ll consider such protocols in detail in
+<a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a>. Another important delay is media packetization delay, which is present in Voice-over-IP
+(VoIP) applications. In VoIP, the sending side must first fill a packet with encoded digitized speech
+before passing the packet to the Internet. This time to fill a packet—called the packetization delay—can
+be significant and can impact the user-perceived quality of a VoIP call. This issue will be further
+explored in a homework problem at the end of this chapter.</p>
+</div>
+</section>
+</section>
+<section id="c1-4-4">
+<span id="id13"></span><h2>1.4.4 计算机网络中的吞吐量<a class="headerlink" href="#c1-4-4" title="此标题的永久链接">#</a></h2>
+<p>1.4.4 Throughput in Computer Networks</p>
+<p>除了时延和分组丢失，另一个衡量计算机网络性能的重要指标是端到端吞吐量。为了定义吞吐量，考虑通过计算机网络从主机 A 向主机 B 传输一个大文件。例如，这可能是一个点对点（P2P）文件共享系统中，从一个对等方向另一个对等方传输的大型视频片段。</p>
+<p>某一时刻的 <strong>瞬时吞吐量</strong> 是主机 B 接收该文件的速率（单位为比特/秒）。（许多应用程序，包括许多 P2P 文件共享系统，会在用户界面中显示下载过程中的瞬时吞吐量 —— 你也许曾注意到过！）如果文件大小为 F 比特，主机 B 用 T 秒接收完所有 F 比特，那么该文件传输的 <strong>平均吞吐量</strong> 为 F/T 比特/秒。</p>
+<p>对于某些应用程序（如互联网语音通信），理想情况是时延较低，且瞬时吞吐量始终高于某个阈值（例如某些互联网语音应用需大于 24 kbps，某些实时视频应用需大于 256 kbps）。而对另一些应用（如文件传输），时延并不关键，而是希望吞吐量越高越好。</p>
+<p>为了进一步理解吞吐量这个重要概念，我们来看一些示例。</p>
+<p><a class="reference internal" href="#figure-1-19"><span class="std std-ref">图 1.19(a)</span></a> 显示两个终端系统 —— 一个服务器和一个客户端 —— 通过两个通信链路和一个路由器连接。考虑从服务器向客户端传输文件的吞吐量。令 <span class="math notranslate nohighlight">\(R_s\)</span> 表示服务器与路由器之间链路的速率，<span class="math notranslate nohighlight">\(R_c\)</span> 表示路由器与客户端之间链路的速率。假设整个网络中只有来自服务器向客户端发送的比特。</p>
+<p>在这种理想情况下，服务器到客户端的吞吐量是多少？为回答这个问题，我们可以将比特想象成“流体”，将通信链路想象成“管道”。显然，服务器通过其链路发送比特的速率不能超过 <span class="math notranslate nohighlight">\(R_s\)</span> bps；路由器转发比特的速率也不能超过 <span class="math notranslate nohighlight">\(R_c\)</span> bps。如果 <span class="math notranslate nohighlight">\(R_s &lt; R_c\)</span>，则服务器发送的比特会直接“流经”路由器，以 <span class="math notranslate nohighlight">\(R_s\)</span> bps 到达客户端，吞吐量为 <span class="math notranslate nohighlight">\(R_s\)</span> bps。反之，如果 <span class="math notranslate nohighlight">\(R_c &lt; R_s\)</span>，路由器将无法以接收的速度转发比特。此时比特将以 <span class="math notranslate nohighlight">\(R_c\)</span> 的速率离开路由器，端到端吞吐量为 <span class="math notranslate nohighlight">\(R_c\)</span>。</p>
+<p>（另外请注意，如果比特继续以 <span class="math notranslate nohighlight">\(R_s\)</span> 的速率到达路由器，并以 <span class="math notranslate nohighlight">\(R_c\)</span> 的速率离开路由器，则路由器中等待传输到客户端的比特将持续堆积 —— 这是非常不理想的情况！）因此，对于这个简单的两链路网络，吞吐量为 <span class="math notranslate nohighlight">\(min\{R_c, R_s\}\)</span>，即 <strong>瓶颈链路</strong> 的传输速率。</p>
+<p>确定了吞吐量之后，我们可以近似估算将 F 比特的大文件从服务器传输到客户端所需的时间为 <span class="math notranslate nohighlight">\(F/min\{R_c, R_s\}\)</span>。例如，假设你正在下载一个大小为 F=3200 万比特的 MP3 文件，服务器的传输速率 <span class="math notranslate nohighlight">\(R_s = 2 Mbps\)</span>，你的接入链路速率 <span class="math notranslate nohighlight">\(R_c = 1 Mbps\)</span>，则传输该文件所需时间为 32 秒。</p>
+<p>当然，上述吞吐量与传输时间公式只是近似估算，未考虑存储转发时延、处理时延以及协议相关问题。</p>
+<figure class="align-center" id="figure-1-19">
+<img alt="../_images/72-0.png" src="../_images/72-0.png" />
+</figure>
+<p><strong>图 1.19 从服务器到客户端的文件传输吞吐量</strong></p>
+<p><a class="reference internal" href="#figure-1-19"><span class="std std-ref">图 1.19(b)</span></a> 显示服务器和客户端之间有 N 条链路的网络，这些链路的传输速率为 <span class="math notranslate nohighlight">\(R_1, R_2, ..., R_N\)</span>。使用与两链路网络相同的分析方法可得，从服务器到客户端的文件传输吞吐量为 <span class="math notranslate nohighlight">\(min\{R_1, R_2, ..., R_N\}\)</span>，即路径中瓶颈链路的传输速率。</p>
+<p>接下来考虑一个基于现代互联网的示例。</p>
+<p><a class="reference internal" href="#figure-1-20"><span class="std std-ref">图 1.20(a)</span></a> 显示两个终端系统 —— 一个服务器和一个客户端 —— 连接到计算机网络。考虑从服务器到客户端的文件传输吞吐量。服务器通过一个速率为 <span class="math notranslate nohighlight">\(R_s\)</span> 的接入链路接入网络，客户端通过速率为 <span class="math notranslate nohighlight">\(R_c\)</span> 的接入链路接入网络。假设通信网络核心中的所有链路速率都非常高，远高于 <span class="math notranslate nohighlight">\(R_s\)</span> 和 <span class="math notranslate nohighlight">\(R_c\)</span>。</p>
+<p>事实上，如今的互联网核心已经过度配置，使用高速链路，几乎不会发生拥塞。还假设整个网络中唯一传输的比特是服务器发往客户端的。由于计算机网络核心在本示例中就像一根宽管道，数据从源到目的地的传输速率仍为 <span class="math notranslate nohighlight">\(min\{R_s, R_c\}\)</span>。因此，在当今互联网中，吞吐量的限制因素通常是接入网络。</p>
+<p>最后一个示例见 <a class="reference internal" href="#figure-1-20"><span class="std std-ref">图 1.20(b)</span></a>，其中有 10 个服务器和 10 个客户端连接到计算机网络核心。本例中，10 对客户端与服务器正在同时进行文件下载。</p>
+<p>假设此时网络中的唯一流量就是这 10 个下载操作。如图所示，核心中有一条链路被所有这 10 个下载操作共享。用 R 表示这条链路的传输速率。</p>
+<p>假设所有服务器接入链路的速率均为 <span class="math notranslate nohighlight">\(R_s\)</span>，所有客户端接入链路的速率均为 <span class="math notranslate nohighlight">\(R_c\)</span>，核心中除这条共享链路 R 外，其他链路速率都远大于 <span class="math notranslate nohighlight">\(R_s\)</span>、<span class="math notranslate nohighlight">\(R_c\)</span> 和 R。那么此时每个下载操作的吞吐量是多少？</p>
+<p>显然，如果共享链路的速率 R 很大（比如比 <span class="math notranslate nohighlight">\(R_s\)</span> 和 <span class="math notranslate nohighlight">\(R_c\)</span> 都大一百倍），则每个下载的吞吐量仍为 <span class="math notranslate nohighlight">\(min\{R_s, R_c\}\)</span>。</p>
+<p>但如果该链路的速率与 <span class="math notranslate nohighlight">\(R_s\)</span> 和 <span class="math notranslate nohighlight">\(R_c\)</span> 在同一个数量级呢？我们来看一个具体示例。假设 <span class="math notranslate nohighlight">\(R_s = 2 Mbps\)</span>，<span class="math notranslate nohighlight">\(R_c = 1 Mbps\)</span>，<span class="math notranslate nohighlight">\(R = 5 Mbps\)</span>，并且这条共享链路将传输速率平均分配给这 10 个下载任务。</p>
+<p>则瓶颈不再是接入网络，而是核心中的共享链路，该链路只为每个下载任务提供 500 kbps 的吞吐量。因此每个下载任务的端到端吞吐量降低至 500 kbps。</p>
+<figure class="align-left" id="throughput-for-a-file-transfer-from-server-to-client">
+<span id="figure-1-20"></span><img alt="../_images/74-0.png" src="../_images/74-0.png" />
+</figure>
+<figure class="align-center" id="throughput-for-a-file-transfer-from-server-to-client2">
+<img alt="../_images/74-1.png" src="../_images/74-1.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>图 1.20 端到端吞吐量：(a) 客户端从服务器下载文件；(b) 10 个客户端从 10 个服务器同时下载</strong></p>
+<p><a class="reference internal" href="#figure-1-19"><span class="std std-ref">图 1.19</span></a> 和 <a class="reference internal" href="#figure-1-20"><span class="std std-ref">图 1.20(a)</span></a> 中的示例表明，吞吐量依赖于数据传输路径上链路的传输速率。当没有其他竞争流量时，吞吐量可近似为源到目的路径上最小链路速率。</p>
+<p><a class="reference internal" href="#figure-1-20"><span class="std std-ref">图 1.20(b)</span></a> 中的示例进一步表明，吞吐量不仅取决于路径上的链路速率，还受路径中其他流量的影响。特别地，即使某条链路具有较高的传输速率，如果有大量其他数据流同时经过，它仍可能成为瓶颈链路。</p>
+<p>我们将在本章的作业和后续章节中更深入地探讨计算机网络中的吞吐量。</p>
+<div class="toggle docutils container">
+<p>In addition to delay and packet loss, another critical performance measure in computer networks is end-
+to-end throughput. To define throughput, consider transferring a large file from Host A to Host B across
+a computer network. This transfer might be, for example, a large video clip from one peer to another in a
+P2P file sharing system. The <strong>instantaneous throughput</strong> at any instant of time is the rate (in bits/sec) at
+which Host B is receiving the file. (Many applications, including many P2P file sharing ­systems, display
+the instantaneous throughput during downloads in the user interface—perhaps you have observed this
+before!) If the file consists of F bits and the transfer takes T seconds for Host B to receive all F bits, then
+the <strong>average throughput</strong> of the file transfer is F/T bits/sec. For some applications, such as Internet
+telephony, it is desirable to have a low delay and an instantaneous throughput consistently above some
+threshold (for example, over 24 kbps for some Internet telephony applications and over 256 kbps for
+some real-time video applications). For other applications, including those involving file transfers, delay
+is not critical, but it is desirable to have the highest possible throughput.</p>
+<p>To gain further insight into the important concept of throughput, let’s consider a few examples. <a class="reference internal" href="#figure-1-19"><span class="std std-ref">Figure 1.19(a)</span></a> shows two end systems, a server and a client, connected by two communication links and a
+router. Consider the throughput for a file transfer from the server to the client. Let <span class="math notranslate nohighlight">\(R_s\)</span> denote the rate of
+the link between the server and the router; and <span class="math notranslate nohighlight">\(R_c\)</span> denote the rate of the link between the router and the
+client. Suppose that the only bits being sent in the entire network are those from the server to the client.
+We now ask, in this ideal scenario, what is the server-to-client throughput? To answer this question, we
+may think of bits as <em>fluid</em> and communication links as <em>pipes</em>. Clearly, the server cannot pump bits through
+its link at a rate faster than <span class="math notranslate nohighlight">\(R_s\)</span> bps; and the router cannot forward bits at a rate faster than <span class="math notranslate nohighlight">\(R_c\)</span> bps. If
+Rs&lt;Rc, then the bits pumped by the server will “flow” right through the router and arrive at the client at a
+rate of <span class="math notranslate nohighlight">\(R_s\)</span> bps, giving a throughput of <span class="math notranslate nohighlight">\(R_s\)</span> bps. If, on the other hand, Rc&lt;Rs, then the router will not be
+able to forward bits as quickly as it receives them. In this case, bits will only leave the router at rate <span class="math notranslate nohighlight">\(R_c\)</span>,
+giving an end-to-end throughput of <span class="math notranslate nohighlight">\(R_c\)</span>. (Note also that if bits continue to arrive at the router at rate <span class="math notranslate nohighlight">\(R_s\)</span>,
+and continue to leave the router at <span class="math notranslate nohighlight">\(R_c\)</span>, the backlog of bits at the router waiting
+for transmission to the client will grow and grow—a most undesirable situation!) Thus, for this simple
+two-link network, the throughput is <span class="math notranslate nohighlight">\(min\{R_c, R_s\}\)</span>, that is, it is the transmission rate of the <strong>bottleneck link</strong>.
+Having determined the throughput, we can now approximate the time it takes to transfer a large file of F
+bits from server to client as <span class="math notranslate nohighlight">\(F/min\{R_c, R_s\}\)</span>. For a specific example, suppose you are downloading an MP3
+file of F=32 million bits, the server has a transmission rate of Rs=2 Mbps, and you have an access link
+of Rc=1 Mbps. The time needed to transfer the file is then 32 seconds. Of course, these expressions for
+throughput and transfer time are only approximations, as they do not account for store-and-forward and
+processing delays as well as protocol issues.</p>
+<figure class="align-center" id="id14">
+<img alt="../_images/72-0.png" src="../_images/72-0.png" />
+</figure>
+<p><strong>Figure 1.19 Throughput for a file transfer from server to client</strong></p>
+<p><a class="reference internal" href="#figure-1-19"><span class="std std-ref">Figure 1.19(b)</span></a> now shows a network with N links between the server and the client, with the
+transmission rates of the <em>N</em> links being <span class="math notranslate nohighlight">\(R1,R2,…, RN\)</span>. Applying the same analysis as for the two-link
+network, we find that the throughput for a file transfer from server to client is <span class="math notranslate nohighlight">\(min\{R1,R2,…, RN\}\)</span>, which
+is once again the transmission rate of the bottleneck link along the path between server and client.</p>
+<p>Now consider another example motivated by today’s Internet. <a class="reference internal" href="#figure-1-20"><span class="std std-ref">Figure 1.20(a)</span></a> shows two end systems, a
+server and a client, connected to a computer network. Consider the throughput for a file transfer from
+the server to the client. The server is connected to the network with an access link of rate <span class="math notranslate nohighlight">\(R_s\)</span> and the
+client is connected to the network with an access link of rate <span class="math notranslate nohighlight">\(R_c\)</span>. Now suppose that all the links in the
+core of the communication network have very high transmission rates, much higher than <span class="math notranslate nohighlight">\(R_s\)</span> and <span class="math notranslate nohighlight">\(R_c\)</span>.
+Indeed, today, the core of the Internet is over-provisioned with high speed links that experience little
+congestion. Also suppose that the only bits being sent in the entire network are those from the server to
+the client. Because the core of the computer network is like a wide pipe in this example, the rate at
+which bits can flow from source to destination is again the minimum of <span class="math notranslate nohighlight">\(R_s\)</span> and <span class="math notranslate nohighlight">\(R_c\)</span>, that is, throughput =
+<span class="math notranslate nohighlight">\(min\{R_s, R_c\}\)</span>. Therefore, the constraining factor for throughput in today’s Internet is typically the access
+network.</p>
+<p>For a final example, consider <a class="reference internal" href="#figure-1-20"><span class="std std-ref">Figure 1.20(b)</span></a> in which there are 10 servers and 10 clients connected to
+the core of the computer network. In this example, there are 10 simultaneous downloads taking place,
+involving 10 client-server pairs. Suppose that these 10 downloads are the only traffic in the network at
+the current time. As shown in the figure, there is a link in the core that is traversed by all 10 downloads.
+Denote R for the transmission rate of this link R. Let’s suppose that all server access links have the
+same rate <span class="math notranslate nohighlight">\(R_s\)</span>, all client access links have the same rate <span class="math notranslate nohighlight">\(R_c\)</span>, and the transmission rates of all the links in
+the core—except the one common link of rate R—are much larger than <span class="math notranslate nohighlight">\(R_s\)</span>, <span class="math notranslate nohighlight">\(R_c\)</span>, and R. Now we ask, what
+are the throughputs of the downloads? Clearly, if the rate of the common link, R, is large—say a
+hundred times larger than both <span class="math notranslate nohighlight">\(R_s\)</span> and Rc—then the throughput for each download will once again be
+<span class="math notranslate nohighlight">\(min\{R_s, R_c\}\)</span>. But what if the rate of the common link is of the same order as <span class="math notranslate nohighlight">\(R_s\)</span> and <span class="math notranslate nohighlight">\(R_c\)</span>? What will the
+throughput be in this case? Let’s take a look at a specific example. Suppose Rs=2 Mbps, Rc=1 Mbps,
+R=5 Mbps, and the common link divides its transmission rate equally among the 10 downloads. Then the bottleneck for
+each download is no longer in the access network, but is now instead the shared link in the core, which
+only provides each download with 500 kbps of throughput. Thus the end-to-end throughput for each
+download is now reduced to 500 kbps.</p>
+<figure class="align-left" id="id15">
+<img alt="../_images/74-0.png" src="../_images/74-0.png" />
+</figure>
+<figure class="align-center" id="id16">
+<img alt="../_images/74-1.png" src="../_images/74-1.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>Figure 1.20 End-to-end throughput: (a) Client downloads a file from ­server; (b) 10 clients downloading with 10 servers</strong></p>
+<p>The examples in <a class="reference internal" href="#figure-1-19"><span class="std std-ref">Figure 1.19</span></a> and <a class="reference internal" href="#figure-1-20"><span class="std std-ref">Figure 1.20(a)</span></a> show that throughput depends on the transmission
+rates of the links over which the data flows. We saw that when there is no other intervening traffic, the
+throughput can simply be approximated as the minimum transmission rate along the path between
+source and destination. The example in <a class="reference internal" href="#figure-1-20"><span class="std std-ref">Figure 1.20(b)</span></a> shows that more generally the throughput
+depends not only on the transmission rates of the links along the path, but also on the intervening traffic.
+In particular, a link with a high transmission rate may nonetheless be the bottleneck link for a file transfer
+if many other data flows are also passing through that link. We will examine throughput in computer
+networks more closely in the homework problems and in the subsequent chapters.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s3.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">1.3 网络核心</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s5.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">1.5 协议层与其服务模型</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-4-1">1.4.1 分组交换网络中的时延概述</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">时延类型</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">处理时延</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">排队时延</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">传输时延</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">传播时延</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">比较传输时延与传播时延</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-4-2">1.4.2 排队时延与分组丢失</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">分组丢失</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-4-3">1.4.3 端到端时延</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#traceroute">Traceroute 路由跟踪</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">端系统、应用程序及其他时延</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-4-4">1.4.4 计算机网络中的吞吐量</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

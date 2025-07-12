@@ -1,0 +1,755 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>家庭作业问题和疑问 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c7/homework';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="Wireshark 实验室" href="wiresharklab.html" />
+    <link rel="prev" title="7.9 小结" href="summary.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 7 章 无线与移动网络</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">7.9 小结</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c7/homework.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>家庭作业问题和疑问</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">第7.1节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">第7.2节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">第7.3节与第7.4节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">第7.5节与第7.6节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">第7.7节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">第7.8节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">问题</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="id1">
+<h1>家庭作业问题和疑问<a class="headerlink" href="#id1" title="此标题的永久链接">#</a></h1>
+<p>Homework Problems and Questions</p>
+<section id="id2">
+<h2>第7.1节<a class="headerlink" href="#id2" title="此标题的永久链接">#</a></h2>
+<p>R1. 无线网络以“基础设施模式”运行意味着什么？如果网络不是以基础设施模式运行，它处于哪种运行模式？该模式与基础设施模式之间有什么区别？</p>
+<p>R2. 在我们于 <a class="reference internal" href="s1.html#c7-1"><span class="std std-ref">第7.1节</span></a> 中定义的分类法中，识别出了哪四种类型的无线网络？你使用过这些无线网络中的哪几种？</p>
+<div class="toggle docutils container">
+<p>R1. What does it mean for a wireless network to be operating in “infrastructure mode”? If the network is not in infrastructure mode, what mode of operation is it in, and what is the difference between that mode of operation and infrastructure mode?</p>
+<p>R2. What are the four types of wireless networks identified in our taxonomy in <a class="reference internal" href="s1.html#c7-1"><span class="std std-ref">Section 7.1</span></a> ? Which of these types of wireless networks have you used?</p>
+</div>
+</section>
+<section id="id3">
+<h2>第7.2节<a class="headerlink" href="#id3" title="此标题的永久链接">#</a></h2>
+<p>R3. 以下几种无线信道损伤类型之间有什么区别：路径损耗、多径传播、来自其他源的干扰？</p>
+<p>R4. 当一个移动节点离基站越来越远时，基站可以采取哪两种措施来确保所传输帧的丢失概率不增加？</p>
+<div class="toggle docutils container">
+<p>R3. What are the differences between the following types of wireless channel impairments: path loss, multipath propagation, interference from other sources?</p>
+<p>R4. As a mobile node gets farther and farther away from a base station, what are two actions that a base station could take to ensure that the loss probability of a transmitted frame does not increase?</p>
+</div>
+</section>
+<section id="id4">
+<h2>第7.3节与第7.4节<a class="headerlink" href="#id4" title="此标题的永久链接">#</a></h2>
+<p>R5. 请描述802.11中信标帧的作用。</p>
+<p>R6. 判断正误：在一个802.11站点发送数据帧之前，它必须先发送RTS帧并接收到相应的CTS帧。</p>
+<p>R7. 为什么在802.11中使用确认帧，而在有线以太网中不使用？</p>
+<p>R8. 判断正误：以太网和802.11使用相同的帧结构。</p>
+<p>R9. 请描述RTS阈值是如何工作的。</p>
+<p>R10. 假设IEEE 802.11中的RTS和CTS帧与标准的DATA和ACK帧一样长，那么使用CTS和RTS帧还有优势吗？为什么？</p>
+<p>R11. <a class="reference internal" href="s3.html#c7-3-4"><span class="std std-ref">第7.3.4节</span></a> 讨论了802.11的移动性，其中一个无线站点在同一子网内从一个BSS移动到另一个。当AP之间通过交换机互连时，AP可能需要发送一个带有伪造MAC地址的帧，以使交换机正确转发该帧。这是为什么？</p>
+<p>R12. 蓝牙网络中的主设备与802.11网络中的基站之间有什么区别？</p>
+<p>R13. 在802.15.4 Zigbee标准中，所谓的超级帧（super frame）是什么意思？</p>
+<p>R14. 在3G蜂窝数据架构中，“核心网络”的作用是什么？</p>
+<p>R15. RNC在3G蜂窝数据网络架构中扮演什么角色？RNC在蜂窝语音网络中扮演什么角色？</p>
+<p>R16. 在4G架构中，eNodeB、MME、P-GW和S-GW分别扮演什么角色？</p>
+<p>R17. 3G与4G蜂窝架构之间有哪三项重要的差异？</p>
+<div class="toggle docutils container">
+<p>R5. Describe the role of the beacon frames in 802.11.</p>
+<p>R6. True or false: Before an 802.11 station transmits a data frame, it must first send an RTS frame and receive a corresponding CTS frame.</p>
+<p>R7. Why are acknowledgments used in 802.11 but not in wired Ethernet?</p>
+<p>R8. True or false: Ethernet and 802.11 use the same frame structure.</p>
+<p>R9. Describe how the RTS threshold works.</p>
+<p>R10. Suppose the IEEE 802.11 RTS and CTS frames were as long as the standard DATA and ACK frames. Would there be any advantage to using the CTS and RTS frames? Why or why not?</p>
+<p>R11. <a class="reference internal" href="s3.html#c7-3-4"><span class="std std-ref">Section 7.3.4</span></a> discusses 802.11 mobility, in which a wireless station moves from one BSS to another within the same subnet. When the APs are interconnected with a switch, an AP may need to send a frame with a spoofed MAC address to get the switch to forward the frame properly. Why?</p>
+<p>R12. What are the differences between a master device in a Bluetooth network and a base station in an 802.11 network?</p>
+<p>R13. What is meant by a super frame in the 802.15.4 Zigbee standard?</p>
+<p>R14. What is the role of the “core network” in the 3G cellular data architecture?</p>
+<p>R15. What is the role of the RNC in the 3G cellular data network architecture? What role does the RNC play in the cellular voice network?</p>
+<p>R16. What is the role of the eNodeB, MME, P-GW, and S-GW in 4G architecture?</p>
+<p>R17. What are three important differences between the 3G and 4G cellular ­architectures?</p>
+</div>
+</section>
+<section id="id5">
+<h2>第7.5节与第7.6节<a class="headerlink" href="#id5" title="此标题的永久链接">#</a></h2>
+<p>R18. 如果一个节点通过无线连接接入因特网，该节点是否必须是移动的？请解释。假设一位用户拿着笔记本电脑在家中走动，并始终通过同一个接入点访问因特网。从网络角度看，这位用户是移动的吗？请解释。</p>
+<p>R19. 永久地址与转交地址之间有什么区别？谁负责分配转交地址？</p>
+<p>R20. 考虑一个通过移动IP建立的TCP连接。判断正误：从通信对应方到移动主机的TCP连接阶段通过移动主机的归属网络，但数据传输阶段是直接在通信对应方与移动主机之间进行的，绕过了归属网络。</p>
+<div class="toggle docutils container">
+<p>R18. If a node has a wireless connection to the Internet, does that node have to be mobile? Explain. Suppose that a user with a laptop walks around her house with her laptop, and always accesses the Internet through the same access point. Is this user mobile from a network standpoint? Explain.</p>
+<p>R19. What is the difference between a permanent address and a care-of address? Who assigns a care-of address?</p>
+<p>R20. Consider a TCP connection going over Mobile IP. True or false: The TCP connection phase between the correspondent and the mobile host goes through the mobile’s home network, but the data transfer phase is directly between the correspondent and the mobile host, bypassing the home network.</p>
+</div>
+</section>
+<section id="id6">
+<h2>第7.7节<a class="headerlink" href="#id6" title="此标题的永久链接">#</a></h2>
+<p>R21. HLR与VLR在GSM网络中的作用分别是什么？在移动IP中有哪些元素与HLR和VLR类似？</p>
+<p>R22. 锚定MSC在GSM网络中扮演什么角色？</p>
+<div class="toggle docutils container">
+<p>R21. What are the purposes of the HLR and VLR in GSM networks? What elements of mobile IP are similar to the HLR and VLR?</p>
+<p>R22. What is the role of the anchor MSC in GSM networks?</p>
+</div>
+</section>
+<section id="id7">
+<h2>第7.8节<a class="headerlink" href="#id7" title="此标题的永久链接">#</a></h2>
+<p>R23. 可以采取哪三种方法避免单一的无线链路影响端到端传输层TCP连接的性能？</p>
+<div class="toggle docutils container">
+<p>R23. What are three approaches that can be taken to avoid having a single ­wireless link degrade the performance of an end-to-end transport-layer TCP ­connection?</p>
+</div>
+</section>
+<section id="id8">
+<h2>问题<a class="headerlink" href="#id8" title="此标题的永久链接">#</a></h2>
+<p>Problems</p>
+<p>P1. 考虑 <a class="reference internal" href="s2.html#figure-7-5"><span class="std std-ref">图7.5</span></a> 中的单发送者CDMA示例。如果发送者的CDMA码为 (1,−1,1,−1,1,−1,1,−1)，那么发送者的输出（对应图中显示的2个数据位）会是什么？</p>
+<p>P2. 考虑 <a class="reference internal" href="s2.html#figure-7-6"><span class="std std-ref">图7.6</span></a> 中的发送者2。发送者发送到信道的输出（在与发送者1的信号相加之前），即 Zi,m2 是什么？</p>
+<p>P3. 假设 <a class="reference internal" href="s2.html#figure-7-6"><span class="std std-ref">图7.6</span></a> 中的接收者希望接收发送者2发送的数据。通过计算证明接收者确实能够利用发送者2的码从汇总的信道信号中恢复发送者2的数据。</p>
+<p>P4. 对于两个发送者、两个接收者的示例，举例说明两组包含1和-1值的CDMA码，这些码不能使两个接收者从两个CDMA发送者中提取出原始的传输比特。</p>
+<p>P5. 假设某咖啡馆内有两个ISP提供WiFi接入，每个ISP运行自己的AP并拥有自己的IP地址段。</p>
+<ol class="loweralpha simple">
+<li><p>假设两个ISP不小心都将其AP配置在了频道11上。802.11协议在这种情况下会完全失效吗？请讨论当两个分别连接到不同ISP的站点尝试同时发送时会发生什么。</p></li>
+<li><p>如果一个AP运行在频道1，另一个AP运行在频道11，你的答案有何变化？</p></li>
+</ol>
+<p>P6. 在CSMA/CA协议的第4步中，一个成功发送帧的站点在进行第二个帧的CSMA/CA流程时，从第2步开始而不是第1步开始。设计者为什么要让这样的站点在信道空闲时不立即发送第二个帧？</p>
+<p>P7. 假设一个802.11b站点配置为总是通过RTS/CTS序列保留信道。假设此站点突然要发送1000字节数据，并且此时其他站点均空闲。忽略传播延迟且假设无比特错误，基于SIFS和DIFS计算发送该帧并接收确认所需的时间。</p>
+<p>P8. 考虑 <a class="reference internal" href="#figure-7-34"><span class="std std-ref">图7.34</span></a> 中的场景，有四个无线节点A、B、C和D。四个节点的无线覆盖范围由阴影椭圆表示；所有节点共享同一频率。当A发送时，只有B能听到/接收；B发送时，A和C能听到/接收；C发送时，B和D能听到/接收；D发送时，只有C能听到/接收。</p>
+<figure class="align-center" id="figure-7-34">
+<img alt="../_images/649-0.png" src="../_images/649-0.png" />
+</figure>
+<p><strong>图7.34 问题P8的场景</strong></p>
+<p>假设每个节点都有无限的消息想发送给其他所有节点。如果消息的目的地不是直接邻居，则该消息必须中继。例如，若A想发送给D，则消息必须先从A发送到B，B再转发给C，C再转发给D。时间被划分为时隙，每条消息发送恰好占用一个时隙（例如时隙ALOHA）。在一个时隙内，节点可以执行以下操作之一：(i)发送消息，(ii)接收消息（前提是恰好有一个消息发送给它），(iii)保持静默。与往常一样，如果节点听到两个或更多同时发送的消息，则发生碰撞，所有消息均未成功接收。此处假设无比特错误，因此如果仅有一条消息发送，处于发送半径内的节点将正确接收该消息。</p>
+<ol class="loweralpha simple">
+<li><p>现假设一个全知控制器（即能够了解网络中每个节点状态的控制器）可以指挥每个节点做任何它想做的事情，即发送消息、接收消息或保持静默。假设网络中没有其他消息往返于其他源-目的对，在该全知控制器的指挥下，数据从C传输到A的最大速率是多少？</p></li>
+<li><p>现假设A向B发送消息，D向C发送消息。在此情况下，数据从A到B和从D到C的总最大传输速率是多少？</p></li>
+<li><p>现假设A向B发送消息，C向D发送消息。在此情况下，数据从A到B和从C到D的总最大传输速率是多少？</p></li>
+<li><p>现假设无线链路被有线链路替代。请在该有线场景下重新回答（a）到（c）的问题。</p></li>
+<li><p>现假设我们又回到无线场景，并且对于每条从源发送到目的地的数据消息，目的地都会发送一个ACK消息回源（例如TCP中的情况）。并且假设每条ACK消息占用一个时隙。请在此情景下重复回答（a）到（c）的问题。</p></li>
+</ol>
+<p>P9. 描述802.15.1蓝牙帧的格式。你需要在课外查阅相关资料以获得此信息。帧格式中是否存在某种机制固有限制802.15.1网络中最多只能有八个活动节点？请解释。</p>
+<p>P10. 考虑下列理想化的LTE场景。下行信道（见 <a class="reference internal" href="s4.html#figure-7-21"><span class="std std-ref">图7.21</span></a>）在时间上被划分为时隙，跨F个频率。基站可覆盖四个节点A、B、C和D，在下行信道上的可达速率分别为10 Mbps、5 Mbps、2.5 Mbps和1 Mbps。假设基站在所有F个频率上利用所有可用时隙向单一节点发送数据。基站有无限量数据要发送给各节点，可以在任意下行子帧的任意时隙使用任意频率向任一节点发送。</p>
+<ol class="loweralpha simple">
+<li><p>假设基站可在每个时隙选择向任一节点发送数据，其最大发送速率是多少？你的方案公平吗？请解释并定义你所说的“公平”。</p></li>
+<li><p>若公平性要求每个节点在每秒内必须接收相同数量的数据，则基站在下行子帧期间的平均发送速率是多少？请说明你的推导过程。</p></li>
+<li><p>假设公平性准则变为任一节点接收的数据最多是任一其他节点的两倍。则基站在下行子帧期间的平均发送速率是多少？请说明你的推导过程。</p></li>
+</ol>
+<p>P11. 在 <a class="reference internal" href="s5.html#c7-5"><span class="std std-ref">第7.5节</span></a> 中，提出的一种解决方案允许移动用户在不同外网间移动时保持其IP地址不变，该方案为外网发布一个针对移动用户的高度具体化路由，并利用现有路由基础设施传播该信息。我们指出了可扩展性问题。假设当移动用户从一个网络移动到另一个网络时，新外网发布一个具体路由给移动用户，旧外网撤销其路由。考虑距离矢量算法中路由信息的传播（特别是跨全球网络的域间路由）。</p>
+<ol class="loweralpha simple">
+<li><p>当外网开始发布其路由时，其他路由器能否立即将数据报路由到新外网？</p></li>
+<li><p>是否可能不同路由器认为移动用户存在于不同的外网？</p></li>
+<li><p>讨论其他路由器最终获知移动用户路径的时间尺度。</p></li>
+</ol>
+<p>P12. 假设 <a class="reference internal" href="s5.html#figure-7-23"><span class="std std-ref">图7.23</span></a> 中的通信对应方也是移动的。请绘制为了将数据报从原移动用户路由到（现已移动的）通信对应方所需的额外网络层基础设施。请像 <a class="reference internal" href="s5.html#figure-7-24"><span class="std std-ref">图7.24</span></a> 那样展示原移动用户与（现已移动的）通信对应方间数据报的结构。</p>
+<p>P13. 在移动IP中，移动性对源与目的地间数据报的端到端延迟有什么影响？</p>
+<p>P14. 考虑 <a class="reference internal" href="s7.html#c7-7-2"><span class="std std-ref">第7.7.2节</span></a> 末尾讨论的链式示例。假设移动用户访问外网A、B和C，并且通信对应方在移动用户处于外网A时开始连接。列出移动用户从网络A移动到网络B再到网络C时，外代理之间以及外代理与归属代理之间消息的序列。接着，假设不执行链式转发，且通信对应方及归属代理必须被明确通知移动用户的转交地址变化。列出第二种情景下需要交换的消息序列。</p>
+<p>P15. 考虑两个位于同一外网且有外代理的移动节点。这两个移动节点能否使用相同的移动IP转交地址？请说明你的答案。</p>
+<p>P16. 在讨论VLR如何将移动当前位置信息更新至HLR时，向HLR提供MSRN与提供VLR地址各有什么优缺点？</p>
+<div class="toggle docutils container">
+<p>P1. Consider the single-sender CDMA example in <a class="reference internal" href="s2.html#figure-7-5"><span class="std std-ref">Figure 7.5</span></a> . What would be the sender’s output (for the 2 data bits shown) if the sender’s CDMA code were (1,−1,1,−1,1,−1,1,−1)?</p>
+<p>P2. Consider sender 2 in <a class="reference internal" href="s2.html#figure-7-6"><span class="std std-ref">Figure 7.6</span></a> . What is the sender’s output to the channel (before it is added to the signal from sender 1), Zi,m2?</p>
+<p>P3. Suppose that the receiver in <a class="reference internal" href="s2.html#figure-7-6"><span class="std std-ref">Figure 7.6</span></a> wanted to receive the data being sent by sender 2. Show (by calculation) that the receiver is indeed able to recover sender 2’s data from the aggregate channel signal by using sender 2’s code.</p>
+<p>P4. For the two-sender, two-receiver example, give an example of two CDMA codes containing 1 and 21 values that do not allow the two receivers to extract the original transmitted bits from the two CDMA senders.</p>
+<p>P5. Suppose there are two ISPs providing WiFi access in a particular café, with each ISP operating its own AP and having its own IP address block.</p>
+<ol class="loweralpha simple">
+<li><p>Further suppose that by accident, each ISP has configured its AP to operate over channel 11. Will the 802.11 protocol completely break down in this situation? Discuss what happens when two stations, each associated with a different ISP, attempt to transmit at the same time.</p></li>
+<li><p>Now suppose that one AP operates over channel 1 and the other over channel 11. How do your answers change?</p></li>
+</ol>
+<p>P6. In step 4 of the CSMA/CA protocol, a station that successfully transmits a frame begins the CSMA/CA protocol for a second frame at step 2, rather than at step 1. What rationale might the designers of CSMA/CA have had in mind by having such a station not transmit the second frame immediately (if the channel is sensed idle)?</p>
+<p>P7. Suppose an 802.11b station is configured to always reserve the channel with the RTS/CTS sequence. Suppose this station suddenly wants to ­transmit 1,000 bytes of data, and all other stations are idle at this time. As a ­function of SIFS and DIFS, and ignoring propagation delay and assuming no bit errors, calculate the time required to transmit the frame and receive the acknowledgment.</p>
+<p>P8. Consider the scenario shown in <a class="reference internal" href="#figure-7-34"><span class="std std-ref">Figure 7.34</span></a> , in which there are four wireless nodes, A, B, C, and D. The radio coverage of the four nodes is shown via the shaded ovals; all nodes share the same frequency. When A transmits, it can only be heard/received by B; when B transmits, both A and C can hear/receive from B; when C transmits, both B and D can hear/receive from C; when D transmits, only C can hear/receive from D.</p>
+<figure class="align-center">
+<img alt="../_images/649-0.png" src="../_images/649-0.png" />
+</figure>
+<p><strong>Figure 7.34 Scenario for problem P8</strong></p>
+<p>Suppose now that each node has an infinite supply of messages that it wants to send to each of the other nodes. If a message’s destination is not an immediate neighbor, then the message must be relayed. For example, if A wants to send to D, a message from A must first be sent to B, which then sends the message to C, which then sends the message to D. Time is slotted, with a message transmission time taking exactly one time slot, e.g., as in slotted Aloha. During a slot, a node can do one of the following: (i) send a message, (ii) receive a message (if exactly one message is being sent to it), (iii) remain silent. As always, if a node hears two or more simultaneous transmissions, a collision occurs and none of the transmitted messages are received successfully. You can assume here that there are no bit-level errors, and thus if exactly one message is sent, it will be received correctly by those within the transmission radius of the sender.</p>
+<ol class="loweralpha simple">
+<li><p>Suppose now that an omniscient controller (i.e., a controller that knows the state of every node in the network) can command each node to do whatever it (the omniscient controller) wishes, i.e., to send a message, to receive a message, or to remain silent. Given this omniscient controller, what is the maximum rate at which a data message can be transferred from C to A, given that there are no other messages between any other source/destination pairs?</p></li>
+<li><p>Suppose now that A sends messages to B, and D sends messages to C. What is the combined maximum rate at which data messages can flow from A to B and from D to C?</p></li>
+<li><p>Suppose now that A sends messages to B, and C sends messages to D. What is the combined maximum rate at which data messages can flow from A to B and from C to D?</p></li>
+<li><p>Suppose now that the wireless links are replaced by wired links. Repeat questions (a) through (c) again in this wired scenario.</p></li>
+<li><p>Now suppose we are again in the wireless scenario, and that for every data message sent from source to destination, the destination will send an ACK message back to the source (e.g., as in TCP). Also suppose that each ACK message takes up one slot. Repeat questions (a)–(c) above for this scenario.</p></li>
+</ol>
+<p>P9. Describe the format of the 802.15.1 Bluetooth frame. You will have to do some reading outside of the text to find this information. Is there anything in the frame format that inherently limits the number of active nodes in an 802.15.1 network to eight active nodes? Explain.</p>
+<p>P10. Consider the following idealized LTE scenario. The downstream channel (see <a class="reference internal" href="s4.html#figure-7-21"><span class="std std-ref">Figure 7.21</span></a> ) is slotted in time, across F frequencies. There are four nodes, A, B, C, and D, reachable from the base station at rates of 10 Mbps, 5 Mbps, 2.5 Mbps, and 1 Mbps, respectively, on the downstream channel. These rates assume that the base station utilizes all time slots available on all F frequencies to send to just one station. The base station has an infinite amount of data to send to each of the nodes, and can send to any one of these four nodes using any of the F frequencies during any time slot in the ­downstream sub-frame.</p>
+<ol class="loweralpha simple">
+<li><p>What is the maximum rate at which the base station can send to the nodes, assuming it can send to any node it chooses during each time slot? Is your solution fair? Explain and define what you mean by “fair.”</p></li>
+<li><p>If there is a fairness requirement that each node must receive an equal amount of data during each one second interval, what is the average transmission rate by the base station (to all nodes) during the downstream sub-frame? Explain how you arrived at your answer.</p></li>
+<li><p>Suppose that the fairness criterion is that any node can receive at most twice as much data as any other node during the sub-frame. What is the average transmission rate by the base station (to all nodes) during the sub-frame? Explain how you arrived at your answer.</p></li>
+</ol>
+<p>P11. In <a class="reference internal" href="s5.html#c7-5"><span class="std std-ref">Section 7.5</span></a> , one proposed solution that allowed mobile users to maintain their IP addresses as they moved among foreign networks was to have a foreign network advertise a highly specific route to the mobile user and use the existing routing infrastructure to propagate this information throughout the network. We identified scalability as one concern. Suppose that when a mobile user moves from one network to another, the new foreign network advertises a specific route to the mobile user, and the old foreign network withdraws its route. Consider how routing information propagates in a distance-vector algorithm (particularly for the case of interdomain routing among networks that span the globe).</p>
+<ol class="loweralpha simple">
+<li><p>Will other routers be able to route datagrams immediately to the new foreign network as soon as the foreign network begins advertising its route?</p></li>
+<li><p>Is it possible for different routers to believe that different foreign networks contain the mobile user?</p></li>
+<li><p>Discuss the timescale over which other routers in the network will eventually learn the path to the mobile users.</p></li>
+</ol>
+<p>P12. Suppose the correspondent in <a class="reference internal" href="s5.html#figure-7-23"><span class="std std-ref">Figure 7.23</span></a> were mobile. Sketch the additional network- layer infrastructure that would be needed to route the datagram from the original mobile user to the (now mobile) correspondent. Show the structure of the datagram(s) between the original mobile user and the (now mobile) correspondent, as in <a class="reference internal" href="s5.html#figure-7-24"><span class="std std-ref">Figure 7.24</span></a> .</p>
+<p>P13. In mobile IP, what effect will mobility have on end-to-end delays of datagrams between the source and destination?</p>
+<p>P14. Consider the chaining example discussed at the end of <a class="reference internal" href="s7.html#c7-7-2"><span class="std std-ref">Section 7.7.2</span></a> . Suppose a mobile user visits foreign networks A, B, and C, and that a correspondent begins a connection to the mobile user when it is resident in foreign ­network A. List the sequence of messages between foreign agents, and between foreign agents and the home agent as the mobile user moves from network A to network B to network C. Next, suppose chaining is not performed, and the correspondent (as well as the home agent) must be explicitly notified of the changes in the mobile user’s care-of address. List the sequence of messages that would need to be exchanged in this second scenario.</p>
+<p>P15. Consider two mobile nodes in a foreign network having a foreign agent. Is it possible for the two mobile nodes to use the same care-of address in mobile IP? Explain your answer.</p>
+<p>P16. In our discussion of how the VLR updated the HLR with information about the mobile’s current location, what are the advantages and disadvantages of providing the MSRN as opposed to the address of the VLR to the HLR?</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="summary.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">7.9 小结</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="wiresharklab.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">Wireshark 实验室</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">第7.1节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">第7.2节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">第7.3节与第7.4节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">第7.5节与第7.6节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">第7.7节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">第7.8节</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">问题</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

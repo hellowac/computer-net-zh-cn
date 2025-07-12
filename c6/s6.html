@@ -1,0 +1,648 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>6.6 数据中心网络 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c6/s6';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="6.7 回顾：网页请求生命周期中的一天" href="s7.html" />
+    <link rel="prev" title="6.5 链路虚拟化：作为链路层的网络" href="s5.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 6 章 链路层与局域网（LANs）</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c6/s6.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>6.6 数据中心网络</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">负载均衡</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">分层架构</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">数据中心网络的发展趋势</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c6-6">
+<span id="id1"></span><h1>6.6 数据中心网络<a class="headerlink" href="#c6-6" title="此标题的永久链接">#</a></h1>
+<p>6.6 Data Center Networking</p>
+<p>近年来，互联网公司如 Google、Microsoft、Facebook 和 Amazon（以及它们在亚洲和欧洲的对应公司）构建了大规模的数据中心，每个数据中心容纳数万到数十万台主机，同时支持多种不同的云应用（如搜索、电子邮件、社交网络和电子商务）。每个数据中心拥有自己的数据中心网络，用以连接其内部主机并将数据中心连接到互联网。在本节中，我们将简要介绍面向云应用的 <strong>数据中心网络</strong>。</p>
+<p>一个大型数据中心的成本非常高，对于一个拥有 100,000 台主机的数据中心来说，每月成本超过 1200 万美元 <a class="reference internal" href="../references.html#greenberg-2009a"><span class="std std-ref">[Greenberg 2009a]</span></a>。在这些成本中，大约 45% 可归因于主机本身（每 3–4 年需要更换一次）；25% 用于基础设施，包括变压器、不间断电源（UPS）系统、长时间断电时的发电机以及冷却系统；15% 为电力成本；15% 为网络相关成本，包括网络设备（交换机、路由器和负载均衡器）、外部链路和中转流量成本。（在这些百分比中，设备成本是按摊销计算的，以便对一次性采购和持续性开销（如电力）使用统一的成本指标。）虽然网络并不是最大的成本项，但网络创新是降低整体成本并最大化性能的关键 <a class="reference internal" href="../references.html#greenberg-2009a"><span class="std std-ref">[Greenberg 2009a]</span></a>。</p>
+<p>数据中心中的“工蜂”是主机：它们提供内容（如网页和视频），存储电子邮件和文档，并集体执行大规模分布式计算（如搜索引擎的分布式索引计算）。数据中心中的主机称为 <strong>刀片（blades）</strong>，外形类似披萨盒，通常为包含 CPU、内存和磁盘存储的商用主机。这些主机被堆叠在机架中，每个机架通常拥有 20 到 40 个刀片。在每个机架顶部有一个交换机，称为 <strong>Top of Rack（TOR）交换机</strong>，用于连接机架内主机及连接数据中心中其他交换机。具体而言，机架中的每台主机都通过网络接口卡连接到其 TOR 交换机，每个 TOR 交换机还有额外的端口可用于连接其他交换机。如今，主机通常通过 40 Gbps 的以太网连接到其 TOR 交换机 <a class="reference internal" href="../references.html#greenberg-2015"><span class="std std-ref">[Greenberg 2015]</span></a>。每台主机还被分配一个数据中心内部的 IP 地址。</p>
+<p>数据中心网络支持两种类型的流量：外部客户端与内部主机之间的流量，以及内部主机之间的流量。为了处理外部客户端与内部主机之间的流量，数据中心网络包括一个或多个 <strong>边界路由器</strong>，将数据中心网络连接到公共互联网。因此，数据中心网络既互连各个机架，又将机架连接到边界路由器。<a class="reference internal" href="#figure-6-30"><span class="std std-ref">图 6.30</span></a> 展示了一个数据中心网络的示例。<strong>数据中心网络设计</strong>，即设计用于连接各个机架和边界路由器的互联网络及协议的技术，近年来已成为计算机网络研究的重要分支 [<a class="reference internal" href="../references.html#al-fares-2008"><span class="std std-ref">Al-Fares 2008</span></a>; <a class="reference internal" href="../references.html#greenberg-2009a"><span class="std std-ref">Greenberg 2009a</span></a>; <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">Greenberg 2009b</span></a>; <a class="reference internal" href="../references.html#mysore-2009"><span class="std std-ref">Mysore 2009</span></a>; <a class="reference internal" href="../references.html#guo-2009"><span class="std std-ref">Guo 2009</span></a>; <a class="reference internal" href="../references.html#wang-2010"><span class="std std-ref">Wang 2010</span></a>]。</p>
+<figure class="align-center" id="figure-6-30">
+<img alt="../_images/553-0.png" src="../_images/553-0.png" />
+</figure>
+<p><strong>图 6.30 一种具有分层拓扑结构的数据中心网络</strong></p>
+<div class="toggle docutils container">
+<p>In recent years, Internet companies such as Google, Microsoft, Facebook, and ­Amazon (as well as their counterparts in Asia and Europe) have built massive data centers, each housing tens to hundreds of thousands of hosts, and concurrently supporting many distinct cloud applications (e.g., search, e-mail, social networking, and e-commerce). Each data center has its own data center network that interconnects its hosts with each other and interconnects the data center with the Internet. In this section, we provide a brief introduction to <strong>data center networking</strong> for cloud applications.</p>
+<p>The cost of a large data center is huge, exceeding $12 million per month for a 100,000 host data center <a class="reference internal" href="../references.html#greenberg-2009a"><span class="std std-ref">[Greenberg 2009a]</span></a>. Of these costs, about 45 percent can be attributed to the hosts themselves (which need to be replaced every 3–4 years); 25 percent to infrastructure, including transformers, uninterruptable power supplies (UPS) systems, generators for long-term outages, and cooling systems; 15 percent for electric utility costs for the power draw; and 15 percent for networking, including network gear (switches, routers and load balancers), external links, and transit traffic costs. (In these percentages, costs for equipment are amortized so that a common cost metric is applied for one-time purchases and ongoing expenses such as power.) While networking is not the largest cost, networking innovation is the key to reducing overall cost and maximizing performance <a class="reference internal" href="../references.html#greenberg-2009a"><span class="std std-ref">[Greenberg 2009a]</span></a>.</p>
+<p>The worker bees in a data center are the hosts: They serve content (e.g., Web pages and videos), store e-mails and documents, and collectively perform massively distributed computations (e.g., distributed index computations for search engines). The hosts in data centers, called <strong>blades</strong> and resembling pizza boxes, are generally commodity hosts that include CPU, memory, and disk storage. The hosts are stacked in racks, with each rack typically having 20 to 40 blades. At the top of each rack there is a switch, aptly named the <strong>Top of Rack (TOR) switch</strong>, that interconnects the hosts in the rack with each other and with other switches in the data center. Specifically, each host in the rack has a network interface card that connects to its TOR switch, and each TOR switch has additional ports that can be connected to other switches. Today hosts typically have 40 Gbps Ethernet connections to their TOR switches <a class="reference internal" href="../references.html#greenberg-2015"><span class="std std-ref">[Greenberg 2015]</span></a>. Each host is also assigned its own data-center-internal IP address.</p>
+<p>The data center network supports two types of traffic: traffic flowing between external clients and internal hosts and traffic flowing between internal hosts. To handle flows between external clients and internal hosts, the data center network includes one or more <strong>border routers</strong>, connecting the data center network to the public Internet. The data center network therefore interconnects the racks with each other and connects the racks to the border routers. <a class="reference internal" href="#figure-6-30"><span class="std std-ref">Figure 6.30</span></a> shows an example of a data center network. <strong>Data center network design</strong>, the art of designing the interconnection network and protocols that connect the racks with each other and with the border routers, has become an important branch of computer networking research in recent years [<a class="reference internal" href="../references.html#al-fares-2008"><span class="std std-ref">Al-Fares 2008</span></a>; <a class="reference internal" href="../references.html#greenberg-2009a"><span class="std std-ref">Greenberg 2009a</span></a>; <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">Greenberg 2009b</span></a>; <a class="reference internal" href="../references.html#mysore-2009"><span class="std std-ref">Mysore 2009</span></a>; <a class="reference internal" href="../references.html#guo-2009"><span class="std std-ref">Guo 2009</span></a>; <a class="reference internal" href="../references.html#wang-2010"><span class="std std-ref">Wang 2010</span></a>].</p>
+<figure class="align-center">
+<img alt="../_images/553-0.png" src="../_images/553-0.png" />
+</figure>
+<p><strong>Figure 6.30 A data center network with a hierarchical topology</strong></p>
+</div>
+<section id="id2">
+<h2>负载均衡<a class="headerlink" href="#id2" title="此标题的永久链接">#</a></h2>
+<p>Load Balancing</p>
+<p>像 Google 或 Microsoft 这样的云数据中心可同时提供多种应用，如搜索、电子邮件和视频应用。为了支持来自外部客户端的请求，每个应用都关联有一个公共可见的 IP 地址，客户端将请求发送到该地址，并从中接收响应。在数据中心内部，外部请求首先被定向到一个 <strong>负载均衡器</strong>，该负载均衡器负责将请求分发给主机，根据其当前负载在主机之间实现负载均衡。一个大型数据中心通常有多个负载均衡器，每个负责一组特定的云应用。这类负载均衡器有时被称为“第 4 层交换机”，因为它基于分组中的目标端口号（第 4 层）以及目标 IP 地址做出决策。当负载均衡器接收到某个特定应用的请求时，它会将该请求转发给处理该应用的某个主机。（主机随后可能会调用其他主机的服务来协助处理请求。）当主机完成请求处理后，会将响应发送回负载均衡器，后者再将响应转发给外部客户端。负载均衡器不仅在主机之间均衡负载，还提供类似 NAT 的功能，将公共外部 IP 地址转换为适当主机的内部 IP 地址，反向方向的分组也执行相应转换。这一机制防止了客户端直接与主机联系，具有隐藏内部网络结构和防止客户端直接访问主机的安全优势。</p>
+<div class="toggle docutils container">
+<p>A cloud data center, such as a Google or Microsoft data center, provides many applications concurrently, such as search, e-mail, and video applications. To support requests from external clients, each application is associated with a publicly visible IP address to which clients send their requests and from which they receive responses. Inside the data center, the external requests are first directed to a <strong>load balancer</strong> whose job it is to distribute requests to the hosts, balancing the load across the hosts as a function of their current load. A large data center will often have several load balancers, each one devoted to a set of specific cloud applications. Such a load balancer is sometimes referred to as a “layer-4 switch” since it makes decisions based on the destination port number (layer 4) as well as destination IP address in the packet. Upon receiving a request for a particular application, the load balancer forwards it to one of the hosts that handles the application. (A host may then invoke the services of other hosts to help process the request.) When the host finishes processing the request, it sends its response back to the load balancer, which in turn relays the response back to the external client. The load balancer not only balances the work load across hosts, but also provides a NAT-like function, translating the public external IP address to the internal IP address of the appropriate host, and then translating back for packets traveling in the reverse direction back to the clients. This prevents clients from contacting hosts directly, which has the security benefit of hiding the internal network structure and preventing clients from directly interacting with the hosts.</p>
+</div>
+</section>
+<section id="id3">
+<h2>分层架构<a class="headerlink" href="#id3" title="此标题的永久链接">#</a></h2>
+<p>Hierarchical Architecture</p>
+<p>对于仅容纳几千台主机的小型数据中心，由边界路由器、负载均衡器以及通过单个以太网交换机互连的几十个机架组成的简单网络可能就足够了。但为了扩展到数万乃至数十万台主机，数据中心通常采用如 <a class="reference internal" href="#figure-6-30"><span class="std std-ref">图 6.30</span></a> 所示的 <strong>路由器和交换机的分层结构</strong>。在分层结构的顶部，边界路由器连接到接入路由器（<a class="reference internal" href="#figure-6-30"><span class="std std-ref">图 6.30</span></a> 仅展示两个，但实际上可能有更多）。每个接入路由器下有三层交换机。每个接入路由器连接到一个顶层交换机，每个顶层交换机连接多个第二层交换机和一个负载均衡器。每个第二层交换机又通过 TOR（第三层交换机）连接多个机架。所有链路通常使用以太网协议作为链路层和物理层协议，混合使用铜缆和光纤。采用这种分层设计，可以将数据中心扩展到数十万台主机。</p>
+<p>由于云应用提供商持续提供高可用应用至关重要，数据中心还包括冗余的网络设备和冗余链路设计（<a class="reference internal" href="#figure-6-30"><span class="std std-ref">图 6.30</span></a> 中未显示）。例如，每个 TOR 交换机可以连接到两个第二层交换机，每个接入路由器、第一层交换机和第二层交换机都可以复制并集成到设计中 [<a class="reference internal" href="../references.html#cisco-2012"><span class="std std-ref">Cisco 2012</span></a>; <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">Greenberg 2009b</span></a>]。在 <a class="reference internal" href="#figure-6-30"><span class="std std-ref">图 6.30</span></a> 的分层设计中，注意到每个接入路由器下的主机构成一个子网。为了限制 ARP 广播流量，每个这样的子网被进一步划分为包含几百台主机的 VLAN 子网 <a class="reference internal" href="../references.html#greenberg-2009a"><span class="std std-ref">[Greenberg 2009a]</span></a>。</p>
+<p>尽管上述传统分层架构解决了可扩展性问题，但它存在主机到主机通信能力受限的问题 <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">[Greenberg 2009b]</span></a>。为了解这一限制，再次参考 <a class="reference internal" href="#figure-6-30"><span class="std std-ref">图 6.30</span></a>，假设每台主机通过 1 Gbps 链路连接到 TOR 交换机，而交换机之间的链路为 10 Gbps。处于同一机架的两个主机总是可以以 1 Gbps 全速通信，唯一限制来自主机的网络接口卡。但如果数据中心网络中存在大量同时的流，那么两个不同机架的主机之间的最大通信速率可能会大幅下降。为说明此问题，考虑包含 40 对来自不同机架主机之间的 40 个同时流的流量模式。具体而言，假设 <a class="reference internal" href="#figure-6-30"><span class="std std-ref">图 6.30</span></a> 中机架 1 中的 10 台主机分别向机架 5 中对应的 10 台主机发送流；类似地，机架 2 与 6、机架 3 与 7、机架 4 与 8 各有 10 个流。如果每个流在通过链路时平均分配链路容量，则通过 A 到 B 链路（以及 B 到 C 链路）的 40 个流将各自仅获得 10 Gbps / 40 = 250 Mbps 的带宽，这远低于主机网卡的 1 Gbps 速率。对于需要穿越更高层的流而言，问题将更加严重。一种解决方案是部署更高速率的交换机和路由器。但这将显著增加数据中心成本，因为高速率端口的交换机和路由器价格非常昂贵。</p>
+<p>支持高带宽主机到主机通信很重要，因为数据中心的一个关键要求是计算和服务的部署灵活性 [<a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">Greenberg 2009b</span></a>; <a class="reference internal" href="../references.html#farrington-2010"><span class="std std-ref">Farrington 2010</span></a>]。例如，大规模互联网搜索引擎可能在分布于多个机架的数千台主机上运行，主机间带宽需求很大。同样，像 EC2 这样的云计算服务可能希望将组成客户服务的多个虚拟机部署在数据中心内任意位置容量最足的物理主机上。如果这些主机分布在多个机架中，上述网络瓶颈可能导致性能不佳。</p>
+<div class="toggle docutils container">
+<p>For a small data center housing only a few thousand hosts, a simple network consisting of a border router, a load balancer, and a few tens of racks all interconnected by a single Ethernet switch could possibly suffice. But to scale to tens to hundreds of thousands of hosts, a data center often employs a <strong>hierarchy of routers and switches</strong>, such as the topology shown in <a class="reference internal" href="#figure-6-30"><span class="std std-ref">Figure 6.30</span></a>. At the top of the hierarchy, the border router connects to access routers (only two are shown in <a class="reference internal" href="#figure-6-30"><span class="std std-ref">Figure 6.30</span></a>, but there can be many more). Below each access router there are three tiers of switches. Each access router connects to a top-tier switch, and each top-tier switch connects to multiple second-tier switches and a load balancer. Each second-tier switch in turn connects to multiple racks via the racks’ TOR switches (third-tier switches). All links typically use Ethernet for their link-layer and physical-layer protocols, with a mix of copper and fiber cabling. With such a hierarchical design, it is possible to scale a data center to hundreds of thousands of hosts.</p>
+<p>Because it is critical for a cloud application provider to continually provide applications with high availability, data centers also include redundant network equipment and redundant links in their designs (not shown in <a class="reference internal" href="#figure-6-30"><span class="std std-ref">Figure 6.30</span></a>). For example, each TOR switch can connect to two tier-2 switches, and each access router, tier-1 switch, and tier-2 switch can be duplicated and integrated into the design [<a class="reference internal" href="../references.html#cisco-2012"><span class="std std-ref">Cisco 2012</span></a>; <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">Greenberg 2009b</span></a>]. In the hierarchical design in <a class="reference internal" href="#figure-6-30"><span class="std std-ref">Figure 6.30</span></a>, observe that the hosts below each access router form a single subnet. In order to localize ARP broadcast traffic, each of these subnets is
+further partitioned into smaller VLAN subnets, each comprising a few hundred hosts <a class="reference internal" href="../references.html#greenberg-2009a"><span class="std std-ref">[Greenberg 2009a]</span></a>.</p>
+<p>Although the conventional hierarchical architecture just described solves the problem of scale, it suffers from limited host-to-host capacity <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">[Greenberg 2009b]</span></a>. To understand this limitation, consider again <a class="reference internal" href="#figure-6-30"><span class="std std-ref">Figure 6.30</span></a>, and suppose each host connects to its TOR switch with a 1 Gbps link, whereas the links between switches are 10 Gbps Ethernet links. Two hosts in the same rack can always communicate at a full 1 Gbps, limited only by the rate of the hosts’ network interface cards. However, if there are many simultaneous flows in the data center network, the maximum rate between two hosts in different racks can be much less. To gain insight into this issue, consider a traffic pattern consisting of 40 simultaneous flows between 40 pairs of hosts in different racks. Specifically, suppose each of 10 hosts in rack 1 in <a class="reference internal" href="#figure-6-30"><span class="std std-ref">Figure 6.30</span></a> sends a flow to a corresponding host in rack 5. Similarly, there are ten simultaneous flows between pairs of hosts in racks 2 and 6, ten simultaneous flows between racks 3 and 7, and ten simultaneous flows between racks 4 and 8. If each flow evenly shares a link’s capacity with other flows traversing that link, then the 40 flows crossing the 10 Gbps A-to-B link (as well as the 10 Gbps B-to-C link) will each only receive 10 Gbps/40=250 Mbps, which is significantly less than the 1 Gbps network interface card rate. The problem becomes even more acute for flows between hosts that need to travel higher up the hierarchy. One possible solution to this limitation is to deploy higher-rate switches and routers. But this would significantly increase the cost of the data center, because switches and routers with high port speeds are very expensive.</p>
+<p>Supporting high-bandwidth host-to-host communication is important because a key requirement in data centers is flexibility in placement of computation and services [<a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">Greenberg 2009b</span></a>; <a class="reference internal" href="../references.html#farrington-2010"><span class="std std-ref">Farrington 2010</span></a>]. For example, a large-scale Internet search engine may run on thousands of hosts spread across multiple racks with significant bandwidth requirements between all pairs of hosts. Similarly, a cloud computing service such as EC2 may wish to place the multiple virtual machines comprising a customer’s service on the physical hosts with the most capacity irrespective of their location in the data center. If these physical hosts are spread across multiple racks, network bottlenecks as described above may result in poor performance.</p>
+</div>
+</section>
+<section id="id4">
+<h2>数据中心网络的发展趋势<a class="headerlink" href="#id4" title="此标题的永久链接">#</a></h2>
+<p>Trends in Data Center Networking</p>
+<p>为了降低数据中心成本，同时提升其延迟和吞吐性能，Google、Facebook、Amazon 和 Microsoft 等互联网云巨头不断部署新的数据中心网络设计。尽管这些设计是专有的，但仍能识别出许多重要的发展趋势。</p>
+<p>其中一个趋势是部署新的互联架构和网络协议，以克服传统分层设计的缺点。一种做法是使用 <strong>全互联拓扑</strong> 替代交换机和路由器的分层结构 [<a class="reference internal" href="../references.html#facebook-2014"><span class="std std-ref">Facebook 2014</span></a>; <a class="reference internal" href="../references.html#al-fares-2008"><span class="std std-ref">Al-Fares 2008</span></a>; <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">Greenberg 2009b</span></a>; <a class="reference internal" href="../references.html#guo-2009"><span class="std std-ref">Guo 2009</span></a>]，如 <a class="reference internal" href="#figure-6-31"><span class="std std-ref">图 6.31</span></a> 所示。在该设计中，每个第一层交换机连接到所有的第二层交换机，以便（1）主机间通信无需跨越交换层级；（2）在有 n 个第一层交换机的情况下，任意两个第二层交换机之间存在 n 条不相交路径。这种设计可显著提升主机到主机容量。仍以 40 个流的示例为例，图 6.31 中的拓扑可以处理这种流量模式，因为在第一个和第二个第二层交换机之间存在四条路径，合计提供 40 Gbps 的总带宽。这种设计不仅缓解了主机间通信容量限制，还创建了一个更灵活的计算与服务环境，使得不连接到同一交换机的任意两个机架间通信在逻辑上等效，无论其在数据中心中的位置如何。</p>
+<p>另一个主要趋势是采用基于集装箱的模块化数据中心（MDC） [<a class="reference internal" href="../references.html#youtube-2009"><span class="std std-ref">YouTube 2009</span></a>; <a class="reference internal" href="../references.html#waldrop-2007"><span class="std std-ref">Waldrop 2007</span></a>]。在 MDC 中，工厂在一个标准 12 米集装箱内建造一个“迷你数据中心”，并将该集装箱运送至数据中心位置。每个集装箱最多可容纳几千台主机，这些主机密集堆叠在数十个机架中。在数据中心现场，多个集装箱彼此互联并连接到互联网。一旦预制集装箱部署到数据中心，通常很难维护。因此，每个集装箱设计为可优雅降级：随着组件（服务器和交换机）逐渐失效，集装箱继续运行但性能下降。当多个组件失效并导致性能低于阈值时，该集装箱将被整体更换。</p>
+<figure class="align-center">
+<img alt="../_images/556-0.png" src="../_images/556-0.png" />
+</figure>
+<p id="figure-6-31"><strong>图 6.31 高度互联的数据中心网络拓扑</strong></p>
+<p>用集装箱构建数据中心带来了新的网络挑战。使用 MDC 时存在两类网络：集装箱内部网络以及连接各集装箱的核心网络 [<a class="reference internal" href="../references.html#guo-2009"><span class="std std-ref">Guo 2009</span></a>; <a class="reference internal" href="../references.html#farrington-2010"><span class="std std-ref">Farrington 2010</span></a>]。在每个集装箱内部，规模达到几千台主机，可以使用廉价商用千兆以太网交换机构建全互联网络（如上所述）。然而，核心网络的设计，即在数百到数千个集装箱之间提供高主机间带宽，仍是一个挑战性问题。文献 <a class="reference internal" href="../references.html#farrington-2010"><span class="std std-ref">[Farrington 2010]</span></a> 提出了用于互联集装箱的电/光混合交换架构。</p>
+<p>使用高度互联拓扑时，一个主要问题是设计交换机间的路由算法。一种可能性 <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">[Greenberg 2009b]</span></a> 是使用某种形式的随机路由。另一种可能性 <a class="reference internal" href="../references.html#guo-2009"><span class="std std-ref">[Guo 2009]</span></a> 是在每个主机上部署多个网络接口卡，将其连接到多个廉价交换机上，并允许主机本身智能地在交换机间路由流量。这些方法的变体和扩展目前正被部署到现代数据中心中。</p>
+<p>另一个重要趋势是大型云服务提供商越来越多地自建或定制数据中心中的几乎所有组件，包括网络适配器、交换机、路由器、TOR、软件和网络协议 [<a class="reference internal" href="../references.html#greenberg-2015"><span class="std std-ref">Greenberg 2015</span></a>, <a class="reference internal" href="../references.html#singh-2015"><span class="std std-ref">Singh 2015</span></a>]。Amazon 首创的另一个趋势是通过“可用区（availability zones）”提升可靠性，本质上是在附近的不同建筑中复制独立的数据中心。通过让建筑彼此靠近（相距数公里），可以在同一可用区内同步事务性数据，同时提供容错能力 <a class="reference internal" href="../references.html#amazon-2014"><span class="std std-ref">[Amazon 2014]</span></a>。未来还将不断涌现更多关于数据中心设计的创新；感兴趣的读者可以查阅最新的关于数据中心网络设计的论文和视频。</p>
+<div class="toggle docutils container">
+<p>In order to reduce the cost of data centers, and at the same time improve their delay and throughput performance, Internet cloud giants such as Google, Facebook, ­Amazon, and Microsoft are continually deploying new data center network designs. Although these designs are proprietary, many important trends can nevertheless be identified.</p>
+<p>One such trend is to deploy new interconnection architectures and network protocols that overcome the drawbacks of the traditional hierarchical designs. One such approach is to replace the hierarchy of switches and routers with a <strong>fully connected topology</strong> [<a class="reference internal" href="../references.html#facebook-2014"><span class="std std-ref">Facebook 2014</span></a>; <a class="reference internal" href="../references.html#al-fares-2008"><span class="std std-ref">Al-Fares 2008</span></a>; <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">Greenberg 2009b</span></a>; <a class="reference internal" href="../references.html#guo-2009"><span class="std std-ref">Guo 2009</span></a>], such as the topology shown in <a class="reference internal" href="#figure-6-31"><span class="std std-ref">Figure 6.31</span></a>. In this design, each tier-1 switch connects to all of the tier-2 switches so that (1) host-to-host traffic never has to rise above the switch tiers, and (2) with n tier-1 switches, between any two tier-2 switches there are n disjoint paths. Such a design can significantly improve the host-to-host capacity. To see this, consider again our example of 40 flows. The topology in Figure 6.31 can handle such a flow pattern since there are four distinct paths between the first tier-2 switch and the second tier-2 switch, together providing an aggregate capacity of 40 Gbps between the first two tier-2 switches. Such a design not only alleviates the host-to-host capacity limitation, but also creates a more flexible computation and service environment in which communication between any two racks not connected to the same switch is logically equivalent, irrespective of their locations in the data center.</p>
+<p>Another major trend is to employ shipping container–based modular data centers (MDCs) [<a class="reference internal" href="../references.html#youtube-2009"><span class="std std-ref">YouTube 2009</span></a>; <a class="reference internal" href="../references.html#waldrop-2007"><span class="std std-ref">Waldrop 2007</span></a>]. In an MDC, a factory builds, within a standard 12-meter shipping container, a “mini data center” and ships the container to the data center location. Each container has up to a few thousand hosts, stacked in tens of racks, which are packed closely together. At the data center location, multiple containers are interconnected with each other and also with the Internet. Once a prefabricated container is deployed at a data center, it is often difficult to service. Thus, each container is designed for graceful performance degradation: as components (servers and switches) fail over time, the container continues to operate but with degraded performance. When many components have failed and performance has dropped below a threshold, the entire container is removed and replaced with a fresh one.</p>
+<figure class="align-center">
+<img alt="../_images/556-0.png" src="../_images/556-0.png" />
+</figure>
+<p><strong>Figure 6.31 Highly interconnected data network topology</strong></p>
+<p>Building a data center out of containers creates new networking challenges. With an MDC, there are two types of networks: the container-internal networks within each of the containers and the core network connecting each container [<a class="reference internal" href="../references.html#guo-2009"><span class="std std-ref">Guo 2009</span></a>; <a class="reference internal" href="../references.html#farrington-2010"><span class="std std-ref">Farrington 2010</span></a>]. Within each container, at the scale of up to a few thousand hosts, it is possible to build a fully connected network (as described above) using inexpensive commodity Gigabit Ethernet switches. However, the design of the core network, interconnecting hundreds to thousands of containers while providing high host-to-host bandwidth across containers for typical workloads, remains a challenging problem. A hybrid electrical/optical switch architecture for interconnecting the containers is proposed in <a class="reference internal" href="../references.html#farrington-2010"><span class="std std-ref">[Farrington 2010]</span></a>.</p>
+<p>When using highly interconnected topologies, one of the major issues is designing routing algorithms among the switches. One possibility <a class="reference internal" href="../references.html#greenberg-2009b"><span class="std std-ref">[Greenberg 2009b]</span></a> is to use a form of random routing. Another possibility <a class="reference internal" href="../references.html#guo-2009"><span class="std std-ref">[Guo 2009]</span></a> is to deploy multiple network interface cards in each host, connect each host to multiple low-cost commodity switches, and allow the hosts themselves to intelligently route traffic among the switches. Variations and extensions of these approaches are currently being deployed in contemporary data centers.</p>
+<p>Another important trend is that large cloud providers are increasingly building or customizing just about everything that is in their data centers, including network adapters, switches routers, TORs, software, and networking protocols [<a class="reference internal" href="../references.html#greenberg-2015"><span class="std std-ref">Greenberg 2015</span></a>, <a class="reference internal" href="../references.html#singh-2015"><span class="std std-ref">Singh 2015</span></a>]. Another trend, pioneered by Amazon, is to improve reliability with “availability zones,” which essentially replicate distinct data centers in different nearby buildings. By having the buildings nearby (a few kilometers apart), transactional data can be synchronized across the data centers in the same availability zone while providing fault tolerance <a class="reference internal" href="../references.html#amazon-2014"><span class="std std-ref">[Amazon 2014]</span></a>. Many more innovations in data center design are likely to continue to come; interested readers are encouraged to see the recent papers and videos on data center network design.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s5.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">6.5 链路虚拟化：作为链路层的网络</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s7.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">6.7 回顾：网页请求生命周期中的一天</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">负载均衡</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">分层架构</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">数据中心网络的发展趋势</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

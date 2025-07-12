@@ -1,0 +1,695 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>8.4 终端认证 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c8/s4';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="8.5 电子邮件安全" href="s5.html" />
+    <link rel="prev" title="8.3 消息完整性和数字签名" href="s3.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 8 章 计算机网络中的安全</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c8/s4.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>8.4 终端认证</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap1-0">8.4.1 认证协议 ap1.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap2-0">8.4.2 认证协议 ap2.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap3-0">8.4.3 认证协议 ap3.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap3-1">8.4.4 认证协议 ap3.1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap4-0">8.4.5 认证协议 ap4.0</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c8-4">
+<span id="id1"></span><h1>8.4 终端认证<a class="headerlink" href="#c8-4" title="此标题的永久链接">#</a></h1>
+<p>8.4 End-Point Authentication</p>
+<p><strong>终端认证</strong> （End-point authentication）是指一个实体在计算机网络上向另一个实体证明自己身份的过程，例如，一个用户向电子邮件服务器证明其身份。作为人类，我们以多种方式相互认证：我们在见面时通过面孔相互识别，在电话中通过声音相互识别，海关官员通过核对护照上的照片来认证我们的身份。</p>
+<p>在本节中，我们考虑两个通过网络通信的实体之间如何相互认证。我们重点关注在通信实际发生时，对“在线”一方进行认证的过程。一个具体的例子是用户向电子邮件服务器认证其身份。这与在 <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">第8.3节</span></a> 中研究的问题略有不同，后者关注的是如何证明某条消息确实来自所声称的发送者，即使消息是在过去某个时刻收到的。</p>
+<p>在网络上执行身份认证时，通信双方无法依赖生物识别信息，例如外貌或声音特征。事实上，我们将在后续的案例研究中看到，往往是网络元素（如路由器和客户端/服务器进程）需要彼此认证。在这种情况下，认证只能基于 <strong>认证协议</strong> 中交换的消息和数据来完成。通常，认证协议在通信双方运行其他协议之前运行（例如可靠数据传输协议、路由信息交换协议或电子邮件协议）。认证协议首先建立双方对彼此身份的认可；只有在完成认证后，双方才开始后续的通信工作。</p>
+<p>就像我们在 <a class="reference internal" href="../c3/index.html#c3"><span class="std std-ref">第3章</span></a> 中开发可靠数据传输（rdt）协议那样，我们会发现，通过开发多个版本的认证协议（我们称之为 <strong>ap</strong>，即 authentication protocol）并逐步发现各个版本中的漏洞，是一种很有启发意义的方式。（如果你喜欢这种逐步演进的设计方式，或许你也会喜欢 <a class="reference internal" href="../references.html#bryant-1988"><span class="std std-ref">[Bryant 1988]</span></a>，其中讲述了一群开放网络认证系统设计师之间的虚构对话，以及他们发现的各种微妙问题。）</p>
+<figure class="align-center" id="figure-8-15">
+<img alt="../_images/687-0.png" src="../_images/687-0.png" />
+</figure>
+<p><strong>图 8.15 协议 ap1.0 及其失败场景</strong></p>
+<p>我们假设 Alice 需要向 Bob 认证她的身份。</p>
+<div class="toggle docutils container">
+<p><strong>End-point authentication</strong> is the process of one entity proving its identity to another entity over a computer network, for example, a user proving its identity to an e-mail server. As humans, we authenticate each other in many ways: We recognize each ­other’s faces when we meet, we recognize each other’s voices on the telephone, we are authenticated by the customs official who checks us against the picture on our passport.</p>
+<p>In this section, we consider how one party can authenticate another party when the two are communicating over a network. We focus here on authenticating a “live” party, at the point in time when communication is actually occurring. A concrete example is a user authenticating him or herself to an e- mail server. This is a subtly different problem from proving that a message received at some point in the past did indeed come from that claimed sender, as studied in <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">Section 8.3</span></a>.</p>
+<p>When performing authentication over the network, the communicating parties cannot rely on biometric information, such as a visual appearance or a voiceprint. Indeed, we will see in our later case studies that it is often network elements such as routers and client/server processes that must authenticate each other. Here, authentication must be done solely on the basis of messages and data exchanged as part of an <strong>authentication protocol</strong>. Typically, an authentication protocol would run before the two communicating parties run some other protocol (for example, a reliable data transfer protocol, a routing information exchange protocol, or an e-mail protocol). The authentication protocol first establishes the identities of the parties to each other’s satisfaction; only after authentication do the parties get down to the work at hand.</p>
+<p>As in the case of our development of a reliable data transfer (rdt) protocol in <a class="reference internal" href="../c3/index.html#c3"><span class="std std-ref">Chapter 3</span></a>, we will find it instructive here to develop various versions of an authentication protocol, which we will call <strong>ap</strong> (authentication protocol), and poke holes in each version as we proceed. (If you enjoy this stepwise evolution of a design, you might also enjoy <a class="reference internal" href="../references.html#bryant-1988"><span class="std std-ref">[Bryant 1988]</span></a>, which recounts a fictitious narrative between designers of an open-network authentication system, and their discovery of the many subtle issues involved.)</p>
+<figure class="align-center">
+<img alt="../_images/687-0.png" src="../_images/687-0.png" />
+</figure>
+<p><strong>Figure 8.15 Protocol ap1.0 and a failure scenario</strong></p>
+<p>Let’s assume that Alice needs to authenticate herself to Bob.</p>
+</div>
+<section id="ap1-0">
+<span id="c8-4-1"></span><h2>8.4.1 认证协议 ap1.0<a class="headerlink" href="#ap1-0" title="此标题的永久链接">#</a></h2>
+<p>8.4.1 Authentication Protocol ap1.0</p>
+<p>或许我们能想到的最简单的认证协议就是 Alice 仅仅向 Bob 发送一条消息，说她是 Alice。该协议如 <a class="reference internal" href="#figure-8-15"><span class="std std-ref">图 8.15</span></a> 所示。这个协议的漏洞是显而易见的——Bob 无法真正知道发送消息“我是 Alice”的人是否确实是 Alice。例如，Trudy（入侵者）同样可以发送这样一条消息。</p>
+<div class="toggle docutils container">
+<p>Perhaps the simplest authentication protocol we can imagine is one where Alice simply sends a message to Bob saying she is Alice. This protocol is shown in <a class="reference internal" href="#figure-8-15"><span class="std std-ref">Figure 8.15</span></a>. The flaw here is obvious— there is no way for Bob actually to know that the person sending the message “I am Alice” is indeed Alice. For example, Trudy (the intruder) could just as well send such a message.</p>
+</div>
+</section>
+<section id="ap2-0">
+<span id="c8-4-2"></span><h2>8.4.2 认证协议 ap2.0<a class="headerlink" href="#ap2-0" title="此标题的永久链接">#</a></h2>
+<p>8.4.2 Authentication Protocol ap2.0</p>
+<p>如果 Alice 有一个众所周知的网络地址（例如，一个固定的 IP 地址），她总是从这个地址进行通信，那么 Bob 可以尝试通过验证承载认证消息的 IP 数据报中的源地址是否与 Alice 的已知地址匹配来认证 Alice。在这种情况下，Alice 就被认证了。这或许能阻止一个对网络毫无概念的入侵者冒充 Alice，但它无法阻止在读这本书的学生，当然也无法阻止许多其他人！</p>
+<p>根据我们对网络层和数据链路层的学习，我们知道要伪造一个 IP 数据报并不困难（例如，如果你能够访问操作系统代码并构建自己的操作系统内核——Linux 及其他几个开源操作系统就是如此），我们可以创建一个 IP 数据报，把我们想要的任何 IP 源地址（例如 Alice 的知名 IP 地址）写入该数据报中，然后通过链路层协议将其发送给首跳路由器。从那以后，这个源地址伪造的数据报就会被“忠实地”转发给 Bob。这种方法如 <a class="reference internal" href="#figure-8-16"><span class="std std-ref">图 8.16</span></a> 所示，是一种 IP 欺骗（IP spoofing）行为。如果 Trudy 的首跳路由器被配置为只转发包含 Trudy 自己 IP 源地址的数据报，则可以避免 IP 欺骗 [<span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2827.html"><strong>RFC 2827</strong></a>]。然而，这项功能并未被广泛部署或强制执行。因此，如果 Bob 轻信 Trudy 的网络管理员（或许就是 Trudy 本人）已经将 Trudy 的首跳路由器配置为只转发地址正确的数据报，那就太天真了。</p>
+<figure class="align-center" id="figure-8-16">
+<img alt="../_images/688-0.png" src="../_images/688-0.png" />
+</figure>
+<p><strong>图 8.16 协议 ap2.0 及其失败场景</strong></p>
+<div class="toggle docutils container">
+<p>If Alice has a well-known network address (e.g., an IP address) from which she always communicates, Bob could attempt to authenticate Alice by verifying that the source address on the IP datagram carrying the authentication message matches Alice’s well-known address. In this case, Alice would be authenticated. This might stop a very network-naive intruder from impersonating Alice, but it wouldn’t stop the determined student studying this book, or many others!</p>
+<p>From our study of the network and data link layers, we know that it is not that hard (for example, if one had access to the operating system code and could build one’s own operating system kernel, as is the case with Linux and several other freely available operating systems) to create an IP datagram, put whatever IP source address we want (for example, Alice’s well-known IP address) into the IP datagram, and send the datagram over the link-layer protocol to the first-hop router. From then on, the incorrectly source-addressed datagram would be dutifully forwarded to Bob. This approach,
+shown in <a class="reference internal" href="#figure-8-16"><span class="std std-ref">Figure 8.16</span></a>, is a form of IP spoofing. IP spoofing can be avoided if Trudy’s first-hop router is configured to forward only datagrams containing Trudy’s IP source address [<span class="target" id="index-1"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2827.html"><strong>RFC 2827</strong></a>]. However, this
+capability is not universally deployed or enforced. Bob would thus be foolish to assume that Trudy’s network manager (who might be Trudy herself) had configured Trudy’s first-hop router to forward only appropriately addressed datagrams.</p>
+<figure class="align-center">
+<img alt="../_images/688-0.png" src="../_images/688-0.png" />
+</figure>
+<p><strong>Figure 8.16 Protocol ap2.0 and a failure scenario</strong></p>
+</div>
+</section>
+<section id="ap3-0">
+<span id="c8-4-3"></span><h2>8.4.3 认证协议 ap3.0<a class="headerlink" href="#ap3-0" title="此标题的永久链接">#</a></h2>
+<p>8.4.3 Authentication Protocol ap3.0</p>
+<p>一种经典的认证方法是使用秘密密码。密码是在认证者和被认证者之间共享的机密。Gmail、Facebook、telnet、FTP 以及许多其他服务都使用密码认证。在协议 ap3.0 中，如 <a class="reference internal" href="#figure-8-17"><span class="std std-ref">图 8.17</span></a> 所示，Alice 向 Bob 发送她的秘密密码。</p>
+<p>由于密码被广泛使用，我们可能会认为协议 ap3.0 是相当安全的。如果真这么认为，那我们就错了！其安全漏洞显而易见：如果 Trudy 窃听了 Alice 的通信，那么她就能获取 Alice 的密码。如果你认为这种情况不太可能发生，请考虑这样一个事实：当你使用 Telnet 登录到另一台机器时，登录密码是以明文形式发送给 Telnet 服务器的。任何连接到 Telnet 客户端或服务器所在 LAN 的人，都有可能嗅探（读取并存储）该局域网上传输的所有数据包，从而窃取登录密码。事实上，这是一种众所周知的窃取密码的方法（参见 <a class="reference internal" href="../references.html#jimenez-1997"><span class="std std-ref">[Jimenez 1997]</span></a>）。因此，这种威胁显然是真实存在的，ap3.0 显然行不通。</p>
+<div class="toggle docutils container">
+<p>One classic approach to authentication is to use a secret password. The password is a shared secret between the authenticator and the person being authenticated. Gmail, Facebook, telnet, FTP, and many other services use password authentication. In protocol ap3.0, Alice thus sends her secret password to Bob, as shown in <a class="reference internal" href="#figure-8-17"><span class="std std-ref">Figure 8.17</span></a>.</p>
+<p>Since passwords are so widely used, we might suspect that protocol ap3.0 is fairly secure. If so, we’d be wrong! The security flaw here is clear. If Trudy eavesdrops on Alice’s communication, then she can learn Alice’s password. Lest you think this is unlikely, consider the fact that when you Telnet to another machine and log in, the login password is sent unencrypted to the Telnet server. Someone connected to the Telnet client or server’s LAN can possibly sniff (read and store) all packets transmitted on the LAN and thus steal the login password. In fact, this is a well-known approach for stealing passwords (see, for example, <a class="reference internal" href="../references.html#jimenez-1997"><span class="std std-ref">[Jimenez 1997]</span></a>). Such a threat is obviously very real, so ap3.0 clearly won’t do.</p>
+</div>
+</section>
+<section id="ap3-1">
+<span id="c8-4-4"></span><h2>8.4.4 认证协议 ap3.1<a class="headerlink" href="#ap3-1" title="此标题的永久链接">#</a></h2>
+<p>8.4.4 Authentication Protocol ap3.1</p>
+<p>我们用来修复 ap3.0 的下一个想法，自然是对密码进行加密。通过加密密码，我们可以防止 Trudy 获取 Alice 的密码。如果我们假设 Alice 和 Bob 共享一个对称密钥 KA-B，那么 Alice 可以加密密码，并将她的身份信息 “我是 Alice” 以及加密后的密码发送给 Bob。Bob 随后解密密码，并在密码正确的前提下对 Alice 进行认证。Bob 感到可以信任 Alice 的身份，因为 Alice 不仅知道密码，而且还知道加密密码所需的共享密钥。我们将此协议称为 ap3.1。</p>
+<figure class="align-center" id="figure-8-17">
+<img alt="../_images/689-0.png" src="../_images/689-0.png" />
+</figure>
+<p><strong>图 8.17 协议 ap3.0 及其失败场景</strong></p>
+<p>虽然 ap3.1 确实可以防止 Trudy 获取 Alice 的密码，但此处使用加密技术并没有真正解决认证问题。Bob 仍然容易受到 <strong>重放攻击</strong>：Trudy 只需窃听 Alice 的通信，记录下加密版本的密码，然后将该加密密码重放给 Bob，假冒 Alice 的身份。协议 ap3.1 中使用加密密码的情况，并没有使其与 <a class="reference internal" href="#figure-8-17"><span class="std std-ref">图 8.17</span></a> 中的协议 ap3.0 本质上有所不同。</p>
+<div class="toggle docutils container">
+<p>Our next idea for fixing ap3.0 is naturally to encrypt the password. By encrypting the password, we can prevent Trudy from learning Alice’s password. If we assume that Alice and Bob share a symmetric secret key, KA-B, then Alice can encrypt the password and send her identification message, “I am Alice,” and her encrypted password to Bob. Bob then decrypts the password and, assuming the password is correct, authenticates Alice. Bob feels comfortable in authenticating Alice since Alice not only knows the password, but also knows the shared secret key value needed to encrypt the password. Let’s call this protocol ap3.1.</p>
+<figure class="align-center">
+<img alt="../_images/689-0.png" src="../_images/689-0.png" />
+</figure>
+<p><strong>Figure 8.17 Protocol ap3.0 and a failure scenario</strong></p>
+<p>While it is true that ap3.1 prevents Trudy from learning Alice’s password, the use of cryptography here does not solve the authentication problem. Bob is subject to a <strong>playback attack</strong>: Trudy need only eavesdrop on Alice’s communication, record the encrypted version of the password, and play back the encrypted version of the password to Bob to pretend that she is Alice. The use of an encrypted password in ap3.1 doesn’t make the situation manifestly different from that of protocol ap3.0 in <a class="reference internal" href="#figure-8-17"><span class="std std-ref">Figure 8.17</span></a>.</p>
+</div>
+</section>
+<section id="ap4-0">
+<span id="c8-4-5"></span><h2>8.4.5 认证协议 ap4.0<a class="headerlink" href="#ap4-0" title="此标题的永久链接">#</a></h2>
+<p>8.4.5 Authentication Protocol ap4.0</p>
+<p><a class="reference internal" href="#figure-8-17"><span class="std std-ref">图 8.17</span></a> 中的失败场景是因为 Bob 无法区分 Alice 的原始认证和之后的 Alice 原始认证的重放。也就是说，Bob 无法判断 Alice 是否是真实在线（即当前确实在连接的另一端），还是他收到的消息只是 Alice 先前认证的录音重放。非常（非常）细心的读者会记得，TCP 三次握手协议也需要解决同样的问题——TCP 连接的服务器端不希望接受一个连接请求，如果收到的 SYN 报文是早期连接中 SYN 报文的旧副本（重传）。TCP 服务器端是如何解决客户端是否真实在线的问题的呢？它选择一个很长时间未使用的初始序列号，将该序列号发送给客户端，然后等待客户端回复一个包含该序列号的 ACK 报文。我们也可以在这里采用相同的思路来进行认证。</p>
+<p><strong>Nonce</strong> 是协议中只使用一次的数字。也就是说，一旦协议使用了某个 nonce，就永远不会再次使用该数字。我们的 ap4.0 协议使用 nonce 的步骤如下：</p>
+<ol class="arabic simple">
+<li><p>Alice 发送消息 “我是 Alice” 给 Bob。</p></li>
+<li><p>Bob 选择一个 nonce，R，并发送给 Alice。</p></li>
+<li><p>Alice 使用 Alice 和 Bob 共享的对称密钥 KA-B 对 nonce 加密，然后将加密后的 nonce，KA-B (R)，发送回 Bob。和协议 ap3.1 类似，Alice 知道并使用了 KA-B 来加密某个值，这让 Bob 知道他收到的消息确实是 Alice 生成的。nonce 用来确保 Alice 是实时在线的。</p></li>
+<li><p>Bob 解密收到的消息。如果解密得到的 nonce 等于他发送给 Alice 的 nonce，则认证通过。</p></li>
+</ol>
+<p>协议 ap4.0 如 <a class="reference internal" href="#figure-8-18"><span class="std std-ref">图 8.18</span></a> 所示。通过使用一次性数字 R，并检查返回的值 KA-B (R)，Bob 可以确定 Alice 不仅是她所说的人（因为她知道加密 R 所需的密钥值），而且是实时在线的（因为她加密了 Bob 刚刚生成的 nonce R）。</p>
+<p>nonce 和对称密钥密码学的结合构成了 ap4.0 的基础。一个自然的问题是，是否可以用 nonce 和公钥密码学（而非对称密钥密码学）来解决认证问题。本章末尾的习题将探讨这个问题。</p>
+<figure class="align-center" id="figure-8-18">
+<img alt="../_images/691-0.png" src="../_images/691-0.png" />
+</figure>
+<p><strong>图 8.18 协议 ap4.0 及其失败场景</strong></p>
+<div class="toggle docutils container">
+<p>The failure scenario in <a class="reference internal" href="#figure-8-17"><span class="std std-ref">Figure 8.17</span></a> resulted from the fact that Bob could not distinguish between the original authentication of Alice and the later playback of Alice’s original authentication. That is, Bob could not tell if Alice was live (that is, was currently really on the other end of the connection) or whether the messages he was receiving were a recorded playback of a previous authentication of Alice. The very (very) observant reader will recall that the three-way TCP handshake protocol needed to address the same problem—the server side of a TCP connection did not want to accept a connection if the received SYN segment was an old copy (retransmission) of a SYN segment from an earlier connection. How did the TCP server side solve the problem of determining whether the client was really live? It chose an initial sequence number that had not been used in a very long time, sent that number to the client, and then waited for the client to respond with an ACK segment containing that number. We can adopt the same idea here for authentication purposes.</p>
+<p>A <strong>nonce</strong> is a number that a protocol will use only once in a lifetime. That is, once a protocol uses a nonce, it will never use that number again. Our ap4.0 protocol uses a nonce as follows:</p>
+<ol class="arabic simple">
+<li><p>Alice sends the message “I am Alice” to Bob.</p></li>
+<li><p>Bob chooses a nonce, R, and sends it to Alice.</p></li>
+<li><p>Alice encrypts the nonce using Alice and Bob’s symmetric secret key, KA-B, and sends the encrypted nonce, KA-B (R), back to Bob. As in protocol ap3.1, it is the fact that Alice knows KA-B and uses it to encrypt a value that lets Bob know that the message he receives was generated by Alice. The nonce is used to ensure that Alice is live.</p></li>
+<li><p>Bob decrypts the received message. If the decrypted nonce equals the nonce he sent Alice, then Alice is authenticated.</p></li>
+</ol>
+<p>Protocol ap4.0 is illustrated in <a class="reference internal" href="#figure-8-18"><span class="std std-ref">Figure 8.18</span></a>. By using the once-in-a-lifetime value, R, and then checking the returned value, KA-B (R), Bob can be sure that Alice is both who she says she is (since she knows the secret key value needed to encrypt R) and live (since she has encrypted the nonce, R, that Bob just created).</p>
+<p>The use of a nonce and symmetric key cryptography forms the basis of ap4.0. A natural question is whether we can use a nonce and public key cryptography (rather than symmetric key cryptography) to solve the authentication problem. This issue is explored in the problems at the end of the chapter.</p>
+<figure class="align-center">
+<img alt="../_images/691-0.png" src="../_images/691-0.png" />
+</figure>
+<p><strong>Figure 8.18 Protocol ap4.0 and a failure scenario</strong></p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s3.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">8.3 消息完整性和数字签名</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s5.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">8.5 电子邮件安全</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap1-0">8.4.1 认证协议 ap1.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap2-0">8.4.2 认证协议 ap2.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap3-0">8.4.3 认证协议 ap3.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap3-1">8.4.4 认证协议 ap3.1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ap4-0">8.4.5 认证协议 ap4.0</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

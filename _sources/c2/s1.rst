@@ -1,0 +1,652 @@
+.. _c2.1:
+
+2.1 网络应用程序原理
+=======================================
+2.1 Principles of Network Applications
+
+假设你有一个新的网络应用的创意。也许这个应用将造福人类，或者会让你的教授感到满意，或者会为你带来巨大的财富，又或者它只是一个有趣的开发项目。无论你的动机是什么，我们现在来探讨一下如何将这个创意转化为现实中的网络应用。
+
+网络应用开发的核心是编写运行在不同端系统上的程序，并通过网络相互通信。例如，在 Web 应用中，有两个彼此通信的独立程序：一个是运行在用户主机（如台式机、笔记本、平板电脑、智能手机等）中的浏览器程序；另一个是运行在 Web 服务器主机上的 Web 服务器程序。再举一个例子，在 P2P 文件共享系统中，每个参与文件共享社区的主机上都运行着一个程序。在这种情况下，各主机上的程序可能是相似的，甚至是完全相同的。
+
+因此，在开发新的应用时，你需要编写能在多个端系统上运行的软件。例如，这些软件可以用 C、Java 或 Python 编写。重要的是，你无需编写运行在网络核心设备（如路由器或链路层交换机）上的软件。即使你想为这些网络核心设备编写应用软件，你也无法做到。如我们在 :ref:`第 1 章 <c1>` 中所学，并在 :ref:`图 1.24 <Figure 1.24>` 中展示的那样，网络核心设备不在应用层工作，而是在更低的层次——具体说是网络层及以下工作。这一基本设计——即将应用软件限制在端系统中，如 :ref:`图 2.1 <Figure 2.1>` 所示——极大地促进了各种网络应用的快速开发与部署。
+
+.. _Figure 2.1:
+
+.. figure:: ../img/115-0.png
+   :align: center
+   :name: 通信发生在应用层的端系统之间
+
+**图 2.1 网络应用的通信发生在应用层的端系统之间**
+
+.. toggle::
+
+   Suppose you have an idea for a new network application. Perhaps this application will be a great service
+   to humanity, or will please your professor, or will bring you great wealth, or will simply be fun to develop.
+   Whatever the motivation may be, let’s now examine how you transform the idea into a real-world
+   network application.
+
+   At the core of network application development is writing programs that run on different end systems
+   and communicate with each other over the network. For example, in the Web application there are two
+   distinct programs that communicate with each other: the browser program running in the user’s host
+   (desktop, laptop, tablet, smartphone, and so on); and the Web server program running in the Web
+   server host. As another example, in a P2P file-sharing system there is a program in each host that
+   participates in the file-sharing community. In this case, the programs in the various hosts may be similar
+   or identical.
+
+   Thus, when developing your new application, you need to write software that will run on multiple end
+   systems. This software could be written, for example, in C, Java, or Python. Importantly, you do not
+   need to write software that runs on network-core devices, such as routers or link-layer switches. Even if
+   you wanted to write application software for these network-core devices, you wouldn’t be able to do so.
+   As we learned in :ref:`Chapter 1 <c1>`, and as shown earlier in :ref:`Figure 1.24 <Figure 1.24>`, network-core devices do not function
+   at the application layer but instead function at lower layers—specifically at the network layer and below.
+   This basic design—namely, confining application software to the end systems—as shown in :ref:`Figure 2.1 <Figure 2.1>`,
+   has facilitated the rapid development and deployment of a vast array of network applications.
+
+   .. figure:: ../img/115-0.png
+      :align: center
+      :name: Communication for a network application takes place between end systems at the application layer
+
+   **Figure 2.1 Communication for a network application takes place between end systems at the application layer**
+
+.. _c2.1.1:
+
+2.1.1 网络应用程序架构
+-------------------------------------------------------
+2.1.1 Network Application Architectures
+
+在开始编写软件代码之前，你应当为你的应用制定一个广泛的架构计划。请记住，应用架构与网络架构（例如在 :ref:`第 1 章 <c1>` 中讨论的五层 Internet 架构）是截然不同的。从应用开发者的角度来看，网络架构是固定的，并为应用提供一组特定的服务。而 **应用架构** 则由应用开发者设计，并决定应用如何在各个端系统中进行结构安排。在选择应用架构时，开发者通常会借鉴现代网络应用中使用的两种主要架构范式之一：客户端-服务器架构或对等（P2P）架构。
+
+在 **客户端-服务器架构** 中，存在一个始终在线的主机，称为服务器（server），用于服务来自其他多个主机（称为 *客户端*）的请求。一个经典的例子是 Web 应用，其中始终在线的 Web 服务器为运行在客户端主机上的浏览器程序提供服务。当 Web 服务器收到来自客户端主机的某个对象请求时，它会通过将所请求的对象发送回客户端主机来响应请求。请注意，在客户端-服务器架构中，客户端彼此之间不会直接通信；例如，在 Web 应用中，两个浏览器不会直接通信。客户端-服务器架构的另一个特点是服务器具有一个固定的、众所周知的地址，称为 IP 地址（我们稍后会讨论）。由于服务器拥有固定的、众所周知的地址，且始终在线，客户端总可以通过向服务器的 IP 地址发送数据包来联系服务器。一些著名的采用客户端-服务器架构的应用包括 Web、FTP、Telnet 和电子邮件。客户端-服务器架构如 :ref:`图 2.2(a) <Figure 2.2>` 所示。
+
+在客户端-服务器应用中，单个服务器主机往往无法应对来自所有客户端的请求。例如，一个热门的社交网站若仅靠一个服务器处理所有请求，很快就会不堪重负。因此，通常使用 **数据中心** 来构建强大的虚拟服务器，数据中心中部署了大量主机。最受欢迎的互联网服务（如搜索引擎 Google、Bing、百度，电商平台 Amazon、eBay、阿里巴巴，基于 Web 的电子邮件服务 Gmail 和 Yahoo Mail，社交网络 Facebook、Instagram、Twitter、微信等）均使用一个或多个数据中心。如 :ref:`第 1.3.3 节 <c1.3.3>` 所述，Google 在全球部署了 30 至 50 个数据中心，协同处理搜索、YouTube、Gmail 及其他服务。一个数据中心可能包含成千上万台服务器，这些服务器需要供电和维护。此外，服务提供商还必须为数据从其数据中心发送而持续支付互联费用和带宽费用。
+
+在 **P2P 架构** 中，几乎不依赖（或完全不依赖）于数据中心中的专用服务器。相反，该架构利用间歇性连接的主机之间的直接通信，这些主机称为对等体（peers）。这些对等体并不归服务提供商所有，而是由用户控制的桌面和笔记本电脑，大多数对等体分布在家庭、大学和办公场所。由于对等体之间的通信不经过专用服务器，因此该架构称为对等（peer-to-peer）架构。当今许多最流行、流量最密集的应用程序都基于 P2P 架构。这些应用包括文件共享（如 BitTorrent）、对等加速下载（如 迅雷）、互联网语音和视频会议（如 Skype）。P2P 架构如 :ref:`图 2.2(b) <Figure 2.2>` 所示。值得一提的是，一些应用采用了混合架构，结合了客户端-服务器和 P2P 元素。例如，在许多即时消息应用中，服务器用于追踪用户的 IP 地址，但用户间的消息则直接在主机之间传递（不经过中间服务器）。
+
+.. _Figure 2.2:
+
+.. figure:: ../img/117-0.png
+   :align: left
+   :name: (a) 客户端-服务器架构； 
+
+.. figure:: ../img/117-1.png
+   :align: center
+   :name:  (b) P2P 架构
+
+**图 2.2 (a) 客户端-服务器架构；(b) P2P 架构**
+
+P2P 架构最具吸引力的特征之一是其 **自扩展性（self-scalability）** 。例如，在一个 P2P 文件共享应用中，虽然每个对等体通过请求文件产生负载，但每个对等体也通过向其他对等体分发文件为系统增加服务能力。P2P 架构还具有成本效益，因为它们通常不需要大量的服务器基础设施和服务器带宽（相比之下，客户端-服务器架构需要数据中心）。然而，P2P 应用由于其高度去中心化的结构，在安全性、性能和可靠性方面也面临挑战。
+
+
+.. toggle::
+
+   Before diving into software coding, you should have a broad architectural plan for your application. Keep
+   in mind that an application’s architecture is distinctly different from the network architecture (e.g., the
+   five-layer Internet architecture discussed in :ref:`Chapter 1 <c1>` ). From the application developer’s perspective,
+   the network architecture is fixed and provides a specific set of services to applications. The **application
+   architecture**, on the other hand, is designed by the application developer and dictates how the
+   application is structured over the various end systems. In choosing the application architecture, an
+   application developer will likely draw on one of the two predominant architectural paradigms used in
+   modern network applications: the client-server architecture or the peer-to-peer (P2P) architecture.
+
+   In a **client-server architecture**, there is an always-on host, called the server, which services requests
+   from many other hosts, called *clients*. A classic example is the Web application for which an always-on
+   Web server services requests from browsers running on client hosts. When a Web server receives a
+   request for an object from a client host, it responds by sending the requested object to the client host.
+   Note that with the client-server architecture, clients do not directly communicate with each other; for
+   example, in the Web application, two browsers do not directly communicate. Another characteristic of
+   the client-server architecture is that the server has a fixed, well-known address, called an IP address
+   (which we’ll discuss soon). Because the server has a fixed, well-known address, and because the server
+   is always on, a client can always contact the server by sending a packet to the server’s IP address.
+   Some of the better-known applications with a client-server architecture include the Web, FTP, Telnet,
+   and e-mail. The client-server architecture is shown in :ref:`Figure 2.2(a) <Figure 2.2>` .
+
+   Often in a client-server application, a single-server host is incapable of keeping up with all the requests
+   from clients. For example, a popular social-networking site can quickly become overwhelmed if it has
+   only one server handling all of its requests. For this reason, a **data center**, housing a large number of
+   hosts, is often used to create a powerful virtual server. The most popular Internet services—such as
+   search engines (e.g., Google, Bing, Baidu), Internet commerce (e.g., Amazon, eBay, Alibaba), Web-
+   based e-mail (e.g., Gmail and Yahoo Mail), social networking (e.g., Facebook, Instagram, Twitter, and
+   WeChat)—employ one or more data centers. As discussed in :ref:`Section 1.3.3 <c1.3.3>` , Google has 30 to 50 data
+   centers distributed around the world, which collectively handle search, YouTube, Gmail, and other
+   services. A data center can have hundreds of thousands of servers, which must be powered and
+   maintained. Additionally, the service providers must pay recurring interconnection and bandwidth costs
+   for sending data from their data centers.
+
+   In a **P2P architecture**, there is minimal (or no) reliance on dedicated servers in data centers. Instead
+   the application exploits direct communication between pairs of intermittently connected hosts, called
+   peers. The peers are not owned by the service provider, but are instead desktops and laptops controlled
+   by users, with most of the peers residing in homes, universities, and offices. Because the peers communicate without passing
+   through a dedicated server, the architecture is called peer-to-peer. Many of today’s most popular and
+   traffic-intensive applications are based on P2P architectures. These applications include file sharing
+   (e.g., BitTorrent), peer-assisted download acceleration (e.g., Xunlei), and Internet telephony and video
+   conference (e.g., Skype). The P2P architecture is illustrated in :ref:`Figure 2.2(b) <Figure 2.2>` . We mention that some
+   applications have hybrid architectures, combining both client-server and P2P elements. For example, for
+   many instant messaging applications, servers are used to track the IP addresses of users, but user-to-
+   user messages are sent directly between user hosts (without passing through intermediate servers).
+
+   .. figure:: ../img/117-0.png
+      :align: left
+      :name: (a) Client-server architecture; 
+
+   .. figure:: ../img/117-1.png
+      :align: center
+      :name:  (b) P2P architecture
+
+   **Figure 2.2 (a) Client-server architecture; (b) P2P architecture**
+
+   One of the most compelling features of P2P architectures is their **self-scalability**. For example, in a
+   P2P file-sharing application, although each peer generates workload by requesting files, each peer also
+   adds service capacity to the system by distributing files to other peers. P2P architectures are also cost
+   effective, since they normally don’t require significant server infrastructure and server bandwidth (in
+   contrast with clients-server designs with datacenters). However, P2P applications face challenges of
+   security, performance, and reliability due to their highly decentralized structure.
+
+.. _c2.1.2:
+
+2.1.2 进程通信
+-------------------------------------------------------
+2.1.2 Processes Communicating
+
+在构建网络应用之前，你还需要对运行在多个端系统上的程序之间如何通信有一个基本的了解。在操作系统的术语中，实际上并不是程序之间通信，而是 **进程（processes）** 之 间通信。进程可以被看作是在端系统中运行的程序。当多个进程运行在同一个端系统上时，它们可以通过 **进程间通信** 进行交流，通信规则由该端系统的操作系统控制。但在本书中，我们不特别关注同一主机中进程之间如何通信，而是关注运行在 *不同* 主机（可能使用不同操作系统）上的进程如何通信。
+
+两个不同端系统上的进程通过计算机网络交换 **消息（messages）** 来进行通信。发送进程在网络中创建并发送消息；接收进程接收这些消息，并可能通过发送消息进行响应。:ref:`图 2.1 <Figure 2.1>` 显示了通信进程驻留在五层协议栈的应用层中。
+
+.. toggle::
+
+   Before building your network application, you also need a basic understanding of how the programs,
+   running in multiple end systems, communicate with each other. In the jargon of operating systems, it is
+   not actually programs but **processes** that communicate. A process can be thought of as a program that
+   is running within an end system. When processes are running on the same end system, they can
+   communicate with each other with interprocess communication, using rules that are governed by the
+   end system’s operating system. But in this book we are not particularly interested in how processes in
+   the same host communicate, but instead in how processes running on *different* hosts (with potentially
+   different operating systems) communicate.
+
+   Processes on two different end systems communicate with each other by exchanging **messages** across
+   the computer network. A sending process creates and sends messages into the network; a receiving
+   process receives these messages and possibly responds by sending messages back. :ref:`Figure 2.1 <Figure 2.1>`
+   illustrates that processes communicating with each other reside in the application layer of the five-layer
+   protocol stack.
+
+客户端与服务器进程
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Client and Server Processes
+
+一个网络应用由一对在网络上发送消息的进程组成。例如，在 Web 应用中，客户端浏览器进程与 Web 服务器进程交换消息。在 P2P 文件共享系统中，文件从一个对等体中的进程传输到另一个对等体中的进程。对于每对通信进程，我们通常将其中一个称为客户端（client），另一个称为 **服务器（server）** 。以 Web 为例，浏览器是客户端进程，而 Web 服务器是服务器进程。在 P2P 文件共享中，下载文件的一方被称为客户端，而上传文件的一方被称为服务器。
+
+你可能已经注意到，在某些应用中，例如 P2P 文件共享，一个进程可以既是客户端又是服务器。事实上，一个 P2P 文件共享系统中的进程可以既下载文件又上传文件。然而，即使在这样的系统中，对于任意一对通信进程，在特定的通信会话中，我们仍然可以将一个进程标记为客户端，另一个标记为服务器。我们对客户端和服务器进程的定义如下：
+
+   在一对通信进程的上下文中，发起通信的进程（即在会话开始时最先联系另一方的进程）被称为客户端。等待被联系以启动会话的进程被称为服务器。
+
+在 Web 中，浏览器进程首先与 Web 服务器进程建立联系；因此，浏览器进程是客户端，而 Web 服务器进程是服务器。在 P2P 文件共享中，当对等体 A 请求对等体 B 发送特定文件时，在这次通信会话中，对等体 A 是客户端，而对等体 B 是服务器。当没有歧义时，我们有时也会使用“应用的客户端端”和“服务器端”这样的术语。在本章结尾，我们将逐步讲解一个网络应用中客户端和服务器端的简单代码示例。
+
+.. toggle::
+
+   A network application consists of pairs of processes that send messages to each other over a network.
+   For example, in the Web application a client browser process exchanges messages with a Web server
+   process. In a P2P file-sharing system, a file is transferred from a process in one peer to a process in
+   another peer. For each pair of communicating processes, we typically label one of the two processes as
+   the client and the other process as the **server**. With the Web, a browser is a client process and a Web
+   server is a server process. With P2P file sharing, the peer that is downloading the file is labeled as the
+   client, and the peer that is uploading the file is labeled as the server.
+
+   You may have observed that in some applications, such as in P2P file sharing, a process can be both a
+   client and a server. Indeed, a process in a P2P file-sharing system can both upload and download files.
+   Nevertheless, in the context of any given communication session between a pair of processes, we can
+   still label one process as the client and the other process as the server. We define the client and server
+   processes as follows:
+
+      In the context of a communication session between a pair of processes, the process that initiates the
+      communication (that is, initially contacts the other process at the beginning of the session) is labeled
+      as the client. The process that waits to be contacted to begin the session is the server.
+
+   In the Web, a browser process initializes contact with a Web server process; hence the browser process
+   is the client and the Web server process is the server. In P2P file sharing, when Peer A asks Peer B to
+   send a specific file, Peer A is the client and Peer B is the server in the context of this specific
+   communication session. When there’s no confusion, we’ll sometimes also use the terminology “client
+   side and server side of an application.” At the end of this chapter, we’ll step through simple code for both
+   the client and server sides of network applications.
+
+进程与计算机网络之间的接口
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The Interface Between the Process and the Computer Network
+
+如上所述，大多数应用由成对通信的进程组成，这些进程通过网络发送消息。一个进程向另一个进程发送的所有消息都必须经过底层网络。进程通过一个称为 **套接字（socket）** 的软件接口向网络发送消息并从网络接收消息。为了帮助理解进程和套接字的关系，我们可以用一个类比来说明：一个进程就像一座房子，而它的套接字就像这座房子的门。当一个进程想向另一个主机上的进程发送消息时，它会把消息“推出”它的门（即套接字）。这个发送进程假设在门外存在一套传输基础设施，会将消息送到目标进程的门前。一旦消息到达目标主机，它就会通过接收进程的门（套接字）进入，接收进程随后对消息进行处理。
+
+:ref:`图 2.3 <Figure 2.3>` 展示了通过 Internet 通信的两个进程之间的套接字通信。（:ref:`图 2.3 <Figure 2.3>` 假设进程所使用的底层传输协议是 Internet 的 TCP 协议。）如图所示，套接字是主机中应用层与传输层之间的接口。它也被称为应用与网络之间的 **应用程序编程接口（API）** ，因为套接字就是构建网络应用所使用的编程接口。应用开发者可以完全控制套接字应用层一侧的内容，但对套接字传输层一侧的控制非常有限。应用开发者在传输层一侧所拥有的控制通常包括：（1）选择使用的传输协议；（2）可能还可以设定一些传输层参数，例如最大缓冲区大小和最大分段大小（将在 **第 3 章** 中介绍）。一旦开发者选择了传输协议（如果存在选择），应用就将使用该协议所提供的传输层服务来进行构建。我们将在 :ref:`第 2.7 节 <Section 2.7>` 中详细探讨套接字。
+
+.. toggle::
+
+   As noted above, most applications consist of pairs of communicating processes, with the two processes
+   in each pair sending messages to each other. Any message sent from one process to another must go
+   through the underlying network. A process sends messages into, and receives messages from, the
+   network through a software interface called a **socket**. Let’s consider an analogy to help us understand
+   processes and sockets. A process is analogous to a house and its socket is analogous to its door. When
+   a process wants to send a message to another process on another host, it shoves the message out its
+   door (socket). This sending process assumes that there is a transportation infrastructure on the other
+   side of its door that will transport the message to the door of the destination process. Once the message
+   arrives at the destination host, the message passes through the receiving process’s door (socket), and
+   the receiving process then acts on the message.
+
+   :ref:`Figure 2.3 <Figure 2.3>` illustrates socket communication between two processes that communicate over the Internet.
+   (:ref:`Figure 2.3 <Figure 2.3>` assumes that the underlying transport protocol used by the processes is the Internet’s TCP
+   protocol.) As shown in this figure, a socket is the interface between the application layer and the
+   transport layer within a host. It is also referred to as the **Application Programming Interface (API)**
+   between the application and the network, since the socket is the programming interface with which
+   network applications are built. The application developer has control of everything on the application-
+   layer side of the socket but has little control of the transport-layer side of the socket. The only control
+   that the application developer has on the transport-layer side is (1) the choice of transport protocol and
+   (2) perhaps the ability to fix a few transport-layer parameters such as maximum buffer and maximum
+   segment sizes (to be covered in **Chapter 3**). Once the application developer chooses a transport
+   protocol (if a choice is available), the application is built using the transport-layer services provided by
+   that protocol. We’ll explore sockets in some detail in :ref:`Section 2.7 <Section 2.7>`.
+
+进程寻址
+~~~~~~~~~~~~~~~~~~~~~~
+
+就像要向某个邮政地址发送邮件一样，目的地必须有一个地址。同样地，为了让一个主机上的进程能向另一个主机上的进程发送数据包，接收进程也必须有一个地址。
+
+.. _Figure 2.3:
+
+.. figure:: ../img/120-0.png
+   :align: center
+   :name: 应用进程、套接字和底层传输协议
+
+**图 2.3 应用进程、套接字和底层传输协议**
+
+为了标识接收进程，需要提供两部分信息：（1）主机的地址；（2）指定主机中接收进程的标识符。
+
+在 Internet 中，主机通过其 **IP 地址** 来标识。我们将在 :ref:`第 4 章 <c4>` 中详细介绍 IP 地址。目前你只需要知道，IP 地址是一个 32 位的值，可以用来唯一标识一台主机。除了知道目标主机的地址之外，发送进程还必须标识运行在该主机上的接收进程（更准确地说，是接收套接字）。这是因为一般来说，一台主机可能同时运行多个网络应用。一个 **端口号（port number）** 用于此目的。常见的应用通常被分配有特定的端口号。例如，Web 服务器使用端口号 80，使用 SMTP 协议的邮件服务器进程使用端口号 25。所有 Internet 标准协议的知名端口号可以在 `www.iana.org <http://www.iana.org/>`_ 找到。我们将在 :ref:`第 3 章 <c3>` 中详细讨论端口号。
+
+
+.. toggle::
+
+   In order to send postal mail to a particular destination, the destination needs to have an address.
+   Similarly, in order for a process running on one host to send packets to a process running on another
+   host, the receiving process needs to have an address.
+
+   .. figure:: ../img/120-0.png
+      :align: center
+      :name: Application processes, sockets, and underlying transport protocol
+
+   **Figure 2.3 Application processes, sockets, and underlying transport protocol**
+
+   To identify the receiving process, two pieces of information need to be specified: (1) the address of the
+   host and (2) an identifier that specifies the receiving process in the destination host.
+
+   In the Internet, the host is identified by its **IP address**. We’ll discuss IP addresses in great detail in
+   :ref:`Chapter 4 <c4>`. For now, all we need to know is that an IP address is a 32-bit quantity that we can think of as
+   uniquely identifying the host. In addition to knowing the address of the host to which a message is
+   destined, the sending process must also identify the receiving process (more specifically, the receiving
+   socket) running in the host. This information is needed because in general a host could be running many
+   network applications. A destination **port number** serves this purpose. Popular applications have been
+   assigned specific port numbers. For example, a Web server is identified by port number 80. A mail
+   server process (using the SMTP protocol) is identified by port number 25. A list of well-known port
+   numbers for all Internet standard protocols can be found at `www.iana.org <http://www.iana.org/>`_ . We’ll examine port numbers in detail in :ref:`Chapter 3 <c3>`.
+
+.. _c2.1.3:
+
+2.1.3 传输层为应用提供的服务
+-------------------------------------------------------
+2.1.3 Transport Services Available to Applications
+
+回顾一下，套接字是应用进程与传输层协议之间的接口。发送端的应用将消息通过套接字推送出去。在套接字的另一端，传输层协议负责将这些消息传递到接收进程的套接字中。
+
+许多网络，包括 Internet，提供不止一种传输层协议。当你开发一个应用时，必须在可用的传输层协议中选择一个。你该如何做出这个选择？很可能，你会研究可用传输层协议所提供的服务，然后选择最符合你的应用需求的协议。这个情形类似于在两个城市之间选择乘坐火车还是飞机出行。你必须二选一，而且每种交通方式提供不同的服务。（例如，火车提供市中心接送，而飞机提供更短的旅行时间。）
+
+传输层协议可以为调用它的应用提供哪些服务？我们可以从四个方面对可能的服务进行分类：可靠数据传输、吞吐量、时延和安全性。
+
+.. toggle::
+
+   Recall that a socket is the interface between the application process and the transport-layer protocol.
+   The application at the sending side pushes messages through the socket. At the other side of the
+   socket, the transport-layer protocol has the responsibility of getting the messages to the socket of the
+   receiving process.
+
+   Many networks, including the Internet, provide more than one transport-layer protocol. When you
+   develop an application, you must choose one of the available transport-layer protocols. How do you
+   make this choice? Most likely, you would study the services provided by the available transport-layer
+   protocols, and then pick the protocol with the services that best match your application’s needs. The
+   situation is similar to choosing either train or airplane transport for travel between two cities. You have to
+   choose one or the other, and each transportation mode offers different services. (For example, the train
+   offers downtown pickup and drop-off, whereas the plane offers shorter travel time.)
+
+   What are the services that a transport-layer protocol can offer to applications invoking it? We can
+   broadly classify the possible services along four dimensions: reliable data transfer, throughput, timing,
+   and security.
+
+可靠数据传输
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reliable Data Transfer
+
+如 :ref:`第 1 章 <c1>` 所述，数据包可能会在计算机网络中丢失。例如，一个数据包可能因为路由器中的缓冲区溢出而丢失，或者在其某些位被破坏后被主机或路由器丢弃。对于许多应用而言——如电子邮件、文件传输、远程主机访问、Web 文档传输和金融应用——数据丢失可能会产生灾难性的后果（在金融应用中，受害的可能是银行，也可能是客户！）。因此，为了支持这些应用，必须采取措施来保证应用一端发送的数据能够被完整无误地交付到另一端。如果某协议提供了这样一种数据传输保障服务，我们就说它提供了 **可靠数据传输（reliable data transfer）** 。传输层协议可以为应用提供的一个重要服务就是进程到进程的可靠数据传输服务。当传输协议提供该服务时，发送进程可以安心地将数据交给套接字，确信数据会无差错地抵达接收进程。
+
+当传输层协议不提供可靠数据传输时，发送进程发送的某些数据可能永远无法到达接收进程。对于某些 **容忍丢失的应用（loss-tolerant applications）** ，这可能是可以接受的，最典型的是多媒体应用，比如实时音视频通信，这类应用可以容忍一定程度的数据丢失。在这些多媒体应用中，丢失的数据可能仅仅导致音视频中出现短暂瑕疵——并不会造成关键性的破坏。
+
+.. toggle::
+
+   As discussed in :ref:`Chapter 1 <c1>`, packets can get lost within a computer network. For example, a packet can
+   overflow a buffer in a router, or can be discarded by a host or router after having some of its bits
+   corrupted. For many applications—such as electronic mail, file transfer, remote host access, Web
+   document transfers, and financial applications—data loss can have devastating consequences (in the
+   latter case, for either the bank or the customer!). Thus, to support these applications, something has to
+   be done to guarantee that the data sent by one end of the application is delivered correctly and
+   completely to the other end of the application. If a protocol provides such a guaranteed data delivery
+   service, it is said to provide **reliable data transfer**. One important service that a transport-layer protocol
+   can potentially provide to an application is process-to-process reliable data transfer. When a transport
+   protocol provides this service, the sending process can just pass its data into the socket and know with
+   complete confidence that the data will arrive without errors at the receiving process.
+
+   When a transport-layer protocol doesn’t provide reliable data transfer, some of the data sent by thesending process may never arrive at the receiving process. This may be acceptable for **loss-tolerant
+   applications**, most notably multimedia applications such as conversational audio/video that can tolerate
+   some amount of data loss. In these multimedia applications, lost data might result in a small glitch in the
+   audio/video—not a crucial impairment.
+
+吞吐量
+~~~~~~~~~~~~~~
+Throughput
+
+在 :ref:`第 1 章 <c1>` 中，我们引入了可用吞吐量的概念，它指的是在两个进程之间的通信会话中，发送进程将比特发送到接收进程的速率。由于在通信路径上还有其他会话共享带宽，而且这些会话是动态出现和消失的，所以可用吞吐量是随时间变化的。这一观察引出了传输层协议可以提供的另一个自然服务，即以某个指定速率提供 **可用吞吐量保障服务** 。通过此服务，应用可以请求以 r 比特/秒为单位的吞吐量保障，传输协议将确保可用吞吐量始终不低于 r 比特/秒。很多应用都对这种吞吐量保障服务感兴趣。例如，如果一个 Internet 语音应用将语音编码为 32 kbps，那么它就必须以该速率将数据发送到网络中，并且接收应用也必须以该速率接收数据。如果传输协议无法提供该吞吐量，应用可能需要以更低的速率进行编码（并获得足以支持该编码速率的吞吐量），或者不得不放弃——因为例如只获得一半所需吞吐量的情况，对于语音应用几乎没有用。具有吞吐量要求的应用称为 **带宽敏感型应用（bandwidth-sensitive applications）** 。许多当前的多媒体应用都属于带宽敏感型，尽管有些多媒体应用可能使用自适应编码技术，以适应当前可用吞吐量的速率对数字语音或视频进行编码。
+
+而与带宽敏感型应用不同， **弹性应用（elastic applications）** 可以使用尽可能多，或尽可能少的吞吐量。电子邮件、文件传输和 Web 传输都是弹性应用。当然，吞吐量越高越好。有句老话说：人不能太富、太瘦、或者拥有太多吞吐量！
+
+.. toggle::
+
+   In :ref:`Chapter 1 <c1>` we introduced the concept of available throughput, which, in the context of a
+   communication session between two processes along a network path, is the rate at which the sending
+   process can deliver bits to the receiving process. Because other sessions will be sharing the bandwidth
+   along the network path, and because these other sessions will be coming and going, the available
+   throughput can fluctuate with time. These observations lead to another natural service that a transport-
+   layer protocol could provide, namely, guaranteed available throughput at some specified rate. With such
+   a service, the application could request a guaranteed throughput of r bits/sec, and the transport protocol
+   would then ensure that the available throughput is always at least r bits/sec. Such a guaranteed
+   throughput service would appeal to many applications. For example, if an Internet telephony application
+   encodes voice at 32 kbps, it needs to send data into the network and have data delivered to the
+   receiving application at this rate. If the transport protocol cannot provide this throughput, the application
+   would need to encode at a lower rate (and receive enough throughput to sustain this lower coding rate)
+   or may have to give up, since receiving, say, half of the needed throughput is of little or no use to this
+   Internet telephony application. Applications that have throughput requirements are said to be
+   **bandwidth-sensitive applications**. Many current multimedia applications are bandwidth sensitive,
+   although some multimedia applications may use adaptive coding techniques to encode digitized voice or
+   video at a rate that matches the currently available throughput.
+
+   While bandwidth-sensitive applications have specific throughput requirements, **elastic applications** can
+   make use of as much, or as little, throughput as happens to be available. Electronic mail, file transfer,
+   and Web transfers are all elastic applications. Of course, the more throughput, the better. There’san
+   adage that says that one cannot be too rich, too thin, or have too much throughput!
+
+时延
+~~~~~~~~~~~
+Timing
+
+传输层协议还可以提供 **时延保障服务** 。类似于吞吐量保障，时延保障也有多种形式。例如，某一服务可能保证发送端送入套接字的每一比特都不会在 100 毫秒之后才到达接收端的套接字。这种服务对交互式实时应用非常有吸引力，例如 Internet 语音、虚拟现实、远程会议和多人在线游戏，这些应用都要求数据传输具有严格的时延约束，才能有效运行。（参见 :ref:`第 9 章 <c9>`，[ :ref:`Gauthier 1999 <Gauthier 1999>`；:ref:`Ramjee 1994 <Ramjee 1994>`]。）例如，Internet 语音通信中长时延往往会导致通话中出现不自然的停顿；而在多人游戏或虚拟交互环境中，从执行一个动作到看到环境响应（例如远端玩家响应）的长时延，会使应用缺乏真实感。对于非实时应用，低延迟总是优于高延迟，但并不要求严格的端到端时延限制。
+
+.. toggle::
+
+   A transport-layer protocol can also provide timing guarantees. As with throughput guarantees, timing
+   guarantees can come in many shapes and forms. An example guarantee might be that every bit that the
+   sender pumps into the socket arrives at the receiver’s socket no more than 100 msec later. Such a
+   service would be appealing to interactive real-time applications, such as Internet telephony, virtual
+   environments, teleconferencing, and multiplayer games, all of which require tight timing constraints on
+   data delivery in order to be effective. (See :ref:`Chapter 9 <c9>`, [ :ref:`Gauthier 1999 <Gauthier 1999>`; :ref:`Ramjee 1994 <Ramjee 1994>`].) Long delays in
+   Internet telephony, for example, tend to result in unnatural pauses in the conversation; in a multiplayer
+   game or virtual interactive environment, a long delay between taking an action and seeing the responsefrom the environment (for example, from another player at the end of an end-to-end connection) makes
+   the application feel less realistic. For non-real-time applications, lower delay is always preferable to
+   higher delay, but no tight constraint is placed on the end-to-end delays.
+
+安全性
+~~~~~~~~~~~~~
+Security
+
+最后，传输协议还可以为应用提供一种或多种 **安全服务** 。例如，在发送主机中，传输协议可以对所有由发送进程传出的数据进行加密；在接收主机中，传输层协议可以在将数据传递给接收进程之前对其解密。这项服务即便在数据在发送与接收进程之间被窃听，也能在两进程之间提供 **保密性（confidentiality）**。除了保密性，传输协议还可以提供其他安全服务，包括 **数据完整性** 和 **端点认证** 等，这些主题我们将在 :ref:`第 8 章 <c8>` 中详细介绍。
+
+.. toggle::
+
+   Finally, a transport protocol can provide an application with one or more security services. For example,
+   in the sending host, a transport protocol can encrypt all data transmitted by the sending process, and in
+   the receiving host, the transport-layer protocol can decrypt the data before delivering the data to the
+   receiving process. Such a service would provide confidentiality between the two processes, even if the
+   data is somehow observed between sending and receiving processes. A transport protocol can also
+   provide other security services in addition to confidentiality, including data integrity and end-point
+   authentication, topics that we’ll cover in detail in :ref:`Chapter 8 <c8>`.
+
+.. _c2.1.4:
+
+2.1.4 Internet 提供的传输服务
+-------------------------------------------------------
+2.1.4 Transport Services Provided by the Internet
+
+到目前为止，我们一直在探讨计算机网络一般可以提供的传输服务。现在我们更具体地来看 Internet 所提供的传输服务。Internet（更广泛地说是 TCP/IP 网络）为应用提供了两种传输层协议：UDP 和 TCP。当你（作为应用开发者）为 Internet 创建一个新的网络应用时，首先需要做出的决策之一就是选择使用 UDP 还是 TCP。这两种协议分别为调用它们的应用提供了一组不同的服务。:ref:`图 2.4 <Figure 2.4>` 展示了一些典型应用的服务需求。
+
+.. toggle::
+
+   Up until this point, we have been considering transport services that a computer network could provide
+   in general. Let’s now get more specific and examine the type of transport services provided by the
+   Internet. The Internet (and, more generally, TCP/IP networks) makes two transport protocols available to
+   applications, UDP and TCP. When you (as an application developer) create a new network application
+   for the Internet, one of the first decisions you have to make is whether to use UDP or TCP. Each of
+   these protocols offers a different set of services to the invoking applications. :ref:`Figure 2.4 <Figure 2.4>` shows the
+   service requirements for some selected applications.
+
+TCP 服务
+~~~~~~~~~~~~~~~~
+TCP Services
+
+TCP 服务模型包括面向连接的服务和可靠数据传输服务。当应用调用 TCP 作为其传输协议时，该应用将从 TCP 获得这两种服务。
+
+- **面向连接的服务（Connection-oriented service）**。TCP 在应用层消息开始传输之前，会使客户端和服务端相互交换传输层控制信息。这种所谓的握手过程（handshaking）通知客户端和服务端，以便它们为即将到来的大量数据包做准备。在握手阶段完成之后，在两个进程的套接字之间就建立起了一个 **TCP 连接**。这个连接是全双工的，两个进程可以同时在连接上传输消息。当应用完成消息传输后，必须拆除连接。在 :ref:`第 3 章 <Chapter 3>` 中我们将详细讨论面向连接的服务及其实现方式。
+
+.. _Figure 2.4:
+
+.. figure:: ../img/124-0.png
+   :align: center
+   :name: 一些典型网络应用的服务需求
+
+**图 2.4 一些典型网络应用的服务需求**
+
+- **可靠数据传输服务（Reliable data transfer service）**。通信的进程可以依赖 TCP 来无差错且按序地交付所有发送的数据。当一端的应用将一个字节流传入套接字时，它可以确信 TCP 会将相同的字节流、无丢失也无重复地交付给接收端套接字。
+
+TCP 还包括一个拥塞控制机制，这是一项为了 Internet 整体利益而设计的服务，而非直接为了通信进程的利益。TCP 的拥塞控制机制在发送方与接收方之间的网络出现拥塞时，会限制（节流）发送进程（客户端或服务器）的发送速率。正如我们将在 :ref:`第 3 章 <c3>` 中看到的，TCP 拥塞控制还会尝试将每个 TCP 连接的带宽使用限制在其合理的公平份额内。
+
+.. toggle::
+
+   The TCP service model includes a connection-oriented service and a reliable data transfer service.
+   When an application invokes TCP as its transport protocol, the application receives both of these
+   services from TCP.
+
+   - **Connection-oriented service**. TCP has the client and server exchange transport-layer control information with each other before the application-level messages begin to flow. This so-called handshaking procedure alerts the client and server, allowing them to prepare for an onslaught of packets. After the handshaking phase, a **TCP connection** is said to exist between the sockets of the two processes. The connection is a full-duplex connection in that the two processes can send messages to each other over the connection at the same time. When the application finishes sending messages, it must tear down the connection. In :ref:`Chapter 3 <Chapter 3>` we’ll discuss connection-oriented service in detail and examine how it is implemented.
+
+   .. _Figure 2.4:
+
+   .. figure:: ../img/124-0.png
+      :align: center
+      :name: Requirements of selected network applications
+
+   **Figure 2.4 Requirements of selected network applications**
+
+   - **Reliable data transfer service**. The communicating processes can rely on TCP to deliver all data sent without error and in the proper order. When one side of the application passes a stream of bytes into a socket, it can count on TCP to deliver the same stream of bytes to the receiving socket, with no missing or duplicate bytes.
+
+   TCP also includes a congestion-control mechanism, a service for the general welfare of the Internet
+   rather than for the direct benefit of the communicating processes. The TCP congestion-control
+   mechanism throttles a sending process (client or server) when the network is congested between
+   sender and receiver. As we will see in :ref:`Chapter 3 <c3>`, TCP congestion control also attempts to limit each TCP connection to its fair share of network bandwidth.
+
+.. topic:: 关注安全（FOCUS ON SECURITY）
+
+   TCP 加密安全性
+
+   无论是 TCP 还是 UDP 都不提供加密功能——发送进程传入套接字的数据，会原样在网络上传输至接收进程。因此，例如，如果发送进程将密码以明文形式（即未加密）传入套接字，该明文密码将在发送方和接收方之间的所有链路上传输，并可能在中间链路中被嗅探或窃取。由于隐私和其他安全问题对于许多应用来说变得至关重要，Internet 社区开发了 TCP 的增强版，称为 **安全套接字层（SSL，Secure Sockets Layer）**。增强版 TCP 不仅继承了传统 TCP 的所有功能，还提供了关键的进程间安全服务，包括加密、数据完整性以及端点认证。我们强调，SSL 并不是一种与 TCP 和 UDP 平级的第三种传输层协议，而是对 TCP 的一种增强，并且这些增强是在应用层实现的。具体来说，如果一个应用希望使用 SSL 提供的服务，就需要在客户端和服务端都引入 SSL 代码（可用现成的、性能优良的库和类）。SSL 提供的套接字 API 与传统的 TCP 套接字 API 相似。当一个应用使用 SSL 时，发送进程将明文数据传给 SSL 套接字；SSL 在发送主机中对数据加密，并将加密数据传给 TCP 套接字。这些加密数据通过 Internet 到达接收进程中的 TCP 套接字，接收端套接字将加密数据传给 SSL，由 SSL 解密数据。最后，SSL 将明文数据通过 SSL 套接字交给接收进程。我们将在 :ref:`第 8 章 <c8>` 中更详细地讲解 SSL。
+
+   .. toggle::
+
+      SECURING TCP
+
+      Neither TCP nor UDP provides any encryption—the data that the sending process passes into
+      its socket is the same data that travels over the network to the destination process. So, for
+      example, if the sending process sends a password in cleartext (i.e., unencrypted) into its socket,
+      the cleartext password will travel over all the links between sender and receiver, potentially
+      getting sniffed and discovered at any of the intervening links. Because privacy and other security
+      issues have become critical for many applications, the Internet community has developed an
+      enhancement for TCP, called **Secure Sockets Layer (SSL)**. TCP-enhanced-with-SSL not only 
+      does everything that traditional TCP does but also provides critical process-to-process security
+      services, including encryption, data integrity, and end-point authentication. We emphasize that
+      SSL is not a third Internet transport protocol, on the same level as TCP and UDP, but instead is
+      an enhancement of TCP, with the enhancements being implemented in the application layer. In
+      particular, if an application wants to use the services of SSL, it needs to include SSL code
+      (existing, highly optimized libraries and classes) in both the client and server sides of the
+      application. SSL has its own socket API that is similar to the traditional TCP socket API. When
+      an application uses SSL, the sending process passes cleartext data to the SSL socket; SSL in
+      the sending host then encrypts the data and passes the encrypted data to the TCP socket. The
+      encrypted data travels over the Internet to the TCP socket in the receiving process. The
+      receiving socket passes the encrypted data to SSL, which decrypts the data. Finally, SSL
+      passes the cleartext data through its SSL socket to the receiving process. We’ll cover SSL in
+      some detail in :ref:`Chapter 8 <c8>`.
+
+UDP 服务
+~~~~~~~~~~~~~~~~~
+UDP Services
+
+UDP 是一种无多余功能、轻量级的传输协议，仅提供最基本的服务。UDP 是无连接的，因此两个进程在开始通信之前不需要进行握手。UDP 提供的是不可靠的数据传输服务——也就是说，当一个进程将消息发送到 UDP 套接字时，UDP 并不保证该消息最终一定能抵达接收进程。此外，到达接收进程的消息可能是乱序的。
+
+UDP 不包括拥塞控制机制，因此发送方可以按照任意速率将数据发送到底层网络层中。（但需要注意的是，实际的端到端吞吐量可能低于此发送速率，这可能由于中间链路的传输能力有限或由于网络拥塞。）
+
+.. toggle::
+
+   UDP is a no-frills, lightweight transport protocol, providing minimal services. UDP is connectionless, so
+   there is no handshaking before the two processes start to communicate. UDP provides an unreliable
+   data transfer service—that is, when a process sends a message into a UDP socket, UDP provides no
+   guarantee that the message will ever reach the receiving process. Furthermore, messages that do arrive
+   at the receiving process may arrive out of order.
+
+   UDP does not include a congestion-control mechanism, so the sending side of UDP can pump data into
+   the layer below (the network layer) at any rate it pleases. (Note, however, that the actual end-to-end
+   throughput may be less than this rate due to the limited transmission capacity of intervening links or due
+   to congestion).
+
+Internet 传输协议不提供的服务
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Services Not Provided by Internet Transport Protocols
+
+我们从四个维度对传输协议服务进行了分类：可靠数据传输、吞吐量、时延和安全性。那么 TCP 和 UDP 提供了哪些服务呢？我们已经指出，TCP 提供了可靠的端到端数据传输服务；我们也知道 TCP 可通过在应用层集成 SSL 实现安全性服务。但在我们对 TCP 和 UDP 的简要描述中，你会注意到并未提及吞吐量或时延保障——这些服务是当前 Internet 传输协议所不提供的。那么，这是否意味着类似 Internet 语音通话等对时间敏感的应用无法在现今的 Internet 上运行呢？答案显然是否定的——Internet 多年来一直在承载时间敏感型应用。这些应用通常运行良好，这是因为它们在设计上最大限度地适应了缺乏保障的网络环境。我们将在 :ref:`第 9 章 <c9>` 中探讨这些设计技巧。然而，即使设计再巧妙，当网络延迟过高或端到端吞吐量受限时，也终究存在局限性。总而言之，当今的 Internet 通常能够为时间敏感的应用提供可接受的服务，但无法提供任何时延或吞吐量上的硬性保障。
+
+:ref:`图 2.5 <Figure 2.5>` 展示了一些常见的 Internet 应用所使用的传输协议。可以看到，电子邮件、远程终端访问、Web 和文件传输都使用 TCP。这些应用选择 TCP 主要是因为 TCP 提供了可靠的数据传输服务，保证所有数据最终都能正确到达目的地。Internet 语音通话应用（如 Skype）通常能容忍部分数据丢失，但需要维持一定的最低速率才能正常运行，因此开发者往往更倾向于使用 UDP，以规避 TCP 的拥塞控制机制和数据包开销。然而，由于许多防火墙被配置为屏蔽（大多数类型的）UDP 流量，Internet 语音通话应用常常会设计成在 UDP 通信失败时，自动使用 TCP 作为备选方案。
+
+.. _Figure 2.5:
+
+.. figure:: ../img/126-0.png
+   :align: center
+
+**图 2.5 常见 Internet 应用、其应用层协议及其所用的传输层协议**
+
+.. toggle::
+
+   We have organized transport protocol services along four dimensions: reliable data transfer, throughput,
+   timing, and security. Which of these services are provided by TCP and UDP? We have already noted
+   that TCP provides reliable end-to-end data transfer. And we also know that TCP can be easily enhanced
+   at the application layer with SSL to provide security services. But in our brief description of TCP and
+   UDP, conspicuously missing was any mention of throughput or timing guarantees— services not
+   provided by today’s Internet transport protocols. Does this mean that time-sensitive applications such as
+   Internet telephony cannot run in today’s Internet? The answer is clearly no—the Internet has been
+   hosting time-sensitive applications for many years. These applications often work fairly well because 
+   they have been designed to cope, to the greatest extent possible, with this lack of guarantee. We’ll
+   investigate several of these design tricks in :ref:`Chapter 9 <c9>`. Nevertheless, clever design has its limitations
+   when delay is excessive, or the end-to-end throughput is limited. In summary, today’s Internet can often
+   provide satisfactory service to time-sensitive applications, but it cannot provide any timing or throughput
+   guarantees.
+
+   :ref:`Figure 2.5 <Figure 2.5>` indicates the transport protocols used by some popular Internet applications. We see that e-
+   mail, remote terminal access, the Web, and file transfer all use TCP. These applications have chosen
+   TCP primarily because TCP provides reliable data transfer, guaranteeing that all data will eventually get
+   to its destination. Because Internet telephony applications (such as Skype) can often tolerate some loss
+   but require a minimal rate to be effective, developers of Internet telephony applications usually prefer to
+   run their applications over UDP, thereby circumventing TCP’s congestion control mechanism and packet
+   overheads. But because many firewalls are configured to block (most types of) UDP traffic, Internet
+   telephony applications often are designed to use TCP as a backup if UDP communication fails.
+
+   .. figure:: ../img/126-0.png
+      :align: center
+
+   **Figure 2.5 Popular Internet applications, their application-layer protocols, and their underlying transport protocols**
+
+.. _c2.1.5:
+
+2.1.5 应用层协议
+-------------------------------------------------------
+2.1.5 Application-Layer Protocols
+
+我们刚刚了解到，网络进程通过将消息发送到套接字来相互通信。但是，这些消息是如何构造的呢？消息中各个字段的含义是什么？进程在什么时候发送消息？这些问题将我们引入了 **应用层协议** 的领域。一个 **应用层协议** 定义了运行在不同端系统上的应用进程如何相互传递消息。特别地，应用层协议定义了：
+
+- 所交换的消息类型，例如请求消息和响应消息
+- 各种消息类型的语法，例如消息中的字段以及字段的分隔方式
+- 字段的语义，即字段中信息的含义
+- 确定进程何时以及如何发送消息和响应消息的规则
+
+一些应用层协议在 RFC 中进行了规范，因此属于公共领域。例如，Web 的应用层协议 HTTP（超文本传输协议，:rfc:`2616`）就是一个可以在 RFC 中找到的协议。如果浏览器开发者遵循 HTTP RFC 的规则，那么该浏览器就可以从任何同样遵循 HTTP RFC 规则的 Web 服务器中获取网页。还有许多应用层协议是专有的，并且有意不公开。例如，Skype 使用的就是专有的应用层协议。
+
+区分网络应用和应用层协议非常重要。应用层协议只是网络应用的一个组成部分（尽管从我们的视角来看是非常重要的部分！）。我们来看几个例子。Web 是一个客户端-服务器应用，它允许用户按需从 Web 服务器获取文档。Web 应用包含许多组件，包括文档格式标准（即 HTML）、Web 浏览器（例如 Firefox 和 Microsoft Internet Explorer）、Web 服务器（例如 Apache 和 Microsoft 服务器）以及一个应用层协议。Web 的应用层协议 HTTP 定义了浏览器与 Web 服务器之间所交换消息的格式和顺序。因此，HTTP 只是 Web 应用的一个组成部分（尽管是一个重要组成部分）。再举一个例子，Internet 电子邮件应用也有许多组件，包括存放用户邮箱的邮件服务器；允许用户阅读和创建邮件的邮件客户端（如 Microsoft Outlook）；定义电子邮件结构的标准；以及一组应用层协议，这些协议定义了服务器之间如何传输邮件、服务器与邮件客户端之间如何传输邮件，以及消息头字段的含义应如何解释。电子邮件的主要应用层协议是 SMTP（简单邮件传输协议，:rfc:`5321`）。因此，电子邮件的主要应用层协议 SMTP 也只是整个电子邮件应用的一个组成部分（尽管是重要组成部分）。
+
+.. toggle::
+
+   We have just learned that network processes communicate with each other by sending messages into
+   sockets. But how are these messages structured? What are the meanings of the various fields in the
+   messages? When do the processes send the messages? These questions bring us into the realm of
+   application-layer protocols. An **application-layer protocol** defines how an application’s processes,
+   running on different end systems, pass messages to each other. In particular, an application-layer
+   protocol defines:
+
+   - The types of messages exchanged, for example, request messages and response messages
+   - The syntax of the various message types, such as the fields in the message and how the fields are delineated
+   - The semantics of the fields, that is, the meaning of the information in the fields
+   - Rules for determining when and how a process sends messages and responds to messages
+
+   Some application-layer protocols are specified in RFCs and are therefore in the public domain. For
+   example, the Web’s application-layer protocol, HTTP (the HyperText Transfer Protocol :ref:`[RFC 2616] <RFC 2616>`), is
+   available as an RFC. If a browser developer follows the rules of the HTTP RFC, the browser will be able
+   to retrieve Web pages from any Web server that has also followed the rules of the HTTP RFC. Many
+   other application-layer protocols are proprietary and intentionally not available in the public domain. For
+   example, Skype uses proprietary application-layer protocols.
+
+   It is important to distinguish between network applications and application-layer protocols. An
+   application-layer protocol is only one piece of a network application (albeit, a very important piece of the
+   application from our point of view!). Let’s look at a couple of examples. The Web is a client-server
+   application that allows users to obtain documents from Web servers on demand. The Web application
+   consists of many components, including a standard for document formats (that is, HTML), Web
+   browsers (for example, Firefox and Microsoft Internet Explorer), Web servers (for example, Apache and
+   Microsoft servers), and an application-layer protocol. The Web’s application-layer protocol, HTTP,
+   defines the format and sequence of messages exchanged between browser and Web server. Thus,
+   HTTP is only one piece (albeit, an important piece) of the Web application. As another example, an
+   Internet e-mail application also has many components, including mail servers that house user
+   mailboxes; mail clients (such as Microsoft Outlook) that allow users to read and create messages; a
+   standard for defining the structure of an e-mail message; and application-layer protocols that define how
+   messages are passed between servers, how messages are passed between servers and mail clients,
+   and how the contents of message headers are to be interpreted. The principal application-layer protocol
+   for electronic mail is SMTP (Simple Mail Transfer Protocol) :ref:`[RFC 5321] <RFC 5321>` . Thus, e-mail’s principal
+   application-layer protocol, SMTP, is only one piece (albeit an important piece) of the e-mail application.
+
+.. _c2.1.6:
+
+2.1.6 本书涵盖的网络应用
+-------------------------------------------------------
+2.1.6 Network Applications Covered in This Book
+
+新的公共领域和专有的 Internet 应用每天都在被开发出来。我们并没有以百科全书式的方式涵盖大量 Internet 应用，而是选择专注于一小部分既广泛使用又重要的应用。在本章中，我们将讨论五个重要应用：Web、电子邮件、目录服务、视频流和 P2P 应用。
+
+我们首先讨论 Web，不仅因为它是一种极其流行的应用，而且因为它的应用层协议 HTTP 非常直观、易于理解。接着我们讨论电子邮件，这是 Internet 上第一个“杀手级应用”。与 Web 相比，电子邮件更复杂，因为它使用的不止一个应用层协议。在讨论完电子邮件后，我们介绍 DNS，它为 Internet 提供目录服务。大多数用户不会直接与 DNS 交互，而是通过其他应用间接调用 DNS（包括 Web、文件传输和电子邮件）。DNS 很好地展示了 Internet 中一项核心网络功能（网络名到网络地址的转换）是如何在应用层实现的。随后我们讨论 P2P 文件共享应用，并以点播视频流传输作为我们对应用的最后一项探讨，其中包括如何通过内容分发网络分发存储视频。在 :ref:`第 9 章 <c9>` 中，我们还将更深入地探讨多媒体应用，包括 IP 语音和视频会议。
+
+.. toggle::
+
+   New public domain and proprietary Internet applications are being developed every day. Rather than
+   covering a large number of Internet applications in an encyclopedic manner, we have chosen to focus
+   on a small number of applications that are both pervasive and important. In this chapter we discuss five
+   important applications: the Web, electronic mail, directory service video streaming, and P2P
+   applications. We first discuss the Web, not only because it is an enormously popular application, but
+   also because its application-layer protocol, HTTP, is straightforward and easy to understand. We then
+   discuss electronic mail, the Internet’s first killer application. E-mail is more complex than the Web in the 
+   sense that it makes use of not one but several application-layer protocols. After e-mail, we cover DNS,
+   which provides a directory service for the Internet. Most users do not interact with DNS directly; instead,
+   users invoke DNS indirectly through other applications (including the Web, file transfer, and electronic
+   mail). DNS illustrates nicely how a piece of core network functionality (network-name to network-
+   address translation) can be implemented at the application layer in the Internet. We then discuss P2P
+   file sharing applications, and complete our application study by discussing video streaming on demand,
+   including distributing stored video over content distribution networks. In :ref:`Chapter 9 <c9>`, we’ll cover
+   multimedia applications in more depth, including voice over IP and video conferencing.

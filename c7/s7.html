@@ -1,0 +1,757 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>7.7 蜂窝网络中的移动性管理 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c7/s7';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="7.8 无线与移动性：对高层协议的影响" href="s8.html" />
+    <link rel="prev" title="7.6 移动 IP" href="s6.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 7 章 无线与移动网络</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c7/s7.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>7.7 蜂窝网络中的移动性管理</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c7-7-1">7.7.1 向移动用户路由呼叫</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gsm-handoffs">7.7.2 GSM中的切换（Handoffs）</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c7-7">
+<span id="id1"></span><h1>7.7 蜂窝网络中的移动性管理<a class="headerlink" href="#c7-7" title="此标题的永久链接">#</a></h1>
+<p>7.7 Managing Mobility in Cellular Networks</p>
+<p>在我们考察了IP网络中如何管理移动性之后，现在让我们将注意力转向在支持移动性方面历史更为悠久的网络——蜂窝电话网络。尽管我们在 <a class="reference internal" href="s4.html#c7-4"><span class="std std-ref">第7.4节</span></a> 中聚焦于蜂窝网络中的首跳无线链路，但在这里我们将聚焦于移动性，并以GSM蜂窝网络为案例研究 [<a class="reference internal" href="../references.html#goodman-1997"><span class="std std-ref">Goodman 1997</span></a>; <a class="reference internal" href="../references.html#mouly-1992"><span class="std std-ref">Mouly 1992</span></a>; <a class="reference internal" href="../references.html#scourias-2012"><span class="std std-ref">Scourias 2012</span></a>; <a class="reference internal" href="../references.html#kaaranen-2001"><span class="std std-ref">Kaaranen 2001</span></a>; <a class="reference internal" href="../references.html#korhonen-2003"><span class="std std-ref">Korhonen 2003</span></a>; <a class="reference internal" href="../references.html#turner-2012"><span class="std std-ref">Turner 2012</span></a>]，因为它是一种成熟且被广泛部署的技术。3G和4G网络中的移动性在原理上与GSM所使用的类似。就像在移动IP的案例中一样，我们会看到在 <a class="reference internal" href="s5.html#c7-5"><span class="std std-ref">第7.5节</span></a> 中所识别的一些基本原理也被体现于GSM的网络架构中。</p>
+<p>与移动IP类似，GSM采用了间接路由的方法（见 <a class="reference internal" href="s5.html#c7-5-2"><span class="std std-ref">第7.5.2节</span></a>），首先将通信方的呼叫路由到移动用户的归属网络，再从那里转发至访问网络。在GSM术语中，移动用户的归属网络被称为移动用户的 <strong>归属公共陆地移动网络（home public land mobile network，home PLMN）</strong>。鉴于PLMN这一缩写有些拗口，并且为了避免缩写字母的“汤”，我们将在后文中将GSM的home PLMN简称为 <strong>归属网络</strong>。归属网络是与移动用户签约的蜂窝服务提供商（即向该用户收取月度蜂窝服务费用的提供商）。而 <strong>访问PLMN</strong>，我们将在下文中简称为 <strong>访问网络</strong>，是指当前移动用户所处的网络。</p>
+<p>与移动IP的情形一样，归属网络与访问网络承担着截然不同的职责。</p>
+<ul class="simple">
+<li><p>归属网络维护一个被称为 <strong>归属位置寄存器（HLR）</strong> 的数据库，该数据库中包含了每一位用户的永久手机号码以及订阅者的配置文件信息。重要的是，HLR还包含了这些用户当前位置信息。也就是说，如果某个移动用户当前正在另一个运营商的蜂窝网络中漫游，HLR中将包含足够的信息（通过一个稍后将要介绍的过程）以获取一个访问网络中的地址，从而使得对该移动用户的呼叫能够被正确路由。正如我们将看到的，归属网络中的一个特殊交换设备，被称为 <strong>网关移动服务交换中心（GMSC）</strong>，会在通信方向移动用户发起呼叫时被联系到。再次出于避免缩写堆砌的考虑，我们将在此将GMSC称为更具描述性的术语：<strong>归属MSC</strong>。</p></li>
+<li><p>访问网络维护一个被称为 <strong>访问者位置寄存器（VLR）</strong> 的数据库。VLR为当前处于该VLR所服务网络区域中的每个移动用户保存一条记录。因此，VLR中的记录会随着移动用户进入或离开该网络而不断增减。VLR通常与移动交换中心（MSC）共址，后者负责协调与访问网络相关的呼叫建立过程。</p></li>
+</ul>
+<p>在实际应用中，某个提供商的蜂窝网络既可能作为其用户的归属网络，也可能作为其他签约于不同蜂窝提供商的移动用户的访问网络。</p>
+<figure class="align-center" id="figure-7-30">
+<img alt="../_images/638-0.png" src="../_images/638-0.png" />
+</figure>
+<p><strong>图 7.30 向移动用户拨打电话：间接路由</strong></p>
+<div class="toggle docutils container">
+<p>Having examined how mobility is managed in IP networks, let’s now turn our attention to networks with an even longer history of supporting mobility—cellular telephony networks. Whereas we focused on the first-hop wireless link in cellular networks in <a class="reference internal" href="s4.html#c7-4"><span class="std std-ref">Section 7.4</span></a>, we’ll focus here on mobility, using the GSM cellular network [<a class="reference internal" href="../references.html#goodman-1997"><span class="std std-ref">Goodman 1997</span></a>; <a class="reference internal" href="../references.html#mouly-1992"><span class="std std-ref">Mouly 1992</span></a>; <a class="reference internal" href="../references.html#scourias-2012"><span class="std std-ref">Scourias 2012</span></a>; <a class="reference internal" href="../references.html#kaaranen-2001"><span class="std std-ref">Kaaranen 2001</span></a>; <a class="reference internal" href="../references.html#korhonen-2003"><span class="std std-ref">Korhonen 2003</span></a>; <a class="reference internal" href="../references.html#turner-2012"><span class="std std-ref">Turner 2012</span></a>] as our case study, since it is a mature and widely deployed technology. Mobility in 3G and 4G networks is similar in principle to that used in GSM. As in the case of mobile IP, we’ll see that a number of the fundamental principles we identified in <a class="reference internal" href="s5.html#c7-5"><span class="std std-ref">Section 7.5</span></a> are embodied in GSM’s network architecture.</p>
+<p>Like mobile IP, GSM adopts an indirect routing approach (see <a class="reference internal" href="s5.html#c7-5-2"><span class="std std-ref">Section 7.5.2</span></a>), first routing the correspondent’s call to the mobile user’s home network and from there to the visited network. In GSM terminology, the mobile users’s home network is referred to as the mobile user’s <strong>home public land mobile network (home PLMN)</strong>. Since the PLMN acronym is a bit of a mouthful, and mindful of our quest to avoid an alphabet soup of acronyms, we’ll refer to the GSM home PLMN simply as the home network. The home network is the cellular provider with which the mobile user has a subscription (i.e., the provider that bills the user for monthly cellular service). The visited PLMN, which we’ll refer to simply as the <strong>visited network</strong>, is the network in which the mobile user is currently residing.</p>
+<p>As in the case of mobile IP, the responsibilities of the home and visited networks are quite different.</p>
+<ul class="simple">
+<li><p>The home network maintains a database known as the <strong>home location register (HLR)</strong>, which contains the permanent cell phone number and subscriber profile information for each of its subscribers. Importantly, the HLR also contains information about the current locations of these subscribers. That is, if a mobile user is currently roaming in another provider’s cellular network, the HLR contains enough information to obtain (via a process we’ll describe shortly) an address in the visited network to which a call to the mobile user should be routed. As we’ll see, a special switch in the home network, known as the <strong>Gateway Mobile services Switching Center (GMSC)</strong> is contacted by a correspondent when a call is placed to a mobile user. Again, in our quest to avoid an alphabet soup of acronyms, we’ll refer to the GMSC here by a more descriptive term, <strong>home MSC</strong>.</p></li>
+<li><p>The visited network maintains a database known as the <strong>visitor location register (VLR)</strong>. The VLR contains an entry for each mobile user that is currently in the portion of the network served by the VLR. VLR entries thus come and go as mobile users enter and leave the network. A VLR is usually co-located with the mobile switching center (MSC) that coordinates the setup of a call to and from the visited network.</p></li>
+</ul>
+<p>In practice, a provider’s cellular network will serve as a home network for its subscribers and as a visited network for mobile users whose subscription is with a different cellular provider.</p>
+<figure class="align-center">
+<img alt="../_images/638-0.png" src="../_images/638-0.png" />
+</figure>
+<p><strong>Figure 7.30 Placing a call to a mobile user: Indirect routing</strong></p>
+</div>
+<section id="c7-7-1">
+<span id="id2"></span><h2>7.7.1 向移动用户路由呼叫<a class="headerlink" href="#c7-7-1" title="此标题的永久链接">#</a></h2>
+<p>7.7.1 Routing Calls to a Mobile User</p>
+<p>我们现在可以描述如何向处于访问网络中的GSM移动用户发起呼叫了。我们将在下文中考虑一个简单的示例；更复杂的场景可以参考 <a class="reference internal" href="../references.html#mouly-1992"><span class="std std-ref">[Mouly 1992]</span></a>。如 <a class="reference internal" href="#figure-7-30"><span class="std std-ref">图 7.30</span></a> 所示，步骤如下：</p>
+<ol class="arabic simple">
+<li><p>通信方拨打移动用户的电话号码。该号码本身并不指向某条具体的电话线路或地理位置（毕竟，电话号码是固定的，而用户是移动的！）。号码中的前缀数字足以在全球范围内识别出该移动用户的归属网络。呼叫从通信方通过PSTN（公共交换电话网络）路由至移动用户归属网络中的归属MSC。这是呼叫的第一跳。</p></li>
+<li><p>归属MSC接收到该呼叫后，会向HLR发起查询，以确定移动用户的当前位置。在最简单的情况下，HLR返回 <strong>移动台漫游号码（MSRN）</strong>，我们将在此称之为 <strong>漫游号码</strong>。注意，这个号码不同于移动用户的永久电话号码，后者与移动用户的归属网络关联。漫游号码是临时的：当移动用户进入某个访问网络时，会被临时分配该号码。漫游号码的作用类似于移动IP中的转交地址（COA），并且与COA一样，对通信方和移动用户来说是不可见的。如果HLR中没有该漫游号码，它会返回访问网络中VLR的地址。在这种情况下（未在 <a class="reference internal" href="#figure-7-30"><span class="std std-ref">图 7.30</span></a> 中展示），归属MSC需要查询该VLR，以获得该移动节点的漫游号码。但是，HLR最初是如何获得漫游号码或VLR地址的呢？当移动用户移动到另一个访问网络时，这些值又会发生什么变化？我们将很快探讨这些关键问题。</p></li>
+<li><p>获得漫游号码后，归属MSC通过网络建立呼叫的第二跳，连接至访问网络中的MSC。呼叫过程由通信方开始，先路由至归属MSC，再从归属MSC路由至访问MSC，最后路由至为该移动用户提供服务的基站，呼叫由此完成。</p></li>
+</ol>
+<p>在步骤2中尚未解决的问题是HLR如何获得有关移动用户位置的信息。当移动电话开机或进入由新VLR覆盖的访问网络区域时，移动设备必须在访问网络中注册。该过程通过移动设备与VLR之间的信令消息交换完成。访问网络中的VLR随后会向该移动用户的HLR发送位置更新请求消息。该消息会告知HLR移动用户的漫游号码，或者VLR的地址（稍后可以通过查询该地址来获取移动号码）。在此信息交换过程中，VLR还会从HLR中获取该移动用户的订阅信息，并确定访问网络应为该用户提供哪些服务（如果有的话）。</p>
+<div class="toggle docutils container">
+<p>We’re now in a position to describe how a call is placed to a mobile GSM user in a visited network. We’ll consider a simple example below; more complex scenarios are described in <a class="reference internal" href="../references.html#mouly-1992"><span class="std std-ref">[Mouly 1992]</span></a>. The steps, as illustrated in <a class="reference internal" href="#figure-7-30"><span class="std std-ref">Figure 7.30</span></a>, are as follows:</p>
+<ol class="arabic simple">
+<li><p>The correspondent dials the mobile user’s phone number. This number itself does not refer to a particular telephone line or location (after all, the phone number is fixed and the user is mobile!). The leading digits in the number are sufficient to globally identify the mobile’s home network. The call is routed from the correspondent through the PSTN to the home MSC in the mobile’s home network. This is the first leg of the call.</p></li>
+<li><p>The home MSC receives the call and interrogates the HLR to determine the location of the mobile user. In the simplest case, the HLR returns the <strong>mobile station roaming number (MSRN)</strong>, which we will refer to as the <strong>roaming number</strong>. Note that this number is different from the mobile’s permanent phone number, which is associated with the mobile’s home network. The roaming number is ephemeral: It is temporarily assigned to a mobile when it enters a visited network. The roaming number serves a role similar to that of the care-of address in mobile IP and, like the COA, is invisible to the correspondent and the mobile. If HLR does not have the roaming number, it returns the address of the VLR in the visited network. In this case (not shown in <a class="reference internal" href="#figure-7-30"><span class="std std-ref">Figure 7.30</span></a>), the home MSC will need to query the VLR to obtain the roaming number of the mobile node. But how does the HLR get the roaming number or the VLR address in the first place? What happens to these values when the mobile user moves to another visited network? We’ll consider these important questions shortly.</p></li>
+<li><p>Given the roaming number, the home MSC sets up the second leg of the call through the network to the MSC in the visited network. The call is completed, being routed from the correspondent to the home MSC, and from there to the visited MSC, and from there to the base station serving the mobile user.</p></li>
+</ol>
+<p>An unresolved question in step 2 is how the HLR obtains information about the location of the mobile user. When a mobile telephone is switched on or enters a part of a visited network that is covered by a new VLR, the mobile must register with the visited network. This is done through the exchange of signaling messages between the mobile and the VLR. The visited VLR, in turn, sends a location update request message to the mobile’s HLR. This message informs the HLR of either the roaming number at which the mobile can be contacted, or the address of the VLR (which can then later be queried to obtain the mobile number). As part of this exchange, the VLR also obtains subscriber information from the HLR about the mobile and determines what services (if any) should be accorded the mobile user by the visited network.</p>
+</div>
+</section>
+<section id="gsm-handoffs">
+<span id="c7-7-2"></span><h2>7.7.2 GSM中的切换（Handoffs）<a class="headerlink" href="#gsm-handoffs" title="此标题的永久链接">#</a></h2>
+<p>7.7.2 Handoffs in GSM</p>
+<p>当移动台在通话过程中从一个基站切换到另一个基站时，就发生了 <strong>切换（handoff）</strong>。如 <a class="reference internal" href="#figure-7-31"><span class="std std-ref">图 7.31</span></a> 所示，在切换之前，移动用户的通话通过一个基站（我们称之为旧基站）路由到移动用户；切换之后，通话则通过另一个基站（我们称之为新基站）路由到移动用户。请注意，基站之间的切换不仅意味着移动设备与新基站之间的收发转换，还包括正在进行的通话在网络内部的某个交换点上重新路由至新基站。我们最初假设旧基站与新基站隶属于同一个MSC，并且重新路由发生在该MSC处。</p>
+<figure class="align-center" id="figure-7-31">
+<img alt="../_images/639-0.png" src="../_images/639-0.png" />
+</figure>
+<p><strong>图 7.31 同一MSC下基站之间的切换场景</strong></p>
+<p>发生切换的原因可能有多个，包括（1）当前基站与移动台之间的信号恶化到通话可能被中断的程度，以及（2）某个小区可能过载，正在处理大量通话。通过将移动台切换到负载较轻的邻近小区可以缓解这种拥塞。</p>
+<p>在与某个基站关联期间，移动设备会周期性地测量来自其当前基站的信标信号强度，以及其能够“听到”的邻近基站的信标信号强度。这些测量结果每秒报告一次或两次给当前基站。GSM中的切换由旧基站根据这些测量值、邻近小区中移动设备的当前负载以及其他因素发起 <a class="reference internal" href="../references.html#mouly-1992"><span class="std std-ref">[Mouly 1992]</span></a>。GSM标准并未规定基站用于决定是否执行切换的具体算法。</p>
+<p><span class="xref std std-ref">图 7.32</span> 展示了基站决定切换移动用户时涉及的步骤：</p>
+<ol class="arabic">
+<li><p>旧基站（BS）通知访问MSC即将执行切换，并告知移动用户将切换至的新基站（或一组可能的新基站）。</p></li>
+<li><p>访问MSC发起到新基站的路径建立，分配所需资源以承载重新路由的通话，并向新基站发出即将进行切换的信号。</p></li>
+<li><p>新基站为移动用户分配并激活一个无线信道。</p></li>
+<li><p>新基站向访问MSC和旧基站发出信号，表示访问MSC与新基站之间的路径已建立，应通知移动用户即将进行切换。新基站还提供移动用户与其关联所需的全部信息。</p>
+<figure class="align-center" id="figure-7-32">
+<img alt="../_images/640-0.png" src="../_images/640-0.png" />
+</figure>
+<p><strong>图 7.32 同一MSC下基站间切换的各个步骤</strong></p>
+</li>
+<li><p>移动用户被告知应执行切换。注意，在此之前，移动用户对网络为切换所做的准备（例如，在新基站分配信道、建立访问MSC到新基站的路径）毫不知情。</p></li>
+<li><p>移动设备与新基站交换一个或多个消息，以完全激活新基站中的新信道。</p></li>
+<li><p>移动设备向新基站发送“切换完成”消息，该消息随后转发至访问MSC。访问MSC随后通过新基站将正在进行的通话重新路由至移动用户。</p></li>
+<li><p>分配给旧基站路径的资源随后被释放。</p></li>
+</ol>
+<p>让我们通过考虑以下情况来结束对切换的讨论：当移动用户移动到一个与旧基站关联的MSC不同的新基站时会发生什么？当这种跨MSC切换多次发生时又会发生什么？如 <a class="reference internal" href="#figure-7-33"><span class="std std-ref">图 7.33</span></a> 所示，GSM定义了 <strong>锚定MSC（anchor MSC）</strong> 的概念。锚定MSC是移动用户首次发起通话时所访问的MSC；在整个通话期间，锚定MSC保持不变。无论通话期间发生多少次跨MSC转移，通话总是从归属MSC路由至锚定MSC，再从锚定MSC路由至当前移动用户所在的访问MSC。当移动用户从一个MSC的覆盖区域移动到另一个MSC的覆盖区域时，正在进行的通话就会从锚定MSC重新路由到包含新基站的新访问MSC。因此，在任何时刻，通信路径中最多存在三个MSC（归属MSC、锚定MSC和访问MSC）。<a class="reference internal" href="#figure-7-33"><span class="std std-ref">图 7.33</span></a> 展示了移动用户在多个MSC间路由通话的情况。</p>
+<figure class="align-center" id="figure-7-33">
+<img alt="../_images/641-0.png" src="../_images/641-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/642-0.png" src="../_images/642-0.png" />
+</figure>
+<p><strong>图 7.33 通过锚定MSC重新路由</strong></p>
+<p><strong>表 7.2 移动IP与GSM移动性的共通性</strong></p>
+<div class="pst-scrollable-table-container"><table class="table" id="table-7-2">
+<tbody>
+<tr class="row-odd"><td><p><strong>GSM元素</strong></p></td>
+<td><p><strong>对GSM元素的说明</strong></p></td>
+<td><p><strong>移动IP元素</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>归属系统</p></td>
+<td><p>移动用户永久电话号码所属的网络。</p></td>
+<td><p>归属网络</p></td>
+</tr>
+<tr class="row-odd"><td><p>网关移动交换中心（或简称归属MSC）、归属位置寄存器（HLR）</p></td>
+<td><p>归属MSC：用于获取可路由地址的联系点。HLR：归属系统中的数据库，包含永久电话号码、用户资料、当前位置信息、订阅信息。</p></td>
+<td><p>归属代理（home agent）</p></td>
+</tr>
+<tr class="row-even"><td><p>访问系统</p></td>
+<td><p>除归属系统以外，移动用户当前所在的网络。</p></td>
+<td><p>访问网络</p></td>
+</tr>
+<tr class="row-odd"><td><p>访问移动交换中心、访问位置寄存器（VLR）</p></td>
+<td><p>访问MSC：负责在其管辖的小区中发起和接收与移动节点的通话。VLR：访问系统中的临时数据库条目，包含每位访问移动用户的订阅信息。</p></td>
+<td><p>外部代理（foreign agent）</p></td>
+</tr>
+<tr class="row-even"><td><p>移动台漫游号码（MSRN）或简称漫游号码</p></td>
+<td><p>从归属MSC到访问MSC之间通话段的可路由地址，对通信方和移动用户均不可见。</p></td>
+<td><p>转交地址（care-of address）</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>除了维持从锚定MSC到当前MSC的一跳路径外，还有一种替代方法是简单地将移动用户访问过的MSC进行“链式连接”，即每次移动用户进入新MSC时，由旧MSC将正在进行的通话转发至新MSC。这种MSC链式连接的方式在IS-41蜂窝网络中确实存在，且可选地通过路径最小化步骤移除锚定MSC与当前访问MSC之间的MSC节点 <a class="reference internal" href="../references.html#lin-2001"><span class="std std-ref">[Lin 2001]</span></a>。</p>
+<p>让我们通过对GSM与移动IP中移动性管理的比较来结束本节讨论。如 <a class="reference internal" href="#table-7-2"><span class="std std-ref">表 7.2</span></a> 所示，虽然IP和蜂窝网络在许多方面存在根本差异，但它们在处理移动性方面却拥有许多令人惊讶的功能共通性和总体方法上的相似之处。</p>
+<div class="toggle docutils container">
+<p>A <strong>handoff</strong> occurs when a mobile station changes its association from one base station to another during a call. As shown in <a class="reference internal" href="#figure-7-31"><span class="std std-ref">Figure 7.31</span></a>, a mobile’s call is initially (before handoff) routed to the mobile through one base station (which we’ll refer to as the old base station), and after handoff is routed to the mobile through another base station (which we’ll refer to as the new base station). Note that a handoff between base stations results not only in the mobile transmitting/receiving to/from a new base station, but also in the rerouting of the ongoing call from a switching point within the network to the new base station. Let’s initially assume that the old and new base stations share the same MSC, and that the rerouting occurs at this MSC.</p>
+<figure class="align-center">
+<img alt="../_images/639-0.png" src="../_images/639-0.png" />
+</figure>
+<p><strong>Figure 7.31 Handoff scenario between base stations with a common MSC</strong></p>
+<p>There may be several reasons for handoff to occur, including (1) the signal between the current base station and the mobile may have deteriorated to such an extent that the call is in danger of being dropped, and (2) a cell may have become overloaded, handling a large number of calls. This congestion may be alleviated by handing off mobiles to less congested nearby cells.</p>
+<p>While it is associated with a base station, a mobile periodically measures the strength of a beacon signal from its current base station as well as beacon signals from nearby base stations that it can “hear.” These measurements are reported once or twice a second to the mobile’s current base station. Handoff in GSM is initiated by the old base station based on these measurements, the current loads of mobiles in nearby cells, and other factors <a class="reference internal" href="../references.html#mouly-1992"><span class="std std-ref">[Mouly 1992]</span></a>. The GSM standard does not specify the specific algorithm to be used by a base station to determine whether or not to perform handoff.</p>
+<p><span class="xref std std-ref">Figure 7.32</span> illustrates the steps involved when a base station does decide to hand off a mobile user:</p>
+<ol class="arabic">
+<li><p>The old base station (BS) informs the visited MSC that a handoff is to be performed and the BS (or possible set of BSs) to which the mobile is to be handed off.</p></li>
+<li><p>The visited MSC initiates path setup to the new BS, allocating the resources needed to carry the rerouted call, and signaling the new BS that a handoff is about to occur.</p></li>
+<li><p>The new BS allocates and activates a radio channel for use by the mobile.</p></li>
+<li><p>The new BS signals back to the visited MSC and the old BS that the visited-MSC-to-new-BS path has been established and that the mobile should beinformed of the impending handoff. The new BS provides all of the information that the mobile will need to associate with the new BS.</p>
+<figure class="align-center">
+<img alt="../_images/640-0.png" src="../_images/640-0.png" />
+</figure>
+<p id="id3"><strong>Figure 7.32 Steps in accomplishing a handoff between base stations with a common MSC</strong></p>
+</li>
+<li><p>The mobile is informed that it should perform a handoff. Note that up until this point, the mobile has been blissfully unaware that the network has been laying the groundwork (e.g., allocating a channel in the new BS and allocating a path from the visited MSC to the new BS) for a handoff.</p></li>
+<li><p>The mobile and the new BS exchange one or more messages to fully activate the new channel in the new BS.</p></li>
+<li><p>The mobile sends a handoff complete message to the new BS, which is forwarded up to the visited MSC. The visited MSC then reroutes the ongoing call to the mobile via the new BS.</p></li>
+<li><p>The resources allocated along the path to the old BS are then released.</p></li>
+</ol>
+<p>Let’s conclude our discussion of handoff by considering what happens when the mobile moves to a BS that is associated with a different MSC than the old BS, and what happens when this inter-MSC handoff occurs more than once. As shown in <a class="reference internal" href="#figure-7-33"><span class="std std-ref">Figure 7.33</span></a>, GSM defines the notion of an <strong>anchor MSC</strong>. The anchor MSC is the MSC visited by the mobile when a call first begins; the anchor MSC thus remains unchanged during the call. Throughout the call’s duration and regardless of the number of inter-MSC transfers performed by the mobile, the call is routed from the home MSC to the anchor MSC, and then from the anchor MSC to the visited MSC where the mobile is currently located. When a mobile moves from the coverage area of one MSC to another, the ongoing call is rerouted from the anchor MSC to the new visited MSC containing the new base station. Thus, at all times there are at most three MSCs (the home MSC, the anchor MSC, and the visited MSC) between the correspondent and the mobile. <a class="reference internal" href="#figure-7-33"><span class="std std-ref">Figure 7.33</span></a> illustrates the routing of a call among the MSCs visited by a mobile user.</p>
+<figure class="align-center">
+<img alt="../_images/641-0.png" src="../_images/641-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/642-0.png" src="../_images/642-0.png" />
+</figure>
+<p><strong>Figure 7.33 Rerouting via the anchor MSC</strong></p>
+<p><strong>Table 7.2 Commonalities between mobile IP and GSM mobility</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p><strong>GSM element</strong></p></td>
+<td><p><strong>Comment on GSM element</strong></p></td>
+<td><p><strong>Mobile IP element</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Home system</p></td>
+<td><p>Network to which the mobile user’s permanent phone number belongs.</p></td>
+<td><p>Home network</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gateway mobile switching center or simply home MSC, Home location register (HLR)</p></td>
+<td><p>Home MSC: point of contact to obtain routable address of mobile user. HLR: database in home system containing permanent phone number, profile information, current location of mobile user, subscription information.</p></td>
+<td><p>Home agent</p></td>
+</tr>
+<tr class="row-even"><td><p>Visited system</p></td>
+<td><p>Network other than home system where mobile user is currently residing.</p></td>
+<td><p>Visited network</p></td>
+</tr>
+<tr class="row-odd"><td><p>Visited mobile services switching center, Visitor location register (VLR)</p></td>
+<td><p>Visited MSC: responsible for setting up calls to/from mobile nodes in cells associated with MSC. VLR: temporary database entry in visited system, containing subscription information for each visiting mobile user.</p></td>
+<td><p>Foreign agent</p></td>
+</tr>
+<tr class="row-even"><td><p>Mobile station roaming number (MSRN) or simply roaming number</p></td>
+<td><p>Routable address for telephone call segment between home MSC and visited MSC, visible to neither the mobile nor the correspondent.</p></td>
+<td><p>Care-of addressed</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Rather than maintaining a single MSC hop from the anchor MSC to the current MSC, an alternative approach would have been to simply chain the MSCs visited by the mobile, having an old MSC forward the ongoing call to the new MSC each time the mobile moves to a new MSC. Such MSC chaining can in fact occur in IS-41 cellular networks, with an optional path minimization step to remove MSCs between the anchor MSC and the current visited MSC <a class="reference internal" href="../references.html#lin-2001"><span class="std std-ref">[Lin 2001]</span></a>.</p>
+<p>Let’s wrap up our discussion of GSM mobility management with a comparison of mobility management in GSM and Mobile IP. The comparison in <a class="reference internal" href="#table-7-2"><span class="std std-ref">Table 7.2</span></a> indicates that although IP and cellular networks are fundamentally different in many ways, they share a surprising number of common functional elements and overall approaches in handling mobility.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s6.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">7.6 移动 IP</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s8.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">7.8 无线与移动性：对高层协议的影响</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c7-7-1">7.7.1 向移动用户路由呼叫</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gsm-handoffs">7.7.2 GSM中的切换（Handoffs）</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

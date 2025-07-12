@@ -1,0 +1,608 @@
+.. _c1.2:
+
+
+1.2 网络边缘
+=================
+
+1.2 The Network Edge
+
+在上一节中，我们对互联网及其网络协议进行了高层次的概述。本节我们将更深入地探讨计算机网络（特别是互联网）的组成部分。我们从网络的边缘开始，考察我们最熟悉的一些组件 —— 即我们日常使用的计算机、智能手机和其他设备。在下一节中，我们将从网络边缘转向网络核心，研究计算机网络中的交换与路由。
+
+还记得上一节提到过，在计算机网络术语中，连接到互联网的计算机和其他设备通常被称为终端系统（*end systems*）。它们之所以被称为“终端”系统，是因为它们位于互联网的边缘，如 :ref:`图 1.3 <Figure 1.3>` 所示。互联网的终端系统包括台式计算机（例如 PC、Mac、Linux 机器）、服务器（如 Web 和电子邮件服务器）以及移动设备（例如笔记本电脑、智能手机和平板电脑）。此外，越来越多的非传统设备（“物”）也正在作为终端系统连接到互联网（参见下面的“案例历史”部分）。
+
+终端系统也被称为 *主机（hosts）*，因为它们承载（即运行）诸如 Web 浏览器程序、Web 服务器程序、电子邮件客户端程序或电子邮件服务器程序等应用程序。在本书中，我们将“主机”和“终端系统”这两个术语交替使用，即 *host = end system*。有时，主机还可以进一步划分为两类： **客户端（clients）** 和 **服务器（servers）**。一般来说，客户端通常是台式或移动个人计算机、智能手机等，而服务器则是更为强大的机器，用于存储和分发网页、视频流、转发电子邮件等。如今，我们接收搜索结果、电子邮件、网页和视频的大多数服务器都驻留在大型 **数据中心（data centers）** 中。例如，Google 拥有 50 到 100 个数据中心，其中大约有 15 个大型中心，每个中心部署了超过 10 万台服务器。
+
+.. _Figure 1.3:
+
+.. figure:: ../img/37-0.png
+   :align: center
+   :name: End-system interaction
+
+**图 1.3 终端系统交互**
+
+.. toggle::
+
+   In the previous section we presented a high-level overview of the Internet and networking protocols. We
+   are now going to delve a bit more deeply into the components of a computer network (and the Internet,
+   in particular). We begin in this section at the edge of a network and look at the components with which
+   we are most familiar—namely, the computers, smartphones and other devices that we use on a daily
+   basis. In the next section we’ll move from the network edge to the network core and examine switching
+   and routing in computer networks.
+
+   Recall from the previous section that in computer networking jargon, the computers and other devices
+   connected to the Internet are often referred to as end systems. They are referred to as end systems
+   because they sit at the edge of the Internet, as shown in :ref:`Figure 1.3 <Figure 1.3>` . The Internet’s end systems include
+   desktop computers (e.g., desktop PCs, Macs, and Linux boxes), servers (e.g., Web and e-mail servers),
+   and mobile devices (e.g., laptops, smartphones, and tablets). Furthermore, an increasing number of
+   non-traditional “things” are being attached to the Internet as end ­systems (see the Case History
+   feature).
+
+   End systems are also referred to as *hosts* because they host (that is, run) application programs such as
+   a Web browser program, a Web server program, an e-mail client program, or an e-mail server program.
+   Throughout this book we will use the terms hosts and end systems interchangeably; that is, *host = end system*. Hosts are sometimes further
+   divided into two categories: **clients** and **servers**. Informally, clients tend to be desktop and mobile PCs,
+   smartphones, and so on, whereas servers tend to be more powerful machines that store and distribute
+   Web pages, stream video, relay e-mail, and so on. Today, most of the servers from which we receive
+   search results, e-mail, Web pages, and videos reside in large **data centers**. For example, Google has
+   50-100 data centers, including about 15 large centers, each with more than 100,000 servers.
+   
+   .. figure:: ../img/37-0.png
+      :align: center
+   
+   **Figure 1.3 End-system interaction**
+
+.. _Internet of Things:
+
+.. topic:: 案例历史（CASE HISTORY）
+   
+   *物联网（THE INTERNET OF THINGS）*
+
+   你能想象一个世界，其中几乎所有事物都通过无线方式连接到互联网吗？
+   一个世界中，大多数人、汽车、自行车、眼镜、手表、玩具、医疗设备、家庭传感器、
+   教室、视频监控系统、大气传感器、货架商品甚至宠物都处于联网状态？
+   这个“物联网”（IoT）的世界或许已近在眼前。
+
+   有估计指出，到 2015 年为止，已有大约 50 亿个设备连接到互联网，而到 2020 年，这一数字可能增长至 250 亿 :ref:`[Gartner 2014] <Gartner 2014>`。
+   这些设备包括智能手机，它们已然无处不在，伴随着我们在家中、办公室和车内穿行，
+   并将我们的地理位置和使用数据报告给 ISP 和互联网应用程序。但除了智能手机，
+   目前市场上还有种类繁多的非传统“联网物件”。例如，现在已经有联网的可穿戴设备，
+   包括 Apple 等公司推出的智能手表和眼镜。联网眼镜甚至可以将我们看到的所有内容上传至云端，
+   实现全球实时视觉共享。智能家居设备也已面世，例如可通过智能手机远程控制的联网恒温器、
+   以及联网体重秤，用户可以在手机上图形化查看饮食进展。
+
+   市场上还有联网玩具，例如能够识别并解析儿童语言、并做出适当回应的洋娃娃。
+
+   物联网为用户带来了潜在的革命性收益。但与此同时，也存在巨大的安全与隐私风险。
+   比如，攻击者可能通过互联网入侵物联网设备或其后台服务器。例如，
+   攻击者可能劫持一个联网娃娃，与儿童直接对话；
+   也可能入侵存储来自可穿戴设备的健康与活动数据的数据库。
+   这些安全与隐私问题可能会削弱消费者对物联网技术的信任，
+   阻碍其全面推广和普及 :ref:`[FTC 2015] <FTC 2015>`。
+
+   .. toggle::
+         
+      *THE INTERNET OF THINGS*
+
+      Can you imagine a world in which just about everything is wirelessly connected to the Internet?
+      A world in which most people, cars, bicycles, eye glasses, watches, toys, hospital equipment,
+      home sensors, classrooms, video surveillance systems, atmospheric sensors, store-shelf
+      products, and pets are connected? This world of the Internet of Things (IoT) may actually be just
+      around the corner.
+
+      By some estimates, as of 2015 there are already 5 billion things connected to the Internet, and
+      the number could reach 25 billion by 2020 :ref:`[Gartner 2014] <Gartner 2014>`. These things include our
+      smartphones, which already follow us around in our homes, offices, and cars, reporting our geo-
+      locations and usage data to our ISPs and Internet applications. But in addition to our
+      smartphones, a wide-variety of non-traditional “things” are already available as products. For
+      example, there are Internet-connected wearables, including watches (from Apple and many
+      others) and eye glasses. Internet-connected glasses can, for example, upload everything we see
+      to the cloud, allowing us to share our visual experiences with people around the world in real-
+      time. There are Internet-connected things already available for the smart home, including
+      Internet-connected thermostats that can be controlled remotely from our smartphones, and
+      Internet-connected body scales, enabling us to graphically review the progress of our diets from
+      our smartphones. There are Internet-connected toys, including dolls that recognize and interpret
+      a child’s speech and respond appropriately.
+
+      The IoT offers potentially revolutionary benefits to users. But at the same time there are also
+      huge security and privacy risks. For example, attackers, via the Internet, might be able to hack
+      into IoT devices or into the servers collecting data from IoT devices. For example, an attacker
+      could hijack an Internet-connected doll and talk directly with a child; or an attacker could hack
+      into a database that stores ­personal health and activity information collected from wearable
+      devices. These security and privacy concerns could undermine the consumer confidence
+      necessary for the ­technologies to meet their full potential and may result in less widespread
+      adoption :ref:`[FTC 2015] <FTC 2015>`.
+
+.. _c1.2.1:
+
+1.2.1 接入网络
+-----------------------
+
+1.2.1 Access Networks 
+
+在讨论完位于“网络边缘”的应用与终端系统之后，我们接下来要了解的是接入网络——即物理上将终端系统连接到通往其他远程终端系统路径中的第一个路由器（也称为“边缘路由器”）的网络。:ref:`图 1.4 <Figure 1.4>` 展示了几种类型的接入网络（以粗实线表示）及其典型使用场景（家庭、企业和广域无线接入）。
+
+.. _Figure 1.4:
+
+.. figure:: ../img/39-0.png
+   :align: center 
+   :name: Access networks
+
+**图 1.4 接入网络**
+
+
+.. toggle::
+
+   Having considered the applications and end systems at the “edge of the network,” let’s next consider the
+   access network—the network that physically connects an end system to the first router (also known as
+   the “edge router”) on a path from the end system to any other distant end system. :ref:`Figure 1.4 <Figure 1.4>` shows
+   several types of access networks with thick, shaded lines and the settings (home, enterprise, and wide-area mobile wireless) in which they are used.
+
+   .. _Figure 1.4:
+
+   .. figure:: ../img/39-0.png
+      :align: center 
+
+   **Figure 1.4 Access networks**
+
+家庭接入：DSL、有线电视、FTTH、拨号和卫星
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Home Access: DSL, Cable, FTTH, Dial-Up, and Satellite
+
+截至 2014 年，在发达国家中，超过 78% 的家庭拥有互联网接入，其中韩国、荷兰、芬兰和瑞典的家庭互联网接入率超过 80%，几乎全部为高速宽带接入 :ref:`[ITU 2015] <ITU 2015>`。鉴于家庭接入网络的广泛应用，我们从家庭如何连接到互联网开始介绍接入网络。
+
+目前最常见的两种家庭宽带接入方式是 **数字用户线（DSL）** 和 **有线电视网络（Cable）**。通常，住宅用户通过本地电话公司（telco）提供的 DSL 接入互联网，该电话公司也提供传统的有线电话服务。因此，在 DSL 接入中，用户的电话公司也就是其 ISP。如 :ref:`图 1.5 <Figure 1.5>` 所示，每个用户的 DSL 调制解调器通过现有的电话线（双绞铜线，详见 :ref:`1.2.2节 <c1.2.2>`）与电话公司本地交换局（CO）内的数字用户线接入复用器（DSLAM）进行数据交换。家庭内的 DSL 调制解调器将数字数据转换为高频信号，通过电话线传输至 CO；而 DSLAM 则将多个家庭发来的模拟信号转换为数字信号。
+
+住宅电话线同时承载数据与传统电话信号，它们分别被编码在不同频段上：
+
+- 下行高速通道：50 kHz 到 1 MHz
+- 上行中速通道：4 kHz 到 50 kHz
+- 普通双向电话通道：0 到 4 kHz
+
+这种方式使得一条 DSL 线路看起来像是三条独立线路，从而支持电话与互联网同时使用。
+
+.. _Figure 1.5:
+
+.. figure:: ../img/40-0.png
+   :align: center 
+   :name: DSL Internet access
+
+**图 1.5 DSL 接入互联网**
+
+（我们将在 :ref:`1.3.1节 <c1.3.1>` 介绍这种频分复用技术。）在用户侧，一个分离器将数据与电话信号分开，并将数据信号送至 DSL 调制解调器。在电话公司侧，DSLAM 将信号分离并将数据送入互联网。一个 DSLAM 可连接数百甚至上千个家庭 :ref:`[Dischinger 2007] <Dischinger 2007>`。
+
+DSL 标准定义了多种传输速率，如 12 Mbps 下行 / 1.8 Mbps 上行 :ref:`[ITU 1999] <ITU 1999>` 和 55 Mbps 下行 / 15 Mbps 上行 :ref:`[ITU 2006] <ITU 2006>`。由于下行速率通常高于上行，因此这类接入被称为 **非对称接入**。实际速率可能低于标准值，尤其在提供分级服务（按价格提供不同速率）时。此外，最大速率还受住宅与 CO 之间距离、线路粗细及电磁干扰的影响。DSL 设计初衷就是用于住宅与 CO 之间距离较短的场景；若距离超过 5-10 英里，则需改用其他接入方式。
+
+与 DSL 使用电话公司的基础设施不同，**有线电视接入（Cable Internet）** 使用有线电视公司的现有电视网络。住宅用户从提供有线电视服务的同一公司获取互联网接入。如 :ref:`图 1.6 <A hybrid fiber-coaxial access network>` 所示，光纤将电视头端连接至小区接入节点，再通过同轴电缆连接到各个住宅。每个小区接入点通常服务 500 到 5,000 户家庭。由于该系统结合了光纤与同轴电缆，通常被称为混合光纤同轴（HFC）网络。
+
+.. _Figure 1.6:
+
+.. figure:: ../img/41-0.png
+   :align: center 
+   :name: A hybrid fiber-coaxial access network
+
+**图 1.6 混合光纤同轴接入网络**
+
+有线电视接入需要专用的调制解调器，称为有线调制解调器（cable modem）。类似 DSL 调制解调器，通常为外部设备，并通过以太网接口与家庭 PC 连接。（我们将在 :ref:`第6章 <c6>` 中详细讨论以太网。）在电视头端，有线调制解调器终端系统（CMTS）与 DSL 网络中的 DSLAM 类似，将下游家庭发送的模拟信号转换为数字信号。Cable modem 将 HFC 网络划分为上下行两个通道，通常为非对称接入，下行速率更高。DOCSIS 2.0 标准支持下行最高 42.8 Mbps，上行最高 30.7 Mbps。但实际速率仍可能受限于套餐带宽或线路损耗。
+
+有线接入的一个重要特性是其为共享广播介质。头端发出的每个数据包会通过每条链路发送至每个家庭；而家庭发送的每个数据包也会通过上行通道传至头端。因此，若多个用户同时下载视频，则每个用户实际速率将低于总带宽；而若仅有少数用户且为网页浏览，则可能获得满速体验。由于上行通道也是共享的，因此需使用 **分布式多路访问协议** 以协调发送并避免冲突（详见 :ref:`第6章 <c6>`）。
+
+虽然 DSL 和有线网络目前占据美国住宅宽带市场超过 85%，但一种新兴技术—— **光纤到户（FTTH）** 提供了更高速度 :ref:`[FTTH Council 2016] <FTTH Council 2016>`。顾名思义，FTTH 是指从 CO 直接敷设光纤至每户。目前包括阿联酋、韩国、香港、日本、新加坡、台湾、立陶宛和瑞典等国家和地区，家庭光纤渗透率超过 30% :ref:`[FTTH Council 2016] <FTTH Council 2016>`。
+
+FTTH 存在多种光纤分发技术。最简单的是 **直连光纤** ，即每户一根光纤。但更常见的是多个家庭共享一根从 CO 出发的光纤，接近住宅后再分光。主要有两种分光网络架构： **主动光网络（AON）** 和 **无源光网络（PON）**。AON 本质上是以太网交换（详见 :ref:`第6章 <c6>`）。
+
+我们简要介绍 PON，它被应用于 Verizon 的 FIOS 服务。:ref:`图 1.7 <Figure 1.7>` 展示了基于 PON 的 FTTH 架构。每户配有一个光网络终端（ONT），通过专用光纤连接至邻近分光器。该分光器将少于 100 户的信号汇聚至一根共享光纤，再连接至电话公司 CO 内的光线路终端（OLT）。OLT 进行光电信号转换，通过路由器接入互联网。家庭用户通过家庭路由器（通常是无线）连接 ONT，以访问互联网。在 PON 架构中，OLT 发出的数据包在分光器处进行复制（类似有线头端广播）。
+
+.. _Figure 1.7:
+
+.. figure:: ../img/43-0.png
+   :align: center
+
+**图 1.7 FTTH 接入互联网**
+
+FTTH 可支持千兆级别的互联网接入速率。然而，大多数 FTTH 提供商提供多种套餐，速率越高价格越贵。2011 年美国 FTTH 用户平均下行速率约为 20 Mbps（相比之下，有线接入为 13 Mbps，DSL 不足 5 Mbps） :ref:`[FTTH Council 2011b] <FTTH Council 2011b>` 。
+
+还有两种接入网络技术也用于家庭互联网接入。在无法部署 DSL、有线或 FTTH 的地区（例如部分农村），可使用 **卫星连接**，速率超过 1 Mbps。StarBand 和 HughesNet 是此类服务提供商。而 **拨号接入** 则通过传统电话线路实现，与 DSL 类似，但速率仅为 56 kbps，远低于 DSL 和其他宽带技术。
+
+.. toggle::
+
+   In developed countries as of 2014, more than 78 percent of the households have Internet access, with
+   Korea, Netherlands, Finland, and Sweden leading the way with more than 80 percent of households
+   having Internet access, almost all via a high-speed broadband connection :ref:`[ITU 2015] <ITU 2015>`. Given this
+   widespread use of home access networks let’s begin our overview of access networks by considering
+   how homes connect to the Internet.
+
+   Today, the two most prevalent types of broadband residential access are **digital subscriber line (DSL)**
+   and cable. A residence typically obtains DSL Internet access from the same local telephone company
+   (telco) that provides its wired local phone access. Thus, when DSL is used, a customer’s telco is also its
+   ISP. As shown in :ref:`Figure 1.5 <Figure 1.5>`, each customer’s DSL modem uses the existing telephone line (twisted-
+   pair copper wire, which we’ll discuss in :ref:`Section 1.2.2 <c1.2.2>` ) to exchange data with a digital subscriber line
+   access multiplexer (DSLAM) located in the telco’s local central office (CO). The home’s DSL modem
+   takes digital data and translates it to high-­frequency tones for transmission over telephone wires to the
+   CO; the analog signals from many such houses are translated back into digital format at the DSLAM.
+
+   The residential telephone line carries both data and traditional telephone signals simultaneously, which
+   are encoded at different frequencies:
+
+   - A high-speed downstream channel, in the 50 kHz to 1 MHz band
+   - A medium-speed upstream channel, in the 4 kHz to 50 kHz band
+   - An ordinary two-way telephone channel, in the 0 to 4 kHz band
+
+   This approach makes the single DSL link appear as if there were three separate links, so that a
+   telephone call and an Internet connection can share the DSL link at the same time.
+
+   .. figure:: ../img/40-0.png
+      :align: center 
+      :name: DSL Internet access
+
+   **Figure 1.5 DSL Internet access**
+
+   (We’ll describe this technique of frequency-division multiplexing in :ref:`Section 1.3.1 <c1.3.1>`.) On the customer side,
+   a splitter separates the data and telephone signals arriving to the home and forwards the data signal to
+   the DSL modem. On the telco side, in the CO, the DSLAM separates the data and phone signals and
+   sends the data into the Internet. Hundreds or even thousands of households connect to a single DSLAM
+   :ref:`[Dischinger 2007] <Dischinger 2007>`.
+
+   The DSL standards define multiple transmission rates, including 12 Mbps downstream and 1.8 Mbps
+   upstream :ref:`[ITU 1999] <ITU 1999>`, and 55 Mbps downstream and 15 Mbps upstream :ref:`[ITU 2006] <ITU 2006>`. Because the
+   downstream and upstream rates are different, the access is said to be asymmetric. The actual
+   downstream and upstream transmission rates achieved may be less than the rates noted above, as the
+   DSL provider may purposefully limit a residential rate when tiered service (different rates, available at
+   different prices) are offered. The maximum rate is also limited by the distance between the home and
+   the CO, the gauge of the twisted-pair line and the degree of electrical interference. Engineers have
+   expressly designed DSL for short distances between the home and the CO; generally, if the residence is
+   not located within 5 to 10 miles of the CO, the residence must resort to an alternative form of Internet
+   access.
+
+   While DSL makes use of the telco’s existing local telephone infrastructure, **cable Internet access**
+   makes use of the cable television company’s existing cable television infrastructure. A residence obtains
+   cable Internet access from the same company that provides its cable television. As illustrated in :ref:`Figure 1.6 <Figure 1.6>`
+   , fiber optics connect the cable head end to neighborhood-level junctions, from which traditional
+   coaxial cable is then used to reach individual houses and apartments. Each neighborhood junction
+   typically supports 500 to 5,000 homes. Because both fiber and coaxial cable are employed in this
+   system, it is often referred to as hybrid fiber coax (HFC).
+
+   .. figure:: ../img/41-0.png
+      :align: center 
+      :name: A hybrid fiber-coaxial access network
+
+   **Figure 1.6 A hybrid fiber-coaxial access network**
+
+   Cable internet access requires special modems, called cable modems. As with a DSL modem, the cable
+   modem is typically an external device and connects to the home PC through an Ethernet port. (We will
+   discuss Ethernet in great detail in :ref:`Chapter 6 <c6>`.) At the cable head end, the cable modem termination
+   system (CMTS) serves a similar function as the DSL network’s DSLAM—turning the analog signal sent
+   from the cable modems in many downstream homes back into digital format. Cable modems divide the
+   HFC network into two channels, a downstream and an upstream channel. As with DSL, access is
+   typically asymmetric, with the downstream channel typically allocated a higher transmission rate than
+   the upstream channel. The ­DOCSIS 2.0 standard defines downstream rates up to 42.8 Mbps and
+   upstream rates of up to 30.7 Mbps. As in the case of DSL networks, the maximum achievable rate may
+   not be realized due to lower contracted data rates or media impairments.
+
+   One important characteristic of cable Internet access is that it is a shared broadcast medium. In
+   particular, every packet sent by the head end travels downstream on every link to every home and every
+   packet sent by a home travels on the upstream channel to the head end. For this reason, if several
+   users are simultaneously downloading a video file on the downstream channel, the actual rate at which
+   each user receives its video file will be significantly lower than the aggregate cable downstream rate. On
+   the other hand, if there are only a few active users and they are all Web surfing, then each of the users
+   may actually receive Web pages at the full cable downstream rate, because the users will rarely request
+   a Web page at exactly the same time. Because the upstream channel is also shared, a distributed
+   multiple access protocol is needed to coordinate transmissions and avoid collisions. (We’ll discuss this
+   collision issue in some detail in :ref:`Chapter 6 <c6>`.)
+
+   Although DSL and cable networks currently represent more than 85 percent of residential broadband
+   access in the United States, an up-and-coming technology that provides even higher speeds is **fiber to
+   the home (FTTH)** :ref:`[FTTH Council 2016] <FTTH Council 2016>`. As the name suggests, the FTTH concept is simple—provide
+   an optical fiber path from the CO directly to the home. Many countries today—including the UAE, South
+   Korea, Hong Kong, Japan, Singapore, Taiwan, Lithuania, and Sweden—now have household
+   penetration rates exceeding 30% :ref:`[FTTH Council 2016] <FTTH Council 2016>` .
+
+   There are several competing technologies for optical distribution from the CO to the homes. The
+   simplest optical distribution network is called direct fiber, with one fiber leaving the CO for each home.
+   More commonly, each fiber leaving the central office is actually shared by many homes; it is not until the
+   fiber gets relatively close to the homes that it is split into individual customer-specific fibers. There are
+   two competing optical-distribution network architectures that perform this splitting: active optical
+   networks (AONs) and passive optical networks (PONs). AON is essentially switched Ethernet, which is
+   discussed in :ref:`Chapter 6 <c6>` .
+
+   Here, we briefly discuss PON, which is used in Verizon’s FIOS service. :ref:`Fig­ure 1.7 <FTTH Internet access>` shows FTTH using
+   the PON distribution architecture. Each home has an optical network terminator (ONT), which is
+   connected by dedicated optical fiber to a neighborhood splitter. The splitter combines a number of
+   homes (typically less than 100) onto a single, shared optical fiber, which connects to an optical line ­terminator (OLT) in the
+   telco’s CO. The OLT, providing conversion between optical and electrical signals, connects to the
+   Internet via a telco router. In the home, users connect a home router (typically a wireless router) to the
+   ONT and access the ­Internet via this home router. In the PON architecture, all packets sent from OLT
+   to the splitter are replicated at the splitter (similar to a cable head end).
+
+   .. figure:: ../img/43-0.png
+      :align: center 
+      :name: FTTH Internet access
+
+   **Figure 1.7 FTTH Internet access**
+
+   FTTH can potentially provide Internet access rates in the gigabits per second range. However, most
+   FTTH ISPs provide different rate offerings, with the higher rates naturally costing more money. The
+   average downstream speed of US FTTH customers was approximately 20 Mbps in 2011 (compared
+   with 13 Mbps for cable access networks and less than 5 Mbps for DSL) :ref:`[FTTH Council 2011b] <FTTH Council 2011b>`.
+
+   Two other access network technologies are also used to provide Internet access to the home. In
+   locations where DSL, cable, and FTTH are not available (e.g., in some rural settings), a satellite link can
+   be used to connect a residence to the Internet at speeds of more than 1 Mbps; StarBand and
+   HughesNet are two such satellite access providers. Dial-up access over traditional phone lines is based
+   on the same model as DSL—a home modem connects over a phone line to a modem in the ISP.
+   Compared with DSL and other broadband access networks, dial-up access is excruciatingly slow at 56
+   kbps.
+
+企业（及家庭）接入：以太网与 WiFi
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Access in the Enterprise (and the Home): Ethernet and WiFi
+
+在公司和大学校园中，甚至在越来越多的家庭场景中，本地局域网（LAN）被用于将终端系统连接到边缘路由器。尽管局域网技术种类繁多，但在企业、校园和家庭网络中，以太网无疑是最常用的接入技术。如 :ref:`图 1.8 <Figure 1.8>` 所示，以太网用户通过双绞铜线连接至以太网交换机，相关技术将在 :ref:`第6章 <c6>` 中详细讨论。该以太网交换机（或由多个交换机互联形成的网络）进一步连接至更大的互联网。在以太网接入中，用户通常拥有 100 Mbps 或 1 Gbps 的接入速率，而服务器可能配备 1 Gbps 甚至 10 Gbps 的接入能力。
+
+.. _Figure 1.8:
+
+.. figure:: ../img/44-0.png
+   :align: center 
+   :name: Ethernet Internet access
+
+**图 1.8 以太网接入互联网**
+
+然而，如今越来越多的人通过笔记本电脑、智能手机、平板电脑及其他“物”设备（详见前文 “:ref:`物联网 <Internet of Things>`” 小节）以无线方式访问互联网。在无线局域网场景中，无线用户通过一个接入点（access point）收发数据包，该接入点接入企业网络（通常通过有线以太网），而企业网络又连接至有线互联网。无线局域网用户通常需要在距离接入点几十米之内。基于 IEEE 802.11 技术的无线 LAN 接入（俗称 WiFi）如今几乎无处不在——大学、公司、咖啡馆、机场、家庭，甚至飞机上都有。在许多城市，人们站在街角就可能同时接收到十几个基站的信号（想查看全球 802.11 基站的可浏览地图，可访问由爱好者维护的 :ref:`[wigle.net 2016] <wigle.net 2016>` 网站）。如 :ref:`第7章 <c7>` 所述，802.11 标准如今支持超过 100 Mbps 的共享传输速率。
+
+尽管以太网与 WiFi 接入网络最初是在企业（公司、校园）环境中部署的，但近年来它们已成为家庭网络中相对常见的组成部分。许多家庭将宽带住宅接入（如有线或 DSL）与这些廉价的无线局域网技术相结合，构建功能强大的家庭网络 :ref:`[Edwards 2011] <Edwards 2011>`。:ref:`图 1.9 <Figure 1.9>` 展示了一个典型家庭网络。该网络包括一台漫游笔记本和一台有线 PC；一个基站（无线接入点）与笔记本和其他无线设备通信；一台提供宽带互联网接入的有线调制解调器；以及一台将基站和固定 PC 与调制解调器互联的路由器。该网络允许家庭成员在厨房、后院或卧室之间自由移动的同时保持高速互联网连接。
+
+.. _Figure 1.9:
+
+.. figure:: ../img/45-0.png
+   :align: center 
+   :name: A typical home network
+
+**图 1.9 一个典型的家庭网络**
+
+.. toggle::
+
+   On corporate and university campuses, and increasingly in home settings, a local area network (LAN) is
+   used to connect an end system to the edge router. Although there are many types of LAN technologies,
+   Ethernet is by far the most prevalent access technology in corporate, university, and home networks. As
+   shown in :ref:`Figure 1.8 <Figure 1.8>`, Ethernet users use twisted-pair copper wire to connect to an Ethernet switch, a
+   technology discussed in detail in :ref:`Chapter 6 <c6>`. The Ethernet switch, or a network of such
+   interconnected switches, is then in turn connected into the larger Internet. With Ethernet access, users
+   typically have 100 Mbps or 1 Gbps access to the Ethernet switch, whereas servers may have 1 Gbps or
+   even 10 Gbps access.
+
+   .. figure:: ../img/44-0.png
+      :align: center 
+      :name: Ethernet Internet access
+
+   **Figure 1.8 Ethernet Internet access**
+
+   Increasingly, however, people are accessing the Internet wirelessly from laptops, smartphones, tablets,
+   and other “things” (see earlier sidebar on “:ref:`Internet of Things <Internet of Things>`”). In a wireless LAN setting, wireless
+   users transmit/receive packets to/from an access point that is connected into the enterprise’s network
+   (most likely using wired Ethernet), which in turn is connected to the wired Internet. A wireless LAN user
+   must typically be within a few tens of meters of the access point. Wireless LAN access based on IEEE
+   802.11 technology, more colloquially known as WiFi, is now just about everywhere—universities,
+   business offices, cafes, airports, homes, and even in airplanes. In many cities, one can stand on a street
+   corner and be within range of ten or twenty base stations (for a browseable global map of 802.11 base
+   stations that have been discovered and logged on a Web site by people who take great enjoyment in
+   doing such things, see :ref:`[wigle.net 2016] <wigle.net 2016>`). As discussed in detail in :ref:`Chapter 7 <c7>`, 802.11 today provides a
+   shared transmission rate of up to more than 100 Mbps.
+
+   Even though Ethernet and WiFi access networks were initially deployed in enterprise (corporate,
+   university) settings, they have recently become relatively common components of home networks. Many
+   homes combine broadband residential access (that is, cable modems or DSL) with these inexpensive
+   wireless LAN technologies to create powerful home networks :ref:`[Edwards 2011] <Edwards 2011>`. :ref:`Figure 1.9 <Figure 1.9>` shows a
+   typical home network. This home network consists of a roaming laptop as well as a wired PC; a base
+   station (the wireless access point), which communicates with the wireless PC and other wireless
+   devices in the home; a cable modem, providing broadband access to the Internet; and a router, which
+   interconnects the base station and the stationary PC with the cable modem. This network allows
+   household members to have broadband access to the Internet with one member roaming from the
+   kitchen to the backyard to the bedrooms.
+
+   .. figure:: ../img/45-0.png
+      :align: center 
+      :name: A typical home network
+
+   **Figure 1.9 A typical home network**
+
+广域无线接入：3G 与 LTE
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Wide-Area Wireless Access: 3G and LTE
+
+如今，越来越多的设备（如 iPhone 和 Android 设备）被用于发送信息、分享照片、观看电影、串流音乐等移动互联网应用。这些设备使用与移动通信相同的无线基础设施，通过由移动网络运营商运营的基站发送/接收数据包。与 WiFi 不同，用户只需在距离基站几十公里以内即可接入网络（而非 WiFi 的几十米）。
+
+电信公司已对第三代（3G）无线技术进行了巨额投资，该技术支持超过 1 Mbps 的分组交换广域无线互联网接入。更高速的广域接入技术——第四代（4G）无线网络——也正在部署中。其中的 LTE（即“长期演进”，可谓“年度最差缩写奖”候选者）源自 3G 技术，其速率可超过 10 Mbps。商业部署中，LTE 下行速率已达数十 Mbps。我们将在 :ref:`第7章 <c7>` 中介绍无线网络与移动性、WiFi、3G、LTE 以及其他更多技术的基本原理。
+
+.. toggle::
+
+   Increasingly, devices such as iPhones and Android devices are being used to message, share photos in
+   social networks, watch movies, and stream music while on the run. These devices employ the same
+   wireless infrastructure used for cellular telephony to send/receive packets through a base station that is
+   operated by the cellular network provider. Unlike WiFi, a user need only be within a few tens of
+   kilometers (as opposed to a few tens of meters) of the base station.
+
+   Telecommunications companies have made enormous investments in so-called third-generation (3G)
+   wireless, which provides packet-switched wide-area wireless Internet access at speeds in excess of 1
+   Mbps. But even higher-speed wide-area access technologies—a fourth-generation (4G) of wide-area
+   wireless networks—are already being deployed. LTE (for “Long-Term Evolution”—a candidate for Bad
+   Acronym of the Year Award) has its roots in 3G technology, and can achieve rates in excess of 10
+   Mbps. LTE downstream rates of many tens of Mbps have been reported in commercial deployments.
+   We’ll cover the basic principles of wireless networks and mobility, as well as WiFi, 3G, and LTE
+   technologies (and more!) in :ref:`Chapter 7 <c7>`.
+
+.. _c1.2.2:
+
+1.2.2 物理媒介
+-----------------------
+1.2.2 Physical Media 
+
+在前一小节中，我们概述了互联网中一些最重要的网络接入技术。在描述这些技术时，我们也指出了它们所使用的物理媒介。例如，我们提到 HFC 使用了光纤和同轴电缆的组合，DSL 和以太网使用铜线，而移动接入网络使用的是无线电频谱。在本小节中，我们将简要介绍互联网中常用的这些和其他传输媒介。
+
+为了定义物理媒介的含义，让我们思考一下一个比特的简短旅程。考虑一个比特从一个终端系统出发，穿过一系列链路和路由器，最终抵达另一个终端系统。这个可怜的比特在传输过程中被“踢来踢去”，被传输了无数次！源端系统首先发送该比特，随后第一个路由器接收到该比特；第一个路由器随后发送该比特，接着第二个路由器接收……如此反复。因此，比特在从源到目的地的传输过程中，会通过一系列的发射器-接收器对。对于每对发射器-接收器，比特都是通过传播电磁波或光脉冲在 **物理媒介** 上传输的。物理媒介可以具有多种形式，而且路径上的每对发射器-接收器之间所使用的媒介类型不必相同。物理媒介的例子包括双绞铜线、同轴电缆、多模光纤、地面无线电频谱和卫星无线电频谱。物理媒介分为两类： **导引媒介（guided media）** 和 **非导引媒介（unguided media）**。在导引媒介中，波被引导沿着实体介质传播，例如光纤、电缆或同轴电缆；而在非导引媒介中，波则在大气或外层空间中传播，例如无线局域网或数字卫星信道。
+
+但在介绍各种媒介类型的特性之前，我们先简单谈谈它们的成本。物理链路（铜线、光纤等）的实际成本通常相对于其他网络成本而言是次要的。特别是，物理链路的安装人工成本往往远高于材料成本。因此，许多建筑商会在建筑中的每个房间都预埋双绞线、光纤和同轴电缆。即使初期只使用其中一种媒介，未来可能会更换使用其他媒介，从长远来看，这样可以节省重新布线的成本。
+
+.. toggle::
+
+   In the previous subsection, we gave an overview of some of the most important network access
+   technologies in the Internet. As we described these technologies, we also indicated the physical media
+   used. For example, we said that HFC uses a combination of fiber cable and coaxial cable. We said that
+   DSL and Ethernet use copper wire. And we said that mobile access networks use the radio spectrum. In
+   this subsection we provide a brief overview of these and other transmission media that are commonly
+   used in the Internet.
+
+   In order to define what is meant by a physical medium, let us reflect on the brief life of a bit. Consider a
+   bit traveling from one end system, through a series of links and routers, to another end system. This
+   poor bit gets kicked around and transmitted many, many times! The source end system first transmits
+   the bit, and shortly thereafter the first router in the series receives the bit; the first router then transmits
+   the bit, and shortly thereafter the second router receives the bit; and so on. Thus our bit, when traveling
+   from source to destination, passes through a series of transmitter-receiver pairs. For each transmitter-
+   receiver pair, the bit is sent by propagating electromagnetic waves or optical pulses across a **physical
+   medium**. The physical medium can take many shapes and forms and does not have to be of the same
+   type for each transmitter-receiver pair along the path. Examples of physical media include twisted-pair
+   copper wire, coaxial cable, multimode fiber-optic cable, terrestrial radio spectrum, and satellite radio
+   spectrum. Physical media fall into two categories: **guided media** and **unguided media**. With guided
+   media, the waves are guided along a solid medium, such as a fiber-optic cable, a twisted-pair copper
+   wire, or a coaxial cable. With unguided media, the waves propagate in the atmosphere and in outer
+   space, such as in a wireless LAN or a digital satellite channel.
+
+   But before we get into the characteristics of the various media types, let us say a few words about their
+   costs. The actual cost of the physical link (copper wire, fiber-optic cable, and so on) is often relatively
+   minor compared with other networking costs. In particular, the labor cost associated with the installation
+   of the physical link can be orders of magnitude higher than the cost of the material. For this reason,
+   many builders install twisted pair, optical fiber, and coaxial cable in every room in a building. Even if only
+   one medium is initially used, there is a good chance that another medium could be used in the near
+   future, and so money is saved by not having to lay additional wires in the future.
+
+双绞铜线
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Twisted-Pair Copper Wire
+
+最便宜且最常用的导引传输媒介是双绞铜线。一个多世纪以来，电话网络就使用双绞线。事实上，超过 99% 的电话手柄到本地电话交换机之间的有线连接使用的都是双绞铜线。我们大多数人在家中（或父母、祖父母家）或办公场所都见过它。双绞线由两根大约 1 毫米粗的绝缘铜线组成，这两根线以规则的螺旋形方式缠绕在一起，缠绕的目的是减少来自邻近线对的电磁干扰。通常，多对双绞线会被捆成一根缆线，并加装保护套。每一对铜线构成一条通信链路。**无屏蔽双绞线（UTP）** 是建筑物内计算机网络（即 LAN）中最常用的形式。目前使用双绞线的 LAN 数据速率从 10 Mbps 到 10 Gbps 不等，具体取决于铜线的粗细和发射器与接收器之间的距离。
+
+在 1980 年代光纤技术出现时，由于比特率较低，许多人曾不看好双绞线，甚至认为光纤将完全取代它。但双绞线并未轻易退出舞台。现代的双绞线技术，例如 6a 类线缆，已经可以在百米距离内实现 10 Gbps 的数据速率。最终，双绞线成为高速 LAN 网络的主流解决方案。
+
+如前所述，双绞线也常用于家庭互联网接入。拨号调制解调器技术可在双绞线上提供最高 56 kbps 的接入速率，而 DSL（数字用户线路）技术则可在用户靠近 ISP 中心局时实现数十 Mbps 的接入速率。
+
+.. toggle::
+
+   The least expensive and most commonly used guided transmission medium is twisted-pair copper wire.
+   For over a hundred years it has been used by telephone networks. In fact, more than 99 percent of the
+   wired connections from the telephone handset to the local telephone switch use twisted-pair copper
+   wire. Most of us have seen twisted pair in our homes (or those of our parents or grandparents!) and
+   work environments. Twisted pair consists of two insulated copper wires, each about 1 mm thick,
+   arranged in a regular spiral pattern. The wires are twisted together to reduce the electrical interference
+   from similar pairs close by. Typically, a number of pairs are bundled together in a cable by wrapping the
+   pairs in a protective shield. A wire pair constitutes a single communication link. **Unshielded twisted
+   pair (UTP)** is commonly used for computer networks within a building, that is, for LANs. Data rates for
+   LANs using twisted pair today range from 10 Mbps to 10 Gbps. The data rates that can be achieved
+   depend on the thickness of the wire and the distance between transmitter and receiver.
+
+   When fiber-optic technology emerged in the 1980s, many people disparaged twisted pair because of its
+   relatively low bit rates. Some people even felt that fiber-optic technology would completely replace
+   twisted pair. But twisted pair did not give up so easily. Modern twisted-pair technology, such as category
+   6a cable, can achieve data rates of 10 Gbps for distances up to a hundred meters. In the end, twisted
+   pair has emerged as the dominant solution for high-speed LAN networking.
+
+   As discussed earlier, twisted pair is also commonly used for residential Internet access. We saw that
+   dial-up modem technology enables access at rates of up to 56 kbps over twisted pair. We also saw that
+   DSL (digital subscriber line) technology has enabled residential users to access the Internet at tens of
+   Mbps over twisted pair (when users live close to the ISP’s central office).
+
+同轴电缆
+~~~~~~~~~~~~~~~~~~~~
+Coaxial Cable
+
+与双绞线类似，同轴电缆也由两根铜导体构成，但两根导体是同心结构而非平行排列。由于其结构及特殊的绝缘和屏蔽层，同轴电缆可实现较高的数据传输速率。同轴电缆在有线电视系统中相当常见。如前所述，有线电视系统已与有线调制解调器结合，为家庭用户提供数十 Mbps 的互联网接入。在有线电视和有线互联网接入中，发射器将数字信号调制到特定频段并转换为模拟信号发送至一个或多个接收器。同轴电缆可用作一种导引的 **共享媒介**：多个终端系统可直接连接至电缆，每个终端都能接收到其他终端发送的内容。
+
+.. toggle::
+
+   Like twisted pair, coaxial cable consists of two copper conductors, but the two conductors are concentric
+   rather than parallel. With this construction and special insulation and shielding, coaxial cable can
+   achieve high data transmission rates. Coaxial cable is quite common in cable television systems. As we
+   saw earlier, cable television systems have recently been coupled with cable modems to provide
+   residential users with Internet access at rates of tens of Mbps. In cable television and cable Internet
+   access, the transmitter shifts the digital signal to a specific frequency band, and the resulting analog
+   signal is sent from the transmitter to one or more receivers. Coaxial cable can be used as a guided
+   **shared medium**. Specifically, a number of end systems can be connected directly to the cable, with
+   each of the end systems receiving whatever is sent by the other end systems.
+
+光纤
+~~~~~~~~~~~~~
+Fiber Optics
+
+光纤是一种细长柔性的介质，用于传输光脉冲，每个脉冲代表一个比特。一根光纤可以支持高达数十甚至数百 Gbps 的传输速率。它不受电磁干扰影响，信号衰减极低（在 100 公里范围内），且极难被窃听。这些特性使光纤成为远距离导引传输媒介的首选，尤其适合海底链路。美国及其他国家的长途电话网络如今几乎完全使用光纤。在互联网骨干网中也大量部署了光纤。然而，由于光纤设备（如发射器、接收器和交换设备）成本较高，使其在短距离传输（如 LAN 或家庭接入网络）中的普及受到限制。光通信标准链路速率从 51.8 Mbps 到 39.8 Gbps 不等，通常被称为 OC-n，其中 n × 51.8 Mbps。例如，当前常见的标准包括 OC-1、OC-3、OC-12、OC-24、OC-48、OC-96、OC-192、OC-768。[:ref:`Mukherjee 2006 <Mukherjee 2006>`，:ref:`Ramaswami 2010 <Ramaswami 2010>`] 详细介绍了光网络的各个方面。
+
+.. toggle::
+
+   An optical fiber is a thin, flexible medium that conducts pulses of light, with each pulse representing a
+   bit. A single optical fiber can support tremendous bit rates, up to tens or even hundreds of gigabits per
+   second. They are immune to electromagnetic interference, have very low signal attenuation up to 100
+   kilometers, and are very hard to tap. These characteristics have made fiber optics the preferred long-
+   haul guided transmission media, particularly for overseas links. Many of the long-distance telephone
+   networks in the United States and elsewhere now use fiber optics exclusively. Fiber optics is also
+   prevalent in the backbone of the Internet. However, the high cost of optical devices—such as
+   transmitters, receivers, and switches—has hindered their deployment for short-haul transport, such as in
+   a LAN or into the home in a residential access network. The Optical Carrier (OC) standard link speeds
+   range from 51.8 Mbps to 39.8 Gbps; these specifications are often referred to as OC-n, where the link
+   speed equals n ∞ 51.8 Mbps. Standards in use today include OC-1, OC-3, OC-12, OC-24, OC-48, OC-
+   96, OC-192, OC-768. [:ref:`Mukherjee 2006 <Mukherjee 2006>`, :ref:`Ramaswami 2010 <Ramaswami 2010>`] provide coverage of various aspects of
+   optical networking.
+
+地面无线电信道
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Terrestrial Radio Channels
+
+无线电信道在电磁频谱上传输信号。由于无需铺设物理电缆、可穿墙、支持移动用户接入，且可能支持远距离通信，因此无线电是一种非常有吸引力的传输媒介。无线电信道的特性受传播环境及传输距离的显著影响。环境因素决定了路径损耗与阴影衰落（信号随距离增加以及遇到障碍物时的衰减）、多路径衰落（信号在反射物上的反射造成干扰）、以及干扰（来自其他传输和电磁信号）。
+
+地面无线电信道可大致分为三类：极短距离（如一到两米内）；局部区域（通常覆盖 10 到数百米）；以及广域区域（可达数十公里）。个人设备如无线耳机、键盘、医疗设备通常在短距离内工作；:ref:`第 1.2.1 节 <c1.2.1>` 所述的无线 LAN 技术使用局域无线信道；而蜂窝接入技术使用的是广域无线电信道。我们将在 :ref:`第 7 章 <c7>` 中详细讨论无线电信道。
+
+.. toggle::
+
+   Radio channels carry signals in the electromagnetic spectrum. They are an attractive medium because
+   they require no physical wire to be installed, can penetrate walls, provide connectivity to a mobile user,
+   and can potentially carry a signal for long distances. The characteristics of a radio channel depend
+   significantly on the propagation environment and the distance over which a signal is to be carried.
+   Environmental considerations determine path loss and shadow fading (which decrease the signal
+   strength as the signal travels over a distance and around/through obstructing objects), multipath fading
+   (due to signal reflection off of interfering objects), and interference (due to other transmissions and
+   electromagnetic signals).
+
+   Terrestrial radio channels can be broadly classified into three groups: those that operate over very short
+   distance (e.g., with one or two meters); those that operate in local areas, typically spanning from ten to a
+   few hundred meters; and those that operate in the wide area, spanning tens of kilometers. Personal
+   devices such as wireless headsets, keyboards, and medical devices operate over short distances; the
+   wireless LAN technologies described in :ref:`Section 1.2.1 <c1.2.1>` use local-area radio channels; the cellular access
+   technologies use wide-area radio channels. We’ll discuss radio channels in detail in :ref:`Chapter 7 <c7>`.
+
+卫星无线电信道
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Satellite Radio Channels
+
+通信卫星连接两个或多个地面微波发射/接收站，称为地面站。卫星在一个频段接收信号，通过中继器（后述）对信号进行再生，然后在另一个频段发送信号。通信中使用两类卫星：**地球同步卫星** 和 **低轨道（LEO）卫星** :ref:`[Wiki Satellite 2016] <Wiki Satellite 2016>`。
+
+地球同步卫星始终位于地球上方的同一位置。这是通过将卫星部署在距地球表面 36,000 公里的轨道上实现的。地面站与卫星之间的巨大距离会引入约 280 毫秒的传播时延。尽管如此，卫星链路仍常用于无法接入 DSL 或有线网络的地区，其通信速率可达数百 Mbps。
+
+LEO 卫星则更接近地面，且不会固定在地球某一点上空。它们围绕地球旋转（类似月球），并可与其他卫星及地面站通信。为了为某区域提供连续覆盖，需要部署多颗卫星。目前已有许多低轨通信系统处于开发中。LEO 卫星技术可能在未来用于互联网接入。
+
+.. toggle::
+
+   A communication satellite links two or more Earth-based microwave transmitter/ receivers, known as
+   ground stations. The satellite receives transmissions on one frequency band, regenerates the signal
+   using a repeater (discussed below), and transmits the signal on another frequency. Two types of
+   satellites are used in communications: **geostationary satellites** and **low-earth orbiting (LEO)
+   satellites** :ref:`[Wiki Satellite 2016] <Wiki Satellite 2016>`.
+
+   Geostationary satellites permanently remain above the same spot on Earth. This stationary presence is
+   achieved by placing the satellite in orbit at 36,000 kilometers above Earth’s surface. This huge distance
+   from ground station through satellite back to ground station introduces a substantial signal propagation
+   delay of 280 milliseconds. Nevertheless, satellite links, which can operate at speeds of hundreds of
+   Mbps, are often used in areas without access to DSL or cable-based Internet access.
+
+   LEO satellites are placed much closer to Earth and do not remain permanently above one spot on Earth.
+   They rotate around Earth (just as the Moon does) and may communicate with each other, as well as
+   with ground stations. To provide continuous coverage to an area, many satellites need to be placed in
+   orbit. There are currently many low-altitude communication systems in development. LEO satellite
+   technology may be used for Internet access sometime in the future.

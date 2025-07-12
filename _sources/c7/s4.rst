@@ -1,0 +1,250 @@
+.. _c7.4:
+
+7.4 蜂窝互联网接入
+==================================
+7.4 Cellular Internet Access
+
+在上一节中，我们探讨了当互联网主机处于 WiFi 热点范围内——即处于 802.11 接入点附近时，如何访问互联网。但大多数 WiFi 热点的覆盖区域很小，直径通常在 10 到 100 米之间。那么当我们迫切需要无线互联网接入但无法访问 WiFi 热点时，该怎么办？
+
+鉴于蜂窝电话现在在全球许多地区已无处不在，一个自然的策略是扩展蜂窝网络，使其不仅支持语音电话，还支持无线互联网接入。理想情况下，这种互联网接入应具备合理的高速率，并提供无缝移动性，允许用户在旅行中（例如乘坐公交车或火车时）保持其 TCP 会话。随着上下行比特率足够高，用户甚至可以在漫游时保持视频会议。这种场景并非遥不可及。随着宽带数据服务的逐步部署，数兆比特每秒的数据速率正变得可用，我们将在此介绍相关服务。
+
+本节将简要概述当前和新兴的蜂窝互联网接入技术。我们关注的重点既包括无线第一跳，也包括将无线第一跳连接到更大电话网络和/或互联网的网络；在 :ref:`第 7.7 节 <c7.7>` 中，我们将考虑如何将呼叫路由给在基站之间移动的用户。我们的简要讨论必然只提供蜂窝技术的简化和高层次描述。现代蜂窝通信当然内容广泛且深刻，许多大学开设了多门相关课程。寻求更深入理解的读者建议参阅 [:ref:`Goodman 1997 <Goodman 1997>`；:ref:`Kaaranen 2001 <Kaaranen 2001>`；:ref:`Lin 2001 <Lin 2001>`；:ref:`Korhonen 2003 <Korhonen 2003>`；:ref:`Schiller 2003 <Schiller 2003>`；:ref:`Palat 2009 <Palat 2009>`；:ref:`Scourias 2012 <Scourias 2012>`；:ref:`Turner 2012 <Turner 2012>`；:ref:`Akyildiz 2010 <Akyildiz 2010>`]，以及特别优秀且详尽的参考书 [:ref:`Mouly 1992 <Mouly 1992>`；:ref:`Sauter 2014 <Sauter 2014>`]。
+
+.. toggle::
+
+   In the previous section we examined how an Internet host can access the Internet when inside a WiFi hotspot—that is, when it is within the vicinity of an 802.11 access point. But most WiFi hotspots have a small coverage area of between 10 and 100 meters in diameter. What do we do then when we have a desperate need for wireless Internet access and we cannot access a WiFi hotspot?
+   
+   Given that cellular telephony is now ubiquitous in many areas throughout the world, a natural strategy is to extend cellular networks so that they support not only voice telephony but wireless Internet access as well. Ideally, this Internet access would be at a reasonably high speed and would provide for seamless mobility, allowing users to maintain their TCP sessions while traveling, for example, on a bus or a train. With sufficiently high upstream and downstream bit rates, the user could even maintain video- conferencing sessions while roaming about. This scenario is not that far-fetched. Data rates of several megabits per second are becoming available as broadband data services such as those we will cover here become more widely deployed.
+   
+   In this section, we provide a brief overview of current and emerging cellular Internet access technologies. Our focus here will be on both the wireless first hop as well as the network that connects the wireless first hop into the larger telephone network and/or the Internet; in :ref:`Section 7.7 <c7.7>` we’ll consider how calls are routed to a user moving between base stations. Our brief discussion will necessarily provide only a simplified and high-level description of cellular technologies. Modern cellular communications, of course, has great breadth and depth, with many universities offering several courses on the topic. Readers seeking a deeper understanding are encouraged to see [:ref:`Goodman 1997 <Goodman 1997>`; :ref:`Kaaranen 2001 <Kaaranen 2001>`; :ref:`Lin 2001 <Lin 2001>`; :ref:`Korhonen 2003 <Korhonen 2003>`; :ref:`Schiller 2003 <Schiller 2003>`; :ref:`Palat 2009 <Palat 2009>`; :ref:`Scourias 2012 <Scourias 2012>`; :ref:`Turner 2012 <Turner 2012>`; :ref:`Akyildiz 2010 <Akyildiz 2010>`], as well as the particularly excellent and exhaustive references [:ref:`Mouly 1992 <Mouly 1992>`; :ref:`Sauter 2014 <Sauter 2014>`].
+
+.. _c7.4.1:
+
+7.4.1 蜂窝网络架构概述
+--------------------------------------------------------
+7.4.1 An Overview of Cellular Network Architecture
+
+在本节对蜂窝网络架构的描述中，我们将采用全球移动通信系统（ **GSM** ）标准的术语。（对于历史爱好者来说，GSM 缩写最初来源于 Groupe Spécial Mobile，后来采用了更为英语化的名称，同时保留了原有的缩写字母。）20 世纪 80 年代，欧洲人认识到建立一个泛欧洲数字蜂窝电话系统的必要性，以取代众多不兼容的模拟蜂窝电话系统，这导致了 GSM 标准的诞生 :ref:`[Mouly 1992] <Mouly 1992>`。欧洲人在 1990 年代初成功部署了 GSM 技术，自此 GSM 成为蜂窝电话领域的“巨无霸”，全球超过 80% 的蜂窝用户都使用 GSM。
+
+.. admonition:: 案例历史
+
+    **4G 蜂窝移动与无线局域网**
+
+    许多蜂窝移动电话运营商正在部署 4G 蜂窝移动系统。在一些国家（如韩国和日本），4G LTE 覆盖率超过 90%，几乎无处不在。2015 年，已部署的 LTE 系统平均下载速率在美国和印度为 10Mbps，纽西兰接近 40Mbps。这些 4G 系统部署在有执照的射频频段，部分运营商为频谱使用执照支付了大量费用。4G 系统允许用户在户外远程移动时访问互联网，类似于今天的蜂窝电话接入。在许多情况下，用户可以同时访问无线局域网和 4G。由于 4G 系统容量更受限且更昂贵，许多移动设备在两者可用时默认使用 WiFi 而非 4G。无线边缘网络接入将主要通过无线局域网还是蜂窝系统，仍是未解之谜：
+
+    - 新兴的无线局域网基础设施可能变得几乎无处不在。运行在 54 Mbps 及更高速率的 IEEE 802.11 无线局域网正广泛部署。几乎所有笔记本电脑、平板和智能手机都出厂配备了 802.11 LAN 功能。此外，新兴的互联网设备，如无线摄像头和电子相框，也具备低功耗的无线局域网功能。
+    - 无线局域网基站也可以支持手机设备。许多手机已经能够通过本地方式或使用类似 Skype 的 IP 电话服务连接到蜂窝电话网络或 IP 网络，从而绕过运营商的蜂窝语音和 4G 数据服务。
+
+    当然，许多专家认为 4G 不仅会大获成功，还将彻底改变我们的工作和生活方式。最可能的是，WiFi 和 4G 都将成为普及的无线技术，漫游无线设备会自动选择当前物理位置提供最佳服务的接入技术。
+
+当人们谈论蜂窝技术时，通常将其归为几个“代”。最早的几代主要为语音通信设计。第一代（1G）系统是模拟 FDMA 系统，专为语音通信设计。这些 1G 系统几乎已经被数字的 2G 系统取代，几近绝迹。最初的 2G 系统也为语音设计，但后来扩展（2.5G）以支持数据（即互联网）和语音服务。3G 系统支持语音和数据，但更强调数据能力和更高速率的无线接入链路。当前部署的 4G 系统基于 LTE 技术，采用全 IP 核心网，提供多兆比特速率的集成语音和数据服务。
+
+.. toggle::
+
+    In our description of cellular network architecture in this section, we’ll adopt the terminology of the Global System for Mobile Communications (**GSM**) standards. (For history buffs, the GSM acronym was originally derived from Groupe Spécial Mobile, until the more anglicized name was adopted, preserving the original acronym letters.) In the 1980s, Europeans recognized the need for a pan-European digital cellular telephony system that would replace the numerous incompatible analog cellular telephony systems, leading to the GSM standard :ref:`[Mouly 1992] <Mouly 1992>`. Europeans deployed GSM technology with great success in the early 1990s, and since then GSM has grown to be the 800-pound gorilla of the cellular telephone world, with more than 80% of all cellular subscribers worldwide using GSM.
+
+    .. admonition:: CASE HISTORY
+
+        **4G Cellular Mobile Versus Wireless LANs**
+
+        Many cellular mobile phone operators are deploying 4G cellular mobile systems. In some countries (e.g., Korea and Japan), 4G LTE coverage is higher than 90%—nearly ubiquitous. In 2015, average download rates over deployed LTE systems range from 10Mbps in the US and India to close to 40 Mbps in New Zealand. These 4G systems are being deployed in licensed radio-frequency bands, with some operators paying considerable sums to governments for spectrum-use licenses. 4G systems allow users to access the Internet from remote outdoor locations while on the move, in a manner similar to today’s cellular phone-only access. In many cases, a user may have simultaneous access to both wireless LANs and 4G. With the capacity of 4G systems being both more constrained and more expensive, many mobile devices default to the use of WiFi rather than 4G, when both are avilable. The question of whether wireless edge network access will be primarily over wireless LANs or cellular systems remains an open question:
+
+        - The emerging wireless LAN infrastructure may become nearly ubiquitous. IEEE 802.11 wireless LANs, operating at 54 Mbps and higher, are enjoying widespread deployment. Essentially all laptops, tablets and smartphones are factory-equipped with 802.11 LAN capabilities. Furthermore, emerging Internet appliances—such as wireless cameras and picture frames—also have low-powered wireless LAN capabilities.
+        - Wireless LAN base stations can also handle mobile phone appliances. Many phones are already capable of connecting to the cellular phone network or to an IP network either natively or using a Skype-like Voice-over-IP service, thus bypassing the operator’s cellular voice and 4G data services.
+
+        Of course, many other experts believe that 4G not only will be a major ­success, but will also dramatically revolutionize the way we work and live. Most likely, both WiFi and 4G will both become prevalent wireless technologies, with roaming ­wireless devices automatically selecting the access technology that provides the best service at their current physical location.
+
+    When people talk about cellular technology, they often classify the technology as belonging to one of several “generations.” The earliest generations were designed primarily for voice traffic. First generation (1G) systems were analog FDMA systems designed exclusively for voice-only communication. These 1G systems are almost extinct now, having been replaced by digital 2G systems. The original 2G systems were also designed for voice, but later extended (2.5G) to support data (i.e., Internet) as well as voice service. 3G systems also support voice and data, but with an emphasis on data capabilities and higher-speed radio access links. The 4G systems being deployed today are based on LTE technology, feature an all-IP core network, and provide integrated voice and data at multi-Megabit speeds.
+
+蜂窝网络架构，2G：与电话网络的语音连接
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cellular Network Architecture, 2G: Voice Connections to theTelephone Network
+
+
+蜂窝一词指的是蜂窝网络覆盖区域被划分为多个地理覆盖区，称为 **小区**，如 :ref:`图 7.18 <Figure 7.18>` 左侧所示的六边形。与我们在 :ref:`第 7.3.1 节 <c7.3.1>` 学习的 802.11 WiFi 标准类似，GSM 有其特定术语。每个小区包含一个 **基站收发信台（BTS）**，负责向其小区内的移动台发送和接收信号。小区的覆盖范围取决于多个因素，包括 BTS 的发射功率、用户设备的发射功率、小区内的建筑阻挡以及基站天线的高度。尽管 :ref:`图 7.18 <Figure 7.18>` 显示每个小区中间有一个 BTS，许多现代系统将 BTS 放置在三个小区交界处的角落，以便单个 BTS 使用定向天线为三个小区服务。
+
+.. _Figure 7.18:
+
+.. figure:: ../img/614-0.png 
+    :align: center
+
+**图 7.18 GSM 2G 蜂窝网络架构组件**
+
+2G GSM 标准采用组合的 FDM/TDM（无线）空中接口。回想 :ref:`第 1 章 <c1>`，纯 FDM 时，信道划分为多个频带，每个频带用于一个呼叫。纯 TDM 时，时间被划分为帧，帧进一步划分为时隙，每个呼叫被分配到循环帧中的特定时隙。组合 FDM/TDM 系统中，信道划分为多个频率子带；在每个子带内，时间被划分为帧和时隙。因此，对于组合 FDM/TDM 系统，若信道划分为 F 个子带，时间划分为 T 个时隙，则信道可支持 F·T 个同时呼叫。回想我们在 :ref:`第 6.3.4 节 <c6.3.4>` 中见过，有线接入网络也采用组合 FDM/TDM 方法。GSM 系统使用 200 kHz 频带，每个频带支持八个 TDM 呼叫。GSM 以 13 kbps 和 12.2 kbps 进行语音编码。
+
+GSM 网络中的 **基站控制器（BSC）** 通常负责数十个基站收发信台。BSC 负责为移动用户分配 BTS 无线信道，执行 **寻呼** （查找移动用户所在小区），并执行移动用户切换——我们将在 :ref:`第 7.7.2 节 <c7.7.2>` 讨论切换问题。基站控制器及其控制的基站收发信台合称为 GSM **基站子系统（BSS）**。
+
+如将在 :ref:`第 7.7 节 <c7.7>` 看到， **移动交换中心（MSC）** 在用户授权和计费（如确定移动设备是否允许连接蜂窝网络）、呼叫建立和拆除以及切换中起核心作用。一个 MSC 通常包含多达五个 BSC，覆盖大约 20 万用户。蜂窝运营商的网络通常拥有多个 MSC，其中称为网关 MSC 的特殊 MSC 连接运营商的蜂窝网络与更大的公共电话网络。
+
+
+.. toggle::
+
+    The term cellular refers to the fact that the region covered by a cellular network is partitioned into a number of geographic coverage areas, known as **cells**, shown as hexagons on the left side of :ref:`Figure 7.18 <Figure 7.18>`. As with the 802.11WiFi standard we ­studied in :ref:`Section 7.3.1 <c7.3.1>`, GSM has its own particular nomenclature. Each cell contains a **base transceiver station (BTS)** that transmits signals to and receives signals from the mobile stations in its cell. The coverage area of a cell depends on many factors, including the transmitting power of the BTS, the transmitting power of the user devices, obstructing buildings in the cell, and the height of base station antennas. Although :ref:`Figure 7.18 <Figure 7.18>` shows each cell containing one base transceiver station residing in the middle of the cell, many systems today place the BTS at corners where three cells intersect, so that a single BTS with directional antennas can service three cells.
+
+    .. figure:: ../img/614-0.png 
+        :align: center
+
+    **Figure 7.18 Components of the GSM 2G cellular network architecture**
+
+    The GSM standard for 2G cellular systems uses combined FDM/TDM (radio) for the air interface. Recall from :ref:`Chapter 1 <c1>` that, with pure FDM, the channel is partitioned into a number of frequency bands with each band devoted to a call. Also recall from :ref:`Chapter 1 <c1>` that, with pure TDM, time is partitioned into frames with each frame further partitioned into slots and each call being assigned the use of a particular slot in the revolving frame. In combined FDM/TDM systems, the channel is partitioned into a number of frequency sub-bands; within each sub-band, time is partitioned into frames and slots. Thus, for a combined FDM/TDM system, if the channel is partitioned into F sub-bands and time is partitioned into T slots, then the channel will be able to support F.T simultaneous calls. Recall that we saw in :ref:`Section 6.3.4 <c6.3.4>` that cable access networks also use a combined FDM/TDM approach. GSM systems consist of 200-kHz frequency bands with each band supporting eight TDM calls. GSM encodes speech at 13 kbps and 12.2 kbps.
+
+    A GSM network’s **base station controller (BSC)** will typically service several tens of base transceiver stations. The role of the BSC is to allocate BTS radio channels to mobile subscribers, perform **paging** (finding the cell in which a mobile user is resident), and perform handoff of mobile users—a topic we’ll cover shortly in :ref:`Section 7.7.2 <c7.7.2>`. The base station controller and its controlled base transceiver stations collectively constitute a GSM **base station subsystem (BSS)**.
+
+    As we’ll see in :ref:`Section 7.7 <c7.7>`, the **mobile switching center (MSC)** plays the central role in user authorization and accounting (e.g., determining whether a mobile device is allowed to connect to the cellular network), call establishment and teardown, and handoff. A single MSC will typically contain up to five BSCs, resulting in approximately 200K subscribers per MSC. A cellular provider’s network will have a number of MSCs, with special MSCs known as gateway MSCs connecting the provider’s cellular network to the larger public telephone network.
+
+.. _c7.4.2:
+
+7.4.2 3G 蜂窝数据网络：将互联网扩展到蜂窝用户
+--------------------------------------------------------------------------------------
+7.4.2 3G Cellular Data Networks: Extending the Internet to Cellular Subscribers
+
+我们在 :ref:`第 7.4.1 节 <c7.4.1>` 的讨论侧重于将蜂窝语音用户连接到公共电话网络。但当然，当我们在路上时，也希望能收发电子邮件、访问网页、获得基于位置的服务（例如地图和餐厅推荐），甚至观看流媒体视频。为此，我们的智能手机需要运行完整的 TCP/IP 协议栈（包括物理链路、网络、传输和应用层），并通过蜂窝数据网络连接到互联网。蜂窝数据网络是一个令人眼花缭乱的标准集合，不断演进和竞争，一代（及半代）接替上一代，引入新技术和新服务，并带来新的缩写。更糟的是，2.5G、3G、3.5G 或 4G 技术没有统一的官方机构制定标准，使得区分竞争标准变得困难。下面的讨论将重点介绍由第三代合作伙伴计划（3GPP）开发的 UMTS（通用移动通信服务）3G 和 4G 标准 :ref:`[3GPP 2016] <3GPP 2016>`。
+
+我们先从顶层看一下 :ref:`图 7.19 <Figure 7.19>` 所示的 3G 蜂窝数据网络架构。
+
+.. figure:: ../img/616-0.png 
+    :align: center
+
+.. _Figure 7.19:
+
+**图 7.19 3G 系统架构**
+
+.. toggle::
+
+    Our discussion in :ref:`Section 7.4.1 <c7.4.1>` focused on connecting cellular voice users to the public telephone network. But, of course, when we’re on the go, we’d also like to read e-mail, access the Web, get location-dependent services (e.g., maps and restaurant recommendations) and perhaps even watch streaming video. To do this, our smartphone will need to run a full TCP/IP protocol stack (including the physical link, network, transport, and application layers) and connect into the Internet via the cellular data network. The topic of cellular data networks is a rather bewildering collection of competing and ever-evolving standards as one generation (and half-generation) succeeds the former and introduces new technologies and services with new acronyms. To make matters worse, there’s no single official body that sets requirements for 2.5G, 3G, 3.5G, or 4G technologies, making it hard to sort out the differences among competing standards. In our discussion below, we’ll focus on the UMTS (Universal Mobile Telecommunications Service) 3G and 4G standards developed by the 3rd Generation Partnership project (3GPP) :ref:`[3GPP 2016] <3GPP 2016>`.
+
+    Let’s first take a top-down look at 3G cellular data network architecture shown in :ref:`Figure 7.19 <Figure 7.19>`.
+
+    .. figure:: ../img/616-0.png 
+        :align: center
+
+    **Figure 7.19 3G system architecture**
+
+3G 核心网络
+~~~~~~~~~~~~~~~~~~
+3G Core Network
+
+3G 核心蜂窝数据网络将无线接入网络连接到公共互联网。核心网络与现有蜂窝语音网络的组件（尤其是 MSC）互通，我们之前在 :ref:`图 7.18 <Figure 7.18>` 中见过。鉴于现有蜂窝语音网络中已有大量基础设施（和盈利服务！），3G 数据服务设计者采取的策略很明确：保持现有 GSM 核心蜂窝语音网络不变，在其并行增加蜂窝数据功能。另一种方案——将新数据服务直接集成到现有语音网络核心——会遇到我们在 :ref:`第 4.3 节 <c4.3>` 讨论过的挑战，即在互联网中集成新（IPv6）与遗留（IPv4）技术的难题。
+
+3G 核心网络中有两类节点： **服务 GPRS 支持节点（SGSN）** 和 **网关 GPRS 支持节点（GGSN）**。（GPRS 代表通用分组无线业务，是 2G 网络中的早期蜂窝数据服务；这里讨论的是 3G 网络中演进版本的 GPRS。）SGSN 负责向其所连接的无线接入网络中的移动节点传递数据报，且从移动节点接收数据报。SGSN 与该区域的蜂窝语音网络 MSC 交互，提供用户授权和切换功能，维护活动移动节点的位置（小区）信息，并在无线接入网络的移动节点与 GGSN 之间执行数据报转发。GGSN 作为网关，将多个 SGSN 连接到更大的互联网。GGSN 是移动节点发出的数据报进入更大互联网之前遇到的最后一个 3G 基础设施部分。对外界而言，GGSN 看起来像其他网关路由器；3G 节点在 GGSN 网络内的移动性被隐藏在 GGSN 之后。
+
+.. toggle::
+
+    The 3G core cellular data network connects radio access networks to the public Internet. The core network interoperates with components of the existing cellular voice network (in particular, the MSC) that we previously encountered in :ref:`Figure 7.18 <Figure 7.18>`. Given the considerable amount of existing infrastructure (and profitable services!) in the existing cellular voice network, the approach taken by the designers of 3G data services is clear: leave the existing core GSM cellular voice network untouched, adding additional cellular data functionality in parallel to the existing cellular voice network. The alternative— integrating new data services directly into the core of the existing cellular voice network—would have raised the same challenges encountered in :ref:`Section 4.3 <c4.3>`, where we discussed integrating new (IPv6) and legacy (IPv4) technologies in the Internet.
+
+    There are two types of nodes in the 3G core network: **Serving GPRS Support Nodes (SGSNs)** and **Gateway GPRS Support Nodes (GGSNs)**. (GPRS stands for Generalized Packet Radio Service, an early cellular data service in 2G networks; here we discuss the evolved version of GPRS in 3G networks). An SGSN is responsible for delivering datagrams to/from the mobile nodes in the radio access network to which the SGSN is attached. The SGSN interacts with the cellular voice network’s MSC for that area, providing user authorization and handoff, maintaining location (cell) information about active mobile nodes, and performing datagram forwarding between mobile nodes in the radio access network and a GGSN. The GGSN acts as a gateway, connecting multiple SGSNs into the larger Internet. A GGSN is thus the last piece of 3G infrastructure that a datagram originating at a mobile node encounters before entering the larger Internet. To the outside world, the GGSN looks like any other gateway router; the mobility of the 3G nodes within the GGSN’s network is hidden from the outside world behind the GGSN.
+
+3G 无线接入网络：无线边缘
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3G Radio Access Network: The Wireless Edge
+
+3G **无线接入网络** 是我们作为 3G 用户看到的无线第一跳网络。 **无线网络控制器（RNC）** 通常控制几个基站收发信台，类似于我们在 2G 系统中见到的基站（但在 3G UMTS 术语中称为“Node B”——一个相当不具描述性的名称！）。每个小区的无线链路在移动节点和基站收发信台之间运行，正如 2G 网络中一样。RNC 通过 MSC 连接到电路交换蜂窝语音网络，通过 SGSN 连接到分组交换互联网。因此，虽然 3G 蜂窝语音和蜂窝数据服务使用不同的核心网络，它们共享公共的第一跳/最后一跳无线接入网络。
+
+3G UMTS 相较于 2G 网络的一个显著变化是，不再使用 GSM 的 FDMA/TDMA 方案，而是使用一种称为直接序列宽带 CDMA（DS-WCDMA）的 CDMA 技术 :ref:`[Dahlman 1998] <Dahlman 1998>`，在 TDMA 时隙内进行；TDMA 时隙又在多个频率上存在——这是一种有趣的利用我们在 :ref:`第 6 章 <c6>` 早先识别的三种专用信道共享方法的方式，类似有线有线接入网络所采用的方法（见 :ref:`第 6.3.4 节 <c6.3.4>`）。这一变化需要新的 3G 蜂窝无线接入网络与 2G BSS 无线网络并行运行，如 :ref:`图 7.19 <Figure 7.19>` 所示。与 WCDMA 规范相关的数据服务称为 HSPA（高速分组接入），承诺下行速率可达 14 Mbps。关于 3G 网络的详细信息可见第三代合作伙伴项目（3GPP）网站 :ref:`[3GPP 2016] <3GPP 2016>`。
+
+.. toggle::
+
+    The 3G **radio access network** is the wireless first-hop network that we see as a 3G user. The **Radio Network Controller (RNC)** typically controls several cell base transceiver stations similar to the base stations that we encountered in 2G systems (but officially known in 3G UMTS parlance as a “Node Bs”—a rather non-descriptive name!). Each cell’s wireless link operates between the mobile nodes and a base transceiver station, just as in 2G networks. The RNC connects to both the circuit-switched cellular voice network via an MSC, and to the packet-switched Internet via an SGSN. Thus, while 3G cellular voice and cellular data services use different core networks, they share a common first/last-hop radio access network.
+
+    A significant change in 3G UMTS over 2G networks is that rather than using GSM’s FDMA/TDMA scheme, UMTS uses a CDMA technique known as Direct Sequence Wideband CDMA (DS-WCDMA) :ref:`[Dahlman 1998] <Dahlman 1998>` within TDMA slots; TDMA slots, in turn, are available on multiple frequencies—an interesting use of all three dedicated channel-sharing approaches that we earlier identified in :ref:`Chapter 6 <c6>` and similar to the approach taken in wired cable access networks (see :ref:`Section 6.3.4 <c6.3.4>`). This change requires a new 3G cellular wireless-access network operating in parallel with the 2G BSS radio network shown in :ref:`Figure 7.19 <Figure 7.19>`. The data service associated with the WCDMA specification is known as HSPA (High Speed Packet Access) and promises downlink data rates of up to 14 Mbps. Details regarding 3G networks can be found at the 3rd Generation Partnership Project (3GPP) Web site :ref:`[3GPP 2016] <3GPP 2016>`.
+
+.. _c7.4.3:
+
+7.4.3 迈向4G：LTE
+--------------------------
+7.4.3 On to 4G: LTE
+
+第四代（4G）蜂窝系统正被广泛部署。到2015年，超过50个国家的4G覆盖率超过50%。3GPP提出的4G长期演进（LTE）标准 :ref:`[Sauter 2014] <Sauter 2014>` 相较于3G系统有两个重要创新：全IP核心网络和增强型无线接入网络，详见下文。
+
+.. toggle::
+
+    Fourth generation (4G) cellular systems are becoming widely deployed. In 2015, more than 50 countries had 4G coverage exceeding 50%. The 4G Long-Term ­Evolution (LTE) standard :ref:`[Sauter 2014] <Sauter 2014>` put forward by the 3GPP has two important innovations over 3G systems an all-IP core network and an enhanced radio access network, as discussed below.
+
+4G系统架构：全IP核心网络
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+4G System Architecture: An All-IP Core Network
+
+:ref:`图7.20 <Figure 7.20>` 展示了整体4G网络架构，不幸的是，它引入了又一套（相当难懂的）新的网络组件词汇和缩写。但我们不要被这些缩写迷惑！关于4G架构，有两个重要的高层观察：
+
+.. _Figure 7.20:
+
+.. figure:: ../img/618-0.png 
+    :align: center
+
+**图7.20 4G网络架构**
+
+- **统一的全IP网络架构**。与 :ref:`图7.19 <Figure 7.19>` 中的3G网络不同，后者对语音和数据流量使用分离的网络组件和路径，4G架构 :ref:`图7.20 <Figure 7.20>` 是“全IP”——语音和数据均以IP数据报形式在无线设备（4G术语中称为用户设备，UE）与连接4G边缘网络到更大网络的分组网关（P-GW）之间传输。4G彻底消除了蜂窝网络根源于电话网络的最后痕迹，转而提供普适IP服务！
+- **4G数据平面与控制平面明确分离**。与我们在 :ref:`第4章 <c4>` 和 :ref:`第5章 <c5>` 对IP网络层数据平面和控制平面区别的描述类似，4G网络架构也明确区分了数据平面和控制平面，功能将在下文中讨论。
+- **无线接入网络与全IP核心网络的清晰分离**。携带用户数据的IP数据报在用户（UE）和网关（即 :ref:`图7.20 <Figure 7.20>` 中的P-GW）之间，通过4G内部IP网络转发至外部互联网。控制报文在同一内部网络中于4G控制服务组件间交换，其角色如下。
+
+4G架构的主要组件如下：
+
+- eNodeB是2G基站和3G无线网络控制器（又称Node B）的逻辑继承者，依然扮演核心角色。其数据平面职责是转发UE（通过LTE无线接入网络）与P-GW间的数据报。UE数据报在eNodeB处封装，并通过4G网络的全IP增强分组核心（EPC）隧道传输至P-GW。eNodeB与P-GW间的隧道类似于我们在 :ref:`第4.3节 <c4.3>` 中看到的两个IPv6端点间通过IPv4路由器网络传输IPv6数据报的隧道技术。这些隧道可能带有相应的服务质量（QoS）保证。例如，4G网络可保证语音流量在UE与P-GW之间延迟不超过100毫秒，丢包率低于1%；TCP流量可保证延迟300毫秒，丢包率低于0.0001% :ref:`[Palat 2009] <Palat 2009>`。我们将在 :ref:`第9章 <c9>` 中讨论QoS。
+
+  在控制平面，eNodeB代表UE处理注册和移动信令流量。
+
+- **分组数据网络网关（P-GW）** 为UE分配IP地址并执行QoS管理。作为隧道端点，它还负责在数据报转发至/自UE时进行封装/解封装。
+- **服务网关（S-GW）** 是数据平面的移动锚点——所有UE流量均通过S-GW。S-GW还执行计费功能及合法流量拦截。
+- **移动管理实体（MME）** 代表其控制的小区内UE执行连接和移动管理。它从家庭用户服务器（HSS）接收UE订阅信息。我们将在 :ref:`第7.7节 <c7.7>` 详细介绍蜂窝网络的移动性。
+- **家庭用户服务器（HSS）** 包含UE信息，包括漫游访问能力、服务质量配置文件和认证信息。如 :ref:`第7.7节 <c7.7>` 所述，HSS从UE的家庭蜂窝运营商处获得这些信息。
+
+关于4G网络架构及其EPC的易读介绍有 [:ref:`Motorola 2007 <Motorola 2007>`; :ref:`Palat 2009 <Palat 2009>`; :ref:`Sauter 2014 <Sauter 2014>`]。
+
+.. toggle::
+
+    :ref:`Figure 7.20 <Figure 7.20>` shows the overall 4G network architecture, which (unfortunately) introduces yet another (rather impenetrable) new vocabulary and set of acronyms for network components. But let’s not get lost in these acronyms! There are two important high-level observations about the 4G architecture:
+
+    .. figure:: ../img/618-0.png 
+        :align: center
+
+    **Figure 7.20 4G network architecture**
+
+    - **A unified, all-IP network architecture**. Unlike the 3G network shown in :ref:`Figure 7.19 <Figure 7.19>`, which has separate network components and paths for voice and data traffic, the 4G architecture shown in :ref:`Figure 7.20 <Figure 7.20>` is “all-IP”—both voice and data are carried in IP datagrams to/from the wireless device (the User Equipment, UE in 4G parlance) to the gateway to the packet gateway (P-GW) that connects the 4G edge network to the rest of the network. With 4G, the last vestiges of cellular networks’ roots in the telephony have disappeared, giving way to universal IP service!
+    - **A clear separation of the 4G data plane and 4G control plane**. Mirroring our distinction between the data and control planes for IP’s network layer in :ref:`Chapters 4 <c4>` and :ref:`5 <c5>` respectively, the 4G network architecture also clearly separates the data and control planes. We’ll discuss their functionality below.
+    - **A clear separation between the radio access network, and the all-IP-core ­network**. IP datagrams carrying user data are forwarded between the user (UE) and the gateway (P-GW in :ref:`Figure 7.20 <Figure 7.20>`) over a 4G-internal IP network to the external Internet. Control packets are exchanged over this same internal network among the 4G’s control services components, whose roles are described below.
+
+    The principal components of the 4G architecture are as follows.
+
+    - The eNodeB is the logical descendant of the 2G base station and the 3G Radio Network Controller (a.k.a Node B) and again plays a central role here. Its data-plane role is to forward datagrams between UE (over the LTE radio access ­network) and the P-GW.
+    UE datagrams are encapsulated at the eNodeB and tunneled to the P-GW through the 4G network’s all-IP enhanced packet core (EPC). This tunneling between the eNodeB and P-GW is similar the tunneling we saw in :ref:`Section 4.3 <c4.3>` of IPv6 datagrams between two IPv6 endpoints through a network of IPv4 routers. These tunnels may have associated quality of service (QoS) guarantees. For example, a 4G network may guarantee that voice traffic experiences no more than a 100 msec delay between UE and P-GW, and has a packet loss rate of less than 1%; TCP traffic might have a guarantee of 300 msec and a packet loss rate of less than .0001% :ref:`[Palat 2009] <Palat 2009>`. We’ll cover QoS in :ref:`Chapter 9 <c9>`.
+
+    In the control plane, the eNodeB handles registration and mobility signaling traffic on behalf of the UE.
+
+    - The **Packet Data Network Gateway (P-GW)** allocates IP addresses to the UEs and performs QoS enforcement. As a tunnel endpoint it also performs datagram encapsulation/decapsulation when forwarding a datagram to/from a UE.
+    - The **Serving Gateway (S-GW)** is the data-plane mobility anchor point—all UE traffic will pass through the S-GW. The S-GW also performs charging/billing functions and lawful traffic interception.
+    - The **Mobility Management Entity (MME)** performs connection and mobility management on behalf of the UEs resident in the cell it controls. It receives UE subscription information from the HHS. We cover mobility in cellular networks in detail in :ref:`Section 7.7 <c7.7>`.
+    - The **Home Subscriber Server (HSS)** contains UE information including roaming access capabilities, quality of service profiles, and authentication information. As we’ll see in :ref:`Section 7.7 <c7.7>`, the HSS obtains this information from the UE’s home cellular provider.
+
+    Very readable introductions to 4G network architecture and its EPC are [:ref:`Motorola 2007 <Motorola 2007>`; :ref:`Palat 2009 <Palat 2009>`; :ref:`Sauter 2014 <Sauter 2014>`].
+
+LTE无线接入网络
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+LTE Radio Access Network
+
+LTE在下行链路上结合使用频分多路复用和时分多路复用，称为正交频分复用（OFDM） [:ref:`Rohde 2008 <Rohde 2008>`; :ref:`Ericsson 2011 <Ericsson 2011>`]。（“正交”一词来源于不同频率信道上传输的信号设计成彼此间干扰极小，即使信道频率间隔很近）。在LTE中，每个活跃移动节点被分配一个或多个0.5毫秒时隙，覆盖一个或多个信道频率。:ref:`图7.21 <Figure 7.21>` 显示了在四个频率上分配八个时隙。通过被分配越来越多的时隙（无论是同一频率还是不同频率），移动节点可以实现越来越高的传输速率。移动节点之间的时隙（重新）分配可频繁进行，最短为每毫秒一次。也可以使用不同调制方案改变传输速率；参见我们之前对 :ref:`图7.3 <Figure 7.3>` 中WiFi网络调制方案动态选择的讨论。
+
+.. _Figure 7.21:
+
+.. figure:: ../img/620-0.png 
+    :align: center
+
+**图7.21 每个频率上组织成10毫秒帧的二十个0.5毫秒时隙。图中阴影部分为八时隙分配示意。**
+
+LTE标准并不强制具体的时隙分配给移动节点。由LTE设备供应商和/或网络运营商通过调度算法决定哪些移动节点被允许在特定频率的特定时隙传输。通过机会调度 [:ref:`Bender 2000 <Bender 2000>`; :ref:`Kolding 2003 <Kolding 2003>`; :ref:`Kulkarni 2005 <Kulkarni 2005>`]，匹配物理层协议与发射方和接收方之间的信道条件，并根据信道状况选择接收方，使无线网络控制器能够充分利用无线介质。此外，调度下行数据包传输时可考虑用户优先级和合约服务等级（例如银、金或白金）。除了上述LTE功能，LTE-Advanced通过分配聚合信道给移动节点支持数百Mbps的下行带宽 :ref:`[Akyildiz 2010] <Akyildiz 2010>`。
+
+另一种4G无线技术——WiMAX（微波接入的全球互操作性）——是一系列IEEE 802.16标准，与LTE有显著不同。WiMAX尚未像LTE那样实现广泛部署。本书网站提供WiMAX的详细讨论。
+
+.. toggle::
+
+    LTE uses a combination of frequency division multiplexing and time division multiplexing on the downstream channel, known as orthogonal frequency division multiplexing (OFDM) [:ref:`Rohde 2008 <Rohde 2008>`; :ref:`Ericsson 2011 <Ericsson 2011>`]. (The term “orthogonal” comes from the fact the signals being sent on different frequency
+    channels are created so that they interfere very little with each other, even when channel frequencies are tightly spaced). In LTE, each active mobile node is allocated one or more 0.5 ms time slots in one or more of the channel frequencies. :ref:`Figure 7.21 <Figure 7.21>` shows an allocation of eight time slots over four frequencies. By being allocated increasingly more time slots (whether on the same frequency or on different frequencies), a mobile node is able to achieve increasingly higher transmission rates. Slot (re)allocation among mobile nodes can be performed as often as once every millisecond. Different modulation schemes can also be used to change the transmission rate; see our earlier discussion of :ref:`Figure 7.3 <Figure 7.3>` and dynamic selection of modulation schemes in WiFi networks.
+
+
+    .. figure:: ../img/620-0.png 
+        :align: center
+
+    **Figure 7.21 Twenty 0.5 ms slots organized into 10 ms frames at each frequency. An eight-slot allocation is shown shaded.**
+
+    The particular allocation of time slots to mobile nodes is not mandated by the LTE standard. Instead, the decision of which mobile nodes will be allowed to transmit in a given time slot on a given frequency is determined by the scheduling algorithms provided by the LTE equipment vendor and/or the network operator. With opportunistic scheduling [:ref:`Bender 2000 <Bender 2000>`; :ref:`Kolding 2003 <Kolding 2003>`; :ref:`Kulkarni 2005 <Kulkarni 2005>`], matching the physical-layer protocol to the channel conditions between the sender and receiver and choosing the receivers to which packets will be sent based on channel conditions allow the radio network controller to make best use of the wireless medium. In addition, user priorities and contracted levels of service (e.g., silver, gold, or platinum) can be used in scheduling downstream packet transmissions. In addition to the LTE capabilities described above, LTE-Advanced allows for downstream bandwidths of hundreds of Mbps by allocating aggregated channels to a mobile node :ref:`[Akyildiz 2010] <Akyildiz 2010>`.
+
+    An additional 4G wireless technology—WiMAX (World Interoperability for Microwave Access)—is a family of IEEE 802.16 standards that differ significantly from LTE. WiMAX has not yet been able to enjoy the widespread deployment of LTE. A detailed discussion of WiMAX can be found on this book’s Web site.
