@@ -52,5 +52,4 @@ Chapter 9 Multimedia Networking
    ./s5.rst
    ./summary.rst
    ./homework.rst
-   ./wiresharklab.rst
    ./interview.rst

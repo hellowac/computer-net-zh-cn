@@ -2,12 +2,18 @@
 
 引用
 ===============
-
 References
 
-**A note on URLs.** In the references below, we have provided URLs for Web pages, Web-only documents, and other material that has not been published in a conference or journal (when we have been able to locate a URL for such material). We have not provided URLs for conference and journal publications, as these documents can usually be located via a search engine, from the conference Web site (e.g., papers in all ACM SIGCOMM conferences and workshops can be located via http://www.acm.org/ sigcomm), or via a digital library subscription. While all URLs provided below were valid (and tested) in Jan. 2016, URLs can become out of date. Please consult the online version of this book (www.pearsonhighered .com/cs-resources) for an up-to-date bibliography.
+**关于 URL 的说明。** 在下列参考文献中，我们为网页、仅限网络发布的文档以及其他未在会议或期刊上发表的资料提供了 URL（在我们能够找到该资料的 URL 的情况下）。我们没有为会议和期刊出版物提供 URL，因为这些文档通常可以通过搜索引擎、会议网站（例如，所有 ACM SIGCOMM 会议和研讨会的论文都可以通过 http://www.acm.org/sigcomm 查找）或通过数字图书馆订阅来找到。尽管以下提供的所有 URL 在 2016 年 1 月均有效（并经过测试），但 URL 可能会过时。请查阅本书的在线版本（www.pearsonhighered.com/cs-resources）以获取最新的参考书目。
 
-**A note on Internet Request for Comments (RFCs):** Copies of Internet RFCs are available at many sites. The RFC Editor of the Internet Society (the body that oversees the RFCs) maintains the site, http://www.rfc-editor.org. This site allows you to search for a specific RFC by title, number, or authors, and will show updates to any RFCs listed. Internet RFCs can be updated or obsoleted by later RFCs. Our favorite site for getting RFCs is the original source—http://www.rfc-editor.org.
+**关于互联网“请求评议文档”（RFCs）的说明：** 互联网上有许多网站可以获取 RFC 文档。由互联网协会（负责监管 RFC 的机构）下属的 RFC 编辑维护了网站 http://www.rfc-editor.org。该网站允许你按标题、编号或作者搜索特定的 RFC，并会显示所列 RFC 的更新信息。Internet RFC 文档可能会被后续的 RFC 更新或废弃。我们获取 RFC 的首选网站是其原始来源 —— http://www.rfc-editor.org。
+
+
+.. toggle::
+
+    **A note on URLs.** In the references below, we have provided URLs for Web pages, Web-only documents, and other material that has not been published in a conference or journal (when we have been able to locate a URL for such material). We have not provided URLs for conference and journal publications, as these documents can usually be located via a search engine, from the conference Web site (e.g., papers in all ACM SIGCOMM conferences and workshops can be located via http://www.acm.org/ sigcomm), or via a digital library subscription. While all URLs provided below were valid (and tested) in Jan. 2016, URLs can become out of date. Please consult the online version of this book (www.pearsonhighered .com/cs-resources) for an up-to-date bibliography.
+
+    **A note on Internet Request for Comments (RFCs):** Copies of Internet RFCs are available at many sites. The RFC Editor of the Internet Society (the body that oversees the RFCs) maintains the site, http://www.rfc-editor.org. This site allows you to search for a specific RFC by title, number, or authors, and will show updates to any RFCs listed. Internet RFCs can be updated or obsoleted by later RFCs. Our favorite site for getting RFCs is the original source—http://www.rfc-editor.org.
 
 
 .. _3GPP 2016:
