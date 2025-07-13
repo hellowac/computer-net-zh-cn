@@ -1,0 +1,701 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>7.2 无线链接和网络特性 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c7/s2';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="7.3 WiFi：802.11 无线局域网" href="s3.html" />
+    <link rel="prev" title="7.1 简介" href="s1.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 7 章 无线与移动网络</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">7.1 简介</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c7/s2.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>7.2 无线链接和网络特性</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cdma">7.2.1 CDMA</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c7-2">
+<span id="id1"></span><h1>7.2 无线链接和网络特性<a class="headerlink" href="#c7-2" title="此标题的永久链接">#</a></h1>
+<p>7.2 Wireless Links and Network Characteristics</p>
+<p>7.2 无线链路与网络特性</p>
+<p>让我们从一个简单的有线网络开始考虑，比如一个家庭网络，主机之间通过有线以太网交换机互连（见 <a class="reference internal" href="../c6/s4.html#c6-4"><span class="std std-ref">第 6.4 节</span></a>）。如果我们将有线以太网替换为无线 802.11 网络，那么无线网络接口将取代主机的有线以太网接口，接入点将取代以太网交换机，但在网络层及以上几乎不需要做任何修改。这说明在比较有线网络和无线网络的重要差异时，我们应将注意力集中在链路层。实际上，我们可以发现有线链路和无线链路之间存在许多重要的差异：</p>
+<ul class="simple">
+<li><p><strong>信号强度衰减</strong>。电磁波在穿越物体（例如，无线电信号穿越墙壁）时会发生衰减。即使在自由空间中，信号也会扩散，导致信号强度降低（有时称为 <strong>路径损耗</strong> ），并随着发送方与接收方之间距离的增加而下降。</p></li>
+<li><p><strong>来自其他信号源的干扰</strong>。在同一频段中传输的无线电信号会互相干扰。例如， <code class="docutils literal notranslate"><span class="pre">2.4</span> <span class="pre">GHz</span></code> 无线电话和 802.11b 无线局域网使用相同的频段。因此，在使用 <code class="docutils literal notranslate"><span class="pre">2.4</span> <span class="pre">GHz</span></code> 无线电话通话的同时使用 <code class="docutils literal notranslate"><span class="pre">802.11b</span></code> 无线局域网，既不能指望网络表现良好，也不能指望电话通信良好。除了来自其他发射源的干扰之外，环境中的电磁噪声（例如附近的电机、微波炉）也可能引起干扰。</p></li>
+<li><p><strong>多路径传播</strong>。当电磁波的一部分反射到物体和地面上，导致发送方与接收方之间信号经过不同路径传播时，就会发生多路径传播。这会导致接收方接收到的信号模糊。发送方与接收方之间的物体移动还会导致多路径传播随时间变化。</p></li>
+</ul>
+<p>关于无线信道特性、模型和测量的详细讨论，参见 <a class="reference internal" href="../references.html#anderson-1995"><span class="std std-ref">[Anderson 1995]</span></a>。</p>
+<p>上述讨论表明，相较于有线链路，无线链路更容易发生比特错误。因此，无线链路协议（如我们将在下一节研究的 802.11 协议）不仅采用强大的 CRC 错误检测码，还使用链路层可靠数据传输协议来重传损坏的帧，这并不令人意外。</p>
+<p>在了解了无线信道可能出现的问题之后，我们将注意力转向接收无线信号的主机。该主机接收到的电磁信号，是发送方原始信号（由于上述的衰减和多路径传播等原因而退化）与环境中的背景噪声的组合。 <strong>信噪比（SNR）</strong> 是接收信号强度（即传输信息）与噪声强度的相对度量。SNR 通常以分贝（dB）为单位进行测量，这种单位被一些人认为是电气工程师用来让计算机科学家困惑的。SNR 的单位 dB 是接收信号幅度与噪声幅度的以 10 为底的对数比值的 20 倍。对我们而言，仅需知道更高的 SNR 值可以使接收方更容易从背景噪声中提取出所传输的信号。</p>
+<p><span class="xref std std-ref">图 7.3</span>）展示了三种不同调制技术在理想化无线信道上传输信息时的比特错误率（BER，即传输的比特在接收端出错的概率）与 SNR 的关系。关于调制与编码的理论，以及信号提取和比特错误率的内容，超出了本教材的范围（可参考 <a class="reference internal" href="../references.html#schwartz-1980"><span class="std std-ref">[Schwartz 1980]</span></a> 进行深入了解）。尽管如此，<a class="reference internal" href="#figure-7-3"><span class="std std-ref">图 7.3</span></a> 展示了几个有助于理解高层无线通信协议的重要物理层特性：</p>
+<figure class="align-center" id="figure-7-3">
+<img alt="../_images/585-0.png" src="../_images/585-0.png" />
+</figure>
+<p><strong>图 7.3 比特错误率、传输速率与信噪比的关系</strong></p>
+<figure class="align-center" id="figure-7-4">
+<img alt="../_images/585-1.png" src="../_images/585-1.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/586-0.png" src="../_images/586-0.png" />
+</figure>
+<p><strong>图 7.4 由障碍物 (a) 和衰落 (b) 引起的隐藏终端问题</strong></p>
+<ul class="simple">
+<li><p><strong>对于给定的调制方案，SNR 越高，BER 越低</strong>。由于发送方可以通过增加发射功率来提高 SNR，因此发送方可以通过增加功率来降低帧被错误接收的概率。然而，值得注意的是，将功率提升至超过某一阈值（例如将 BER 从 <span class="math notranslate nohighlight">\(10^{-12}\)</span> 降低到 <span class="math notranslate nohighlight">\(10^{-13}\)</span> ）在实际中可能并没有多少益处。与此同时，提升发射功率也带来了缺点：发送方需要消耗更多能量（对于电池供电的移动用户尤其重要），而且发送方的信号更有可能干扰其他发送方的传输（见 <a class="reference internal" href="#figure-7-4"><span class="std std-ref">图 7.4(b)</span></a>）。</p></li>
+<li><p><strong>对于给定的 SNR，传输速率较高的调制方式（无论是否出错）具有更高的 BER</strong>。例如，在 <a class="reference internal" href="#figure-7-3"><span class="std std-ref">图 7.3</span></a> 中，当 SNR 为 <code class="docutils literal notranslate"><span class="pre">10</span> <span class="pre">dB</span></code> 时，使用 BPSK 调制、传输速率为 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Mbps</span></code> 时的 BER 小于 <span class="math notranslate nohighlight">\(10^{-7}\)</span> ，而使用 QAM16 调制、传输速率为 <code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">Mbps</span></code> 时的 BER 为 <span class="math notranslate nohighlight">\(10^{-1}\)</span> ，这在实际中是完全不可接受的。然而，当 SNR 为 <code class="docutils literal notranslate"><span class="pre">20</span> <span class="pre">dB</span></code> 时，QAM16 的 BER 降至 <span class="math notranslate nohighlight">\(10^{-7}\)</span>，而传输速率仍为 4 Mbps；此时 BPSK 的 BER 低到几乎“超出了图表显示范围”，但其传输速率仅为 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Mbps</span></code>。如果系统可以容忍 BER 为 <span class="math notranslate nohighlight">\(10^{-7}\)</span>，那么 QAM16 所提供的更高传输速率会使其成为该场景下的首选调制方案。这些考虑引出了下一个特性：</p></li>
+<li><p><strong>动态选择物理层调制方案可以根据信道条件自适应选择调制方式</strong>。SNR（进而 BER）可能因移动性或环境变化而变化。蜂窝数据系统、802.11 WiFi 和 4G 蜂窝数据网络中均使用了自适应调制与编码机制（我们将在 <a class="reference internal" href="s3.html#c7-3"><span class="std std-ref">第 7.3 节</span></a> 和 <a class="reference internal" href="s4.html#c7-4"><span class="std std-ref">第 7.4 节</span></a> 中学习）。例如，这使得系统可以根据 BER 的约束和信道特性选择具有最高可能传输速率的调制方式。</p></li>
+</ul>
+<p>更高且随时间变化的比特错误率并不是有线链路与无线链路之间的唯一差异。还记得在有线广播链路中，所有节点都能接收到来自所有其他节点的传输。而在无线链路中，情况并不如此简单，详见 <a class="reference internal" href="#figure-7-4"><span class="std std-ref">图 7.4</span></a>。假设站点 A 向站点 B 发送数据，同时站点 C 也向站点 B 发送数据。在所谓的 <strong>隐藏终端问题</strong> 中，环境中的物理障碍物（如山体或建筑物）可能使 A 和 C 无法接收到彼此的信号，尽管它们的信号实际上在目标 B 处发生了干扰，这在 <a class="reference internal" href="#figure-7-4"><span class="std std-ref">图 7.4(a)</span></a> 中有所展示。另一种在接收端无法检测的冲突场景来自于信号在无线介质中传播过程中 <strong>衰落</strong> 。<a class="reference internal" href="#figure-7-4"><span class="std std-ref">图 7.4(b)</span></a> 展示了 A 与 C 位置安排使其信号不足以相互检测，但却足以在站点 B 处互相干扰的情况。正如我们将在 <a class="reference internal" href="s3.html#c7-3"><span class="std std-ref">第 7.3 节</span></a> 看到的那样，隐藏终端问题与信号衰落使得无线网络中的多路访问远比有线网络复杂得多。</p>
+<div class="toggle docutils container">
+<p>Let’s begin by considering a simple wired network, say a home network, with a wired Ethernet switch (see <a class="reference internal" href="../c6/s4.html#c6-4"><span class="std std-ref">Section 6.4</span></a>) interconnecting the hosts. If we replace the wired Ethernet with a wireless 802.11 network, a wireless network interface would replace the host’s wired Ethernet interface, and an access point would replace the Ethernet switch, but virtually no changes would be needed at the network layer or above. This suggests that we focus our attention on the link layer when looking for important differences between wired and wireless networks. Indeed, we can find a number of important differences between a wired link and a wireless link:</p>
+<ul class="simple">
+<li><p><strong>Decreasing signal strength</strong>. Electromagnetic radiation attenuates as it passes through matter (e.g., a radio signal passing through a wall). Even in free space, the signal will disperse, resulting in decreased signal strength (sometimes referred to as <strong>path loss</strong>) as the distance between sender and receiver increases.</p></li>
+<li><p><strong>Interference from other sources</strong>. Radio sources transmitting in the same frequency band will interfere with each other. For example, 2.4 GHz wireless phones and 802.11b wireless LANs transmit in the same frequency band. Thus, the 802.11b wireless LAN user talking on a 2.4 GHz wireless phone can expect that neither the network nor the phone will perform particularly well. In addition to interference from transmitting sources, electromagnetic noise within the environment (e.g., a nearby motor, a microwave) can result in interference.</p></li>
+<li><p><strong>Multipath propagation</strong>. Multipath propagation occurs when portions of the electromagnetic wave reflect off objects and the ground, taking paths of different lengths between a sender and receiver. This results in the blurring of the received signal at the receiver. Moving objects between the sender and receiver can cause multipath propagation to change over time.</p></li>
+</ul>
+<p>For a detailed discussion of wireless channel characteristics, models, and measurements, see <a class="reference internal" href="../references.html#anderson-1995"><span class="std std-ref">[Anderson 1995]</span></a>.</p>
+<p>The discussion above suggests that bit errors will be more common in wireless links than in wired links. For this reason, it is perhaps not surprising that wireless link protocols (such as the 802.11 protocol we’ll examine in the following section) employ not only powerful CRC error detection codes, but also link-level reliable-data-transfer protocols that retransmit corrupted frames.</p>
+<p>Having considered the impairments that can occur on a wireless channel, let’s next turn our attention to the host receiving the wireless signal. This host receives an electromagnetic signal that is a combination of a degraded form of the original signal transmitted by the sender (degraded due to the attenuation and multipath propagation effects that we discussed above, among others) and background noise in the environment. The <strong>signal-to-noise ratio (SNR)</strong> is a relative measure of the strength of the received signal (i.e., the information being transmitted) and this noise. The SNR is typically measured in units of decibels (dB), a unit of measure that some think is used by electrical engineers primarily to confuse computer scientists. The SNR, measured in dB, is twenty times the ratio of the base-10 logarithm of the amplitude of the received signal to the amplitude of the noise. For our purposes here, we need only know that a larger SNR makes it easier for the receiver to extract the transmitted signal from the background noise.</p>
+<p><a class="reference internal" href="#figure-7-3"><span class="std std-ref">Figure 7.3</span></a> (adapted from <a class="reference internal" href="../references.html#holland-2001"><span class="std std-ref">[Holland 2001]</span></a>) shows the bit error rate (BER)—roughly speaking, the probability that a transmitted bit is received in error at the receiver—versus the SNR for three different modulation techniques for encoding information for transmission on an idealized wireless channel. The theory of modulation and coding, as well as signal extraction and BER, is well beyond the scope of this text (see <a class="reference internal" href="../references.html#schwartz-1980"><span class="std std-ref">[Schwartz 1980]</span></a> for a discussion of these topics). Nonetheless, <a class="reference internal" href="#figure-7-3"><span class="std std-ref">Figure 7.3</span></a> illustrates several physical-layer characteristics that are important in understanding higher-layer wireless communication protocols:</p>
+<figure class="align-center">
+<img alt="../_images/585-0.png" src="../_images/585-0.png" />
+</figure>
+<p><strong>Figure 7.3 Bit error rate, transmission rate, and SNR</strong></p>
+<figure class="align-center">
+<img alt="../_images/585-1.png" src="../_images/585-1.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/586-0.png" src="../_images/586-0.png" />
+</figure>
+<p><strong>Figure 7.4 Hidden terminal problem caused by obstacle (a) and fading (b)</strong></p>
+<ul class="simple">
+<li><p><strong>For a given modulation scheme, the higher the SNR, the lower the BER</strong>. Since a sender can increase the SNR by increasing its transmission power, a sender can decrease the probability that a frame is received in error by increasing its transmission power. Note, however, that there is arguably little practical gain in increasing the power beyond a certain threshold, say to decrease the BER from 10-12 to 10-13. There are also disadvantages associated with increasing the transmission power: More energy must be expended by the sender (an important concern for battery-powered mobile users), and the sender’s transmissions are more likely to interfere with the transmissions of another sender (see <a class="reference internal" href="#figure-7-4"><span class="std std-ref">Figure 7.4(b)</span></a>).</p></li>
+<li><p><strong>For a given SNR, a modulation technique with a higher bit transmission rate (whether in error or not) will have a higher BER</strong>. For example, in <a class="reference internal" href="#figure-7-3"><span class="std std-ref">Figure 7.3</span></a>, with an SNR of 10 dB, BPSK modulation with a transmission rate of 1 Mbps has a BER of less than 10-7, while with QAM16 modulation with a transmission rate of 4 Mbps, the BER is 10-1, far too high to be practically useful. However, with an SNR of 20 dB, QAM16 modulation has a transmission rate of 4 Mbps and a BER of 10-7, while BPSK modulation has a transmission rate of only 1 Mbps and a BER that is so low as to be (literally) “off the charts.” If one can tolerate a BER of 10-7, the higher transmission rate offered by QAM16 would make it the preferred modulation technique in this situation. These considerations give rise to the final characteristic, described next.</p></li>
+<li><p><strong>Dynamic selection of the physical-layer modulation technique can be used to adapt the modulation technique to channel conditions</strong>. The SNR (and hence the BER) may change as a result of mobility or due to changes in the environment. Adaptive modulation and coding are used in cellular data systems and in the 802.11 WiFi and 4G cellular data networks that we’ll study in <a class="reference internal" href="s3.html#c7-3"><span class="std std-ref">Sections 7.3</span></a> and <a class="reference internal" href="s4.html#c7-4"><span class="std std-ref">7.4</span></a>. This allows, for example, the selection of a modulation technique that provides the highest transmission rate possible subject to a constraint on the BER, for given channel characteristics.</p></li>
+</ul>
+<p>A higher and time-varying bit error rate is not the only difference between a wired and wireless link. Recall that in the case of wired broadcast links, all nodes receive the transmissions from all other nodes. In the case of wireless links, the situation is not as simple, as shown in <a class="reference internal" href="#figure-7-4"><span class="std std-ref">Figure 7.4</span></a>. Suppose that Station A is transmitting to Station B. Suppose also that Station C is transmitting to Station B. With the so-called <strong>hidden terminal problem</strong>, physical obstructions in the environment (for example, a mountain or a building) may prevent A and C from hearing each other’s transmissions, even though A’s and C’s transmissions are indeed interfering at the destination, B. This is shown in <a class="reference internal" href="#figure-7-4"><span class="std std-ref">Figure 7.4(a)</span></a>. A second scenario that results in undetectable collisions at the receiver results from the <strong>fading</strong> of a signal’s strength as it propagates through the wireless medium. <a class="reference internal" href="#figure-7-4"><span class="std std-ref">Figure 7.4(b)</span></a> illustrates the case where A and C are placed such that their signals are not strong enough to detect each other’s transmissions, yet their signals are strong enough to interfere with each other at station B. As we’ll see in <a class="reference internal" href="s3.html#c7-3"><span class="std std-ref">Section 7.3</span></a>, the hidden terminal problem and fading make multiple access in a wireless network considerably more complex than in a wired network.</p>
+</div>
+<section id="cdma">
+<span id="c7-2-1"></span><h2>7.2.1 CDMA<a class="headerlink" href="#cdma" title="此标题的永久链接">#</a></h2>
+<p>回顾 <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">第 6 章</span></a> 中的内容，当主机在共享介质上通信时，需要一种协议以避免多个发送方的信号在接收端发生干扰。在 <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">第 6 章</span></a> 中，我们介绍了三类介质访问协议：信道划分、随机访问以及轮流访问。码分多址（Code Division Multiple Access，CDMA）属于信道划分协议家族。它在无线局域网和蜂窝网络技术中非常常见。由于 CDMA 在无线世界中具有重要地位，我们将在后续介绍具体的无线接入技术之前，先简要介绍 CDMA。</p>
+<p>在 CDMA 协议中，每个要发送的比特都通过与变化速度远高于原始数据比特序列的信号（即 <strong>编码</strong> ）相乘进行编码，这种变化速率称为 <strong>码片率（chipping rate）</strong>。<a class="reference internal" href="#figure-7-5"><span class="std std-ref">图 7.5</span></a> 展示了一个简单的理想化 CDMA 编码/解码场景。假设原始数据比特进入 CDMA 编码器的速率定义了时间单位；也就是说，每个原始数据比特的传输占用一个比特时间槽。设第 <code class="docutils literal notranslate"><span class="pre">i</span></code> 个比特槽的数据比特为 <span class="math notranslate nohighlight">\(d_i\)</span>。为了数学上的方便，我们将值为 <code class="docutils literal notranslate"><span class="pre">0</span></code> 的比特表示为 <code class="docutils literal notranslate"><span class="pre">-1</span></code> 。每个比特槽进一步被划分为 <code class="docutils literal notranslate"><span class="pre">M</span></code> 个迷你时间槽；在 <a class="reference internal" href="#figure-7-5"><span class="std std-ref">图 7.5</span></a> 中， <code class="docutils literal notranslate"><span class="pre">M=8</span></code>，尽管在实际中 <code class="docutils literal notranslate"><span class="pre">M</span></code> 要大得多。发送方使用的 CDMA 编码由 <code class="docutils literal notranslate"><span class="pre">M</span></code> 个值组成，即 <span class="math notranslate nohighlight">\(c_m\)</span>， <code class="docutils literal notranslate"><span class="pre">m=1</span></code> , …, <code class="docutils literal notranslate"><span class="pre">M</span></code>，每个值为 <code class="docutils literal notranslate"><span class="pre">+1</span></code> 或 <code class="docutils literal notranslate"><span class="pre">-1</span></code>。在 <a class="reference internal" href="#figure-7-5"><span class="std std-ref">图 7.5</span></a> 中，发送方使用的 <code class="docutils literal notranslate"><span class="pre">M</span></code> 比特 CDMA 编码为 <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">-1,</span> <span class="pre">1,</span> <span class="pre">-1,</span> <span class="pre">-1,</span> <span class="pre">-1)</span></code>。</p>
+<figure class="align-center" id="figure-7-5">
+<img alt="../_images/588-0.png" src="../_images/588-0.png" />
+</figure>
+<p><strong>图 7.5 一个简单的 CDMA 示例：发送方编码，接收方解码</strong></p>
+<p>为了说明 CDMA 的工作原理，我们聚焦于第 <code class="docutils literal notranslate"><span class="pre">i</span></code> 个数据比特 <span class="math notranslate nohighlight">\(d_i\)</span>。在 <span class="math notranslate nohighlight">\(d_i\)</span> 的比特传输时间中的第 <code class="docutils literal notranslate"><span class="pre">m</span></code> 个迷你槽中，CDMA 编码器的输出 <span class="math notranslate nohighlight">\(Z_{i,m}\)</span> 是 <span class="math notranslate nohighlight">\(d_i\)</span> 与第 <cite>m</cite> 个 CDMA 编码比特 <span class="math notranslate nohighlight">\(c_{m}\)</span> 的乘积：</p>
+<p><strong>公式 (7.1)</strong></p>
+<div class="math notranslate nohighlight" id="equation-7-1">
+<span id="equation-7-1"></span><span class="eqno">(1)<a class="headerlink" href="#equation-7-1" title="此公式的永久链接">#</a></span>\[ Z_{i,m} = d_i ⋅ c_m\]</div>
+<p>在一个没有干扰发送方的理想世界中，接收方接收到编码后的比特 <span class="math notranslate nohighlight">\(Z_{i,m}\)</span>，然后通过计算以下公式恢复原始数据比特 <span class="math notranslate nohighlight">\(d_i\)</span>：</p>
+<p><strong>公式 (7.2)</strong></p>
+<div class="math notranslate nohighlight" id="equation-7-2">
+<span id="equation-7-2"></span><span class="eqno">(2)<a class="headerlink" href="#equation-7-2" title="此公式的永久链接">#</a></span>\[ d_i = \frac{1}{M} \sum_{m=1}^{M} Z_{i,m} ⋅ c_m\]</div>
+<p>读者可以结合 <a class="reference internal" href="#figure-7-5"><span class="std std-ref">图 7.5</span></a> 中的例子，手动推导验证接收方确实可以通过 <a class="reference internal" href="#equation-7-2">(2)</a> 正确恢复原始数据比特。</p>
+<p>但现实世界远非理想，如前所述，CDMA 必须能在存在使用不同编码发送和传输数据的干扰发送方的情况下工作。那么，在这些数据比特被其他发送方的比特“缠绕”的情况下，CDMA 接收方如何恢复某个发送方的原始数据比特呢？CDMA 的原理是假设干扰的已发送比特信号是可加性的。例如，如果有三个发送方在同一个迷你槽中发送值为 <code class="docutils literal notranslate"><span class="pre">1</span></code> 的比特，而第四个发送方发送值为 <code class="docutils literal notranslate"><span class="pre">-1</span></code> 的比特，那么该迷你槽中所有接收方接收到的信号值就是 <code class="docutils literal notranslate"><span class="pre">2``（因为</span> <span class="pre">``1+1+1-1=2</span></code>）。在存在多个发送方的情况下，发送方 s 按照 <a class="reference internal" href="#equation-7-1">(1)</a> 的方式计算其编码发送比特 <span class="math notranslate nohighlight">\(Z_{i,m}^s\)</span>。不过，在第 i 个比特槽的第 m 个迷你槽中，接收方接收到的值现在是所有 N 个发送方在该迷你槽中所发送比特的总和：</p>
+<div class="math notranslate nohighlight">
+\[Z_{i,m}^* = \sum_{s=1}^{N} Z_{i,m}^s\]</div>
+<p>令人惊奇的是，如果发送方所使用的编码选择得当，接收方就能仅使用发送方的编码，按与 <a class="reference internal" href="#equation-7-2">(2)</a> 相同的方式，从总信号中恢复该发送方传输的数据：</p>
+<p><strong>公式 (7.3)</strong></p>
+<div class="math notranslate nohighlight" id="equation-7-3">
+<span class="eqno">(3)<a class="headerlink" href="#equation-7-3" title="此公式的永久链接">#</a></span>\[ d_i = \frac{1}{M} \sum_{m=1}^{M} Z_{i,m}^* ⋅ c_m\]</div>
+<p>这一过程可见于 <a class="reference internal" href="#figure-7-6"><span class="std std-ref">图 7.6</span></a> 中的一个两个发送方的 CDMA 示例。上方发送方使用的 <code class="docutils literal notranslate"><span class="pre">M</span></code> 比特 CDMA 编码为 <code class="docutils literal notranslate"><span class="pre">(1,1,1,-1,1,-1,-1,-1)</span></code>，而下方发送方使用的编码为 <code class="docutils literal notranslate"><span class="pre">(1,-1,1,1,1,-1,1,1)</span></code>。<a class="reference internal" href="#figure-7-6"><span class="std std-ref">图 7.6</span></a> 展示了接收方如何从上方发送方恢复原始数据比特。注意，即便存在下方发送方的干扰传输，接收方依然能够从发送方 <code class="docutils literal notranslate"><span class="pre">1</span></code> 提取出数据。</p>
+<p>回顾我们在 <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">第 6 章</span></a> 中提到的鸡尾酒会类比。CDMA 协议就像是一群聚会者使用不同语言交谈；在这种情境下，人类实际上非常擅长专注于自己懂的语言对话，同时屏蔽其他语言的谈话内容。我们可以看到，CDMA 是一种划分协议，它不是划分时间或频率，而是划分码空间，并为每个节点分配码空间的一部分。</p>
+<figure class="align-center" id="figure-7-6">
+<img alt="../_images/590-0.png" src="../_images/590-0.png" />
+</figure>
+<p><strong>图 7.6 一个两个发送方的 CDMA 示例</strong></p>
+<p>我们在此对 CDMA 的讨论必然是简略的；在实际应用中，还需处理许多困难问题。首先，为了使 CDMA 接收方能够提取特定发送方的信号，CDMA 编码必须被精心设计。其次，我们的讨论假设来自不同发送方的接收信号强度是相同的，而在现实中这很难保证。有关这些以及其他 CDMA 相关问题的详尽研究，请参阅 [<a class="reference internal" href="../references.html#pickholtz-1982"><span class="std std-ref">Pickholtz 1982</span></a>；<a class="reference internal" href="../references.html#viterbi-1995"><span class="std std-ref">Viterbi 1995</span></a>]。</p>
+<div class="toggle docutils container">
+<p>Recall from <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a> that when hosts communicate over a shared medium, a protocol is needed so that the signals sent by multiple senders do not interfere at the receivers. In <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a> we described three classes of medium access protocols: channel partitioning, random access, and taking turns. Code division multiple access (CDMA) belongs to the family of channel partitioning protocols. It is prevalent in wireless LAN and cellular technologies. Because CDMA is so important in the wireless world, we’ll take a quick look at CDMA now, before getting into specific wireless access technologies in the subsequent sections.</p>
+<p>In a CDMA protocol, each bit being sent is encoded by multiplying the bit by a signal (the code) that changes at a much faster rate (known as the <strong>chipping rate</strong>) than the original sequence of data bits. <a class="reference internal" href="#figure-7-5"><span class="std std-ref">Figure 7.5</span></a> shows a simple, idealized CDMA encoding/decoding scenario. Suppose that the rate at which original data bits reach the CDMA encoder defines the unit of time; that is, each original data bit to be transmitted requires a one-bit slot time. Let di be the value of the data bit for the ith bit slot. For mathematical convenience, we represent a data bit with a 0 value as -1. Each bit slot is further subdivided into M mini-slots; in <a class="reference internal" href="#figure-7-5"><span class="std std-ref">Figure 7.5</span></a>, M=8, although in practice M is much larger. The CDMA code used by the sender consists of a sequence of M values, cm, m=1,…, M, each taking a+1 or -1 value. In the example in <a class="reference internal" href="#figure-7-5"><span class="std std-ref">Figure 7.5</span></a>, the M-bit CDMA code being used by the sender is (1,1,1,-1,1,-1,-1,-1).</p>
+<figure class="align-center">
+<img alt="../_images/588-0.png" src="../_images/588-0.png" />
+</figure>
+<p><strong>Figure 7.5 A simple CDMA example: Sender encoding, receiver decoding</strong></p>
+<p>To illustrate how CDMA works, let us focus on the ith data bit, di. For the mth mini-slot of the bit-transmission time of <span class="math notranslate nohighlight">\(d_{i}\)</span>, the output of the CDMA encoder, <span class="math notranslate nohighlight">\(Z_{i,m}\)</span>, is the value of di multiplied by the mth bit in the assigned CDMA code, <span class="math notranslate nohighlight">\(c_{m}\)</span>:</p>
+<p><strong>Equation (7.1)</strong></p>
+<div class="highlight-math notranslate" id="id2"><div class="highlight"><pre><span></span>Zi,m=di⋅cm
+</pre></div>
+</div>
+<p>In a simple world, with no interfering senders, the receiver would receive the encoded bits, <span class="math notranslate nohighlight">\(Z_{i,m}\)</span>, and recover the original data bit, <span class="math notranslate nohighlight">\(d_{i}\)</span>, by computing:</p>
+<p><strong>Equation (7.2)</strong></p>
+<div class="highlight-text notranslate" id="id3"><div class="highlight"><pre><span></span>di=1M∑m=1MZi,m⋅cm
+</pre></div>
+</div>
+<p>The reader might want to work through the details of the example in <a class="reference internal" href="#figure-7-5"><span class="std std-ref">Figure 7.5</span></a> to see that the original data bits are indeed correctly recovered at the receiver using <span class="xref std std-ref">Equation 7.2</span>.</p>
+<p>The world is far from ideal, however, and as noted above, CDMA must work in the presence of interfering senders that are encoding and transmitting their data using a different assigned code. But how can a CDMA receiver recover a sender’s original data bits when those data bits are being tangled with bits being transmitted by other senders? CDMA works under the assumption that the interfering transmitted bit signals are additive. This means, for example, that if three senders send a 1 value, and a fourth sender sends a -1 value during the same mini-slot, then the received signal at all receivers during that mini-slot is a 2 (since 1+1+1-1=2). In the presence of multiple senders, sender s computes its encoded transmissions, Zi,ms, in exactly the same manner as in <span class="xref std std-ref">Equation 7.1</span>. The value received at a receiver during the mth mini-slot of the ith bit slot, however, is now the sum of the transmitted bits from all N senders during that mini-slot:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Zi,m*=∑s=1NZi,ms
+</pre></div>
+</div>
+<p>Amazingly, if the senders’ codes are chosen carefully, each receiver can recover the data sent by a given sender out of the aggregate signal simply by using the sender’s code in exactly the same manner as in <span class="xref std std-ref">Equation 7.2</span>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>di=1M∑m=1MZi,m*⋅cm
+</pre></div>
+</div>
+<p>as shown in <a class="reference internal" href="#figure-7-6"><span class="std std-ref">Figure 7.6</span></a>, for a two-sender CDMA example. The M-bit CDMA code being used by the upper sender is (1,1,1,-1,1,-1,-1,-1), while the CDMA code being used by the lower sender is (1,-1,1,1,1,-1,1,1). <a class="reference internal" href="#figure-7-6"><span class="std std-ref">Figure 7.6</span></a> illustrates a receiver recovering the original data bits from the upper sender. Note that the receiver is able to extract the data from sender 1 in spite of the interfering transmission from sender 2.</p>
+<p>Recall our cocktail analogy from <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a>. A CDMA protocol is similar to having partygoers speaking in multiple languages; in such circumstances humans are actually quite good at locking into the conversation in the language they understand, while filtering out the remaining conversations. We see here that CDMA is a partitioning protocol in that it partitions the codespace (as opposed to time or frequency) and assigns each node a dedicated piece of the codespace.</p>
+<figure class="align-center">
+<img alt="../_images/590-0.png" src="../_images/590-0.png" />
+</figure>
+<p><strong>Figure 7.6 A two-sender CDMA example</strong></p>
+<p>Our discussion here of CDMA is necessarily brief; in practice a number of difficult issues must be addressed. First, in order for the CDMA receivers to be able to extract a particular sender’s signal, the CDMA codes must be carefully chosen. ­Second, our discussion has assumed that the received signal strengths from various senders are the same; in reality this can be difficult to achieve. There is a considerable body of literature addressing these and other issues related to CDMA; see ­[<a class="reference internal" href="../references.html#pickholtz-1982"><span class="std std-ref">Pickholtz 1982</span></a>; <a class="reference internal" href="../references.html#viterbi-1995"><span class="std std-ref">Viterbi 1995</span></a>] for details.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s1.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">7.1 简介</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s3.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">7.3 WiFi：802.11 无线局域网</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cdma">7.2.1 CDMA</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

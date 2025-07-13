@@ -1,0 +1,917 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>1.5 协议层与其服务模型 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c1/s5';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="1.6 网络攻击" href="s6.html" />
+    <link rel="prev" title="1.4 分组交换网络中的时延、丢包与吞吐量" href="s4.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 1 章 计算机网络与因特网</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c1/s5.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>1.5 协议层与其服务模型</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-5-1">1.5.1 分层体系结构</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">协议分层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">应用层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">传输层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">网络层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">链路层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">物理层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#osi">OSI 模型</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encapsulation">1.5.2 封装（Encapsulation）</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c1-5">
+<span id="id1"></span><h1>1.5 协议层与其服务模型<a class="headerlink" href="#c1-5" title="此标题的永久链接">#</a></h1>
+<p>1.5 Protocol Layers and Their Service Models</p>
+<p>从我们目前的讨论可以看出，互联网是一个 <em>极其</em> 复杂的系统。我们已经看到，互联网包含许多组成部分：众多的应用和协议、各种类型的端系统、分组交换设备以及各种类型的链路层介质。鉴于其巨大的复杂性，是否有可能组织一个网络体系结构，或至少组织我们关于网络体系结构的讨论？幸运的是，这两个问题的答案都是肯定的。</p>
+<div class="toggle docutils container">
+<p>From our discussion thus far, it is apparent that the Internet is an <em>extremely</em> complicated system. We
+have seen that there are many pieces to the Internet: numerous applications and protocols, various
+types of end systems, packet switches, and various types of link-level media. Given this enormous
+complexity, is there any hope of organizing a network architecture, or at least our discussion of network
+architecture? Fortunately, the answer to both questions is yes.</p>
+</div>
+<section id="c1-5-1">
+<span id="id2"></span><h2>1.5.1 分层体系结构<a class="headerlink" href="#c1-5-1" title="此标题的永久链接">#</a></h2>
+<p>1.5.1 Layered Architecture</p>
+<p>在尝试组织我们对互联网体系结构的思考之前，让我们先找一个人类生活中的类比。事实上，我们在日常生活中经常处理复杂的系统。想象一下如果有人让你描述航空系统。你会如何找到一种结构来描述这个包含售票员、行李检查员、登机口人员、飞行员、飞机、空中交通控制以及一个全球性的飞机航线系统的复杂系统？一种描述这个系统的方法可能是描述你在乘坐飞机时经历的一系列操作（或他人为你完成的操作）。你购买机票、托运行李、前往登机口，最终登上飞机。飞机起飞并被引导至目的地。飞机降落后，你在登机口下机并提取行李。如果这次旅程不愉快，你会向售票员抱怨这趟航班（尽管不会得到任何补偿）。该场景如 <a class="reference internal" href="#figure-1-21"><span class="std std-ref">图 1.21</span></a> 所示。</p>
+<figure class="align-center" id="figure-1-21">
+<img alt="../_images/75-0.png" src="../_images/75-0.png" />
+</figure>
+<p><strong>图 1.21 乘坐飞机旅行：所执行的操作</strong></p>
+<figure class="align-center" id="figure-1-22">
+<img alt="../_images/76-0.png" src="../_images/76-0.png" />
+</figure>
+<p><strong>图 1.22 航空功能的水平分层</strong></p>
+<p>在这里我们已经可以看到与计算机网络的一些类比：你被航空公司从源地运送到目的地；在互联网中，一个分组从源主机被传输到目标主机。但这还不是我们要找的类比。我们正在寻找 <a class="reference internal" href="#figure-1-21"><span class="std std-ref">图 1.21</span></a> 中的一种 <em>结构</em>。</p>
+<p>观察 <a class="reference internal" href="#figure-1-21"><span class="std std-ref">图 1.21</span></a>，我们注意到两端都有售票功能；已经持票的乘客还有行李托运功能；已经持票并完成行李托运的乘客还有登机口功能。对于那些已通过登机口的乘客（也就是说，已持票、已托运行李并已通过登机口的乘客），存在起飞与降落功能，而在飞行途中，则有飞机航线引导功能。这表明我们可以以 <em>水平</em> 的方式来看待 <a class="reference internal" href="#figure-1-21"><span class="std std-ref">图 1.21</span></a> 中的各项功能，如 <a class="reference internal" href="#figure-1-22"><span class="std std-ref">图 1.22</span></a> 所示。</p>
+<p><a class="reference internal" href="#figure-1-22"><span class="std std-ref">图 1.22</span></a> 将航空功能划分为多个层，提供了一个用于讨论航空旅行的框架。请注意，每一层与其下方的层组合实现某种功能、某种服务。在售票层及以下，实现了从一个航空柜台到另一个航空柜台的人员转运。在行李层及以下，实现了从托运行李点到提取行李点的人员及其行李的转运。请注意，行李层只为已持票的乘客提供该服务。在登机口层，实现了从出发登机口到到达登机口的人员和行李的转运。在起飞/降落层，实现了从跑道到跑道的人员和行李的转运。每一层通过以下方式提供其服务：（1）在该层中执行特定操作（例如，在登机口层，将人员装载到飞机上或从飞机上卸下）；（2）使用其下一层的服务（例如，在登机口层，使用起飞/降落层提供的跑道到跑道的人员转运服务）。</p>
+<p>分层体系结构使我们可以讨论一个庞大复杂系统中定义良好且特定的部分。通过提供模块化，这种简化本身具有相当大的价值，使得更改该层所提供服务的实现变得容易得多。只要该层向上层提供相同的服务，并从下层使用相同的服务，那么当该层的实现发生变化时，系统的其余部分将保持不变。（请注意，更改服务的 <em>实现</em> 与更改服务本身是非常不同的！）例如，如果登机口的功能发生变化（比如根据乘客身高登机和下机），航空系统的其余部分将保持不变，因为登机口层仍然提供相同的功能（装载和卸载乘客）；它只是以不同的方式来实现该功能。对于一个不断更新的庞大复杂系统而言，能够更改服务实现而不影响系统其他部分，是分层结构的另一个重要优势。</p>
+<div class="toggle docutils container">
+<p>Before attempting to organize our thoughts on Internet architecture, let’s look for a human analogy.
+Actually, we deal with complex systems all the time in our everyday life. Imagine if someone asked you
+to describe, for example, the airline system. How would you find the structure to describe this complex
+system that has ticketing agents, baggage checkers, gate personnel, pilots, airplanes, air traffic control,
+and a worldwide system for routing airplanes? One way to describe this system might be to describe the
+series of actions you take (or others take for you) when you fly on an airline. You purchase your ticket,
+check your bags, go to the gate, and eventually get loaded onto the plane. The plane takes off and is
+routed to its destination. After your plane lands, you deplane at the gate and claim your bags. If the trip
+was bad, you complain about the flight to the ticket agent (getting nothing for your effort). This scenario
+is shown in <a class="reference internal" href="#figure-1-21"><span class="std std-ref">Figure 1.21</span></a>.</p>
+<figure class="align-center">
+<img alt="../_images/75-0.png" src="../_images/75-0.png" />
+</figure>
+<p><strong>Figure 1.21 Taking an airplane trip: actions</strong></p>
+<figure class="align-center">
+<img alt="../_images/76-0.png" src="../_images/76-0.png" />
+</figure>
+<p><strong>Figure 1.22 Horizontal layering of airline functionality</strong></p>
+<p>Already, we can see some analogies here with computer networking: You are being shipped from
+source to destination by the airline; a packet is shipped from source host to destination host in the
+Internet. But this is not quite the analogy we are after. We are looking for some <em>structure</em> in <a class="reference internal" href="#figure-1-21"><span class="std std-ref">Figure 1.21</span></a>.
+Looking at <a class="reference internal" href="#figure-1-21"><span class="std std-ref">Figure 1.21</span></a>, we note that there is a ticketing function at each end; there is also a baggage
+function for already-ticketed passengers, and a gate function for already-ticketed and already-baggage-
+checked passengers. For passengers who have made it through the gate (that is, passengers who are
+already ticketed, baggage-checked, and through the gate), there is a takeoff and landing function, and
+while in flight, there is an airplane-routing function. This suggests that we can look at the functionality in
+<a class="reference internal" href="#figure-1-21"><span class="std std-ref">Figure 1.21</span></a> in a <em>horizontal</em> manner, as shown in <a class="reference internal" href="#figure-1-22"><span class="std std-ref">Figure 1.22</span></a>.</p>
+<p><a class="reference internal" href="#figure-1-22"><span class="std std-ref">Figure 1.22</span></a> has divided the airline functionality into layers, providing a framework in which we can
+discuss airline travel. Note that each layer, combined with the layers below it, implements some
+functionality, some service. At the ticketing layer and below, airline-counter-to-airline-counter transfer of
+a person is accomplished. At the baggage layer and below, baggage-check-to-baggage-claim transfer of
+a person and bags is accomplished. Note that the baggage layer provides this service only to an
+already-ticketed person. At the gate layer, departure-gate-to-arrival-gate transfer of a person and bags
+is accomplished. At the takeoff/landing layer, runway-to-runway transfer of people and their bags is
+accomplished. Each layer provides its service by (1) performing certain actions within that layer (for
+example, at the gate layer, loading and unloading people from an airplane) and by (2) using the services
+of the layer directly below it (for example, in the gate layer, using the runway-to-runway passenger
+transfer service of the takeoff/landing layer).</p>
+<p>A layered architecture allows us to discuss a well-defined, specific part of a large and complex system.
+This simplification itself is of considerable value by providing modularity, making it much easier to
+change the implementation of the service provided by the layer. As long as the layer provides the same
+service to the layer above it, and uses the same services from the layer below it, the remainder of the
+system remains unchanged when a layer’s implementation is changed. (Note that changing the
+implementation of a service is very different from changing the service itself!) For example, if the gate
+functions were changed (for instance, to have people board and disembark by height), the remainder of
+the airline system would remain unchanged since the gate layer still provides the same function (loading
+and unloading people); it simply implements that function in a different manner after the change. For
+large and complex systems that are constantly being updated, the ability to change the implementation
+of a service without affecting other components of the system is another important advantage of layering.</p>
+</div>
+<section id="id3">
+<h3>协议分层<a class="headerlink" href="#id3" title="此标题的永久链接">#</a></h3>
+<p>Protocol Layering</p>
+<p>关于航空的内容说得够多了。现在让我们将注意力转向网络协议。为了使网络协议的设计更有结构，网络设计者将协议——以及实现这些协议的网络硬件和软件——组织成 <strong>层</strong>。每个协议都属于某一层，就像 <a class="reference internal" href="#figure-1-22"><span class="std std-ref">图 1.22</span></a> 中航空体系结构的每个功能都属于一个层一样。我们再次关注每一层为其上层提供的 <strong>服务</strong>——即所谓的该层的 <strong>服务模型</strong>。就像在航空示例中一样，每一层通过以下方式提供其服务：（1）在该层内执行某些操作；（2）使用其下方一层的服务。例如，第 n 层提供的服务可能包括从网络的一端到另一端可靠传递消息。这可能通过使用第 n−1 层的不可靠端到端消息传递服务并添加第 n 层的功能（用于检测和重传丢失的消息）来实现。</p>
+<p>一个协议层可以通过软件、硬件或二者结合来实现。应用层协议（如 HTTP 和 SMTP）几乎总是在端系统中以软件方式实现；传输层协议也是如此。由于物理层和数据链路层负责处理特定链路上的通信，因此它们通常在与给定链路相关的网络接口卡中实现（例如以太网或 WiFi 接口卡）。网络层通常是硬件和软件的混合实现。还要注意的是，就像分层航空体系结构中的功能分布在构成系统的不同机场和飞行控制中心一样，第 n 层协议也分布在构成网络的端系统、分组交换机和其他组件中。也就是说，每个网络组件中通常都包含某个协议层的一部分。</p>
+<p>协议分层具有概念性和结构性优势 <a class="reference internal" href="../references.html#rfc-3439"><span class="std std-ref">[RFC 3439]</span></a>。正如我们所看到的，分层为系统组件的讨论提供了一种结构化方式。模块化使得系统组件的更新更加容易。但我们也提到，一些研究人员和网络工程师强烈反对分层 <a class="reference internal" href="../references.html#wakeman-1992"><span class="std std-ref">[Wakeman 1992]</span></a>。分层的一个潜在缺点是某一层可能会重复低层的功能。例如，许多协议栈在链路级别和端到端级别都提供错误恢复。第二个潜在缺点是某一层的功能可能需要来自另一层的信息（例如时间戳值）；这违反了层之间分离的目标。</p>
+<figure class="align-left" id="figure-1-23">
+<img alt="../_images/78-0.png" src="../_images/78-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/78-1.png" src="../_images/78-1.png" />
+</figure>
+<p><strong>图 1.23 互联网协议栈 (a) 与 OSI 参考模型 (b)</strong></p>
+<p>将各层的协议合在一起时，我们称之为 <strong>协议栈</strong>。互联网协议栈由五层组成：物理层、链路层、网络层、传输层和应用层，如 <a class="reference internal" href="#figure-1-23"><span class="std std-ref">图 1.23(a)</span></a> 所示。如果你查看目录，你会发现我们大致是按照互联网协议栈的层来组织本书内容的。我们采用 <strong>自顶向下的方法</strong>，首先介绍应用层，然后逐层向下讲解。</p>
+<div class="toggle docutils container">
+<p>But enough about airlines. Let’s now turn our attention to network protocols. To provide structure to the
+design of network protocols, network designers organize protocols—and the network hardware and
+software that implement the protocols—in <strong>layers</strong>. Each protocol belongs to one of the layers, just as
+each function in the airline architecture in <a class="reference internal" href="#figure-1-22"><span class="std std-ref">Figure 1.22</span></a> belonged to a layer. We are again interested in
+the <strong>services</strong> that a layer offers to the layer above—the so-called <strong>service model</strong> of a layer. Just as in
+the case of our airline example, each layer provides its service by (1) performing certain actions within
+that layer and by (2) using the services of the layer directly below it. For example, the services provided
+by layer n may include reliable delivery of messages from one edge of the network to the other. This
+might be implemented by using an unreliable edge-to-edge message delivery service of layer n−1, and
+adding layer n functionality to detect and retransmit lost messages.</p>
+<p>A protocol layer can be implemented in software, in hardware, or in a combination of the two.
+Application-layer protocols—such as HTTP and SMTP—are almost always implemented in software in
+the end systems; so are transport-layer protocols. Because the physical layer and data link layers are
+responsible for handling communication over a specific link, they are typically implemented in a network
+interface card (for example, Ethernet or WiFi interface cards) associated with a given link. The network
+layer is often a mixed implementation of hardware and software. Also note that just as the functions in
+the layered airline architecture were <em>distributed</em> among the various airports and flight control centers that
+make up the system, so too is a layer <em>n</em> protocol distributed among the end systems, packet switches,
+and other components that make up the network. That is, there’s often a piece of a layer n protocol in
+each of these network components.</p>
+<p>Protocol layering has conceptual and structural advantages <a class="reference internal" href="../references.html#rfc-3439"><span class="std std-ref">[RFC 3439]</span></a>. As we have seen, layering
+provides a structured way to discuss system components. Modularity makes it easier to update system
+components. We mention, however, that some researchers and networking engineers are vehemently
+opposed to layering <a class="reference internal" href="../references.html#wakeman-1992"><span class="std std-ref">[Wakeman 1992]</span></a>. One potential drawback of layering is that one layer may
+duplicate lower-layer functionality. For example, many protocol stacks provide error recovery
+on both a per-link basis and an end-to-end basis. A second potential drawback is that functionality at
+one layer may need information (for example, a timestamp value) that is present only in another layer;
+this violates the goal of separation of layers.</p>
+<figure class="align-left">
+<img alt="../_images/78-0.png" src="../_images/78-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/78-1.png" src="../_images/78-1.png" />
+</figure>
+<p><strong>Figure 1.23 The Internet protocol stack (a) and OSI reference model (b)</strong></p>
+<p>When taken together, the protocols of the various layers are called the <strong>protocol stack</strong>. The Internet
+protocol stack consists of five layers: the physical, link, network, transport, and application layers, as
+shown in <a class="reference internal" href="#figure-1-23"><span class="std std-ref">Figure 1.23(a)</span></a>. If you examine the Table of Contents, you will see that we have roughly
+organized this book using the layers of the Internet protocol stack. We take a <strong>top-down approach</strong>, first
+covering the application layer and then proceeding downward.</p>
+</div>
+</section>
+<section id="id4">
+<h3>应用层<a class="headerlink" href="#id4" title="此标题的永久链接">#</a></h3>
+<p>Application Layer</p>
+<p>应用层是网络应用及其应用层协议所在的位置。互联网的应用层包括许多协议，例如 HTTP 协议（用于网页文档的请求和传输）、SMTP（用于电子邮件的传输）以及 FTP（用于两个端系统之间的文件传输）。我们将看到，某些网络功能，如将人类可读的互联网端系统名称（例如 <a class="reference external" href="http://www.ietf.org/">www.ietf.org</a>）转换为 32 位网络地址，也是在一个特定的应用层协议——即域名系统（DNS）的帮助下完成的。我们将在 <a class="reference internal" href="../c2/index.html#c2"><span class="std std-ref">第 2 章</span></a> 中看到，创建和部署我们自己的新应用层协议是非常容易的。</p>
+<p>应用层协议分布在多个端系统之间，一个端系统中的应用使用协议与另一个端系统中的应用交换信息分组。我们将在应用层将这些信息分组称为 <strong>消息</strong>。</p>
+<div class="toggle docutils container">
+<p>The application layer is where network applications and their application-layer protocols reside. The
+Internet’s application layer includes many protocols, such as the HTTP protocol (which provides for Web
+document request and transfer), SMTP (which provides for the transfer of e-mail messages), and FTP
+(which provides for the transfer of files between two end systems). We’ll see that certain network
+functions, such as the translation of human-friendly names for Internet end systems like <a class="reference external" href="http://www.ietf.org/">www.ietf.org</a> to
+a 32-bit network address, are also done with the help of a specific application-layer protocol, namely, the
+domain name system (DNS). We’ll see in <a class="reference internal" href="../c2/index.html#c2"><span class="std std-ref">Chapter 2</span></a> that it is very easy to create and deploy our own
+new application-layer protocols.</p>
+<p>An application-layer protocol is distributed over multiple end systems, with the application in one end
+system using the protocol to exchange packets of information with the application in another end
+system. We’ll refer to this packet of information at the application layer as a <strong>message</strong>.</p>
+</div>
+</section>
+<section id="id6">
+<h3>传输层<a class="headerlink" href="#id6" title="此标题的永久链接">#</a></h3>
+<p>Transport Layer</p>
+<p>互联网的传输层在应用端点之间传送应用层的消息。在互联网中，有两个传输协议：TCP 和 UDP，它们都可以传送应用层的消息。TCP 为其应用提供面向连接的服务。此服务包括向目标端系统保证交付应用层消息，以及流量控制（即发送方/接收方的速度匹配）。TCP 还将长消息分段为更短的段，并提供拥塞控制机制，使源在网络拥塞时降低其发送速率。UDP 协议为其应用提供无连接服务。这是一种不带任何附加功能的服务，不提供可靠性、流控制或拥塞控制。在本书中，我们将传输层的数据包称为 <strong>段（segment）</strong>。</p>
+<div class="toggle docutils container">
+<p>The Internet’s transport layer transports application-layer messages between application endpoints. In
+the Internet there are two transport protocols, TCP and UDP, either of which can transport application-
+layer messages. TCP provides a ­connection-oriented service to its applications. This service includes
+guaranteed delivery of application-layer messages to the destination and flow control (that is,
+sender/receiver speed matching). TCP also breaks long messages into shorter ­segments and provides
+a congestion-control mechanism, so that a source throttles its transmission rate when the network is
+congested. The UDP protocol provides a connectionless service to its applications. This is a no-frills
+service that provides no reliability, no flow control, and no congestion control. In this book, we’ll refer to
+a transport-layer packet as a <strong>segment</strong>.</p>
+</div>
+</section>
+<section id="id7">
+<h3>网络层<a class="headerlink" href="#id7" title="此标题的永久链接">#</a></h3>
+<p>Network Layer</p>
+<p>互联网的网络层负责将被称为 <strong>数据报（datagram）</strong> 的网络层数据包从一个主机传输到另一个主机。源主机中的互联网传输层协议（TCP 或 UDP）将一个传输层段和目标地址传递给网络层，就像你将写好地址的信件交给邮政服务一样。然后网络层提供将该段交付到目标主机的传输层的服务。</p>
+<p>互联网的网络层包括著名的 IP 协议，它定义了数据报中的字段以及终端系统和路由器如何处理这些字段。IP 协议是唯一的，所有具有网络层的互联网组件都必须运行 IP 协议。互联网的网络层还包含决定数据报在源和目标之间路径的路由协议。互联网拥有许多路由协议。正如我们在 <a class="reference internal" href="s3.html#c1-3"><span class="std std-ref">第 1.3 节</span></a> 中所看到的，互联网是网络的网络，在一个网络内部，网络管理员可以运行任何想要的路由协议。尽管网络层包含 IP 协议和许多路由协议，但通常仅被称为 IP 层，反映了 IP 是连接互联网的“粘合剂”这一事实。</p>
+<div class="toggle docutils container">
+<p>The Internet’s network layer is responsible for moving network-layer packets known as <strong>datagrams</strong> from
+one host to another. The Internet transport-layer protocol (TCP or UDP) in a source host passes a
+transport-layer segment and a destination address to the network layer, just as you would give the
+postal service a letter with a destination address. The network layer then provides the service of
+delivering the segment to the transport layer in the destination host.</p>
+<p>The Internet’s network layer includes the celebrated IP protocol, which defines the fields in the datagram
+as well as how the end systems and routers act on these fields. There is only one IP protocol, and all
+Internet components that have a network layer must run the IP protocol. The Internet’s network layer
+also contains routing protocols that determine the routes that datagrams take between sources and
+destinations. The Internet has many routing protocols. As we saw in <a class="reference internal" href="s3.html#c1-3"><span class="std std-ref">Section 1.3</span></a>, the Internet is a
+network of networks, and within a network, the network administrator can run any routing protocol
+desired. Although the network layer contains both the IP protocol and numerous routing protocols, it is
+often simply referred to as the IP layer, reflecting the fact that IP is the glue that binds the Internet
+together.</p>
+</div>
+</section>
+<section id="id8">
+<h3>链路层<a class="headerlink" href="#id8" title="此标题的永久链接">#</a></h3>
+<p>Link Layer</p>
+<p>互联网的网络层将数据报通过一系列路由器从源传送到目标。为了将数据包从路由路径上的一个节点（主机或路由器）移动到下一个节点，网络层依赖于链路层提供的服务。具体地说，在每个节点上，网络层将数据报下交给链路层，链路层将数据报传送到路径上的下一个节点。在下一个节点，链路层将数据报上传至网络层。</p>
+<p>链路层提供的服务取决于该链路上采用的具体链路层协议。例如，一些链路层协议提供可靠的传输服务，从发送节点通过一条链路传送到接收节点。请注意，这种可靠传输服务不同于 TCP 提供的端到端可靠传输服务。链路层协议的示例包括以太网、WiFi 以及有线接入网络的 DOCSIS 协议。由于数据报通常需要跨越多条链路从源传送到目标，因此在其路径上的不同链路上，数据报可能由不同的链路层协议处理。例如，一个数据报可能在一条链路上由以太网处理，在下一条链路上由 PPP 处理。网络层将从每种不同的链路层协议中接收不同的服务。在本书中，我们将链路层的数据包称为 <strong>帧（frame）</strong>。</p>
+<div class="toggle docutils container">
+<p>The Internet’s network layer routes a datagram through a series of routers between the source and
+destination. To move a packet from one node (host or router) to the next node in the route, the network
+layer relies on the services of the link layer. In particular, at each node, the network layer passes the
+datagram down to the link layer, which delivers the datagram to the next node along the route. At this
+next node, the link layer passes the datagram up to the network layer.</p>
+<p>The services provided by the link layer depend on the specific link-layer protocol that is employed over
+the link. For example, some link-layer protocols provide reliable delivery, from transmitting node, over
+one link, to receiving node. Note that this reliable delivery service is different from the reliable delivery
+service of TCP, which provides reliable delivery from one end system to another. Examples of link-layerprotocols include Ethernet, WiFi, and the cable access network’s DOCSIS protocol. As datagrams
+typically need to traverse several links to travel from source to destination, a datagram may be handled
+by different link-layer protocols at different links along its route. For example, a datagram may be
+handled by Ethernet on one link and by PPP on the next link. The network layer will receive a different
+service from each of the different link-layer protocols. In this book, we’ll refer to the link-layer packets as
+<strong>frames</strong>.</p>
+</div>
+</section>
+<section id="id9">
+<h3>物理层<a class="headerlink" href="#id9" title="此标题的永久链接">#</a></h3>
+<p>Physical Layer</p>
+<p>链路层的工作是将整个帧从一个网络元素移动到相邻的网络元素，而物理层的工作是将帧中的 <em>各个位</em> 从一个节点移动到下一个节点。该层的协议同样依赖于链路，并且还取决于链路的实际传输介质（例如，双绞铜线、单模光纤）。例如，以太网有多种物理层协议：一种用于双绞铜线，另一种用于同轴电缆，还有一种用于光纤，等等。在每种情况下，位在链路上传输的方式都不同。</p>
+<div class="toggle docutils container">
+<p>While the job of the link layer is to move entire frames from one network element to an adjacent network
+element, the job of the physical layer is to move the <em>individual bits</em> within the frame from one node to the
+next. The protocols in this layer are again link dependent and further depend on the actual transmission
+medium of the link (for example, twisted-pair copper wire, single-mode fiber optics). For example,
+Ethernet has many physical-layer protocols: one for twisted-pair copper wire, another for coaxial cable,
+another for fiber, and so on. In each case, a bit is moved across the link in a different way.</p>
+</div>
+</section>
+<section id="osi">
+<h3>OSI 模型<a class="headerlink" href="#osi" title="此标题的永久链接">#</a></h3>
+<p>The OSI Model</p>
+<p>在详细讨论了互联网协议栈之后，我们应当指出，它并不是唯一存在的协议栈。特别是在 20 世纪 70 年代后期，国际标准化组织（ISO）提议将计算机网络组织为七层，称为开放系统互联（OSI）模型 <a class="reference internal" href="../references.html#iso-2016"><span class="std std-ref">[ISO 2016]</span></a>。OSI 模型的成形时期正值后来的互联网协议仍处于初期阶段，当时还有许多不同的协议族在开发中；事实上，OSI 模型的最初设计者可能并未考虑到互联网。尽管如此，从 70 年代末期开始，许多培训课程和大学课程采纳了 ISO 的标准，并围绕七层模型组织课程。由于其对早期网络教育的影响，七层模型至今仍存在于一些网络教材和培训课程中。</p>
+<p>如 <a class="reference internal" href="#figure-1-23"><span class="std std-ref">图 1.23(b)</span></a> 所示，OSI 参考模型的七层分别是：应用层、表示层、会话层、传输层、网络层、数据链路层和物理层。其中五层的功能与互联网中名称类似的对应层大致相同。因此，我们将重点关注 OSI 模型中额外的两层——表示层和会话层。表示层的作用是提供服务，使通信应用可以解释所交换数据的含义。这些服务包括数据压缩和数据加密（其含义不言自明），以及数据描述（这使应用无需关心数据在内部的表示/存储格式——这些格式可能在不同计算机之间有所不同）。会话层提供数据交换的边界划分与同步服务，包括构建检查点与恢复机制的能力。</p>
+<p>互联网缺少 OSI 模型中存在的两层，这引出了几个有趣的问题：这些层所提供的服务是否不重要？如果某个应用需要这些服务该怎么办？互联网对这两个问题的回答是一样的——由应用开发者决定。是否需要某项服务由应用开发者决定；如果该服务很重要，那么开发者需要在应用中构建相应的功能。</p>
+<div class="toggle docutils container">
+<p>Having discussed the Internet protocol stack in detail, we should mention that it is not the only protocol
+stack around. In particular, back in the late 1970s, the International Organization for Standardization
+(ISO) proposed that computer networks be organized around seven layers, called the Open Systems
+Interconnection (OSI) model <a class="reference internal" href="../references.html#iso-2016"><span class="std std-ref">[ISO 2016]</span></a>. The OSI model took shape when the protocols that were to
+become the Internet protocols were in their infancy, and were but one of many different protocol suites
+under development; in fact, the inventors of the original OSI model probably did not have the Internet in
+mind when creating it. Nevertheless, beginning in the late 1970s, many training and university courses
+picked up on the ISO mandate and organized courses around the seven-layer model. Because of its
+early impact on networking education, the seven-layer model continues to linger on in some networking
+textbooks and training courses.</p>
+<p>The seven layers of the OSI reference model, shown in <a class="reference internal" href="#figure-1-23"><span class="std std-ref">Figure 1.23(b)</span></a>, are: application layer,
+presentation layer, session layer, transport layer, network layer, data link layer, and physical layer. The
+functionality of five of these layers is roughly the same as their similarly named Internet counterparts.
+Thus, let’s consider the two additional layers present in the OSI reference model—the presentation layer
+and the session layer. The role of the presentation layer is to provide services that allow communicating
+applications to interpret the meaning of data exchanged. These services include data compression and
+data encryption (which are self-explanatory) as well as data description (which frees the applications
+from having to worry about the internal format in which data are represented/stored—formats that may
+differ from one computer to another). The session layer provides for delimiting and synchronization of
+data exchange, including the means to build a checkpointing and recovery scheme.</p>
+<p>The fact that the Internet lacks two layers found in the OSI reference model poses a couple of
+interesting questions: Are the services provided by these layers unimportant? What if an application
+needs one of these services? The Internet’s answer to both of these questions is the same—it’s up to
+the application developer. It’s up to the application developer to decide if a service is important, and if
+the service is important, it’s up to the application developer to build that functionality into the application.</p>
+</div>
+</section>
+</section>
+<section id="encapsulation">
+<span id="c1-5-2"></span><h2>1.5.2 封装（Encapsulation）<a class="headerlink" href="#encapsulation" title="此标题的永久链接">#</a></h2>
+<p>1.5.2 Encapsulation</p>
+<p><a class="reference internal" href="#figure-1-24"><span class="std std-ref">图 1.24</span></a> 展示了数据在发送端系统的协议栈中向下传递、在中间链路层交换机和路由器的协议栈中上下传递、以及在接收端系统协议栈中向上传递的物理路径。正如我们在本书后面将讨论的，路由器和链路层交换机都是分组交换设备。与端系统类似，路由器和链路层交换机也将其网络硬件和软件组织为多个层。但路由器和链路层交换机并不会实现协议栈中的 <em>所有</em> 层；它们通常只实现底层。如 <a class="reference internal" href="#figure-1-24"><span class="std std-ref">图 1.24</span></a> 所示，链路层交换机实现第 1 层和第 2 层；路由器实现第 1 层到第 3 层。这意味着，例如，互联网路由器能够实现 IP 协议（第 3 层协议），而链路层交换机则不能。我们将在后文看到，链路层交换机虽然无法识别 IP 地址，但它们能够识别第 2 层地址，例如以太网地址。请注意，主机实现所有五层；这与互联网体系结构将大部分复杂性置于网络边缘的观点是一致的。</p>
+<figure class="align-center" id="figure-1-24">
+<img alt="../_images/81-0.png" src="../_images/81-0.png" />
+</figure>
+<p><strong>图 1.24 主机、路由器和链路层交换机；每个包含一组不同的层，反映它们在功能上的差异</strong></p>
+<p><a class="reference internal" href="#figure-1-24"><span class="std std-ref">图 1.24</span></a> 同时也说明了一个重要的概念： <strong>封装（encapsulation）</strong> 。在发送主机中，一个 <strong>应用层消息</strong> （图中 M）被传递给传输层。在最简单的情况下，传输层将该消息与附加信息（即所谓的传输层头部信息，图中 Ht）一起组成一个传输层段（ <strong>transport-layer segment</strong> ）。该头部信息将在接收端的传输层中被使用。应用层消息和传输层头部信息共同组成了 <strong>传输层段</strong> ，因此该段封装了应用层消息。附加信息可能包括：用于使接收端传输层将消息交付给正确应用的标识信息，以及用于检测传输过程中文本是否被篡改的错误检测位。随后，传输层将该段传递给网络层，网络层添加网络层头部信息（图中 <span class="math notranslate nohighlight">\(H_n\)</span>），如源地址和目标端系统地址，从而生成一个 <strong>网络层数据报（datagram）</strong> 。数据报再被传递给链路层，链路层（当然！）会添加自己的链路层头部信息，生成一个 <strong>链路层帧（frame）</strong> 。因此，我们看到，在每一层中，数据包都包含两类字段：头字段（header fields）和 <strong>有效载荷字段（payload field）</strong> 。有效载荷通常是上一层的一个数据包。</p>
+<p>这里有一个有用的类比：假设某公司一个分支办公室要向另一个分支办公室发送一份内部备忘录，通过公共邮政系统传递。假设 Alice 位于某分支机构，想把备忘录发给 Bob（他在另一分支机构）。这个 <em>备忘录</em> 就类似于应用层消息。Alice 将备忘录装入一封写有 Bob 姓名和部门的内部邮件信封中。这个 <em>内部邮件信封</em> 就类似于 <em>传输层段</em> ——它包含了头部信息（Bob 的姓名和部门编号），并封装了应用层消息（备忘录）。当发送办公室的邮件室收到内部信封后，它将其放入适合通过公共邮政系统寄送的另一个信封中。发送方邮件室还在这个邮政信封上写上发送与接收办公室的地址。在此，邮政 <em>信封</em> 类比于 <em>数据报</em> ——它封装了传输层段（内部邮件信封），而传输层段又封装了原始消息（备忘录）。邮政系统将邮政信封送达接收方办公室的邮件室。在那里，开始执行解封装（de-encapsulation）过程。邮件室取出内部备忘录并将其转交给 Bob。最后，Bob 拆开信封并取出备忘录。</p>
+<p>封装过程可能比上述描述更加复杂。例如，一个大型消息可能会被分割为多个传输层段（每个段还可能被进一步分割为多个网络层数据报）。在接收端，这样的段必须从其组成数据报中重新构建出来。</p>
+<div class="toggle docutils container">
+<p><a class="reference internal" href="#figure-1-24"><span class="std std-ref">Figure 1.24</span></a> shows the physical path that data takes down a sending end system’s protocol stack, up
+and down the protocol stacks of an intervening link-layer switch and router, and then up the protocol stack at the receiving end system. As we discuss later in this book,
+routers and link-layer switches are both packet switches. Similar to end systems, routers and link-layer
+switches organize their networking hardware and software into layers. But routers and link-layer
+switches do not implement <em>all</em> of the layers in the protocol stack; they typically implement only the
+bottom layers. As shown in <a class="reference internal" href="#figure-1-24"><span class="std std-ref">Figure 1.24</span></a> , link-layer switches implement layers 1 and 2; routers
+implement layers 1 through 3. This means, for example, that Internet routers are capable of
+implementing the IP protocol (a layer 3 protocol), while link-layer switches are not. We’ll see later that
+while link-layer switches do not recognize IP addresses, they are capable of recognizing layer 2
+addresses, such as Ethernet addresses. Note that hosts implement all five layers; this is consistent with
+the view that the Internet architecture puts much of its complexity at the edges of the network.</p>
+<figure class="align-center" id="hosts-routers-and-link-layer-switches-each-contains-a-different-set-of-layers-reflecting-their-differences-in-functionality">
+<img alt="../_images/81-0.png" src="../_images/81-0.png" />
+</figure>
+<p><strong>Figure 1.24 Hosts, routers, and link-layer switches; each contains a ­different set of layers, reflecting their differences in ­functionality</strong></p>
+<p><a class="reference internal" href="#figure-1-24"><span class="std std-ref">Figure 1.24</span></a> also illustrates the important concept of <strong>encapsulation</strong>. At the sending host, an
+<strong>application-layer message</strong> (M in <a class="reference internal" href="#figure-1-24"><span class="std std-ref">Figure 1.24</span></a>) is passed to the transport layer. In the simplest case,
+the transport layer takes the message and appends additional information (so-called transport-layer
+header information, Ht in <a class="reference internal" href="#figure-1-24"><span class="std std-ref">Figure 1.24</span></a>) that will be used by the receiver-side transport layer. The
+application-layer message and the transport-layer header information together constitute the <strong>transport-layer segment</strong>. The transport-layer segment thus encapsulates the application-layer message. The
+added information might include information allowing the receiver-side transport layer to deliver the
+message up to the appropriate application, and error-detection bits that allow the receiver to determine
+whether bits in the message have been changed in route. The transport layer then passes the segment
+to the network layer, which adds network-layer header information (<span class="math notranslate nohighlight">\(H_n\)</span> in <a class="reference internal" href="#figure-1-24"><span class="std std-ref">Figure 1.24</span></a>) such as source
+and destination end system addresses, creating a <strong>network-layer datagram</strong>. The datagram is then
+passed to the link layer, which (of course!) will add its own link-layer header information and create a
+<strong>link-layer frame</strong>. Thus, we see that at each layer, a packet has two types of fields: header fields and a
+<strong>payload field</strong>. The payload is typically a packet from the layer above.</p>
+<p>A useful analogy here is the sending of an interoffice memo from one corporate branch office to another
+via the public postal service. Suppose Alice, who is in one branch office, wants to send a memo to Bob,
+who is in another branch office. The <em>memo</em> is analogous to the application-layer message. Alice puts the
+memo in an interoffice envelope with Bob’s name and department written on the front of the envelope.
+The <em>interoffice</em> envelope is analogous to a <em>transport-layer segment</em>—it contains header information
+(Bob’s name and department number) and it encapsulates the application-layer message (the memo).
+When the sending branch-office mailroom receives the interoffice envelope, it puts the interoffice
+envelope inside yet another envelope, which is suitable for sending through the public postal service.
+The sending mailroom also writes the postal address of the sending and receiving branch offices on the
+postal envelope. Here, the postal <em>envelope</em> is analogous to the <em>datagram</em>—it encapsulates the transport-
+layer segment (the interoffice envelope), which encapsulates the original message (the memo). The
+postal service delivers the postal envelope to the receiving branch-office mailroom. There, the process
+of de-encapsulation is begun. The mailroom extracts the interoffice memo and forwards it to Bob.
+Finally, Bob opens the envelope and removes the memo.</p>
+<p>The process of encapsulation can be more complex than that described above. For example, a large
+message may be divided into multiple transport-layer segments (which might themselves each be
+divided into multiple network-layer datagrams). At the receiving end, such a segment must then be
+reconstructed from its constituent datagrams.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s4.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">1.4 分组交换网络中的时延、丢包与吞吐量</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s6.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">1.6 网络攻击</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c1-5-1">1.5.1 分层体系结构</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">协议分层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">应用层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">传输层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">网络层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">链路层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">物理层</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#osi">OSI 模型</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#encapsulation">1.5.2 封装（Encapsulation）</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>8.8 无线局域网的安全 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c8/s8';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="8.9 运行安全：防火墙和入侵检测系统" href="s9.html" />
+    <link rel="prev" title="8.7 网络层安全: IPsec 和虚拟专用网络" href="s7.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 8 章 计算机网络中的安全</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c8/s8.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>8.8 无线局域网的安全</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wep">8.8.1 有线等效保密 (WEP)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ieee-802-11i">8.8.2 IEEE 802.11i</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c8-8">
+<span id="id1"></span><h1>8.8 无线局域网的安全<a class="headerlink" href="#c8-8" title="此标题的永久链接">#</a></h1>
+<p>8.8 Securing Wireless LANs</p>
+<p>在无线网络中，安全性尤为重要，因为携带帧的无线电波可以传播得远远超过包含无线基站和主机的建筑物。本节将简要介绍无线安全。欲了解更深入的内容，请参见 Edney 和 Arbaugh 撰写的易读书籍 <span class="xref std std-ref">[Edney 2003]</span>。</p>
+<p>802.11 中的安全问题在技术界和媒体中都引起了相当大的关注。虽然讨论颇多，但争论甚少——似乎普遍认同原始 802.11 规范存在许多严重的安全漏洞。事实上，现在可以下载到公开的软件利用这些漏洞，使得使用原始 802.11 安全机制的用户面临的安全攻击风险与不使用任何安全功能的用户一样大。</p>
+<p>以下章节中，我们将讨论最初在 802.11 规范中标准化的安全机制，统称为 <strong>有线等效保密（Wired Equivalent Privacy, WEP）</strong>。顾名思义，WEP 旨在提供与有线网络相似的安全级别。随后我们将讨论 WEP 中的一些安全漏洞，并介绍 2004 年采用的更安全的 802.11i 标准。</p>
+<div class="toggle docutils container">
+<p>Security is a particularly important concern in wireless networks, where radio waves carrying frames can propagate far beyond the building containing the wireless base station and hosts. In this section we present a brief introduction to wireless security. For a more in-depth treatment, see the highly readable
+book by Edney and Arbaugh <span class="xref std std-ref">[Edney 2003]</span>.</p>
+<p>The issue of security in 802.11 has attracted considerable attention in both technical circles and in the media. While there has been considerable discussion, there has been little debate—there seems to be universal agreement that the original 802.11 specification contains a number of serious security flaws. Indeed, public domain software can now be downloaded that exploits these holes, making those who use the vanilla 802.11 security mechanisms as open to security attacks as users who use no security features at all.</p>
+<p>In the following section, we discuss the security mechanisms initially standardized in the 802.11 specification, known collectively as <strong>Wired Equivalent Privacy (WEP)</strong>. As the name suggests, WEP is meant to provide a level of security similar to that found in wired networks. We’ll then discuss a few of the security holes in WEP and discuss the 802.11i standard, a fundamentally more secure version of 802.11 adopted in 2004.</p>
+</div>
+<section id="wep">
+<span id="c8-8-1"></span><h2>8.8.1 有线等效保密 (WEP)<a class="headerlink" href="#wep" title="此标题的永久链接">#</a></h2>
+<p>8.8.1 Wired Equivalent Privacy (WEP)</p>
+<p>IEEE 802.11 WEP 协议设计于 1999 年，采用对称共享密钥方法，在主机与无线接入点（即基站）之间提供认证和数据加密。WEP 未指定密钥管理算法，因此假设主机与无线接入点通过带外方法已达成密钥共识。认证过程如下：</p>
+<ol class="arabic simple">
+<li><p>无线主机向接入点请求认证。</p></li>
+<li><p>接入点响应认证请求，发送一个 128 字节的随机数（nonce）。</p></li>
+<li><p>无线主机使用与接入点共享的对称密钥加密该随机数。</p></li>
+<li><p>接入点解密主机加密的随机数。</p></li>
+</ol>
+<p>若解密出的随机数与最初发送给主机的随机数匹配，则接入点认证通过该主机。</p>
+<figure class="align-center">
+<img alt="../_images/715-0.png" src="../_images/715-0.png" />
+</figure>
+<p id="figure-8-30"><strong>图 8.30 802.11 WEP 协议</strong></p>
+<p>WEP 数据加密算法如 <a class="reference internal" href="#figure-8-30"><span class="std std-ref">图 8.30</span></a> 所示。假设主机和接入点均知晓一个秘密的 40 位对称密钥 KS。另有一个 24 位初始化向量（IV）附加在 40 位密钥后，构成 64 位密钥，用于加密单帧。IV 会随帧变化，因此每帧使用不同的 64 位密钥。加密过程如下。首先计算数据负载的 4 字节 CRC 值（参见 <a class="reference internal" href="../c6/s2.html#c6-2"><span class="std std-ref">第 6.2 节</span></a>）。然后使用 RC4 流密码对负载和这 4 字节 CRC 进行加密。这里不详细介绍 RC4（详见 <a class="reference internal" href="../references.html#schneier-1995"><span class="std std-ref">[Schneier 1995]</span></a> 和 <span class="xref std std-ref">[Edney 2003]</span>）。我们只需知道，给定一个密钥值（本例中为 64 位（KS, IV）密钥），RC4 算法会生成一串密钥流 k1IV,k2IV,k3IV,…，用于对帧内的数据和 CRC 进行加密。实际操作中，可按字节处理。加密通过将数据的第 i 个字节 di 与密钥流的第 i 个字节 kiIV 异或产生密文第 i 字节 ci：</p>
+<blockquote>
+<div><p>ci = di ⊕ kiIV</p>
+</div></blockquote>
+<p>IV 在帧间变化，并以明文形式包含在每个 WEP 加密 802.11 帧的头部，如 <a class="reference internal" href="#figure-8-30"><span class="std std-ref">图 8.30</span></a> 所示。接收方使用与发送方共享的 40 位对称密钥，加上该 IV，构造出与发送方相同的 64 位密钥用以解密：</p>
+<blockquote>
+<div><p>di = ci ⊕ kiIV</p>
+</div></blockquote>
+<p>RC4 算法的正确使用要求相同的 64 位密钥值绝不重复使用。回想 WEP 密钥在帧间变化。对于给定的 KS（很少变动），只有 2^24 个唯一密钥。如果这些密钥随机选取，<span class="xref std std-ref">[Edney 2003]</span> 证明在仅传输 12,000 帧后，出现重复 IV（即重复 64 位密钥）的概率超过 99%。以 1KB 帧大小和 11 Mbps 传输速率，仅需几秒即可传输 12,000 帧。此外，由于 IV 以明文形式在帧中传输，窃听者一旦发现重复 IV，即知道密钥被重复使用。</p>
+<p>为说明使用重复密钥时出现的问题，考虑 Trudy 针对 Alice 发起的选择明文攻击。假设 Trudy（可能通过 IP 欺骗）发送请求（如 HTTP 或 FTP 请求）给 Alice，要求发送内容已知的数据 d1, d2, d3, d4,…。Trudy 还观察到加密后的数据 c1, c2, c3, c4,…。由于 di = ci ⊕ kiIV，Trudy 对等式两边 XOR ci 得：</p>
+<blockquote>
+<div><p>di ⊕ ci = kiIV</p>
+</div></blockquote>
+<p>有了此关系，Trudy 可以用已知的 di 和 ci 计算出 kiIV。下次当 Trudy 看到相同 IV 被使用时，即知道密钥序列 k1IV, k2IV, k3IV,…，从而能解密加密消息。</p>
+<p>WEP 还有其他安全隐患。<a class="reference internal" href="../references.html#fluhrer-2001"><span class="std std-ref">[Fluhrer 2001]</span></a> 描述了利用 RC4 某些弱密钥的攻击方法。<a class="reference internal" href="../references.html#stubblefield-2002"><span class="std std-ref">[Stubblefield 2002]</span></a> 讨论了有效实现和利用此攻击的方式。另一个关注点是 <a class="reference internal" href="#figure-8-30"><span class="std std-ref">图 8.30</span></a> 中显示并在 802.11 帧中传输的 CRC 位，用于检测负载中被篡改的位。然而，攻击者可更改加密内容（如用乱码替换原始加密数据），计算替换乱码的 CRC，并将其放入 WEP 帧，生成一个接收方可接受的 802.11 帧。对此，需要使用我们在 <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">第 8.3 节</span></a> 学习过的消息完整性技术来检测内容篡改或替换。有关 WEP 安全性的更多细节，请参见 [<span class="xref std std-ref">Edney 2003</span>; <a class="reference internal" href="../references.html#wright-2015"><span class="std std-ref">Wright 2015</span></a>] 及其中参考文献。</p>
+<div class="toggle docutils container">
+<p>The IEEE 802.11 WEP protocol was designed in 1999 to provide authentication and data encryption between a host and a wireless access point (that is, base station) using a symmetric shared key approach. WEP does not specify a key management algorithm, so it is assumed that the host and wireless access point have somehow agreed on the key via an out-of-band method. Authentication is carried out as ­follows:</p>
+<ol class="arabic simple">
+<li><p>A wireless host requests authentication by an access point.</p></li>
+<li><p>The access point responds to the authentication request with a 128-byte nonce value.</p></li>
+<li><p>The wireless host encrypts the nonce using the symmetric key that it shares with the access point.</p></li>
+<li><p>The access point decrypts the host-encrypted nonce.</p></li>
+</ol>
+<p>If the decrypted nonce matches the nonce value originally sent to the host, then the host is authenticated by the access point.</p>
+<figure class="align-center">
+<img alt="../_images/715-0.png" src="../_images/715-0.png" />
+</figure>
+<p><strong>Figure 8.30 802.11 WEP protocol</strong></p>
+<p>The WEP data encryption algorithm is illustrated in <a class="reference internal" href="#figure-8-30"><span class="std std-ref">Figure 8.30</span></a>. A secret 40-bit symmetric key, KS, is assumed to be known by both a host and the access point. In addition, a 24-bit Initialization Vector (IV) is appended to the 40-bit key to create a 64-bit key that will be used to encrypt a single frame. The IV will change from one frame to another, and hence each frame will be encrypted with a different 64-bit key. Encryption is performed as follows. First a 4-byte CRC value (see <a class="reference internal" href="../c6/s2.html#c6-2"><span class="std std-ref">Section 6.2</span></a>) is computed for the data payload. The payload and the four CRC bytes are then encrypted using the RC4 stream cipher. We will not cover the details of RC4 here (see <a class="reference internal" href="../references.html#schneier-1995"><span class="std std-ref">[Schneier 1995]</span></a> and <span class="xref std std-ref">[Edney 2003]</span> for details). For our purposes, it is enough to know that when presented with a key value (in this case, the 64-bit (KS, IV) key), the RC4 algorithm produces a stream of key values, k1IV,k2IV,k3IV,… that are used to encrypt the data and CRC value in a frame. For practical purposes, we can think of these operations being performed a byte at a time. Encryption is performed by XOR-ing the ith byte of data, di, with the ith key, kiIV, in the stream of key values generated by the (KS, IV) pair to produce the ith byte of ciphertext, ci:</p>
+<blockquote>
+<div><p>ci=di⊕kiIV</p>
+</div></blockquote>
+<p>The IV value changes from one frame to the next and is included in plaintext in the header of each WEP-encrypted 802.11 frame, as shown in <a class="reference internal" href="#figure-8-30"><span class="std std-ref">Figure 8.30</span></a>. The receiver takes the secret 40-bit symmetric key that it shares with the sender, appends the IV, and uses the resulting 64-bit key (which is identical to the key used by the sender to perform encryption) to decrypt the frame:</p>
+<blockquote>
+<div><p>di=ci⊕kiIV</p>
+</div></blockquote>
+<p>Proper use of the RC4 algorithm requires that the same 64-bit key value never be used more than once. Recall that the WEP key changes on a frame-by-frame basis. For a given KS (which changes rarely, if ever), this means that there are only 224 unique keys. If these keys are chosen randomly, we can show <span class="xref std std-ref">[Edney 2003]</span> that the probability of having chosen the same IV value (and hence used the same 64-bit key) is more than 99 percent after only 12,000 frames. With 1 Kbyte frame sizes and a data transmission rate of 11 Mbps, only a few seconds are needed before 12,000 frames are transmitted. Furthermore, since the IV is transmitted in plaintext in the frame, an eavesdropper will know whenever a duplicate IV value is used.</p>
+<p>To see one of the several problems that occur when a duplicate key is used, consider the following chosen-plaintext attack taken by Trudy against Alice. Suppose that Trudy (possibly using IP spoofing) sends a request (for example, an HTTP or FTP request) to Alice to transmit a file with known content, d1, d2, d3, d4,…. Trudy also observes the encrypted data c1, c2, c3, c4,…. Since di=ci⊕kiIV, if we XOR ci with each side of this equality we have</p>
+<blockquote>
+<div><p>di⊕ci=kiIV</p>
+</div></blockquote>
+<p>With this relationship, Trudy can use the known values of di and ci to compute kiIV. The next time Trudy sees the same value of IV being used, she will know the key sequence k1IV,k2IV,k3IV,… and will thus be able to decrypt the encrypted message.</p>
+<p>There are several additional security concerns with WEP as well. <a class="reference internal" href="../references.html#fluhrer-2001"><span class="std std-ref">[Fluhrer 2001]</span></a> described an attack exploiting a known weakness in RC4 when certain weak keys are chosen. <a class="reference internal" href="../references.html#stubblefield-2002"><span class="std std-ref">[Stubblefield 2002]</span></a> discusses efficient ways to implement and exploit this attack. Another concern with WEP involves the CRC bits shown in <a class="reference internal" href="#figure-8-30"><span class="std std-ref">Figure 8.30</span></a> and transmitted in the 802.11 frame to detect altered bits in the payload. However, an attacker who changes the encrypted content (e.g., substituting gibberish for the original encrypted data), computes a CRC over the substituted gibberish, and places the CRC into a WEP frame can produce an 802.11 frame that will be accepted by the receiver. What is needed here are message integrity techniques such as those we studied in <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">Section 8.3</span></a> to detect content tampering or substitution. For more details of WEP security, see [<span class="xref std std-ref">Edney 2003</span>; <a class="reference internal" href="../references.html#wright-2015"><span class="std std-ref">Wright 2015</span></a>] and the references therein.</p>
+</div>
+</section>
+<section id="ieee-802-11i">
+<span id="c8-8-2"></span><h2>8.8.2 IEEE 802.11i<a class="headerlink" href="#ieee-802-11i" title="此标题的永久链接">#</a></h2>
+<p>在 IEEE 802.11 于 1999 年发布后不久，便开始开发一个具有更强安全机制的新版 802.11。该新标准被称为 802.11i，并于 2004 年完成最终批准。正如我们将看到的，虽然 WEP 提供了相对较弱的加密、仅有单一的认证方式且没有密钥分发机制，IEEE 802.11i 则提供了更强的加密形式、一套可扩展的认证机制以及密钥分发机制。下面我们介绍 802.11i 的概览；一份优秀的（流式音频）802.11i 技术概览见 <span class="xref std std-ref">[TechOnline 2012]</span>。</p>
+<figure class="align-center" id="figure-8-31">
+<img alt="../_images/717-0.png" src="../_images/717-0.png" />
+</figure>
+<p><strong>图 8.31 802.11i：四个操作阶段</strong></p>
+<p><a class="reference internal" href="#figure-8-31"><span class="std std-ref">图 8.31</span></a> 概述了 802.11i 框架。除了无线客户端和接入点，802.11i 还定义了一个认证服务器，接入点可与其通信。将认证服务器与接入点分离，使一个认证服务器能够服务多个接入点，实现认证和访问决策的集中管理（这些决策通常比较敏感），并保持接入点的成本和复杂性较低。802.11i 分四个阶段运行：</p>
+<ol class="arabic">
+<li><p><strong>发现阶段</strong>。在发现阶段，接入点广播其存在及可向无线客户端节点提供的认证和加密形式。客户端随后请求其期望的具体认证和加密方式。尽管客户端和接入点已开始消息交换，但客户端尚未认证且无加密密钥，因此在客户端能够通过无线通道与任意远程主机通信之前，还需经过若干步骤。</p></li>
+<li><p><strong>相互认证与主密钥（MK）生成</strong>。认证发生在无线客户端与认证服务器之间。此阶段中，接入点主要作为中继，转发客户端和认证服务器之间的消息。 <strong>可扩展认证协议（EAP）</strong> [<span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3748.html"><strong>RFC 3748</strong></a>] 定义了客户端与认证服务器间简单请求/响应模式的端到端消息格式。如 <a class="reference internal" href="#figure-8-32"><span class="std std-ref">图 8.32</span></a> 所示，EAP 消息通过 <strong>EAPoL</strong> （局域网上的 EAP，参见 <a class="reference internal" href="../references.html#ieee-802-1x"><span class="std std-ref">[IEEE 802.1X]</span></a>）封装，并在 802.11 无线链路上传输。这些 EAP 消息在接入点被解封装后，再用 <strong>RADIUS</strong> 协议封装，通过 UDP/IP 传送至认证服务器。虽然 802.11i 协议不强制使用 RADIUS 服务器和协议 [<span class="target" id="index-1"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2865.html"><strong>RFC 2865</strong></a>]，但它们是 802.11i 的事实标准组件。近期标准化的 <strong>DIAMETER</strong> 协议 [<span class="target" id="index-2"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3588.html"><strong>RFC 3588</strong></a>] 预计将很快替代 <strong>RADIUS</strong>。</p>
+<figure class="align-center" id="figure-8-32">
+<img alt="../_images/718-0.png" src="../_images/718-0.png" />
+</figure>
+<p><strong>图 8.32 EAP 是一个端到端协议。EAP 消息通过无线链路在客户端和接入点间使用 EAPoL 封装，在接入点与认证服务器间通过 UDP/IP 使用 RADIUS 封装</strong></p>
+<p>通过 EAP，认证服务器可以选择多种认证方式之一。尽管 802.11i 并不强制某种认证方法，EAP-TLS 认证方案 [<span class="target" id="index-3"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc5216.html"><strong>RFC 5216</strong></a>] 被广泛采用。EAP-TLS 使用类似于我们在 <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">第 8.3 节</span></a> 学习的公钥技术（包括随机数加密和消息摘要），允许客户端与认证服务器相互认证，并推导出双方共有的主密钥（MK）。</p>
+</li>
+<li><p><strong>成对主密钥（PMK）生成</strong>。MK 是客户端和认证服务器共享的秘密，用于生成第二个密钥——成对主密钥（PMK）。认证服务器随后将 PMK 发送给接入点。至此，我们达到了目标！客户端和接入点现拥有共享密钥（回想 WEP 时，密钥分发问题根本未解决），且已相互认证，准备开始正常通信。</p></li>
+<li><p><strong>临时密钥（TK）生成</strong>。利用 PMK，无线客户端和接入点现在可以生成用于通信的附加密钥。其中尤其重要的是临时密钥（TK），它将用于对无线链路上传输到任意远程主机的数据进行链路层加密。</p></li>
+</ol>
+<p>802.11i 提供了多种加密形式，包括基于 AES 的加密方案和增强版 WEP 加密。</p>
+<div class="toggle docutils container">
+<p>Soon after the 1999 release of IEEE 802.11, work began on developing a new and improved version of 802.11 with stronger security mechanisms. The new standard, known as 802.11i, underwent final ratification in 2004. As we’ll see, while WEP provided relatively weak encryption, only a single way to perform authentication, and no key distribution mechanisms, IEEE 802.11i provides for much stronger forms of encryption, an extensible set of authentication mechanisms, and a key distribution mechanism. In the following, we present an overview of 802.11i; an excellent (streaming audio) technical overview of 802.11i is <span class="xref std std-ref">[TechOnline 2012]</span>.</p>
+<figure class="align-center">
+<img alt="../_images/717-0.png" src="../_images/717-0.png" />
+</figure>
+<p><strong>Figure 8.31 802.11i: Four phases of operation</strong></p>
+<p><a class="reference internal" href="#figure-8-31"><span class="std std-ref">Figure 8.31</span></a> overviews the 802.11i framework. In addition to the wireless client and access point, 802.11i defines an authentication server with which the AP can communicate. Separating the authentication server from the AP allows one authentication server to serve many APs, centralizing the (often sensitive) decisions regarding authentication and access within the single server, and keeping AP costs and complexity low. 802.11i operates in four phases:</p>
+<ol class="arabic simple">
+<li><p><strong>Discovery</strong>. In the discovery phase, the AP advertises its presence and the forms of authentication and encryption that can be provided to the wireless client node. The client then requests the specific forms of authentication and encryption that it desires. Although the client and AP are already exchanging messages, the client has not yet been authenticated nor does it have an encryption key, and so several more steps will be required before the client can communicate with an arbitrary remote host over the wireless channel.</p></li>
+<li><p><strong>Mutual authentication and Master Key (MK) generation</strong>. Authentication takes place between the wireless client and the authentication server. In this phase, the access point acts essentially as a relay, forwarding messages between the client and the authentication server. The <strong>Extensible Authentication Protocol (EAP)</strong> [<span class="target" id="index-4"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3748.html"><strong>RFC 3748</strong></a>] defines the end-to-end message formats used in a simple request/response mode of interaction between the client and authentication server. As shown in <a class="reference internal" href="#figure-8-32"><span class="std std-ref">Figure 8.32</span></a>, EAP messages are encapsulated using <strong>EAPoL</strong> (EAP over LAN, <a class="reference internal" href="../references.html#ieee-802-1x"><span class="std std-ref">[IEEE 802.1X]</span></a>) and sent over the 802.11 wireless link. These EAP messages are then decapsulated at the access point, and then re-encapsulated using the <strong>RADIUS</strong> protocol for transmission over UDP/IP to the authentication server. While the RADIUS server and protocol [<span class="target" id="index-5"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2865.html"><strong>RFC 2865</strong></a>] are not required by the 802.11i protocol, they are de facto standard components for 802.11i. The recently standardized <strong>DIAMETER</strong> protocol [<span class="target" id="index-6"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3588.html"><strong>RFC 3588</strong></a>] is likely to replace <strong>RADIUS</strong> in the near future.</p></li>
+</ol>
+<figure class="align-center">
+<img alt="../_images/718-0.png" src="../_images/718-0.png" />
+</figure>
+<p><strong>Figure 8.32 EAP is an end-to-end protocol. EAP messages are encapsulated using EAPoL over the wireless link between the ­client and the access point, and using RADIUS over UDP/IP between the access point and the authentication server</strong></p>
+<p>With EAP, the authentication server can choose one of a number of ways to perform authentication. While 802.11i does not mandate a particular authentication method, the EAP- TLS authentication scheme [<span class="target" id="index-7"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc5216.html"><strong>RFC 5216</strong></a>] is often used. EAP-TLS uses public key techniques (including nonce encryption and message digests) similar to those we studied in <a class="reference internal" href="s3.html#c8-3"><span class="std std-ref">Section 8.3</span></a> to allow the client and the authentication server to mutually authenticate each other, and to derive a Master Key (MK) that is known to both parties.</p>
+<ol class="arabic simple" start="3">
+<li><p><strong>Pairwise Master Key (PMK) generation</strong>. The MK is a shared secret known only to the client and the authentication server, which they each use to generate a second key, the Pairwise Master Key (PMK). The authentication server then sends the PMK to the AP. This is where we wanted to be! The client and AP now have a shared key (recall that in WEP, the problem of key distribution was not addressed at all) and have mutually authenticated each other. They’re just about ready to get down to business.</p></li>
+<li><p><strong>Temporal Key (TK) generation</strong>. With the PMK, the wireless client and AP can now generate additional keys that will be used for communication. Of ­particular interest is the Temporal Key (TK), which will be used to perform the link-level encryption of data sent over the wireless link and to an arbitrary remote host.</p></li>
+</ol>
+<p>802.11i provides several forms of encryption, including an AES-based encryption scheme and a strengthened version of WEP encryption.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s7.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">8.7 网络层安全: IPsec 和虚拟专用网络</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s9.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">8.9 运行安全：防火墙和入侵检测系统</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wep">8.8.1 有线等效保密 (WEP)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ieee-802-11i">8.8.2 IEEE 802.11i</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

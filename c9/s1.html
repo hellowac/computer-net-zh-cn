@@ -1,0 +1,729 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>9.1 多媒体网络应用 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c9/s1';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="9.2 流媒体存储视频" href="s2.html" />
+    <link rel="prev" title="第 9 章 多媒体网络" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 9 章 多媒体网络</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c9/s1.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>9.1 多媒体网络应用</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c9-1-1">9.1.1 视频的特性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c9-1-2">9.1.2 音频的特性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c9-1-3">9.1.3 多媒体网络应用的类型</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">流式存储音频与视频</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ip">会话语音与视频 IP 通信</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">流式直播音频与视频</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c9-1">
+<span id="id1"></span><h1>9.1 多媒体网络应用<a class="headerlink" href="#c9-1" title="此标题的永久链接">#</a></h1>
+<p>9.1 Multimedia Networking Applications</p>
+<p>我们将多媒体网络应用定义为任何使用音频或视频的网络应用程序。在本节中，我们提供多媒体应用程序的分类方法。我们将看到，每一类应用程序都有其独特的服务需求和设计问题。但在深入讨论互联网多媒体应用程序之前，首先考虑音频和视频媒体本身的固有特性是有益的。</p>
+<div class="toggle docutils container">
+<p>We define a multimedia network application as any network application that employs audio or video. In this section, we provide a taxonomy of multimedia applications. We’ll see that each class of applications in the taxonomy has its own unique set of service requirements and design issues. But before diving into an in-depth discussion of Internet multimedia applications, it is useful to consider the intrinsic characteristics of the audio and video media themselves.</p>
+</div>
+<section id="c9-1-1">
+<span id="id2"></span><h2>9.1.1 视频的特性<a class="headerlink" href="#c9-1-1" title="此标题的永久链接">#</a></h2>
+<p>9.1.1 Properties of Video</p>
+<p>视频也许最突出的特性是其 <strong>高比特率</strong>。通过互联网传输的视频比特率通常在 100 kbps（低质量视频会议）到超过 3 Mbps（高清电影流）之间。为了感受视频带宽需求与其他互联网应用的差异，我们可以简单考虑三个不同用户，各自使用不同的互联网应用。第一个用户 Frank 在快速浏览朋友们在 Facebook 上发布的照片。假设 Frank 每 10 秒查看一张新照片，平均每张照片为 200 Kbytes。（如常，在此讨论中我们简化假设 1 Kbyte = 8000 位。）第二个用户 Martha 正在通过互联网（“云端”）向她的智能手机串流音乐。假设 Martha 使用 Spotify 等服务接连播放多首 MP3 歌曲，每首以 128 kbps 编码。第三个用户 Victor 在观看一个以 2 Mbps 编码的视频。最后，假设三个用户的会话时间都是 4000 秒（大约 67 分钟）。<a class="reference internal" href="#table-9-1"><span class="std std-ref">表 9.1</span></a> 对这三位用户的比特率和总传输字节进行了比较。我们可以看到，视频流媒体显然消耗最多带宽，比 Facebook 和音乐流媒体的比特率高出十倍以上。因此，在设计网络视频应用时，首先必须考虑的是视频的高比特率需求。鉴于视频的普及及其高比特率，这也难怪 Cisco 预测 <a class="reference internal" href="../references.html#cisco-2015"><span class="std std-ref">[Cisco 2015]</span></a> 到 2019 年，流式和存储视频将约占全球消费者互联网流量的 80%。</p>
+<p id="table-9-1"><strong>表 9.1 三种互联网应用的比特率需求比较</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td></td>
+<td><p><strong>比特率</strong></p></td>
+<td><p><strong>67 分钟传输字节</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Facebook 的 Frank</p></td>
+<td><p>160 kbps</p></td>
+<td><p>80 Mbytes</p></td>
+</tr>
+<tr class="row-odd"><td><p>音乐的 Martha</p></td>
+<td><p>128 kbps</p></td>
+<td><p>64 Mbytes</p></td>
+</tr>
+<tr class="row-even"><td><p>视频的 Victor</p></td>
+<td><p>2 Mbps</p></td>
+<td><p>1 Gbyte</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>视频的另一个重要特性是其可以被压缩，从而在视频质量与比特率之间进行权衡。视频是一系列图像，通常以恒定速率显示，例如每秒 24 或 30 帧。一个未压缩的数字图像由像素阵列构成，每个像素以若干位表示亮度和颜色。视频中存在两种冗余类型，均可通过 <strong>视频压缩</strong> 加以利用。空间冗余指的是单帧图像中的冗余。直观来看，一个主要是白色区域的图像具有高度冗余性，可在不显著牺牲图像质量的前提下高效压缩。时间冗余反映的是图像之间的重复性。如果某帧图像与后继图像完全相同，那么无需重新编码该帧，仅需在编码中指示其重复即可。现成的视频压缩算法几乎可以将视频压缩为任意所需比特率。当然，比特率越高，图像质量越好，用户的观看体验越佳。</p>
+<p>我们还可以使用压缩技术创建同一视频的 <strong>多个版本</strong>，每个版本具有不同的质量等级。例如，可以压缩出三个版本，分别为 300 kbps、1 Mbps 和 3 Mbps。用户可根据其当前可用带宽选择观看版本。高速互联网连接的用户可选 3 Mbps 版本；而通过 3G 网络使用智能手机观看的用户则可能选择 300 kbps 版本。同样，视频会议应用中的视频也可以“即时压缩”，以在会话用户之间的可用端到端带宽条件下提供最佳视频质量。</p>
+<div class="toggle docutils container">
+<p>Perhaps the most salient characteristic of video is its <strong>high bit rate</strong>. Video distributed over the Internet typically ranges from 100 kbps for low-quality video conferencing to over 3 Mbps for streaming high- definition movies. To get a sense of how video bandwidth demands compare with those of other Internet applications, let’s briefly consider three different users, each using a different Internet application. Our first user, Frank, is going quickly through photos posted on his friends’ Facebook pages. Let’s assume that Frank is looking at a new photo every 10 seconds, and that photos are on average 200 Kbytes in size. (As usual, throughout this discussion we make the simplifying assumption that 1 Kbyte=8,000 bits.) Our second user, Martha, is streaming music from the Internet (“the cloud”) to her smartphone. Let’s assume Martha is using a service such as Spotify to listen to many MP3 songs, one after the other, each encoded at a rate of 128 kbps. Our third user, Victor, is watching a video that has been encoded at 2 Mbps. Finally, let’s suppose that the session length for all three users is 4,000 seconds (approximately 67 minutes). <a class="reference internal" href="#table-9-1"><span class="std std-ref">Table 9.1</span></a> compares the bit rates and the total bytes transferred for these three users. We see that video streaming consumes by far the most bandwidth, having a bit rate of more than ten times greater than that of the Facebook and music-streaming applications. Therefore, when design ing networked video applications, the first thing we must keep in mind is the high bit-rate requirements of video. Given the popularity of video and its high bit rate, it is perhaps not surprising that Cisco predicts <a class="reference internal" href="../references.html#cisco-2015"><span class="std std-ref">[Cisco 2015]</span></a> that streaming and stored video will be approximately 80 percent of global consumer Internet traffic by 2019.</p>
+<p><strong>Table 9.1 Comparison of bit-rate requirements of three Internet applications</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td></td>
+<td><p><strong>Bit rate</strong></p></td>
+<td><p><strong>Bytes transferred in 67 min</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Facebook Frank</p></td>
+<td><p>160 kbps</p></td>
+<td><p>80 Mbytes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Martha Music</p></td>
+<td><p>128 kbps</p></td>
+<td><p>64 Mbytes</p></td>
+</tr>
+<tr class="row-even"><td><p>Victor Video</p></td>
+<td><p>2 Mbps</p></td>
+<td><p>1 Gbyte</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Another important characteristic of video is that it can be compressed, thereby trading off video quality with bit rate. A video is a sequence of images, typically being displayed at a constant rate, for example, at 24 or 30 images per second. An uncompressed, digitally encoded image consists of an array of pixels, with each pixel encoded into a number of bits to represent luminance and color. There are two types of redundancy in video, both of which can be exploited by <strong>video compression</strong>. Spatial redundancy is the redundancy within a given image. Intuitively, an image that consists of mostly white space has a high degree of redundancy and can be efficiently compressed without significantly sacrificing image quality. Temporal redundancy reflects repetition from image to subsequent image. If, for example, an image and the subsequent image are exactly the same, there is no reason to re-encode the subsequent image; it is instead more efficient simply to indicate during encoding that the subsequent image is exactly the same. Today’s off-the-shelf compression algorithms can compress a video to essentially any bit rate desired. Of course, the higher the bit rate, the better the image quality and the better the overall user viewing experience.</p>
+<p>We can also use compression to create <strong>multiple versions</strong> of the same video, each at a different quality level. For example, we can use compression to create, say, three versions of the same video, at rates of 300 kbps, 1 Mbps, and 3 Mbps. Users can then decide which version they want to watch as a function of their current available bandwidth. Users with high-speed Internet connections might choose the 3 Mbps version; users watching the video over 3G with a smartphone might choose the 300 kbps version. Similarly, the video in a video conference application can be compressed “on-the-fly” to provide the best video quality given the available end-to-end bandwidth between conversing users.</p>
+</div>
+</section>
+<section id="c9-1-2">
+<span id="id3"></span><h2>9.1.2 音频的特性<a class="headerlink" href="#c9-1-2" title="此标题的永久链接">#</a></h2>
+<p>9.1.2 Properties of Audio</p>
+<p>数字音频（包括数字化语音与音乐）在带宽需求方面远低于视频。然而，数字音频在设计多媒体网络应用时也有其独特特性。为理解这些特性，我们首先来看模拟音频（由人类和乐器产生的）如何转换为数字信号：</p>
+<ul class="simple">
+<li><p>模拟音频信号以某个固定速率采样，例如每秒 8000 次。每个样本的值为一个实数。</p></li>
+<li><p>每个样本接着被四舍五入为有限个值之一，此操作称为 <strong>量化</strong>。这些有限值（量化值）通常为 2 的幂，例如 256 个量化值。</p></li>
+<li><p>每个量化值用固定数量的位表示。例如，如果有 256 个量化值，则每个值（即每个样本）用一个字节表示。所有样本的位表示接连在一起形成数字信号。例如，若模拟音频以每秒 8000 次采样、每个样本 8 位量化，则数字信号的比特率为 64,000 bps。为通过音响播放，该数字信号可以被转换（即解码）为模拟信号。然而，解码后的模拟信号只是原始信号的近似值，声音质量可能显著降低（例如，高频声音可能丢失）。通过提高采样率和量化值的数量，解码信号可更好地逼近原始模拟信号。因此（与视频类似），在解码信号质量与数字信号的比特率与存储需求之间存在权衡。</p></li>
+</ul>
+<p>上述基本编码技术称为 <strong>脉冲编码调制（PCM）</strong>。语音编码常采用 PCM，采样率为 8000 次/秒，每次采样 8 位，对应比特率为 64 kbps。音频 CD 也使用 PCM，采样率为 44,100 次/秒，每个样本 16 位；这对应单声道 705.6 kbps，立体声 1.411 Mbps。</p>
+<p>然而，PCM 编码的语音与音乐在互联网上很少使用。与视频一样，音频也使用压缩技术来降低比特率。人类语音可压缩至 10 kbps 以下仍保持可懂度。用于接近 CD 质量立体声音乐的一种流行压缩技术是 <strong>MPEG 1 第三层</strong>，即 <strong>MP3</strong>。MP3 编码器支持多种压缩率；128 kbps 是最常见的编码率，音质几乎无明显损失。一个相关标准是 <strong>高级音频编码（AAC）</strong>，由 Apple 推广。与视频一样，可以为一个预先录制的音频流创建多个版本，每个具有不同的比特率。</p>
+<p>尽管音频的比特率远低于视频，用户对音频故障的敏感度却高于视频。例如，设想一次视频会议正在进行。如果视频信号偶尔丢失几秒，会议可能仍能继续而不会造成太多用户困扰。但若音频信号频繁丢失，用户可能不得不中断会话。</p>
+<div class="toggle docutils container">
+<p>Digital audio (including digitized speech and music) has significantly lower bandwidth requirements than video. Digital audio, however, has its own unique properties that must be considered when designing multimedia network applications. To understand these properties, let’s first consider how analog audio (which humans and musical instruments generate) is converted to a digital signal:</p>
+<ul class="simple">
+<li><p>The analog audio signal is sampled at some fixed rate, for example, at 8,000 samples per second. The value of each sample will be some real number.</p></li>
+<li><p>Each of the samples is then rounded to one of a finite number of values. This operation is referred to as <strong>quantization</strong>. The number of such finite values—called quantization values—is typically a power of two, for example, 256 quantization values.</p></li>
+<li><p>Each of the quantization values is represented by a fixed number of bits. For example, if there are 256 quantization values, then each value—and hence each audio sample—is represented by one byte. The bit representations of all the samples are then concatenated together to form the digital representation of the signal. As an example, if an analog audio signal is sampled at 8,000 samples per second and each sample is quantized and represented by 8 bits, then the resulting digital signal will have a rate of 64,000 bits per second. For playback through audio speakers, the digital signal can then be converted back—that is, decoded—to an analog signal. However, the decoded analog signal is only an approximation of the original signal, and the sound quality may be noticeably degraded (for example, high-frequency sounds may be missing in the decoded signal). By increasing the sampling rate and the number of quantization values, the decoded signal can better approximate the original analog signal. Thus (as with video), there is a trade-off between the quality of the decoded signal and the bit-rate and storage requirements of the digital signal.</p></li>
+</ul>
+<p>The basic encoding technique that we just described is called <strong>pulse code modulation (PCM)</strong>. Speech encoding often uses PCM, with a sampling rate of 8,000 samples per second and 8 bits per sample, resulting in a rate of 64 kbps. The audio compact disk (CD) also uses PCM, with a sampling rate of 44,100 samples per second with 16 bits per sample; this gives a rate of 705.6 kbps for mono and 1.411 Mbps for stereo.</p>
+<p>PCM-encoded speech and music, however, are rarely used in the Internet. Instead, as with video, compression techniques are used to reduce the bit rates of the stream. Human speech can be compressed to less than 10 kbps and still be intelligible. A popular compression technique for near CD- quality stereo music is <strong>MPEG 1 layer 3</strong>, more commonly known as <strong>MP3</strong>. MP3 encoders can compress to many different rates; 128 kbps is the most common encoding rate and produces very little sound degradation. A related standard is <strong>Advanced Audio Coding (AAC)</strong>, which has been popularized by Apple. As with video, multiple versions of a prerecorded audio stream can be created, each at a different bit rate.</p>
+<p>Although audio bit rates are generally much less than those of video, users are generally much more sensitive to audio glitches than video glitches. Consider, for example, a video conference taking place over the Internet. If, from time to time, the video signal is lost for a few seconds, the video conference can likely proceed without too much user frustration. If, however, the audio signal is frequently lost, the users may have to terminate the session.</p>
+</div>
+</section>
+<section id="c9-1-3">
+<span id="id4"></span><h2>9.1.3 多媒体网络应用的类型<a class="headerlink" href="#c9-1-3" title="此标题的永久链接">#</a></h2>
+<p>9.1.3 Types of Multimedia Network Applications</p>
+<p>互联网支持大量有用且有趣的多媒体应用。在本小节中，我们将多媒体应用分为三大类：（i）流式存储音视频、（ii）会话语音/视频 IP 通信、以及（iii）流式直播音视频。正如我们将要看到的，每一类应用都有其特定的服务需求和设计问题。</p>
+<div class="toggle docutils container">
+<p>The Internet supports a large variety of useful and entertaining multimedia applications. In this subsection, we classify multimedia applications into three broad categories: (i) streaming stored audio/video, (ii) conversational voice/video-over-IP, and (iii) streaming live audio/video. As we will soon see, each of these application categories has its own set of service requirements and design issues.</p>
+</div>
+<section id="id5">
+<h3>流式存储音频与视频<a class="headerlink" href="#id5" title="此标题的永久链接">#</a></h3>
+<p>Streaming Stored Audio and Video</p>
+<p>为保持讨论具体性，我们聚焦于流式存储视频，这类应用通常同时包含音频与视频。流式存储音频（如 Spotify 的音乐流服务）与视频类似，只是比特率通常低得多。</p>
+<p>这类应用中，底层媒体为预录制视频，如电影、电视节目、录制的体育赛事或用户生成视频（如 YouTube 上常见的内容）。这些预录制视频存储在服务器上，用户通过发送请求按需观看。如今，许多互联网公司提供流式视频服务，包括 YouTube（Google）、Netflix、Amazon 和 Hulu。流式存储视频有三个关键特性：</p>
+<ul class="simple">
+<li><p><strong>流式传输</strong>。在流式存储视频应用中，客户端通常在开始接收视频几秒内就启动播放。这意味着客户端一边播放视频某段内容，一边从服务器接收后续内容。这种技术称为 <strong>流式传输（streaming）</strong>，避免了必须下载整个视频文件（可能造成较长延迟）后才播放。</p></li>
+<li><p><strong>交互性</strong>。由于媒体是预录制的，用户可暂停、向前/向后定位、快进等。用户发出这些操作请求至客户端实际执行之间的延迟应少于几秒，以确保响应性。</p></li>
+<li><p><strong>连续播放</strong>。一旦视频播放开始，应按原始录制时间连续进行。因此，必须及时从服务器接收数据以便客户端播放；否则用户可能遇到画面冻结（等待延迟帧）或跳帧（跳过延迟帧）现象。</p></li>
+</ul>
+<p>对于流式视频而言，最重要的性能指标是平均吞吐量。为实现连续播放，网络必须向流媒体应用提供不小于视频比特率的平均吞吐量。正如我们将在 <a class="reference internal" href="s2.html#c9-2"><span class="std std-ref">第 9.2 节</span></a> 中看到的，通过缓冲与预取，即便吞吐量波动，只要 5–10 秒的平均吞吐量超过视频速率，也可以实现连续播放 <a class="reference internal" href="../references.html#wang-2008"><span class="std std-ref">[Wang 2008]</span></a>。</p>
+<p>许多流式视频应用中，预录视频存储并通过 CDN 分发，而非单一数据中心。也存在许多 P2P 视频流应用，其中视频存储于用户主机（即对等方）上，不同视频块来自分布全球的多个对等方。鉴于互联网视频流的普遍性，我们将在 <a class="reference internal" href="s2.html#c9-2"><span class="std std-ref">第 9.2 节</span></a> 中深入探讨，重点包括客户端缓冲、预取、质量适配及 CDN 分发等内容。</p>
+<div class="toggle docutils container">
+<p>To keep the discussion concrete, we focus here on streaming stored video, which typically combines video and audio components. Streaming stored audio (such as Spotify’s streaming music service) is very similar to streaming stored video, although the bit rates are typically much lower.</p>
+<p>In this class of applications, the underlying medium is prerecorded video, such as a movie, a television show, a prerecorded sporting event, or a prerecorded user-generated video (such as those commonly seen on YouTube). These prerecorded videos are placed on servers, and users send requests to the servers to view the videos on demand. Many Internet companies today provide streaming video, including YouTube (Google), Netflix, Amazon, and Hulu. Streaming stored video has three key distinguishing features.</p>
+<ul class="simple">
+<li><p><strong>Streaming</strong>. In a streaming stored video application, the client typically begins video playout within a few seconds after it begins receiving the video from the server. This means that the client will be playing out from one location in the video while at the same time receiving later parts of the video from the server. This technique, known as <strong>streaming</strong>, avoids having to download the entire video file (and incurring a potentially long delay) before playout begins.</p></li>
+<li><p><strong>Interactivity</strong>. Because the media is prerecorded, the user may pause, reposition forward, reposition backward, fast-forward, and so on through the video content. The time from when the user makes such a request until the action manifests itself at the client should be less than a few seconds for acceptable responsiveness.</p></li>
+<li><p><strong>Continuous playout</strong>. Once playout of the video begins, it should proceed according to the original timing of the recording. Therefore, data must be received from the server in time for its playout at the client; otherwise, users experience video frame freezing (when the client waits for the delayed frames) or frame skipping (when the client skips over delayed frames).</p></li>
+</ul>
+<p>By far, the most important performance measure for streaming video is average throughput. In order to provide continuous playout, the network must provide an average throughput to the streaming application that is at least as large the bit rate of the video itself. As we will see in <a class="reference internal" href="s2.html#c9-2"><span class="std std-ref">Section 9.2</span></a>, by using buffering and prefetching, it is possible to provide continuous playout even when the throughput fluctuates, as long as the average throughput (averaged over 5–10 seconds) remains above the video rate <a class="reference internal" href="../references.html#wang-2008"><span class="std std-ref">[Wang 2008]</span></a>.</p>
+<p>For many streaming video applications, prerecorded video is stored on, and streamed from, a CDN rather than from a single data center. There are also many P2P video streaming applications for which the video is stored on users’ hosts (peers), with different chunks of video arriving from different peers that may spread around the globe. Given the prominence of Internet video streaming, we will explore video streaming in some depth in <a class="reference internal" href="s2.html#c9-2"><span class="std std-ref">Section 9.2</span></a>, paying particular attention to client buffering, prefetching, adapting quality to bandwidth availability, and CDN distribution.</p>
+</div>
+</section>
+<section id="ip">
+<h3>会话语音与视频 IP 通信<a class="headerlink" href="#ip" title="此标题的永久链接">#</a></h3>
+<p>Conversational Voice- and Video-over-IP</p>
+<p>通过互联网进行的实时语音对话通常称为 <strong>网络电话（Internet telephony）</strong>，从用户角度看，它类似传统电路交换电话服务。它也常被称为 <strong>VoIP（语音 IP 通信）</strong>。会话视频通信与之类似，只是同时包含参与者的视频画面。如今大多数语音与视频会话系统支持三人以上会议通话。Skype、QQ、Google Talk 等互联网公司每日拥有数亿语音视频用户。</p>
+<p>在 <span class="xref std std-ref">第 2 章</span>）对应用服务需求的讨论中，我们确定了多个评估维度。其中两项——时间要求与容忍数据丢失——对会话语音与视频应用尤为关键。时间要求重要，因为音视频会话应用极度 <strong>延迟敏感</strong>。在两个或以上说话者交互的通话中，从说话/动作发生到对方接收到的延迟应低于几百毫秒。对于语音，延迟小于 150 毫秒不会被人感知；150–400 毫秒之间为可接受范围；超过 400 毫秒将导致令人沮丧甚至完全无法理解的对话。</p>
+<p>另一方面，会话多媒体应用是 <strong>可容忍丢失</strong> 的——偶尔的丢失只会造成音视频播放的短暂瑕疵，这些问题通常可部分或完全掩盖。延迟敏感但可容错的特性，与网页浏览、邮件、社交网络与远程登录等弹性数据应用明显不同。弹性应用中，长时间延迟令人烦恼但不致命，而数据完整性与准确性才至关重要。我们将在 <a class="reference internal" href="s3.html#c9-3"><span class="std std-ref">第 9.3 节</span></a> 中深入讨论会话语音与视频，重点包括如何通过自适应播放、前向纠错及错误隐藏等方法缓解网络导致的丢包与延迟。</p>
+<div class="toggle docutils container">
+<p>Real-time conversational voice over the Internet is often referred to as <strong>Internet telephony</strong>, since, from the user’s perspective, it is similar to the traditional circuit-switched telephone service. It is also commonly called <strong>Voice-over-IP (VoIP)</strong>. Conversational video is similar, except that it includes the video of the participants as well as their voices. Most of today’s voice and video conversational systems allow users to create conferences with three or more participants. Conversational voice and video are widely used in the Internet today, with the Internet companies Skype, QQ, and Google Talk boasting hundreds of millions of daily users.</p>
+<p>In our discussion of application service requirements in <a class="reference internal" href="../c2/index.html#c2"><span class="std std-ref">Chapter 2</span></a> (<span class="xref std std-ref">Figure 2.4</span>), we identified a number of axes along which application requirements can be classified. Two of these axes—timing considerations and tolerance of data loss—are particularly important for conversational voice and video applications. Timing considerations are important because audio and video conversational applications are highly <strong>delay-sensitive</strong>. For a conversation with two or more interacting speakers, the delay from when a user speaks or moves until the action is manifested at the other end should be less than a few hundred milliseconds. For voice, delays smaller than 150 milliseconds are not perceived by a human listener, delays between 150 and 400 milliseconds can be acceptable, and delays exceeding 400 milliseconds can result in frustrating, if not completely unintelligible, voice conversations.</p>
+<p>On the other hand, conversational multimedia applications are <strong>loss-tolerant</strong>—occasional loss only causes occasional glitches in audio/video playback, and these losses can often be partially or fully concealed. These delay-sensitive but loss-tolerant characteristics are clearly different from those of elastic data applications such as Web browsing, e-mail, social networks, and remote login. For elastic applications, long delays are annoying but not particularly harmful; the completeness and integrity of the transferred data, however, are of paramount importance. We will explore conversational voice and video in more depth in <a class="reference internal" href="s3.html#c9-3"><span class="std std-ref">Section 9.3</span></a>, paying particular attention to how adaptive playout, forward error correction, and error concealment can mitigate against network-induced packet loss and delay.</p>
+</div>
+</section>
+<section id="id6">
+<h3>流式直播音频与视频<a class="headerlink" href="#id6" title="此标题的永久链接">#</a></h3>
+<p>Streaming Live Audio and Video</p>
+<p>第三类应用类似传统广播电台与电视台，只是传输发生在互联网中。这类应用使用户可收听收看来自全球任一角落的现场广播或电视，如体育赛事直播或新闻现场报道。如今，全球有成千上万的广播电视台通过互联网播出内容。</p>
+<p>直播类应用通常拥有大量同时接收相同音视频节目的用户。在现今互联网中，这通常通过 CDN 完成（<a class="reference internal" href="../c2/s6.html#c2-6"><span class="std std-ref">第 2.6 节</span></a>）。与流式存储多媒体类似，网络必须为每个直播多媒体流提供大于消费速率的平均吞吐量。由于事件为实时，延迟也是考虑因素，尽管其时延要求远低于会话语音。用户从选择直播开始至播放启动可容忍长达十秒左右的延迟。我们将在本书中不再详述流式直播媒体，因为其使用的许多技术（初始缓冲延迟、自适应带宽使用、CDN 分发）与流式存储媒体相似。</p>
+<div class="toggle docutils container">
+<p>This third class of applications is similar to traditional broadcast radio and television, except that transmission takes place over the Internet. These applications allow a user to receive a live radio or television transmission—such as a live sporting event or an ongoing news event—transmitted from any corner of the world. Today, thousands of radio and television stations around the world are broadcasting content over the Internet.</p>
+<p>Live, broadcast-like applications often have many users who receive the same audio/video program at the same time. In the Internet today, this is typically done with CDNs (<a class="reference internal" href="../c2/s6.html#c2-6"><span class="std std-ref">Section 2.6</span></a>). As with streaming stored multimedia, the network must provide each live multimedia flow with an average throughput that is larger than the video consumption rate. Because the event is live, delay can also be an issue, although the timing constraints are much less stringent than those for conversational voice. Delays of up to ten seconds or so from when the user chooses to view a live transmission to when playout begins can be tolerated. We will not cover streaming live media in this book because many of the techniques used for streaming live media—initial buffering delay, adaptive bandwidth use, and CDN distribution—are similar to those for streaming stored media.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">第 9 章 多媒体网络</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s2.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">9.2 流媒体存储视频</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c9-1-1">9.1.1 视频的特性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c9-1-2">9.1.2 音频的特性</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c9-1-3">9.1.3 多媒体网络应用的类型</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">流式存储音频与视频</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ip">会话语音与视频 IP 通信</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">流式直播音频与视频</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

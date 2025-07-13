@@ -1,0 +1,812 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>5.5 SDN 控制平面 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c5/s5';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="5.6 ICMP：因特网控制报文协议" href="s6.html" />
+    <link rel="prev" title="5.4 ISP 之间的路由：BGP" href="s4.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 5 章 网络层：控制平面</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c5/s5.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>5.5 SDN 控制平面</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sdn-sdn-sdn">5.5.1 SDN 控制平面：SDN 控制器与 SDN 控制应用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openflow">5.5.2 OpenFlow 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c5-5-3">5.5.3 数据平面与控制平面交互：一个示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c5-5-4">5.5.4 SDN：过去与未来</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="sdn">
+<span id="c5-5"></span><h1>5.5 SDN 控制平面<a class="headerlink" href="#sdn" title="此标题的永久链接">#</a></h1>
+<p>5.5 The SDN Control Plane</p>
+<p>在本节中，我们将深入探讨 SDN 控制平面 —— 它是控制网络中所有启用 SDN 功能的设备之间的数据包转发的网络范围逻辑，同时也负责这些设备及其服务的配置和管理。本节的学习建立在我们之前关于通用 SDN 转发的讨论之上，参见 <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">第 4.4 节</span></a>，因此在继续之前你可能需要先复习那一节，以及本章的 <a class="reference internal" href="s1.html#c5-1"><span class="std std-ref">第 5.1 节</span></a>。与 <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">第 4.4 节</span></a> 一样，我们将再次采用 SDN 领域中常用的术语，将网络中的转发设备称为“分组交换机”（或简称交换机，默认指“分组”），因为转发决策可以基于网络层的源/目的地址、链路层的源/目的地址，以及许多传输层、网络层和链路层包头字段中的其他值来做出。</p>
+<p>SDN 架构具有以下四个关键特性 <a class="reference internal" href="../references.html#kreutz-2015"><span class="std std-ref">[Kreutz 2015]</span></a>：</p>
+<ul class="simple">
+<li><p><strong>基于流的转发</strong>。由 SDN 控制的交换机进行的分组转发可以基于任意数量的传输层、网络层或链路层头字段中的值。我们在 <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">第 4.4 节</span></a> 中看到，OpenFlow1.0 抽象允许基于十一种不同的头字段值进行转发。这与我们在 <a class="reference internal" href="s2.html#c5-2"><span class="std std-ref">第 5.2 节</span></a> 到 <a class="reference internal" href="s4.html#c5-4"><span class="std std-ref">第 5.4 节</span></a> 中学习的传统基于路由器的转发方式形成了鲜明对比，其中 IP 数据报的转发完全基于其目的 IP 地址。回顾 <a class="reference internal" href="s1.html#figure-5-2"><span class="std std-ref">图 5.2</span></a>，数据包的转发规则被指定在交换机的流表中；SDN 控制平面的任务是计算、管理并在网络中所有交换机上安装这些流表项。</p></li>
+<li><p><strong>数据平面与控制平面分离</strong>。这种分离在 <span class="xref std std-ref">图 5.2</span> 和 <a class="reference internal" href="#figure-5-14"><span class="std std-ref">图 5.14</span></a> 中得到了清晰的展示。数据平面由网络中的交换机构成 —— 这些设备相对简单（但速度快），执行其流表中的“匹配 + 动作”规则。控制平面由服务器和软件组成，负责确定并管理交换机的流表。</p></li>
+<li><p><strong>网络控制功能：不在数据平面交换机中</strong>。由于 SDN 中的“S”代表“软件”，所以 SDN 控制平面是以软件实现的并不令人惊讶。然而，与传统路由器不同，这些软件运行在与网络交换机分离且远程的服务器上。如 <a class="reference internal" href="#figure-5-14"><span class="std std-ref">图 5.14</span></a> 所示，控制平面本身包含两个组件 —— 一个 SDN 控制器（或网络操作系统 <a class="reference internal" href="../references.html#gude-2008"><span class="std std-ref">[Gude 2008]</span></a>）和一组网络控制应用。控制器维护准确的网络状态信息（例如远程链路、交换机和主机的状态）；将这些信息提供给控制平面中运行的网络控制应用；并提供这些应用监控、编程和控制底层网络设备的机制。尽管 <a class="reference internal" href="#figure-5-14"><span class="std std-ref">图 5.14</span></a> 中的控制器被展示为一个集中式的服务器，在实践中控制器只是逻辑上的集中，通常是在多台服务器上实现的，以提供协调的、可扩展的性能和高可用性。</p></li>
+<li><p><strong>可编程网络</strong>。通过运行在控制平面中的网络控制应用程序实现网络的可编程性。这些应用代表了 SDN 控制平面的“大脑”，利用 SDN 控制器提供的 API 来指定和控制网络设备中的数据平面。例如，一个路由网络控制应用可能会确定源和目的地之间的端到端路径（例如，通过使用 SDN 控制器维护的节点状态和链路状态信息执行 Dijkstra 算法）。另一个网络应用可能执行访问控制，即决定哪些分组应在交换机处被阻止，如我们在 <a class="reference internal" href="../c4/s4.html#c4-4-3"><span class="std std-ref">第 4.4.3 节</span></a> 中的第三个示例所示。还有一个应用可能会以实现服务器负载均衡的方式转发分组（我们在 <a class="reference internal" href="../c4/s4.html#c4-4-3"><span class="std std-ref">第 4.4.3 节</span></a> 中考虑的第二个示例）。</p></li>
+</ul>
+<p>通过以上讨论，我们可以看到，SDN 实现了网络功能的显著“解耦” —— 数据平面交换机、SDN 控制器以及网络控制应用是彼此独立的实体，可能分别由不同的供应商和组织提供。这与 SDN 出现之前的模型形成鲜明对比，后者中的交换机/路由器（连同其嵌入式控制平面软件和协议实现）是一个整体的、垂直集成的单元，并由单一供应商销售。SDN 中的这种网络功能解耦被比作从主机计算机（其硬件、系统软件和应用程序都由同一供应商提供）演进到个人计算机（其硬件、操作系统和应用程序彼此分离）。计算硬件、系统软件和应用的解耦被认为催生了一个由三者领域的创新推动的丰富、开放的生态系统；人们希望 SDN 也能带来类似的创新生态。</p>
+<p>基于我们对 <a class="reference internal" href="#figure-5-14"><span class="std std-ref">图 5.14</span></a> 中 SDN 架构的理解，自然会引出许多问题。流表究竟是如何以及在哪里计算的？当 SDN 控制的设备发生事件（例如附加链路上下变化）时，这些流表是如何更新的？在多个交换机上的流表项又是如何协调，以实现有序一致的网络级功能（例如，将分组从源端转发到目的端的端到端路径，或协调分布式防火墙）？SDN 控制平面的职责就是提供这些以及其他许多功能。</p>
+<figure class="align-center" id="figure-5-14">
+<img alt="../_images/461-0.png" src="../_images/461-0.png" />
+</figure>
+<p><strong>图 5.14 SDN 架构的组成部分：SDN 控制的交换机、SDN 控制器、网络控制应用</strong></p>
+<div class="toggle docutils container">
+<p>In this section, we’ll dive into the SDN control plane—the network-wide logic that controls packet forwarding among a network’s SDN-enabled devices, as well as the configuration and management of these devices and their services. Our study here builds on our earlier discussion of generalized SDN forwarding in <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">Section 4.4</span></a>, so you might want to first review that section, as well as <a class="reference internal" href="s1.html#c5-1"><span class="std std-ref">Section 5.1</span></a> of this chapter, before continuing on. As in <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">Section 4.4</span></a>, we’ll again adopt the terminology used in the SDN literature and refer to the network’s forwarding devices as “packet switches” (or just switches, with “packet” being understood), since forwarding decisions can be made on the basis of network-layer source/destination addresses, link-layer source/destination addresses, as well as many other values in transport-, network-, and link-layer packet-header fields.</p>
+<p>Four key characteristics of an SDN architecture can be identified <a class="reference internal" href="../references.html#kreutz-2015"><span class="std std-ref">[Kreutz 2015]</span></a>:</p>
+<ul class="simple">
+<li><p><strong>Flow-based forwarding</strong>. Packet forwarding by SDN-controlled switches can be based on any number of header field values in the transport-layer, network-layer, or link-layer header. We saw in <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">Section 4.4</span></a> that the OpenFlow1.0 abstraction allows forwarding based on eleven different header field values. This contrasts sharply with the traditional approach to router-based forwarding that we studied in <a class="reference internal" href="s2.html#c5-2"><span class="std std-ref">Sections 5.2</span></a>–<a class="reference internal" href="s4.html#c5-4"><span class="std std-ref">5.4</span></a>, where forwarding of IP datagrams was based solely on a datagram’s destination IP address. Recall from <a class="reference internal" href="s1.html#figure-5-2"><span class="std std-ref">Figure 5.2</span></a> that packet forwarding rules are specified in a switch’s flow table; it is the job of the SDN control plane to compute, manage and install flow table entries in all of the network’s switches.</p></li>
+<li><p><strong>Separation of data plane and control plane</strong>. This separation is shown clearly in <span class="xref std std-ref">Figures 5.2</span> and <a class="reference internal" href="#figure-5-14"><span class="std std-ref">5.14</span></a>. The data plane consists of the network’s switches— relatively simple (but fast) devices that</p></li>
+</ul>
+<p>execute the “match plus action” rules in their flow tables. The control plane consists of servers and software that determine and manage the switches’ flow tables.
+- <strong>Network control functions: external to data-plane switches</strong>. Given that the “S” in SDN is for “software,” it’s perhaps not surprising that the SDN control plane is implemented in software. Unlike
+traditional routers, however, this software executes on servers that are both distinct and remote from the network’s switches. As shown in <a class="reference internal" href="#figure-5-14"><span class="std std-ref">Figure 5.14</span></a>, the control plane itself consists of two components
+—an SDN controller (or network operating system <a class="reference internal" href="../references.html#gude-2008"><span class="std std-ref">[Gude 2008]</span></a>) and a set of network-control applications. The controller maintains accurate network state information (e.g., the state of remote
+links, switches, and hosts); provides this information to the network-control applications running in the control plane; and provides the means through which these applications can monitor, program,
+and control the underlying network devices. Although the controller in <a class="reference internal" href="#figure-5-14"><span class="std std-ref">Figure 5.14</span></a> is shown as a single central server, in practice the controller is only logically centralized; it is typically implemented
+on several servers that provide coordinated, scalable performance and high availability.
+- <strong>A programmable network</strong>. The network is programmable through the network-control applications running in the control plane. These applications represent the “brains” of the SDN control plane, using the APIs provided by the SDN controller to specify and control the data plane in the network devices. For example, a routing network-control application might determine the end-end paths between sources and destinations (e.g., by executing Dijkstra’s algorithm using the node-state and link-state information maintained by the SDN controller). Another network application might perform access control, i.e., determine which packets are to be blocked at a switch, as in our third example in <a class="reference internal" href="../c4/s4.html#c4-4-3"><span class="std std-ref">Section 4.4.3</span></a>. Yet another application might forward packets in a manner that performs server load balancing (the second example we considered in <a class="reference internal" href="../c4/s4.html#c4-4-3"><span class="std std-ref">Section 4.4.3</span></a>).</p>
+<p>From this discussion, we can see that SDN represents a significant “unbundling” of network functionality —data plane switches, SDN controllers, and network-control applications are separate entities that may each be provided by different vendors and organizations. This contrasts with the pre-SDN model in which a switch/router (together with its embedded control plane software and protocol implementations) was monolithic, vertically integrated, and sold by a single vendor. This unbundling of network functionality in SDN has been likened to the earlier evolution from mainframe computers (where hardware, system software, and applications were provided by a single vendor) to personal computers (with their separate hardware, operating systems, and applications). The unbundling of computing hardware, system software, and applications has arguably led to a rich, open ecosystem driven by innovation in all three of these areas; one hope for SDN is that it too will lead to a such rich innovation.</p>
+<p>Given our understanding of the SDN architecture of <a class="reference internal" href="#figure-5-14"><span class="std std-ref">Figure 5.14</span></a>, many questions naturally arise. How and where are the flow tables actually computed? How are these tables updated in response to events at SDN-controlled devices (e.g., an attached link going up/down)? And how are the flow table entries at multiple switches coordinated in such a way as to result in orchestrated and consistent network-wide functionality (e.g., end-to-end paths for forwarding packets from sources to destinations, or coordinated distributed firewalls)? It is the role of the SDN control plane to provide these, and many other, capabilities.</p>
+<figure class="align-center">
+<img alt="../_images/461-0.png" src="../_images/461-0.png" />
+</figure>
+<p><strong>Figure 5.14 Components of the SDN architecture: SDN-controlled switches, the SDN controller, network-control applications</strong></p>
+</div>
+<section id="sdn-sdn-sdn">
+<span id="c5-5-1"></span><h2>5.5.1 SDN 控制平面：SDN 控制器与 SDN 控制应用<a class="headerlink" href="#sdn-sdn-sdn" title="此标题的永久链接">#</a></h2>
+<p>5.5.1 The SDN Control Plane: SDN Controller and SDN Control Applications</p>
+<p>我们先从抽象的角度来讨论 SDN 控制平面，考虑其必须提供的通用能力。正如我们将看到的，这种基于“第一性原理”的抽象方法将引导我们构建出一个整体架构，而该架构也反映了现实中 SDN 控制平面的实现方式。</p>
+<p>如上所述，SDN 控制平面大体上分为两个组成部分 —— SDN 控制器和 SDN 网络控制应用。我们先来探讨控制器。自最早的 SDN 控制器 <a class="reference internal" href="../references.html#gude-2008"><span class="std std-ref">[Gude 2008]</span></a> 起，已经开发了许多 SDN 控制器；详见 <a class="reference internal" href="../references.html#kreutz-2015"><span class="std std-ref">[Kreutz 2015]</span></a> 所提供的一个非常详尽且最新的综述。<a class="reference internal" href="#figure-5-15"><span class="std std-ref">图 5.15</span></a> 展示了一个通用 SDN 控制器的更详细视图。一个控制器的功能可以大致组织为三个层次。我们将采用自底向上的方式来考虑这些层次：</p>
+<ul class="simple">
+<li><p><strong>通信层：在 SDN 控制器与受控网络设备之间进行通信。</strong> 显然，如果 SDN 控制器要控制远程启用 SDN 的交换机、主机或其他设备的运行，就需要一种协议来在控制器与该设备之间传输信息。此外，设备还必须能够将本地观察到的事件告知控制器（例如，连接链路上下变化的消息、设备刚加入网络的消息，或表示设备处于正常运行状态的心跳信号）。这些事件为 SDN 控制器提供了网络状态的最新视图。该协议构成了控制器架构中的最底层，如 <a class="reference internal" href="#figure-5-15"><span class="std std-ref">图 5.15</span></a> 所示。控制器与受控设备之间的通信通过被称为“南向接口”的部分进行。在 <a class="reference internal" href="#c5-5-2"><span class="std std-ref">第 5.5.2 节</span></a> 中，我们将学习 OpenFlow —— 一个提供这种通信功能的具体协议。OpenFlow 被实现于大多数（如果不是全部）SDN 控制器中。</p></li>
+<li><p><strong>网络范围的状态管理层。</strong> SDN 控制平面最终做出的控制决策 —— 例如，为了实现期望的端到端转发而配置所有交换机的流表、实现负载均衡或某种防火墙功能 —— 都要求控制器掌握网络中主机、链路、交换机以及其他 SDN 控制设备的最新状态信息。交换机的流表包含计数器，其值也可能被网络控制应用有效利用；因此，这些值应对应用程序可用。由于控制平面的最终目标是为各种受控设备确定其流表，控制器也可能维护这些流表的副本。这些信息都是 SDN 控制器维护的网络范围“状态”的例子。</p></li>
+<li><p><strong>网络控制应用层的接口。</strong> 控制器通过其“北向接口”与网络控制应用交互。这个 API 允许网络控制应用在状态管理层中读取/写入网络状态和流表。应用可以注册以在状态变化事件发生时接收通知，以便能对来自 SDN 控制设备的网络事件通知作出响应。可能会提供不同类型的 API；我们将看到两个流行的 SDN 控制器使用 REST <a class="reference internal" href="../references.html#fielding-2000"><span class="std std-ref">[Fielding 2000]</span></a> 请求-响应接口与其应用通信。</p></li>
+</ul>
+<figure class="align-center" id="figure-5-15">
+<img alt="../_images/463-0.png" src="../_images/463-0.png" />
+</figure>
+<p><strong>图 5.15 SDN 控制器的组成部分</strong></p>
+<p>我们多次指出，SDN 控制器可以被视为“逻辑集中”的，即从外部视角来看（例如从受 SDN 控制的设备和外部网络控制应用的角度），控制器可以被看作是一个单一、整体的服务。然而，这些服务和用于保存状态信息的数据库在实践中是通过一组分布式服务器实现的，目的是实现容错、高可用性或性能优化。由于控制器功能由多个服务器实现，因此必须考虑控制器内部操作的语义（例如维护事件的逻辑时间顺序、一致性、共识等） <a class="reference internal" href="../references.html#panda-2013"><span class="std std-ref">[Panda 2013]</span></a>。</p>
+<p>这些问题在许多不同的分布式系统中都很常见；详见 [<a class="reference internal" href="../references.html#lamport-1989"><span class="std std-ref">Lamport 1989</span></a>，<a class="reference internal" href="../references.html#lampson-1996"><span class="std std-ref">Lampson 1996</span></a>] 所提供的对这些挑战的优雅解决方案。现代控制器如 OpenDaylight <a class="reference internal" href="../references.html#opendaylight-lithium-2016"><span class="std std-ref">[OpenDaylight Lithium 2016]</span></a> 和 ONOS <a class="reference internal" href="../references.html#onos-2016"><span class="std std-ref">[ONOS 2016]</span></a> （参见侧边栏）在架构设计上着重实现逻辑集中但物理分布的控制器平台，为受控设备和网络控制应用提供可扩展的服务与高可用性。</p>
+<p><a class="reference internal" href="#figure-5-15"><span class="std std-ref">图 5.15</span></a> 所展示的架构与 2008 年最初提出的 NOX 控制器架构非常相似 <a class="reference internal" href="../references.html#gude-2008"><span class="std std-ref">[Gude 2008]</span></a>，也与当前的 OpenDaylight <a class="reference internal" href="../references.html#opendaylight-lithium-2016"><span class="std std-ref">[OpenDaylight Lithium 2016]</span></a> 和 ONOS <a class="reference internal" href="../references.html#onos-2016"><span class="std std-ref">[ONOS 2016]</span></a> SDN 控制器类似（参见侧边栏）。我们将在 <a class="reference internal" href="#c5-5-3"><span class="std std-ref">第 5.5.3 节</span></a> 中介绍一个控制器操作的示例。但在此之前，让我们先了解控制器通信层所使用的 OpenFlow 协议。</p>
+<div class="toggle docutils container">
+<p>Let’s begin our discussion of the SDN control plane in the abstract, by considering the generic capabilities that the control plane must provide. As we’ll see, this abstract, “first principles” approach will lead us to an overall architecture that reflects how SDN control planes have been implemented in practice.</p>
+<p>As noted above, the SDN control plane divides broadly into two components—the SDN controller and the SDN network-control applications. Let’s explore the controller first. Many SDN controllers have been developed since the earliest SDN controller <a class="reference internal" href="../references.html#gude-2008"><span class="std std-ref">[Gude 2008]</span></a>; see <a class="reference internal" href="../references.html#kreutz-2015"><span class="std std-ref">[Kreutz 2015]</span></a> for an extremely thorough and up-to-date survey. <a class="reference internal" href="#figure-5-15"><span class="std std-ref">Figure 5.15</span></a> provides a more detailed view of a generic SDN controller. A controller’s functionality can be broadly organized into three layers. Let’s consider these layers in an uncharacteristically bottom-up fashion:</p>
+<ul class="simple">
+<li><p><strong>A communication layer: communicating between the SDN controller and controlled network devices.</strong> Clearly, if an SDN controller is going to control the operation of a remote SDN-enabled switch, host, or other device, a protocol is needed to transfer information between the controller and that device. In addition, a device must be able to communicate locally-observed events to the controller (e.g., a message indicating that an attached link has gone up or down, that a device has just joined the network, or a heartbeat indicating that a device is up and operational). These events provide the SDN controller with an up-to-date view of the network’s state. This protocol constitutes the lowest layer of the controller architecture, as shown in <a class="reference internal" href="#figure-5-15"><span class="std std-ref">Figure 5.15</span></a>. The communication between the controller and the controlled devices cross what has come to be known as the controller’s “southbound” interface. In <a class="reference internal" href="#c5-5-2"><span class="std std-ref">Section 5.5.2</span></a> , we’ll study OpenFlow—a specific protocol that provides this communication functionality. OpenFlow is implemented in most, if not all, SDN controllers.</p></li>
+<li><p><strong>A network-wide state-management layer</strong>. The ultimate control decisions made by the SDN control plane—e.g., configuring flow tables in all switches to achieve the desired end-end forwarding, to implement load balancing, or to implement a particular firewalling capability—will require that the controller have up-to-date information about state of the networks’ hosts, links, switches, and other SDN-controlled devices. A switch’s flow table contains counters whose values might also be profitably used by network-control applications; these values should thus be available to the applications. Since the ultimate aim of the control plane is to determine flow tables for the various controlled devices, a controller might also maintain a copy of these tables. These pieces of information all constitute examples of the network-wide “state” maintained by the SDN controller.</p></li>
+<li><p><strong>The interface to the network-control application layer</strong>. The controller interacts with network- control applications through its “northbound” interface. This API allows network-control applications to read/write network state and flow tables within the state- management layer. Applications can register to be notified when state-change events occur, so that they can take actions in response to network event notifications sent from SDN-controlled devices. Different types of APIs may be provided; we’ll see that two popular SDN controllers communicate</p></li>
+</ul>
+<p>with their applications using a REST <a class="reference internal" href="../references.html#fielding-2000"><span class="std std-ref">[Fielding 2000]</span></a> request-response interface.</p>
+<figure class="align-center">
+<img alt="../_images/463-0.png" src="../_images/463-0.png" />
+</figure>
+<p><strong>Figure 5.15 Components of an SDN controller</strong></p>
+<p>We have noted several times that an SDN controller can be considered to be ­“logically centralized,” i.e., that the controller may be viewed externally (e.g., from the point of view of SDN-controlled devices and external network-control applications) as a single, monolithic service. However, these services and the databases used to hold state information are implemented in practice by a distributed set of servers for fault tolerance, high availability, or for performance reasons. With controller functions being implemented by a set of servers, the semantics of the controller’s internal operations (e.g., maintaining logical time ordering of events, consistency, consensus, and more) must be considered <a class="reference internal" href="../references.html#panda-2013"><span class="std std-ref">[Panda 2013]</span></a>.</p>
+<p>Such concerns are common across many different distributed systems; see [<a class="reference internal" href="../references.html#lamport-1989"><span class="std std-ref">Lamport 1989</span></a>, <a class="reference internal" href="../references.html#lampson-1996"><span class="std std-ref">Lampson 1996</span></a>] for elegant solutions to these challenges. Modern controllers such as OpenDaylight <a class="reference internal" href="../references.html#opendaylight-lithium-2016"><span class="std std-ref">[OpenDaylight Lithium 2016]</span></a> and ONOS <a class="reference internal" href="../references.html#onos-2016"><span class="std std-ref">[ONOS 2016]</span></a> (see sidebar) have placed considerable emphasis on architecting a logically centralized but physically distributed controller platform that provides scalable services and high availability to the controlled devices and network-control applications alike.</p>
+<p>The architecture depicted in <a class="reference internal" href="#figure-5-15"><span class="std std-ref">Figure 5.15</span></a> closely resembles the architecture of the originally proposed NOX controller in 2008 <a class="reference internal" href="../references.html#gude-2008"><span class="std std-ref">[Gude 2008]</span></a>, as well as that of today’s OpenDaylight <a class="reference internal" href="../references.html#opendaylight-lithium-2016"><span class="std std-ref">[OpenDaylight Lithium 2016]</span></a> and ONOS <a class="reference internal" href="../references.html#onos-2016"><span class="std std-ref">[ONOS 2016]</span></a> SDN controllers (see sidebar). We’ll cover an example of controller operation in <a class="reference internal" href="#c5-5-3"><span class="std std-ref">Section 5.5.3</span></a> . First, however, let’s examine the OpenFlow protocol, which lies in the controller’s communication layer.</p>
+</div>
+</section>
+<section id="openflow">
+<span id="c5-5-2"></span><h2>5.5.2 OpenFlow 协议<a class="headerlink" href="#openflow" title="此标题的永久链接">#</a></h2>
+<p>5.5.2 OpenFlow Protocol</p>
+<p>OpenFlow 协议 [<a class="reference internal" href="../references.html#openflow-2009"><span class="std std-ref">OpenFlow 2009</span></a>, <a class="reference internal" href="../references.html#onf-2016"><span class="std std-ref">ONF 2016</span></a>] 在 SDN 控制器与 SDN 控制的交换机或其他实现了我们在 <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">第 4.4 节</span></a> 中学习过的 OpenFlow API 的设备之间运行。OpenFlow 协议基于 TCP 运行，默认端口号为 6653。</p>
+<p>从控制器发送到受控交换机的重要消息包括：</p>
+<ul class="simple">
+<li><p><strong>Configuration（配置）</strong>。该消息允许控制器查询并设置交换机的配置参数。</p></li>
+<li><p><strong>Modify-State（修改状态）</strong>。控制器使用该消息添加、删除或修改交换机流表中的条目，并设置交换机端口属性。</p></li>
+<li><p><strong>Read-State（读取状态）</strong>。控制器使用该消息从交换机的流表和端口收集统计信息和计数器值。</p></li>
+<li><p><strong>Send-Packet（发送分组）</strong>。控制器使用该消息从受控交换机的指定端口发送特定的分组。该消息的有效负载中包含要发送的分组内容。</p></li>
+</ul>
+<p>从 SDN 控制的交换机发送到控制器的消息包括：</p>
+<ul class="simple">
+<li><p>Flow-Removed（流移除）。该消息通知控制器某条流表项已被移除，例如由于超时或接收到 <em>modify-state</em> 消息导致。</p></li>
+<li><p>Port-status（端口状态）。该消息用于交换机通知控制器端口状态的变化。</p></li>
+<li><p>Packet-in（分组进入）。回顾 <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">第 4.4 节</span></a>，当分组到达交换机端口且不匹配任何流表项时，会被发送给控制器以进行进一步处理。匹配成功的分组也可以作为匹配结果之一被发送给控制器。packet-in 消息用于将此类分组发送给控制器。</p></li>
+</ul>
+<p>在 [<a class="reference internal" href="../references.html#openflow-2009"><span class="std std-ref">OpenFlow 2009</span></a>, <a class="reference internal" href="../references.html#onf-2016"><span class="std std-ref">ONF 2016</span></a>] 中还定义了其他 OpenFlow 消息。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">实践中的原理</p>
+<p><strong>Google 的软件定义全球网络</strong></p>
+<p>回顾 <a class="reference internal" href="../c2/s6.html#c2-6"><span class="std std-ref">第 2.6 节</span></a> 中的案例研究，Google 部署了一个专用的广域网（WAN），用于连接其数据中心和位于 IXP 和 ISP 中的服务器集群。该网络称为 B4，采用了 Google 自行设计的基于 OpenFlow 的 SDN 控制平面。Google 的网络能够在长期运行中将 WAN 链路的利用率提高到接近 70%（是典型链路利用率的两到三倍），并能根据应用的优先级和现有流需求将应用流拆分到多个路径中 <a class="reference internal" href="../references.html#jain-2013"><span class="std std-ref">[Jain 2013]</span></a>。</p>
+<p>Google 的 B4 网络特别适合 SDN：（i）Google 控制着从 IXP 和 ISP 的边缘服务器到其网络核心中的路由器的所有设备；（ii）最占带宽的应用是在站点之间进行的大规模数据拷贝，在资源拥塞时可以让位于优先级更高的交互式应用；（iii）由于连接的数据中心仅有数十个，集中控制是可行的。</p>
+<p>Google 的 B4 网络使用定制构建的交换机，每个交换机实现了稍作扩展的 OpenFlow 版本，并配有一个本地的 Open Flow Agent（OFA），其思想与我们在 <a class="reference internal" href="s1.html#figure-5-2"><span class="std std-ref">图 5.2</span></a> 中看到的控制代理类似。每个 OFA 又通过一条独立的“带外”网络连接到网络控制服务器（NCS）中的 Open Flow Controller（OFC），这条网络不同于在数据中心之间承载数据中心流量的网络。OFC 提供了 NCS 用于与其控制交换机通信的服务，其本质类似于 <a class="reference internal" href="#figure-5-15"><span class="std std-ref">图 5.15</span></a> 中 SDN 架构最底层的服务。在 B4 中，OFC 还执行状态管理功能，在网络信息库（NIB）中保存节点和链路状态。Google 的 OFC 实现基于 ONIX SDN 控制器 <a class="reference internal" href="../references.html#koponen-2010"><span class="std std-ref">[Koponen 2010]</span></a>。实现了两种路由协议：BGP（用于数据中心之间的路由）和 IS-IS（一种与 OSPF 密切相关的协议，用于数据中心内部路由）。使用 Paxos <a class="reference internal" href="../references.html#chandra-2007"><span class="std std-ref">[Chandra 2007]</span></a> 来运行 NCS 组件的热备副本以防止故障。</p>
+<p>一个流量工程网络控制应用逻辑上位于网络控制服务器之上，与这些服务器交互，为一组应用流提供全局、网络范围的带宽分配。通过 B4，SDN 向全球网络运营商的实际网络迈出了重要的一步。关于 B4 的详细描述参见 <a class="reference internal" href="../references.html#jain-2013"><span class="std std-ref">[Jain 2013]</span></a>。</p>
+</div>
+<div class="toggle docutils container">
+<p>The OpenFlow protocol [<a class="reference internal" href="../references.html#openflow-2009"><span class="std std-ref">OpenFlow 2009</span></a>, <a class="reference internal" href="../references.html#onf-2016"><span class="std std-ref">ONF 2016</span></a>] operates between an SDN controller and an SDN-controlled switch or other device implementing the OpenFlow API that we studied earlier in <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">Section 4.4</span></a>. The OpenFlow protocol operates over TCP, with a default port number of 6653.</p>
+<p>Among the important messages flowing from the controller to the controlled switch are the following:</p>
+<ul class="simple">
+<li><p><strong>Configuration.</strong> This message allows the controller to query and set a switch’s configuration parameters.</p></li>
+<li><p><strong>Modify-State</strong>. This message is used by a controller to add/delete or modify entries in the switch’s flow table, and to set switch port properties.</p></li>
+<li><p><strong>Read-State</strong>. This message is used by a controller to collect statistics and counter values from the switch’s flow table and ports.</p></li>
+<li><p><strong>Send-Packet</strong>. This message is used by the controller to send a specific packet out of a specified port at the controlled switch. The message itself contains the packet to be sent in its payload.</p></li>
+</ul>
+<p>Among the messages flowing from the SDN-controlled switch to the controller are the following:</p>
+<ul class="simple">
+<li><p>Flow-Removed. This message informs the controller that a flow table entry has been removed, for example by a timeout or as the result of a received <em>modify-state</em> message.</p></li>
+<li><p>Port-status. This message is used by a switch to inform the controller of a change in port status.</p></li>
+<li><p>Packet-in. Recall from <a class="reference internal" href="../c4/s4.html#c4-4"><span class="std std-ref">Section 4.4</span></a> that a packet arriving at a switch port and not matching any flow table entry is sent to the controller for additional processing. Matched packets may also be sent to the controller, as an action to be taken on a match. The packet-in message is used to send such packets to the controller.</p></li>
+</ul>
+<p>Additional OpenFlow messages are defined in [<a class="reference internal" href="../references.html#openflow-2009"><span class="std std-ref">OpenFlow 2009</span></a>, <a class="reference internal" href="../references.html#onf-2016"><span class="std std-ref">ONF 2016</span></a>].</p>
+<div class="admonition-principles-in-practice admonition">
+<p class="admonition-title">Principles in Practice</p>
+<p><strong>Google’s Software-Defined Global Network</strong></p>
+<p>Recall from the case study in <a class="reference internal" href="../c2/s6.html#c2-6"><span class="std std-ref">Section 2.6</span></a> that Google deploys a dedicated wide-area network (WAN) that interconnects its data centers and server clusters (in IXPs and ISPs). This network, called B4, has a Google-designed SDN control plane built on OpenFlow. Google’s network is able to drive WAN links at near 70% utilization over the long run (a two to three fold increase over typical link utilizations) and split application flows among multiple paths based on application priority and existing flow demands <a class="reference internal" href="../references.html#jain-2013"><span class="std std-ref">[Jain 2013]</span></a>.</p>
+<p>The Google B4 network is particularly it well-suited for SDN: (i) Google controls all devices from the edge servers in IXPs and ISPs to routers in their network core; (ii) the most bandwidth- intensive applications are large-scale data copies between sites that can defer to higher-priority interactive applications during times of resource congestion; (iii) with only a few dozen data centers being connected, centralized control is feasible.</p>
+<p>Google’s B4 network uses custom-built switches, each implementing a slightly extended version of OpenFlow, with a local Open Flow Agent (OFA) that is similar in spirit to the control agent we encountered in <a class="reference internal" href="s1.html#figure-5-2"><span class="std std-ref">Figure 5.2</span></a>. Each OFA in turn connects to an Open Flow Controller (OFC) in the network control server (NCS), using a separate “out of band” network, distinct from the network that carries data-center traffic between data centers. The OFC thus provides the services used by the NCS to communicate with its controlled switches, similar in spirit to the lowest layer in the SDN architecture shown in <a class="reference internal" href="#figure-5-15"><span class="std std-ref">Figure 5.15</span></a>. In B4, the OFC also performs state management functions, keeping node and link status in a Network Information Base (NIB). Google’s implementation of the OFC is based on the ONIX SDN controller <a class="reference internal" href="../references.html#koponen-2010"><span class="std std-ref">[Koponen 2010]</span></a>. Two routing protocols, BGP (for routing between the data centers) and IS-IS (a close relative of OSPF, for routing within a data center), are implemented. Paxos <a class="reference internal" href="../references.html#chandra-2007"><span class="std std-ref">[Chandra 2007]</span></a> is used to execute hot replicas of NCS components to protect against failure.</p>
+<p>A traffic engineering network-control application, sitting logically above the set of network control servers, interacts with these servers to provide global, network-wide bandwidth provisioning for groups of application flows. With B4, SDN made an important leap forward into the operational networks of a global network provider. See <a class="reference internal" href="../references.html#jain-2013"><span class="std std-ref">[Jain 2013]</span></a> for a detailed description of B4.</p>
+</div>
+</div>
+</section>
+<section id="c5-5-3">
+<span id="id1"></span><h2>5.5.3 数据平面与控制平面交互：一个示例<a class="headerlink" href="#c5-5-3" title="此标题的永久链接">#</a></h2>
+<p>5.5.3 Data and Control Plane Interaction: An Example</p>
+<p>为了加深我们对 SDN 控制交换机与 SDN 控制器之间交互的理解，让我们考虑 <span class="xref std std-ref">图 5.16</span> 所示的示例，其中使用 Dijkstra 算法（我们在 <a class="reference internal" href="s2.html#c5-2"><span class="std std-ref">第 5.2 节</span></a> 中学习过）来确定最短路径路由。<span class="xref std std-ref">图 5.16</span> 中的 SDN 场景与之前 <a class="reference internal" href="s2.html#c5-2-1"><span class="std std-ref">第 5.2.1 节</span></a> 和 <a class="reference internal" href="s3.html#c5-3"><span class="std std-ref">第 5.3 节</span></a> 中每台路由器各自控制的场景相比有两个重要区别：</p>
+<ul class="simple">
+<li><p>Dijkstra 算法作为一个独立的应用程序在数据交换机之外运行。</p></li>
+<li><p>数据交换机将链路更新发送给 SDN 控制器，而不是发送给其他交换机。</p></li>
+</ul>
+<p>在这个示例中，假设交换机 s1 与 s2 之间的链路断开；假设实现了最短路径路由，因此 s1、s3 和 s4 的入站和出站流转发规则将受到影响，但 s2 的操作保持不变。我们还假设 OpenFlow 被用作通信层协议，并且控制平面除链路状态路由外不执行其他功能。</p>
+<figure class="align-center">
+<img alt="../_images/466-0.png" src="../_images/466-0.png" />
+</figure>
+<p id="figure-5-16"><strong>图 5.16 SDN 控制器场景：链路状态变化</strong></p>
+<ol class="arabic simple">
+<li><p>交换机 s1 检测到它与 s2 之间的链路故障后，使用 OpenFlow 的 port-status 消息通知 SDN 控制器该链路状态发生变化。</p></li>
+<li><p>SDN 控制器接收到表明链路状态变化的 OpenFlow 消息，并通知链路状态管理器，后者更新链路状态数据库。</p></li>
+<li><p>实现 Dijkstra 链路状态路由的网络控制应用此前已注册在链路状态变化时接收通知。该应用随后接收到链路状态变化的通知。</p></li>
+<li><p>链路状态路由应用与链路状态管理器交互以获取更新后的链路状态；它也可能会查询状态管理层中的其他组件。随后，它计算出新的最小代价路径。</p></li>
+<li><p>链路状态路由应用接着与流表管理器交互，确定哪些交换机的流表需要更新。</p></li>
+<li><p>流表管理器随后使用 OpenFlow 协议更新受影响交换机的流表项 —— s1（现在将把发往 s2 的数据包经由 s4 进行转发）、s2（现在将开始从 s1 经由中间交换机 s4 接收数据包）、以及 s4（现在必须转发来自 s1 并目的为 s2 的数据包）。</p></li>
+</ol>
+<p>这个示例虽然简单，但展示了 SDN 控制平面如何提供控制平面服务（在本例中是网络层路由），而这些服务原先是由每个网络路由器各自实现控制来完成的。现在我们可以清楚地认识到，SDN 启用的 ISP 如何能轻松地从最小代价路径路由切换到更为定制化的路由方式。实际上，由于控制器可以随意配置流表，它可以实现任何形式的转发 —— 只需更改其应用控制软件即可。这种更改的便利性与传统每路由器控制平面形成鲜明对比，在后者中，所有路由器中的软件（可能由多个独立供应商提供）都必须进行更改。</p>
+<div class="toggle docutils container">
+<p>In order to solidify our understanding of the interaction between SDN-controlled switches and the SDN controller, let’s consider the example shown in <span class="xref std std-ref">Figure 5.16</span>, in which Dijkstra’s algorithm (which we studied in <a class="reference internal" href="s2.html#c5-2"><span class="std std-ref">Section 5.2</span></a>) is used to determine shortest path routes. The SDN scenario in <span class="xref std std-ref">Figure 5.16</span> has two important differences from the earlier per-router-control scenario of <a class="reference internal" href="s2.html#c5-2-1"><span class="std std-ref">Sections 5.2.1</span></a> and <a class="reference internal" href="s3.html#c5-3"><span class="std std-ref">5.3</span></a>, where Dijkstra’s algorithm was implemented in each and every router and link-state updates were flooded among all network routers:</p>
+<ul class="simple">
+<li><p>Dijkstra’s algorithm is executed as a separate application, outside of the packet switches.</p></li>
+<li><p>Packet switches send link updates to the SDN controller and not to each other.</p></li>
+</ul>
+<p>In this example, let’s assume that the link between switch s1 and s2 goes down; that shortest path routing is implemented, and consequently and that incoming and outgoing flow forwarding rules at s1, s3, and s4 are affected, but that s2’s operation is unchanged. Let’s also assume that OpenFlow is used as the communication layer protocol, and that the control plane performs no other function other than link-state routing.</p>
+<figure class="align-center" id="id2">
+<img alt="../_images/466-0.png" src="../_images/466-0.png" />
+</figure>
+<p><strong>Figure 5.16 SDN controller scenario: Link-state change</strong></p>
+<ol class="arabic simple">
+<li><p>Switch s1, experiencing a link failure between itself and s2, notifies the SDN controller of the link-state change using the OpenFlow port-status message.</p></li>
+<li><p>The SDN controller receives the OpenFlow message indicating the link-state change, and notifies the link-state manager, which updates a link-state ­database.</p></li>
+<li><p>The network-control application that implements Dijkstra’s link-state routing has previously registered to be notified when link state changes. That application receives the notification of the link-state change.</p></li>
+<li><p>The link-state routing application interacts with the link-state manager to get updated link state; it might also consult other components in the state-­management layer. It then computes the new least-cost paths.</p></li>
+<li><p>The link-state routing application then interacts with the flow table manager, which determines the flow tables to be updated.</p></li>
+<li><p>The flow table manager then uses the OpenFlow protocol to update flow table entries at affected switches—s1 (which will now route packets destined to s2 via s4), s2 (which will now begin receiving packets from s1 via intermediate switch s4), and s4 (which must now forward packets from s1 destined to s2).</p></li>
+</ol>
+<p>This example is simple but illustrates how the SDN control plane provides control-plane services (in this case network-layer routing) that had been previously implemented with per-router control exercised in each and every network router. One can now easily appreciate how an SDN-enabled ISP could easily switch from least-cost path routing to a more hand-tailored approach to routing. Indeed, since the controller can tailor the flow tables as it pleases, it can implement any form of forwarding that it pleases —simply by changing its application-control software. This ease of change should be contrasted to the case of a traditional per-router control plane, where software in all routers (which might be provided to the ISP by multiple independent vendors) must be changed.</p>
+</div>
+</section>
+<section id="c5-5-4">
+<span id="id3"></span><h2>5.5.4 SDN：过去与未来<a class="headerlink" href="#c5-5-4" title="此标题的永久链接">#</a></h2>
+<p>5.5.4 SDN: Past and Future</p>
+<p>尽管对 SDN 的强烈兴趣是近年来的现象，但 SDN 的技术根源，尤其是数据平面与控制平面的分离，历史要早得多。2004 年，[<span class="xref std std-ref">Feamster 2004</span>, <a class="reference internal" href="../references.html#lakshman-2004"><span class="std std-ref">Lakshman 2004</span></a>, <a class="reference internal" href="../references.html#rfc-3746"><span class="std std-ref">RFC 3746</span></a>] 均主张网络的数据平面和控制平面应分离。<a class="reference internal" href="../references.html#van-der-merwe-1998"><span class="std std-ref">[van der Merwe 1998]</span></a> 描述了一个多控制器的 ATM 网络控制框架 <a class="reference internal" href="../references.html#black-1995"><span class="std std-ref">[Black 1995]</span></a>，每个控制器管理若干 ATM 交换机。Ethane 项目 <a class="reference internal" href="../references.html#casado-2007"><span class="std std-ref">[Casado 2007]</span></a> 首创了基于流的简单以太网交换机网络概念，采用匹配加动作的流表、集中式控制器来管理流的准入和路由，以及未匹配数据包由交换机转发至控制器的机制。2007 年，已有超过 300 台 Ethane 交换机投入运行。Ethane 很快演变为 OpenFlow 项目，其后发生的事情众所周知！</p>
+<p>大量研究致力于开发未来的 SDN 架构和功能。正如我们所见，SDN 革命正导致专用单片交换机和路由器（集成数据平面和控制平面）被简单的商用交换硬件和复杂的软件控制平面颠覆性地替代。SDN 的一个推广版本，称为网络功能虚拟化（NFV），同样旨在用简单的商用服务器、交换和存储设备颠覆复杂的中间盒（例如具有专用硬件和专有媒体缓存/服务软件的中间盒）:ref:<cite>[Gember-Jacobson 2014] &lt;Gember-Jacobson 2014&gt;</cite>。另一重要研究方向是将 SDN 概念从自治系统内部扩展到自治系统间 <a class="reference internal" href="../references.html#gupta-2014"><span class="std std-ref">[Gupta 2014]</span></a>。</p>
+<div class="admonition- admonition">
+<p class="admonition-title">实践中的原则</p>
+<dl>
+<dt><strong>SDN 控制器案例研究：OpenDaylight 与 ONOS 控制器</strong></dt><dd><p>在 SDN 的早期，只有单一的 SDN 协议（OpenFlow [<a class="reference internal" href="../references.html#mckeown-2008"><span class="std std-ref">McKeown 2008</span></a>; <a class="reference internal" href="../references.html#openflow-2009"><span class="std std-ref">OpenFlow 2009</span></a>]）和单一的 SDN 控制器（NOX <a class="reference internal" href="../references.html#gude-2008"><span class="std std-ref">Gude 2008</span></a>）。此后，SDN 控制器数量显著增长 <a class="reference internal" href="../references.html#kreutz-2015"><span class="std std-ref">[Kreutz 2015]</span></a>。部分 SDN 控制器为公司专有，例如 ONIX <a class="reference internal" href="../references.html#koponen-2010"><span class="std std-ref">[Koponen 2010]</span></a>，Juniper Networks 的 Contrail <a class="reference internal" href="../references.html#juniper-contrail-2016"><span class="std std-ref">[Juniper Contrail 2016]</span></a>，以及谷歌用于其 B4 广域网的控制器 <a class="reference internal" href="../references.html#jain-2013"><span class="std std-ref">[Jain 2013]</span></a>。但更多控制器是开源的，并用多种编程语言实现 <a class="reference internal" href="../references.html#erickson-2013"><span class="std std-ref">[Erickson 2013]</span></a>。最近，OpenDaylight 控制器 <a class="reference internal" href="../references.html#opendaylight-lithium-2016"><span class="std std-ref">[OpenDaylight Lithium 2016]</span></a> 和 ONOS 控制器 <a class="reference internal" href="../references.html#onos-2016"><span class="std std-ref">[ONOS 2016]</span></a> 获得了广泛的行业支持。两者均为开源，并与 Linux 基金会合作开发。</p>
+</dd>
+<dt><strong>OpenDaylight 控制器</strong></dt><dd><p><a class="reference internal" href="#figure-5-17"><span class="std std-ref">图 5.17</span></a> 展示了 OpenDaylight Lithium SDN 控制器平台的简化视图 <a class="reference internal" href="../references.html#opendaylight-lithium-2016"><span class="std std-ref">[OpenDaylight Lithium 2016]</span></a>。ODL 的主要控制器组件与我们在 <a class="reference internal" href="#figure-5-15"><span class="std std-ref">图 5.15</span></a> 中介绍的组件紧密对应。</p>
+<p>网络服务应用决定数据平面转发及防火墙、负载均衡等其他服务如何在受控交换机上实现。与 <a class="reference internal" href="#figure-5-15"><span class="std std-ref">图 5.15</span></a> 中的典型控制器不同，ODL 控制器提供两个接口供应用与本地控制器服务及相互通信：外部应用通过运行在 HTTP 上的 REST 请求-响应 API 与控制器模块通信，内部应用通过服务抽象层（SAL）互相通信。应用设计者可决定应用是在外部还是内部实现；<a class="reference internal" href="#figure-5-17"><span class="std std-ref">图 5.17</span></a> 中展示的应用配置仅作示例。</p>
+<figure class="align-center" id="figure-5-17">
+<img alt="../_images/469-0.png" src="../_images/469-0.png" />
+</figure>
+<p><strong>图 5.17 OpenDaylight 控制器</strong></p>
+<p>ODL 的 <em>基本网络服务功能</em> 是控制器核心，与 <a class="reference internal" href="#figure-5-15"><span class="std std-ref">图 5.15</span></a> 中的网络状态管理能力高度对应。SAL 是控制器的神经中枢，允许组件和应用调用彼此服务并订阅其生成的事件。同时，SAL 提供了对通信层特定 <em>底层通信协议</em> 的统一抽象接口，包括 OpenFlow 和 SNMP（简单网络管理协议，我们将在 <a class="reference internal" href="s7.html#c5-7"><span class="std std-ref">第 5.7 节</span></a> 中介绍）。OVSDB 是一种用于管理数据中心交换的协议，是 SDN 技术的重要应用领域。我们将在 <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">第 6 章</span></a> 介绍数据中心网络。</p>
+<figure class="align-center" id="figure-5-18">
+<img alt="../_images/470-0.png" src="../_images/470-0.png" />
+</figure>
+<p><strong>图 5.18 ONOS 控制器架构</strong></p>
+</dd>
+<dt><strong>ONOS 控制器</strong></dt><dd><p><a class="reference internal" href="#figure-5-18"><span class="std std-ref">图 5.18</span></a> 展示了 ONOS 控制器的简化视图 <a class="reference internal" href="../references.html#onos-2016"><span class="std std-ref">[ONOS 2016]</span></a>。类似于 <a class="reference internal" href="#figure-5-15"><span class="std std-ref">图 5.15</span></a> 中的典型控制器，ONOS 控制器可分为三层：</p>
+<ul class="simple">
+<li><p><strong>北向抽象与协议</strong>。ONOS 的独特之处在于其意图框架，允许应用请求高层服务（例如，建立主机 A 与主机 B 之间的连接，或阻止两者通信），而无需了解该服务的具体实现细节。网络状态信息通过北向 API 以同步查询或异步监听（例如网络状态变化时）形式提供给网络控制应用。</p></li>
+<li><p><strong>分布式核心</strong>。ONOS 的分布式核心维护网络链路、主机和设备的状态。ONOS 部署在一组互联服务器上，每台服务器运行相同的 ONOS 软件副本；服务器数量的增加带来服务容量的提升。ONOS 核心提供服务复制与实例间协调机制，为上层应用和下层网络设备提供逻辑集中核心服务的抽象。</p></li>
+<li><p><strong>南向抽象与协议</strong>。南向抽象屏蔽了底层主机、链路、交换机和协议的异构性，使分布式核心对设备和协议保持无关性。由于该抽象，分布式核心下方的南向接口在逻辑层级上高于我们在 :ref:<a href="#id4"><span class="problematic" id="id5">`</span></a>图 5.14 &lt;Figure 5.14&gt;`（典型控制器）或 :ref:<a href="#id6"><span class="problematic" id="id7">`</span></a>图 5.17 &lt;Figure 5.17&gt;`（ODL 控制器）中的设计。</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="toggle docutils container">
+<p>Although the intense interest in SDN is a relatively recent phenomenon, the technical roots of SDN, and the separation of the data and control planes in particular, go back considerably further. In 2004, [<span class="xref std std-ref">Feamster 2004</span>, <a class="reference internal" href="../references.html#lakshman-2004"><span class="std std-ref">Lakshman 2004</span></a>, <a class="reference internal" href="../references.html#rfc-3746"><span class="std std-ref">RFC 3746</span></a>] all argued for the separation of the network’s data and control planes. <a class="reference internal" href="../references.html#van-der-merwe-1998"><span class="std std-ref">[van der Merwe 1998]</span></a> describes a control framework for ATM networks <a class="reference internal" href="../references.html#black-1995"><span class="std std-ref">[Black 1995]</span></a> with multiple controllers, each controlling a number of ATM switches. The Ethane project <a class="reference internal" href="../references.html#casado-2007"><span class="std std-ref">[Casado 2007]</span></a> pioneered the notion of a network of simple flow-based Ethernet switches with match-plus-action flow tables, a centralized controller that managed flow admission and routing, and the forwarding of unmatched packets from the switch to the controller. A network of more than 300 Ethane switches was operational in 2007. Ethane quickly evolved into the OpenFlow project, and the rest (as the saying goes) is history!</p>
+<p>Numerous research efforts are aimed at developing future SDN architectures and capabilities. As we have seen, the SDN revolution is leading to the disruptive replacement of dedicated monolithic switches and routers (with both data and control planes) by simple commodity switching hardware and a sophisticated software control plane. A generalization of SDN known as network functions virtualization (NFV) similarly aims at disruptive replacement of sophisticated middleboxes (such as middleboxes with dedicated hardware and proprietary software for media caching/service) with simple commodity servers, switching, and storage <a class="reference internal" href="../references.html#gember-jacobson-2014"><span class="std std-ref">[Gember-Jacobson 2014]</span></a>. A second area of important research seeks to extend SDN concepts from the intra-AS setting to the inter-AS setting <a class="reference internal" href="../references.html#gupta-2014"><span class="std std-ref">[Gupta 2014]</span></a>.</p>
+<div class="admonition-principles-in-practice admonition">
+<p class="admonition-title">PRINCIPLES IN PRACTICE</p>
+<dl>
+<dt><strong>SDN Controller Case Studies: The OpenDaylight and ONOS Controllers</strong></dt><dd><p>In the earliest days of SDN, there was a single SDN protocol (OpenFlow [<a class="reference internal" href="../references.html#mckeown-2008"><span class="std std-ref">McKeown 2008</span></a>; <a class="reference internal" href="../references.html#openflow-2009"><span class="std std-ref">OpenFlow 2009</span></a>]) and a single SDN controller (NOX <a class="reference internal" href="../references.html#gude-2008"><span class="std std-ref">Gude 2008</span></a>). Since then, the number of SDN controllers in particular has grown significantly <a class="reference internal" href="../references.html#kreutz-2015"><span class="std std-ref">[Kreutz 2015]</span></a>. Some SDN controllers are company-specific and proprietary, e.g., ONIX <a class="reference internal" href="../references.html#koponen-2010"><span class="std std-ref">[Koponen 2010]</span></a>, Juniper Networks Contrail <a class="reference internal" href="../references.html#juniper-contrail-2016"><span class="std std-ref">[Juniper Contrail 2016]</span></a>, and Google’s controller <a class="reference internal" href="../references.html#jain-2013"><span class="std std-ref">[Jain 2013]</span></a> for its B4 wide-area network. But many more controllers are open-source and implemented in a variety of programming languages <a class="reference internal" href="../references.html#erickson-2013"><span class="std std-ref">[Erickson 2013]</span></a>. Most recently, the OpenDaylight controller <a class="reference internal" href="../references.html#opendaylight-lithium-2016"><span class="std std-ref">[OpenDaylight Lithium 2016]</span></a> and the ONOS controller <a class="reference internal" href="../references.html#onos-2016"><span class="std std-ref">[ONOS 2016]</span></a> have found considerable industry support. They are both open-source and are being developed in partnership with the Linux Foundation.</p>
+</dd>
+<dt><strong>The OpenDaylight Controller</strong></dt><dd><p><a class="reference internal" href="#figure-5-17"><span class="std std-ref">Figure 5.17</span></a> presents a simplified view of the OpenDaylight Lithium SDN controller platform <a class="reference internal" href="../references.html#opendaylight-lithium-2016"><span class="std std-ref">[OpenDaylight Lithium 2016]</span></a>. ODL’s main set of controller components correspond closely to those we developed in <a class="reference internal" href="#figure-5-15"><span class="std std-ref">Figure 5.15</span></a>.</p>
+<p>Network-Service Applications are the applications that determine how data-plane forwarding and other services, such as firewalling and load balancing, are accomplished in the controlled switches. Unlike the canonical controller in <a class="reference internal" href="#figure-5-15"><span class="std std-ref">Figure 5.15</span></a>, the ODL controller has two interfaces through which applications may communicate with native controller services and each other: external applications communicate with controller modules using a REST request-response API running over HTTP. Internal applications communicate with each other via the Service Abstraction Layer (SAL). The choice as to whether a controller application is implemented externally or internally is up to the application designer; the particular configuration of applications shown in <a class="reference internal" href="#figure-5-17"><span class="std std-ref">Figure 5.17</span></a> is only meant as an ­example.</p>
+<figure class="align-center">
+<img alt="../_images/469-0.png" src="../_images/469-0.png" />
+</figure>
+<p><strong>Figure 5.17 The OpenDaylight controller</strong></p>
+<p>ODL’s <em>Basic Network-Service Functions</em> are at the heart of the controller, and they correspond closely to the network-wide state management capabilities that we encountered in <a class="reference internal" href="#figure-5-15"><span class="std std-ref">Figure 5.15</span></a>. The SAL is the controller’s nerve center, allowing controller ­components and applications to invoke each other’s services and to subscribe to events they generate. It also provides a uniform abstract interface to the specific <em>underlying communications protocols</em> in the communication layer, including OpenFlow and SNMP (the Simple Network Management Protocol—a network management protocol that we will cover in <a class="reference internal" href="s7.html#c5-7"><span class="std std-ref">Section 5.7</span></a>). OVSDB is a protocol used to manage data center switching, an important application area for SDN technology. We’ll introduce data center networking in <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a>.</p>
+<figure class="align-center">
+<img alt="../_images/470-0.png" src="../_images/470-0.png" />
+</figure>
+<p><strong>Figure 5.18 ONOS controller architecture</strong></p>
+</dd>
+<dt><strong>The ONOS Controller</strong></dt><dd><p><a class="reference internal" href="#figure-5-18"><span class="std std-ref">Figure 5.18</span></a> presents a simplified view of the ONOS controller <a class="reference internal" href="../references.html#onos-2016"><span class="std std-ref">[ONOS 2016]</span></a>. Similar to the canonical controller in <a class="reference internal" href="#figure-5-15"><span class="std std-ref">Figure 5.15</span></a>, three layers can be identified in the ONOS ­controller:</p>
+<ul class="simple">
+<li><p><strong>Northbound abstractions and protocols</strong>. A unique feature of ONOS is its intent framework, which allows an application to request a high-level service (e.g., to setup a connection between host A and Host B, or conversely to not allow Host A and host B to communicate) without having to know the details of how this service is performed. State information is provided to network-control applications across the northbound API either synchronously (via query) or asynchronously (via listener callbacks, e.g., when network state changes).</p></li>
+<li><p><strong>Distributed core</strong>. The state of the network’s links, hosts, and devices is maintained in ONOS’s distributed core. ONOS is deployed as a service on a set of interconnected servers, with each server running an identical copy of the ONOS software; an increased number of servers offers an increased service capacity. The ONOS core provides the mechanisms for service replication and coordination among instances, providing the applications above and the network devices below with the abstraction of logically centralized core services.</p></li>
+<li><p><strong>Southbound abstractions and protocols</strong>. The southbound abstractions mask the heterogeneity of the underlying hosts, links, switches, and protocols, allowing the distributed core to be both device and protocol agnostic. Because of this abstraction, the southbound interface below the distributed core is logically higher than in our canonical controller in <a class="reference internal" href="#figure-5-14"><span class="std std-ref">Figure 5.14</span></a> or the ODL controller in <a class="reference internal" href="#figure-5-17"><span class="std std-ref">Figure 5.17</span></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s4.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">5.4 ISP 之间的路由：BGP</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s6.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">5.6 ICMP：因特网控制报文协议</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sdn-sdn-sdn">5.5.1 SDN 控制平面：SDN 控制器与 SDN 控制应用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openflow">5.5.2 OpenFlow 协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c5-5-3">5.5.3 数据平面与控制平面交互：一个示例</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c5-5-4">5.5.4 SDN：过去与未来</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,663 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>第 8 章 计算机网络中的安全 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c8/index';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="8.1 什么是网络安全？" href="s1.html" />
+    <link rel="prev" title="访谈: Deborah Estrin" href="../c7/interview.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">第 8 章 计算机网络中的安全</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c8/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>第 8 章 计算机网络中的安全</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c8">
+<span id="id1"></span><h1>第 8 章 计算机网络中的安全<a class="headerlink" href="#c8" title="此标题的永久链接">#</a></h1>
+<p>Chapter 8 Security in Computer Networks</p>
+<p>早在 <a class="reference internal" href="../c1/s6.html#c1-6"><span class="std std-ref">第 1.6 节</span></a> 中，我们描述了一些较为常见且危害严重的互联网攻击类型，包括恶意软件攻击、拒绝服务、嗅探、源伪装以及信息篡改和删除。尽管我们之后对计算机网络有了大量的学习，但尚未深入探讨如何防护网络免受这些攻击。现在，凭借我们在计算机网络和互联网协议方面新获得的专业知识，我们将深入研究安全通信，特别是如何防御那些恶意攻击者。</p>
+<p>让我们引入 Alice 和 Bob，两个人想要通信，并希望以“安全”的方式进行通信。由于这是一本网络教材，我们需要说明，Alice 和 Bob 也可以是两个希望安全交换路由表的路由器，是希望建立安全传输连接的客户端和服务器，或者是想要交换安全邮件的两个电子邮件应用程序——这些都是我们稍后将在本章中讨论的案例。Alice 和 Bob 是安全领域中的经典人物，或许是因为比起用泛泛的“A”和“B”来代表通信双方，这两个名字更加生动有趣。人们通常认为安全通信是为了满足恋爱、战争通讯和商业交易等人类需求；我们更偏向于用 Alice 和 Bob 来代表发送者和接收者，并在本章初始场景中想象他们的通信。</p>
+<p>我们说 Alice 和 Bob 想要通信并希望“安全”通信，但这究竟意味着什么呢？正如我们将看到的，安全（如同爱情）是多面性的；也就是说，安全有许多方面。当然，Alice 和 Bob 希望他们的通信内容对窃听者保持秘密。他们可能还希望确保他们在通信时确实是在相互通信，并且如果通信被窃听者篡改，可以检测出这种篡改。在本章的第一部分，我们将介绍实现通信加密、通信方身份验证以及确保消息完整性的基本密码学技术。</p>
+<p>在本章的第二部分，我们将探讨如何利用基本的密码学原理构建安全的网络协议。依旧采取自上而下的方法，我们将依次研究（前四层）中的安全协议，首先是应用层。我们将探讨如何保障电子邮件安全，如何保障 TCP 连接安全，如何在网络层实现全面安全，以及如何保护无线局域网。在本章的第三部分，我们将关注运营安全，即保护组织网络免受攻击。特别是，我们将详细考察防火墙和入侵检测系统如何增强组织网络的安全性。</p>
+<div class="toggle docutils container">
+<p>Way back in <a class="reference internal" href="../c1/s6.html#c1-6"><span class="std std-ref">Section 1.6</span></a> we described some of the more prevalent and damaging classes of Internet
+attacks, including malware attacks, denial of service, sniffing, source masquerading, and message
+modification and deletion. Although we have since learned a tremendous amount about computer
+networks, we still haven’t examined how to secure networks from those attacks. Equipped with our
+newly acquired expertise in computer networking and Internet protocols, we’ll now study in-depth secure
+communication and, in particular, how computer networks can be defended from those nasty bad guys.</p>
+<p>Let us introduce Alice and Bob, two people who want to communicate and wish to do so “securely.” This
+being a networking text, we should remark that Alice and Bob could be two routers that want to
+exchange routing tables securely, a client and server that want to establish a secure transport
+connection, or two e-mail applications that want to exchange secure e-mail—all case studies that we will
+consider later in this chapter. Alice and Bob are well-known fixtures in the security community, perhaps
+because their names are more fun than a generic entity named “A” that wants to communicate securely
+with a generic entity named “B.” Love affairs, wartime communication, and business transactions are the
+commonly cited human needs for secure communications; preferring the first to the latter two, we’re
+happy to use Alice and Bob as our sender and receiver, and imagine them in this first scenario.</p>
+<p>We said that Alice and Bob want to communicate and wish to do so “securely,” but what precisely does
+this mean? As we will see, security (like love) is a many-splendored thing; that is, there are many facets
+to security. Certainly, Alice and Bob would like for the contents of their communication to remain secret
+from an eavesdropper. They probably would also like to make sure that when they are communicating,
+they are indeed communicating with each other, and that if their communication is tampered with by an
+eavesdropper, that this tampering is detected. In the first part of this chapter, we’ll cover the
+fundamental cryptography techniques that allow for encrypting communication, authenticating the party
+with whom one is communicating, and ensuring message integrity.</p>
+<p>In the second part of this chapter, we’ll examine how the fundamental ­cryptography principles can be
+used to create secure networking protocols. Once again taking a top-down approach, we’ll examine
+secure protocols in each of the (top four) layers, beginning with the application layer. We’ll examine how
+to secure e-mail, how to secure a TCP connection, how to provide blanket security at the network layer,
+and how to secure a wireless LAN. In the third part of this chapter we’ll consider operational security,which is about protecting organizational networks from attacks. In particular, we’ll take a careful look at
+how firewalls and intrusion detection systems can enhance the security of an organizational network.</p>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l1"><a class="reference internal" href="s2.html">8.2 密码学原理</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s2.html#c8-2-1">8.2.1 对称密钥密码学</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html#c8-2-2">8.2.2 公钥加密 6048.3 消息完整性与数字签名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="s3.html">8.3 消息完整性和数字签名</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s3.html#c8-3-1">8.3.1 加密哈希函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html#c8-3-2">8.3.2 消息认证码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html#c8-3-3">8.3.3 数字签名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="s4.html">8.4 终端认证</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s4.html#ap1-0">8.4.1 认证协议 ap1.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html#ap2-0">8.4.2 认证协议 ap2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html#ap3-0">8.4.3 认证协议 ap3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html#ap3-1">8.4.4 认证协议 ap3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html#ap4-0">8.4.5 认证协议 ap4.0</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="s5.html">8.5 电子邮件安全</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s5.html#c8-5-1">8.5.1 安全电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html#pgp">8.5.2 PGP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="s6.html">8.6 保护 TCP 连接: SSL</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s6.html#c8-6-1">8.6.1 整体概览</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html#c8-6-2">8.6.2 更完整的概述</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s7.html#ipsec-vpns">8.7.1 IPsec 和虚拟专用网络 (VPNs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html#ah-esp">8.7.2 AH 和 ESP 协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html#c8-7-3">8.7.3 安全关联</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html#c8-7-4">8.7.4 IPsec 数据报</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html#ike-ipsec">8.7.5 IKE：IPsec 中的密钥管理</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="s8.html">8.8 无线局域网的安全</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s8.html#wep">8.8.1 有线等效保密 (WEP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s8.html#ieee-802-11i">8.8.2 IEEE 802.11i</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="s9.html">8.9 运行安全：防火墙和入侵检测系统</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="s9.html#c8-9-1">8.9.1 防火墙</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s9.html#c8-9-2">8.9.2 入侵检测系统</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="summary.html">8.10 小结</a></li>
+<li class="toctree-l1"><a class="reference internal" href="homework.html">课后习题与问题</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="homework.html#id2">第 8.1 节</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html#id3">第 8.2 节</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html#id4">第 8.3–8.4 节</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html#id5">第 8.5–8.8 节</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html#id6">第 8.9 节</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html#id7">习题</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html#ipsec">IPsec 实验</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="interview.html">访谈：Steven M. Bellovin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="interview.html#id1">是什么促使您专注于网络安全领域？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html#usenet">在您开发 Usenet 时，您对它的愿景是什么？而现在呢？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html#id2">有没有人在职业上激励过您？以何种方式？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html#id3">您对网络和安全的未来有何愿景？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html#id4">您认为安全领域迄今为止最大的进展是什么？我们还需要走多远？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html#id5">您对学习互联网和网络安全的学生有什么建议？</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../c7/interview.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">访谈: Deborah Estrin</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s1.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">8.1 什么是网络安全？</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

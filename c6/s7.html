@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>6.7 回顾：网页请求生命周期中的一天 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c6/s7';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="6.8 小结" href="summary.html" />
+    <link rel="prev" title="6.6 数据中心网络" href="s6.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 6 章 链路层与局域网（LANs）</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c6/s7.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>6.7 回顾：网页请求生命周期中的一天</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dhcpudpip">6.7.1 开始：DHCP、UDP、IP 和以太网</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dns-arp">6.7.2 仍在开始阶段：DNS 和 ARP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dns">6.7.3 仍在开始阶段：到 DNS 服务器的域内路由</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#web-tcp-http">6.7.4 Web 客户端-服务器交互：TCP 与 HTTP</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c6-7">
+<span id="id1"></span><h1>6.7 回顾：网页请求生命周期中的一天<a class="headerlink" href="#c6-7" title="此标题的永久链接">#</a></h1>
+<p>6.7 Retrospective: A Day in the Life of a Web Page Request</p>
+<p>现在我们已经在本章中介绍了链路层，并在前几章中介绍了网络层、传输层和应用层，我们对协议栈的探索也就此完成！在本书的最开始（<a class="reference internal" href="../c1/s1.html#c1-1"><span class="std std-ref">第 1.1 节</span></a>），我们写道“本书的大部分内容涉及计算机网络协议”，在前五章中我们确实已经看到了这一点！在进入本书第二部分的专题章节之前，我们希望通过一种整合性的、整体性的视角对我们迄今为止学习过的协议进行总结。我们可以通过分析一个最简单的请求——下载一个网页——来获得这种“全局视角”，并识别出在满足这个简单请求时涉及的众多（非常多！）协议。<a class="reference internal" href="#figure-6-32"><span class="std std-ref">图 6.32</span></a> 展示了我们的场景：学生 Bob 将笔记本连接到他学校的以太网交换机，并下载一个网页（例如 <span class="xref std std-ref">www.google.com</span> 的首页）。正如我们现在所知道的，实现这个看似简单的请求实际上在“幕后”发生了很多事情。本章最后的 Wireshark 实验将更详细地检查包含多个相关数据包的跟踪文件。</p>
+<div class="toggle docutils container">
+<p>Now that we’ve covered the link layer in this chapter, and the network, transport and application layers in earlier chapters, our journey down the protocol stack is complete! In the very beginning of this book (<a class="reference internal" href="../c1/s1.html#c1-1"><span class="std std-ref">Section 1.1</span></a>), we wrote “much of this book is concerned with computer network protocols,” and in the first five chapters, we’ve certainly seen that this is indeed the case! Before heading into the topical chapters in second part of this book, we’d like to wrap up our journey down the protocol stack by taking an integrated, holistic view of the protocols we’ve learned about so far. One way then to take this “big picture” view is to identify the many (many!) protocols that are involved in satisfying even the simplest request: downloading a Web page. <a class="reference internal" href="#figure-6-32"><span class="std std-ref">Figure 6.32</span></a> illustrates our setting: a student, Bob, connects a laptop to his school’s Ethernet switch and downloads a Web page (say the home page of <span class="xref std std-ref">www.google.com</span>). As we now know, there’s a lot going on “under the hood” to satisfy this seemingly simple request. A Wireshark lab at the end of this chapter examines trace files containing a number of the packets involved in similar scenarios in more detail.</p>
+</div>
+<section id="dhcpudpip">
+<span id="c6-7-1"></span><h2>6.7.1 开始：DHCP、UDP、IP 和以太网<a class="headerlink" href="#dhcpudpip" title="此标题的永久链接">#</a></h2>
+<p>6.7.1 Getting Started: DHCP, UDP, IP, and Ethernet</p>
+<p>假设 Bob 启动了他的笔记本电脑，然后将其连接到连接到学校以太网交换机的以太网电缆上，该交换机又连接到学校的路由器，如 <a class="reference internal" href="#figure-6-32"><span class="std std-ref">图 6.32</span></a> 所示。学校的路由器连接到 ISP，在本例中是 comcast.net。在这个例子中，comcast.net 为学校提供 DNS 服务；因此，DNS 服务器位于 Comcast 网络中而不是学校网络中。我们假设 DHCP 服务器运行在路由器中，这在实际中也很常见。</p>
+<figure class="align-center" id="figure-6-32">
+<img alt="../_images/559-0.png" src="../_images/559-0.png" />
+</figure>
+<p><strong>图 6.32 网页请求的一天：网络设置与动作</strong></p>
+<p>当 Bob 第一次将笔记本连接到网络时，在没有 IP 地址的情况下他无法进行任何操作（例如下载网页）。因此，Bob 的笔记本所进行的第一个与网络相关的操作是运行 DHCP 协议，以从本地 DHCP 服务器获取 IP 地址以及其他信息：</p>
+<ol class="arabic simple">
+<li><p>Bob 笔记本上的操作系统创建一个 <strong>DHCP 请求报文</strong> （<a class="reference internal" href="../c4/s3.html#c4-3-3"><span class="std std-ref">第 4.3.3 节</span></a>），并将其封装在一个 <strong>UDP 段</strong> （<a class="reference internal" href="../c3/s3.html#c3-3"><span class="std std-ref">第 3.3 节</span></a>）中，目标端口为 67（DHCP 服务器），源端口为 68（DHCP 客户端）。该 UDP 段被封装在一个 <strong>IP 数据报</strong> （<a class="reference internal" href="../c4/s3.html#c4-3-1"><span class="std std-ref">第 4.3.1 节</span></a>）中，目标 IP 地址为广播地址 255.255.255.255，源 IP 地址为 0.0.0.0，因为 Bob 的笔记本尚未有 IP 地址。</p></li>
+<li><p>包含 DHCP 请求报文的 IP 数据报被封装在一个 <strong>以太网帧</strong> 中（<a class="reference internal" href="s4.html#c6-4-2"><span class="std std-ref">第 6.4.2 节</span></a>）。该以太网帧的目标 MAC 地址为 FF:FF:FF:FF:FF:FF，从而使帧可以广播给连接到交换机的所有设备（希望包括 DHCP 服务器）；帧的源 MAC 地址为 Bob 笔记本的地址，即 00:16:D3:23:68:8A。</p></li>
+<li><p>包含 DHCP 请求的广播以太网帧是 Bob 的笔记本发送到以太网交换机的第一个帧。交换机将收到的帧广播到所有输出端口，包括连接到路由器的端口。</p></li>
+<li><p>路由器在其 MAC 地址为 00:22:6B:45:1F:1B 的接口上接收到包含 DHCP 请求的广播以太网帧，并从中提取 IP 数据报。该数据报的广播 IP 目的地址表明该数据报应该由该节点的上层协议处理，因此数据报的有效载荷（UDP 段）被 <strong>多路分解</strong> 到 UDP 层（<a class="reference internal" href="../c3/s2.html#c3-2"><span class="std std-ref">第 3.2 节</span></a>），并从中提取 DHCP 请求报文。此时 DHCP 服务器接收到 DHCP 请求报文。</p></li>
+<li><p>假设运行在路由器中的 DHCP 服务器可以在 <strong>CIDR</strong> （<a class="reference internal" href="../c4/s3.html#c4-3-3"><span class="std std-ref">第 4.3.3 节</span></a>）地址块 68.85.2.0/24 中分配 IP 地址。在这个例子中，学校中使用的所有 IP 地址都属于 Comcast 的地址块。假设 DHCP 服务器分配了地址 68.85.2.101 给 Bob 的笔记本。DHCP 服务器创建一个 <strong>DHCP ACK 报文</strong> （<a class="reference internal" href="../c4/s3.html#c4-3-3"><span class="std std-ref">第 4.3.3 节</span></a>），其中包含该 IP 地址、DNS 服务器的 IP 地址（68.87.71.226）、默认网关路由器的 IP 地址（68.85.2.1）以及子网块（68.85.2.0/24）（等价于“网络掩码”）。DHCP 报文被封装在 UDP 段中，再封装在 IP 数据报中，最后封装在以太网帧中。以太网帧的源 MAC 地址为路由器家庭网络接口的地址（00:22:6B:45:1F:1B），目标 MAC 地址为 Bob 笔记本的地址（00:16:D3:23:68:8A）。</p></li>
+<li><p>包含 DHCP ACK 的以太网帧由路由器单播发送给交换机。由于交换机是自学习的（<a class="reference internal" href="s4.html#c6-4-3"><span class="std std-ref">第 6.4.3 节</span></a>），并且之前接收到了来自 Bob 笔记本的包含 DHCP 请求的以太网帧，因此交换机知道只将发送给地址为 00:16:D3:23:68:8A 的帧转发到通向 Bob 笔记本的输出端口。</p></li>
+<li><p>Bob 的笔记本接收到包含 DHCP ACK 的以太网帧，从中提取 IP 数据报，再从中提取 UDP 段，最后从中提取 DHCP ACK 报文。Bob 的 DHCP 客户端随后记录其 IP 地址和 DNS 服务器的 IP 地址，并将默认网关的地址安装到其 <strong>IP 转发表</strong> 中（<a class="reference internal" href="../c4/s1.html#c4-1"><span class="std std-ref">第 4.1 节</span></a>）。Bob 的笔记本将所有目标地址不在其子网 68.85.2.0/24 内的数据报发送至默认网关。此时，Bob 的笔记本已初始化其网络组件，准备开始处理网页获取请求。（注意，<a class="reference internal" href="../c4/index.html#c4"><span class="std std-ref">第 4 章</span></a> 中呈现的四个 DHCP 步骤中，实际上只需要最后两个步骤。）</p></li>
+</ol>
+<div class="toggle docutils container">
+<p>Let’s suppose that Bob boots up his laptop and then connects it to an Ethernet cable connected to the school’s Ethernet switch, which in turn is connected to the school’s router, as shown in <a class="reference internal" href="#figure-6-32"><span class="std std-ref">Figure 6.32</span></a>. The school’s router is connected to an ISP, in this example, comcast.net. In this example, comcast.net is providing the DNS service for the school; thus, the DNS server resides in the Comcast network rather than the school network. We’ll assume that the DHCP server is running within the router, as is often the case.</p>
+<figure class="align-center">
+<img alt="../_images/559-0.png" src="../_images/559-0.png" />
+</figure>
+<p><strong>Figure 6.32 A day in the life of a Web page request: Network setting and actions</strong></p>
+<p>When Bob first connects his laptop to the network, he can’t do anything (e.g., download a Web page) without an IP address. Thus, the first network-related action taken by Bob’s laptop is to run the DHCP protocol to obtain an IP address, as well as other information, from the local DHCP server:</p>
+<ol class="arabic simple">
+<li><p>The operating system on Bob’s laptop creates a <strong>DHCP request message</strong> ­(<a class="reference internal" href="../c4/s3.html#c4-3-3"><span class="std std-ref">Section 4.3.3</span></a>) and puts this message within a <strong>UDP segment</strong> (<a class="reference internal" href="../c3/s3.html#c3-3"><span class="std std-ref">Section 3.3</span></a>) with destination port 67 (DHCP server) and source port 68 (DHCP client). The UDP segment is then placed within an <strong>IP datagram</strong> (<a class="reference internal" href="../c4/s3.html#c4-3-1"><span class="std std-ref">Section 4.3.1</span></a>) with a broadcast IP destination address (255.255.255.255) and a source IP address of 0.0.0.0, since Bob’s laptop doesn’t yet have an IP address.</p></li>
+<li><p>The IP datagram containing the DHCP request message is then placed within an <strong>Ethernet frame</strong> (<a class="reference internal" href="s4.html#c6-4-2"><span class="std std-ref">Section 6.4.2</span></a>). The Ethernet frame has a destination MAC addresses of FF:FF:FF:FF:FF:FF so that the frame will be broadcast to all devices connected to the switch (hopefully including a DHCP server); the frame’s source MAC address is that of Bob’s laptop, 00:16:D3:23:68:8A.</p></li>
+<li><p>The broadcast Ethernet frame containing the DHCP request is the first frame sent by Bob’s laptop to the Ethernet switch. The switch broadcasts the incoming frame on all outgoing ports, including the port connected to the router.</p></li>
+<li><p>The router receives the broadcast Ethernet frame containing the DHCP request on its interface with MAC address 00:22:6B:45:1F:1B and the IP datagram is extracted from the Ethernet frame. The datagram’s broadcast IP destination address indicates that this IP datagram should be processed by upper layer protocols at this node, so the datagram’s payload (a UDP segment) is thus <strong>demultiplexed</strong> (<a class="reference internal" href="../c3/s2.html#c3-2"><span class="std std-ref">Section 3.2</span></a>) up to UDP, and the DHCP request message is extracted from the UDP segment. The DHCP server now has the DHCP request message.</p></li>
+</ol>
+<p>5. Let’s suppose that the DHCP server running within the router can allocate IP addresses in the <strong>CIDR</strong> (<a class="reference internal" href="../c4/s3.html#c4-3-3"><span class="std std-ref">Section 4.3.3</span></a>) block 68.85.2.0/24. In this example, all IP addresses used within the school are thus within Comcast’s address block. Let’s suppose the DHCP server allocates
+address 68.85.2.101 to Bob’s laptop. The DHCP server creates a <strong>DHCP ACK message</strong> (<a class="reference internal" href="../c4/s3.html#c4-3-3"><span class="std std-ref">Section 4.3.3</span></a>) containing this IP address, as well as the IP address of the DNS server (68.87.71.226), the IP address for the default gateway router (68.85.2.1), and the subnet block (68.85.2.0/24) (equivalently, the “network mask”). The DHCP message is put inside a UDP segment, which is put inside an IP datagram, which is put inside an Ethernet frame. The Ethernet frame has a source MAC address of the router’s interface to the home network (00:22:6B:45:1F:1B) and a destination MAC address of Bob’s laptop (00:16:D3:23:68:8A).
+6. The Ethernet frame containing the DHCP ACK is sent (unicast) by the router to the switch. Because the switch is self-learning (<a class="reference internal" href="s4.html#c6-4-3"><span class="std std-ref">Section 6.4.3</span></a>) and previously received an Ethernet frame (containing the DHCP request) from Bob’s laptop, the switch knows to forward a frame
+addressed to 00:16:D3:23:68:8A only to the output port leading to Bob’s laptop.
+7. Bob’s laptop receives the Ethernet frame containing the DHCP ACK, extracts the IP datagram from the Ethernet frame, extracts the UDP segment from the IP datagram, and extracts the DHCP ACK message from the UDP segment. Bob’s DHCP client then records its IP address and the IP address of its DNS server. It also installs the address of the default gateway into its <strong>IP forwarding table</strong> (<a class="reference internal" href="../c4/s1.html#c4-1"><span class="std std-ref">Section 4.1</span></a>). Bob’s laptop will send all datagrams with destination address outside of its subnet 68.85.2.0/24 to the default gateway. At this point, Bob’s laptop has initialized its networking components and is ready to begin processing the Web page fetch. (Note that only the last two DHCP steps of the four presented in <a class="reference internal" href="../c4/index.html#c4"><span class="std std-ref">Chapter 4</span></a> are actually necessary.)</p>
+</div>
+</section>
+<section id="dns-arp">
+<span id="c6-7-2"></span><h2>6.7.2 仍在开始阶段：DNS 和 ARP<a class="headerlink" href="#dns-arp" title="此标题的永久链接">#</a></h2>
+<p>6.7.2 Still Getting Started: DNS and ARP</p>
+<p>当 Bob 在他的网页浏览器中输入 www.google.com 的 URL 时，他启动了一连串最终会导致谷歌主页显示在浏览器上的操作。Bob 的网页浏览器首先创建一个将用于发送 <strong>HTTP 请求</strong> （<a class="reference internal" href="../c2/s2.html#c2-2"><span class="std std-ref">第 2.2 节</span></a>）到 www.google.com 的 <strong>TCP 套接字</strong> （<a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">第 2.7 节</span></a>）。为了创建这个套接字，Bob 的笔记本需要知道 www.google.com 的 IP 地址。正如我们在 <a class="reference internal" href="../c2/s5.html#c2-5"><span class="std std-ref">第 2.5 节</span></a> 中所学到的， <strong>DNS 协议</strong> 被用来提供这种从名称到 IP 地址的转换服务。</p>
+<ol class="arabic simple">
+<li><p>因此，Bob 的笔记本操作系统创建一个 <strong>DNS 查询报文</strong> （<span class="xref std std-ref">第 2.5.3 节</span>），并将字符串 “www.google.com” 放入该 DNS 报文的问题部分中。该 DNS 报文随后被封装在一个 UDP 段中，目标端口为 53（DNS 服务器）。该 UDP 段被封装在一个 IP 数据报中，其目标 IP 地址为 68.87.71.226（在第 5 步中 DHCP ACK 返回的 DNS 服务器地址），源 IP 地址为 68.85.2.101。</p></li>
+<li><p>然后 Bob 的笔记本将包含 DNS 查询报文的数据报封装在一个以太网帧中。该帧将被发送（在链路层中定址）到 Bob 学校网络中的网关路由器。然而，尽管 Bob 的笔记本通过上面的第 5 步中的 DHCP ACK 报文知道了学校网关路由器的 IP 地址（68.85.2.1），但它并不知道该路由器的 MAC 地址。为了获取网关路由器的 MAC 地址，Bob 的笔记本需要使用 ARP 协议（<a class="reference internal" href="s4.html#c6-4-1"><span class="std std-ref">第 6.4.1 节</span></a>）。</p></li>
+<li><p>Bob 的笔记本创建一个目标 IP 地址为 68.85.2.1（默认网关）的 ARP 查询报文，将该 ARP 报文封装在一个目标地址为广播地址（FF:FF:FF:FF:FF:FF）的以太网帧中，并将该帧发送到交换机，交换机将帧转发给所有连接的设备，包括网关路由器。</p></li>
+<li><p>网关路由器在连接到学校网络的接口上接收到包含 ARP 查询报文的帧，并发现 ARP 报文中的目标 IP 地址 68.85.2.1 与其接口的 IP 地址匹配。因此，网关路由器准备一个 <strong>ARP 响应报文</strong>，表明其 MAC 地址 00:22:6B:45:1F:1B 对应于 IP 地址 68.85.2.1。它将 ARP 响应报文封装在一个以太网帧中，目标地址为 00:16:D3:23:68:8A（Bob 的笔记本），并将帧发送到交换机，交换机将帧转发给 Bob 的笔记本。</p></li>
+<li><p>Bob 的笔记本接收到包含 ARP 响应报文的帧，并从该报文中提取出网关路由器的 MAC 地址（00:22:6B:45:1F:1B）。</p></li>
+<li><p>Bob 的笔记本现在（终于！）可以将包含 DNS 查询报文的以太网帧定址给网关路由器的 MAC 地址。请注意，该帧中的 IP 数据报的目的地址是 68.87.71.226（DNS 服务器），而帧的目的地址是 00:22:6B:45:1F:1B（网关路由器）。Bob 的笔记本将该帧发送到交换机，交换机将其转发给网关路由器。</p></li>
+</ol>
+<div class="toggle docutils container">
+<p>When Bob types the URL for www.google.com into his Web browser, he begins the long chain of events that will eventually result in Google’s home page being displayed by his Web browser. Bob’s Web browser begins the process by creating a <strong>TCP socket</strong> (<a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">Section 2.7</span></a>) that will be used to send the <strong>HTTP request</strong> (<a class="reference internal" href="../c2/s2.html#c2-2"><span class="std std-ref">Section 2.2</span></a>) to www.google.com. In order to create the socket, Bob’s laptop will need to know the IP address of www.google.com. We learned in <a class="reference internal" href="../c2/s5.html#c2-5"><span class="std std-ref">Section 2.5</span></a>, that the <strong>DNS ­protocol</strong> is used to provide this name-to-IP-address translation service.</p>
+<ol class="arabic simple">
+<li><p>The operating system on Bob’s laptop thus creates a <strong>DNS query message</strong> (<span class="xref std std-ref">Section 2.5.3</span>), putting the string “www.google.com” in the question section of the DNS message. This DNS message is then placed within a UDP segment with a destination port of 53 (DNS server). The UDP segment is then placed within an IP datagram with an IP destination address of 68.87.71.226 (the address of the DNS server returned in the DHCP ACK in step 5) and a source IP address of 68.85.2.101.</p></li>
+<li><p>Bob’s laptop then places the datagram containing the DNS query message in an Ethernet frame. This frame will be sent (addressed, at the link layer) to the gateway router in Bob’s school’s network. However, even though Bob’s laptop knows the IP address of the school’s gateway router (68.85.2.1) via the DHCP ACK message in step 5 above, it doesn’t know the gateway router’s MAC address. In order to obtain the MAC address of the gateway router, Bob’s ­laptop will need to use the ARP protocol (<a class="reference internal" href="s4.html#c6-4-1"><span class="std std-ref">Section 6.4.1</span></a>).</p></li>
+</ol>
+<p>3.  Bob’s laptop creates an ARP query message with a target IP address of 68.85.2.1 (the default
+gateway), places the ARP message within an Ethernet frame with a broadcast destination address (FF:FF:FF:FF:FF:FF) and sends the Ethernet frame to the switch, which delivers the frame to all connected devices, including the gateway router.
+1.  The gateway router receives the frame containing the ARP query message on the interface to the school network, and finds that the target IP address of 68.85.2.1 in the ARP message matches the IP address of its interface. The gateway router thus prepares an <strong>ARP reply</strong>, indicating that its MAC address of 00:22:6B:45:1F:1B corresponds to IP address 68.85.2.1. It places the ARP reply message in an Ethernet frame, with a destination address of 00:16:D3:23:68:8A (Bob’s laptop) and sends the frame to the switch, which delivers the frame to Bob’s laptop.
+2.  Bob’s laptop receives the frame containing the ARP reply message and extracts the MAC address of the gateway router (00:22:6B:45:1F:1B) from the ARP reply message.
+3.  Bob’s laptop can now (finally!) address the Ethernet frame containing the DNS query to the gateway router’s MAC address. Note that the IP datagram in this frame has an IP destination address of 68.87.71.226 (the DNS server), while the frame has a destination address of 00:22:6B:45:1F:1B (the gateway router). Bob’s laptop sends this frame to the switch, which delivers the frame to the gateway router.</p>
+</div>
+</section>
+<section id="dns">
+<span id="c6-7-3"></span><h2>6.7.3 仍在开始阶段：到 DNS 服务器的域内路由<a class="headerlink" href="#dns" title="此标题的永久链接">#</a></h2>
+<p>6.7.3 Still Getting Started: Intra-Domain Routing to the DNS Server</p>
+<ol class="arabic simple">
+<li><p>网关路由器接收到该帧并提取出包含 DNS 查询报文的 IP 数据报。路由器查阅该数据报的目的地址（68.87.71.226），并根据其转发表确定该数据报应被发送至 <a class="reference internal" href="#figure-6-32"><span class="std std-ref">图 6.32</span></a> 中 Comcast 网络中最左侧的路由器。IP 数据报被封装在适用于学校路由器与 Comcast 最左侧路由器之间链路的链路层帧中，并通过该链路发送。</p></li>
+<li><p>Comcast 网络中最左侧的路由器接收到该帧，提取出 IP 数据报，检查其目的地址（68.87.71.226），并根据其由 Comcast 的域内协议（如 <strong>RIP</strong>、 <strong>OSPF</strong> 或 <strong>IS-IS</strong>，<a class="reference internal" href="../c5/s3.html#c5-3"><span class="std std-ref">第 5.3 节</span></a>）以及 <strong>Internet 域间协议 BGP</strong> （<a class="reference internal" href="../c5/s4.html#c5-4"><span class="std std-ref">第 5.4 节</span></a>）填充的转发表确定转发数据报至 DNS 服务器的出接口。</p></li>
+<li><p>最终，包含 DNS 查询的 IP 数据报抵达 DNS 服务器。DNS 服务器从中提取出 DNS 查询报文，查找其 DNS 数据库中的 www.google.com（ <a class="reference internal" href="../c2/s4.html#c2-4"><span class="std std-ref">第 2.4 节</span></a> ），并找到包含 www.google.com 的 IP 地址（64.233.169.105）的 <strong>DNS 资源记录</strong> （假设该记录当前已被缓存）。请回忆，这个缓存数据最初来源于 googlecom 的 <strong>权威 DNS 服务器</strong> （ <a class="reference internal" href="../c2/s4.html#c2-4-2"><span class="std std-ref">第 2.4.2 节</span></a> ）。DNS 服务器构建一个包含主机名到 IP 地址映射的 <strong>DNS 响应报文</strong>，将该 DNS 响应封装在 UDP 段中，并将该段封装在一个目的地址为 Bob 笔记本（68.85.2.101）的 IP 数据报中。该数据报将经由 Comcast 网络转发回学校的路由器，并最终通过以太网交换机转发至 Bob 的笔记本。</p></li>
+<li><p>Bob 的笔记本从该 DNS 报文中提取出 www.google.com 的 IP 地址。经过大量工作之后，Bob 的笔记本终于可以开始访问 www.google.com 服务器了！</p></li>
+</ol>
+<div class="toggle docutils container">
+<ol class="arabic simple">
+<li><p>The gateway router receives the frame and extracts the IP datagram containing the DNS query. The router looks up the destination address of this datagram (68.87.71.226) and determines from its forwarding table that the datagram should be sent to the leftmost router in the Comcast network in <a class="reference internal" href="#figure-6-32"><span class="std std-ref">Figure 6.32</span></a>. The IP datagram is placed inside a link-layer frame appropriate for the link connecting the school’s router to the leftmost Comcast router and the frame is sent over this link.</p></li>
+<li><p>The leftmost router in the Comcast network receives the frame, extracts the IP datagram, examines the datagram’s destination address (68.87.71.226) and determines the outgoing interface on which to forward the datagram toward the DNS server from its forwarding table, which has been filled in by ­Comcast’s intra-domain protocol (such as <strong>RIP</strong>, <strong>OSPF</strong> or <strong>IS-IS</strong>, <a class="reference internal" href="../c5/s3.html#c5-3"><span class="std std-ref">Section 5.3</span></a>) as well as the <strong>Internet’s inter-domain protocol, BGP</strong> (<a class="reference internal" href="../c5/s4.html#c5-4"><span class="std std-ref">Section 5.4</span></a>).</p></li>
+<li><p>Eventually the IP datagram containing the DNS query arrives at the DNS server. The DNS server extracts the DNS query message, looks up the name www.google.com in its DNS database (<a class="reference internal" href="../c2/s5.html#c2-5"><span class="std std-ref">Section 2.5</span></a>), and finds the <strong>DNS resource record</strong> that contains the IP address (64.233.169.105) for www.google.com. (assuming that it is currently cached in the DNS server). Recall that this cached data originated in the <strong>authoritative DNS server</strong> (<span class="xref std std-ref">Section 2.5.2</span>) for googlecom. The DNS server forms a <strong>DNS reply message</strong> containing this hostname-to-IP- address mapping, and places the DNS reply message in a UDP segment, and the segment within an IP datagram addressed to Bob’s laptop (68.85.2.101). This datagram will be forwarded back through the Comcast network to the school’s router and from there, via the Ethernet switch to Bob’s laptop.</p></li>
+<li><p>Bob’s laptop extracts the IP address of the server www.google.com from the DNS message. Finally, after a lot of work, Bob’s laptop is now ready to contact the www.google.com server!</p></li>
+</ol>
+</div>
+</section>
+<section id="web-tcp-http">
+<span id="c6-7-4"></span><h2>6.7.4 Web 客户端-服务器交互：TCP 与 HTTP<a class="headerlink" href="#web-tcp-http" title="此标题的永久链接">#</a></h2>
+<p>6.7.4 Web Client-Server Interaction: TCP and HTTP</p>
+<ol class="arabic simple">
+<li><p>现在 Bob 的笔记本已经获得 www.google.com 的 IP 地址，它可以创建一个 TCP 套接字（<a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">第 2.7 节</span></a>），用于向 www.google.com 发送 HTTP GET 报文（<a class="reference internal" href="../c2/s2.html#c2-2-3"><span class="std std-ref">第 2.2.3 节</span></a>）。在 Bob 创建 TCP 套接字时，其笔记本中的 TCP 模块首先必须与 www.google.com 的 TCP 模块完成三次握手（<a class="reference internal" href="../c3/s5.html#c3-5-6"><span class="std std-ref">第 3.5.6 节</span></a>）。因此，Bob 的笔记本首先创建一个目标端口为 80（HTTP）的 <strong>TCP SYN 段</strong>，将其封装在一个目的 IP 地址为 64.233.169.105（www.google.com）的 IP 数据报中，再将数据报封装在一个目的 MAC 地址为 00:22:6B:45:1F:1B（网关路由器）的帧中，并将该帧发送到交换机。</p></li>
+<li><p>学校网络、Comcast 网络和 Google 网络中的路由器根据各自的转发表将包含 TCP SYN 的数据报转发至 www.google.com，如上述步骤 14–16 所示。请回忆，Comcast 与 Google 网络之间的域间链路的转发由 <strong>BGP 协议</strong> （<a class="reference internal" href="../c5/index.html#c5"><span class="std std-ref">第 5 章</span></a>）决定。</p></li>
+<li><p>最终，包含 TCP SYN 的数据报抵达 www.google.com。TCP SYN 报文从数据报中提取并多路分解至与端口 80 相关联的欢迎套接字。为 Google HTTP 服务器与 Bob 笔记本之间的连接创建一个连接套接字（<a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">第 2.7 节</span></a>）。然后生成一个 TCP SYNACK 段（<a class="reference internal" href="../c3/s5.html#c3-5-6"><span class="std std-ref">第 3.5.6 节</span></a>），封装在一个发往 Bob 笔记本的数据报中，最后封装在一个适合连接 www.google.com 与其第一跳路由器之间链路的链路层帧中。</p></li>
+<li><p>包含 TCP SYNACK 段的数据报通过 Google、Comcast 和学校网络转发，最终抵达 Bob 笔记本中的以太网卡。数据报在操作系统中多路分解至第 18 步中创建的 TCP 套接字，该套接字进入连接状态。</p></li>
+<li><p>现在 Bob 的笔记本上的套接字终于准备好向 www.google.com 发送字节了，Bob 的浏览器创建一个包含所要获取的 URL 的 HTTP GET 报文（<a class="reference internal" href="../c2/s2.html#c2-2-3"><span class="std std-ref">第 2.2.3 节</span></a>）。该 HTTP GET 报文被写入套接字，成为 TCP 段的有效载荷。TCP 段被封装在数据报中，并按步骤 18–20 中所述的方式发送并传送至 www.google.com。</p></li>
+<li><p>www.google.com 上的 HTTP 服务器从 TCP 套接字中读取 HTTP GET 报文，创建一个 <strong>HTTP 响应报文</strong> （<a class="reference internal" href="../c2/s2.html#c2-2"><span class="std std-ref">第 2.2 节</span></a>），将所请求的网页内容放入响应报文的主体中，并将该报文写入 TCP 套接字。</p></li>
+<li><p>包含 HTTP 响应报文的数据报通过 Google、Comcast 和学校网络转发，最终抵达 Bob 的笔记本。Bob 的网页浏览器程序从套接字中读取 HTTP 响应，从响应主体中提取出网页的 HTML 内容，并最终（终于！）将网页显示出来！</p></li>
+</ol>
+<p>我们上面的场景涵盖了大量的网络知识！如果你理解了上述示例的大部分甚至全部内容，那么自你第一次阅读 <a class="reference internal" href="../c1/s1.html#c1-1"><span class="std std-ref">第 1.1 节</span></a> 起你已经掌握了很多知识，当时我们写道“本书的大部分内容涉及计算机网络协议”，你也许还在疑惑什么是协议！尽管上述示例已经非常详尽，但我们仍省略了一些可能涉及的额外协议（例如运行在学校网关路由器中的 NAT、对学校网络的无线访问、访问学校网络或对段或数据报加密的安全协议、网络管理协议），以及在公共互联网中可能遇到的一些考量（网页缓存、DNS 层级结构）。我们将在本书的第二部分中涵盖这些话题及更多内容。</p>
+<p>最后我们指出，以上的示例提供了一个集成且整体的，但也非常“零部件式”的视角，涵盖了我们在本书第一部分中学习的许多协议。这个示例更关注“怎么做”而非“为什么”。想要获得更广泛、更具反思性的网络协议设计视角，可参阅 [<a class="reference internal" href="../references.html#clark-1988"><span class="std std-ref">Clark 1988</span></a>，<span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc5218.html"><strong>RFC 5218</strong></a>]。</p>
+<div class="toggle docutils container">
+<ol class="arabic simple">
+<li><p>Now that Bob’s laptop has the IP address of www.google.com, it can create the TCP socket (<a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">Section 2.7</span></a>) that will be used to send the HTTP GET message (<a class="reference internal" href="../c2/s2.html#c2-2-3"><span class="std std-ref">Section 2.2.3</span></a>) to www.google.com. When Bob creates the TCP socket, the TCP in Bob’s laptop must first perform a three-way handshake (<a class="reference internal" href="../c3/s5.html#c3-5-6"><span class="std std-ref">Section 3.5.6</span></a>) with the TCP in www.google.com. Bob’s laptop thus first creates a <strong>TCP SYN</strong> segment with destination port 80 (for HTTP), places the TCP segment inside an IP datagram with a destination IP address of 64.233.169.105 (www.google.com), places the datagram inside a frame with a destination MAC address of 00:22:6B:45:1F:1B (the gateway router) and sends the frame to the switch.</p></li>
+<li><p>The routers in the school network, Comcast’s network, and Google’s network forward the datagram containing the TCP SYN toward www.google.com, using the forwarding table in each router, as in steps 14–16 above. Recall that the router forwarding table entries governing forwarding of packets over the inter-domain link between the Comcast and Google networks are determined by the <strong>BGP protocol</strong> (<a class="reference internal" href="../c5/index.html#c5"><span class="std std-ref">Chapter 5</span></a>).</p></li>
+<li><p>Eventually, the datagram containing the TCP SYN arrives at www.google.com. The TCP SYN message is extracted from the datagram and demultiplexed to the welcome socket associated with port 80. A connection socket (<a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">Section 2.7</span></a>) is created for the TCP connection between the Google HTTP server and Bob’s laptop. A TCP SYNACK (<a class="reference internal" href="../c3/s5.html#c3-5-6"><span class="std std-ref">Section 3.5.6</span></a>) segment is generated, placed inside a datagram addressed to Bob’s laptop, and finally placed inside a link-layer frame appropriate for the link connecting www.google.com to its first-hop router.</p></li>
+<li><p>The datagram containing the TCP SYNACK segment is forwarded through the Google, Comcast, and school networks, eventually arriving at the Ethernet card in Bob’s laptop. The datagram is demultiplexed within the operating system to the TCP socket created in step 18, which enters the connected state.</p></li>
+<li><p>With the socket on Bob’s laptop now (finally!) ready to send bytes to www.google.com, Bob’s browser creates the HTTP GET message (<a class="reference internal" href="../c2/s2.html#c2-2-3"><span class="std std-ref">Section 2.2.3</span></a>) containing the URL to be fetched. The HTTP GET message is then written into the socket, with the GET message becoming the payload of a TCP segment. The TCP segment is placed in a datagram and sent and delivered to www.google.com as in steps 18–20 above.</p></li>
+<li><p>The HTTP server at www.google.com reads the HTTP GET message from the TCP socket, creates an <strong>HTTP response</strong> message (<a class="reference internal" href="../c2/s2.html#c2-2"><span class="std std-ref">Section 2.2</span></a>), places the requested Web page content in the body of the HTTP response message, and sends the message into the TCP socket.</p></li>
+<li><p>The datagram containing the HTTP reply message is forwarded through the Google, Comcast, and school networks, and arrives at Bob’s laptop. Bob’s Web browser program reads the HTTP response from the socket, extracts the html for the Web page from the body of the HTTP response, and finally (finally!) displays the Web page!</p></li>
+</ol>
+<p>Our scenario above has covered a lot of networking ground! If you’ve understood most or all of the above example, then you’ve also covered a lot of ground since you first read <a class="reference internal" href="../c1/s1.html#c1-1"><span class="std std-ref">Section 1.1</span></a>, where we wrote “much of this book is concerned with computer network protocols” and you may have wondered what a protocol actually was! As detailed as the above example might seem, we’ve omitted a number of possible additional protocols (e.g., NAT running in the school’s gateway router, wireless access to the school’s network, security protocols for accessing the school network or encrypting segments or datagrams, network management protocols), and considerations (Web caching, the DNS hierarchy) that one would encounter in the public ­Internet. We’ll cover a number of these topics and more in the second part of this book.</p>
+<p>Lastly, we note that our example above was an integrated and holistic, but also very “nuts and bolts,” view of many of the protocols that we’ve studied in the first part of this book. The example focused more on the “how” than the “why.” For a broader, more reflective view on the design of network protocols in general, see [<a class="reference internal" href="../references.html#clark-1988"><span class="std std-ref">Clark 1988</span></a>, <span class="target" id="index-1"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc5218.html"><strong>RFC 5218</strong></a>].</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s6.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">6.6 数据中心网络</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="summary.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">6.8 小结</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dhcpudpip">6.7.1 开始：DHCP、UDP、IP 和以太网</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dns-arp">6.7.2 仍在开始阶段：DNS 和 ARP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dns">6.7.3 仍在开始阶段：到 DNS 服务器的域内路由</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#web-tcp-http">6.7.4 Web 客户端-服务器交互：TCP 与 HTTP</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

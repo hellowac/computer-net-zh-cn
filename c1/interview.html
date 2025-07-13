@@ -1,0 +1,710 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>访谈：Leonard Kleinrock &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c1/interview';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="第 2 章 应用层" href="../c2/index.html" />
+    <link rel="prev" title="Wireshark 实验室" href="wiresharklab.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 1 章 计算机网络与因特网</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c1/interview.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>访谈：Leonard Kleinrock</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">是什么促使您专注于网络/互联网技术？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">您在计算机行业的第一份工作是什么？具体做了什么？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ucla-stanford-research-institute">当您发送第一条主机到主机的消息（从 UCLA 到 Stanford Research Institute）时，您的心里在想什么？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">您对网络的未来有何愿景？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">在职业上，哪些人对您产生了影响？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">您对正在进入网络/互联网领域的学生有何建议？</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="leonard-kleinrock">
+<h1>访谈：Leonard Kleinrock<a class="headerlink" href="#leonard-kleinrock" title="此标题的永久链接">#</a></h1>
+<p>Interview: Leonard Kleinrock</p>
+<p>Leonard Kleinrock 是加州大学洛杉矶分校的计算机科学教授。1969 年，他在 UCLA 的计算机成为 Internet 的第一个节点。他于 1961 年创建的分组交换原理成为 Internet 背后的核心技术。他获得了纽约城市学院（CCNY）的电气工程学士学位，并在麻省理工学院（MIT）获得了电气工程的硕士和博士学位。</p>
+<div class="toggle docutils container">
+<p>Leonard Kleinrock is a professor of computer science at the University of California, Los
+Angeles. In 1969, his computer at UCLA became the first node of the Internet. His creation of
+packet-switching principles in 1961 became the technology behind the Internet. He received his
+B.E.E. from the City College of New York (CCNY) and his masters and PhD in electrical
+engineering from MIT.</p>
+</div>
+<figure class="align-center">
+<img alt="../_images/109-0.png" src="../_images/109-0.png" />
+</figure>
+<section id="id1">
+<h2>是什么促使您专注于网络/互联网技术？<a class="headerlink" href="#id1" title="此标题的永久链接">#</a></h2>
+<p>What made you decide to specialize in networking/Internet technology?</p>
+<p>1959 年，我在 MIT 攻读博士时，环顾四周，发现大多数同学都在研究信息论和编码理论。在 MIT，有一位伟大的研究者 Claude Shannon，他开启了这些领域，并且已经解决了其中大多数重要问题。剩下的问题非常困难，而且意义不大。所以我决定开辟一个全新的方向——一个尚未有人涉足的领域。请记住，在 MIT 我被大量计算机包围，我很清楚不久之后这些机器将需要彼此通信。而当时并没有一种有效的通信方式，因此我决定开发一种能够创建高效、可靠数据网络的技术。</p>
+<div class="toggle docutils container">
+<p>As a PhD student at MIT in 1959, I looked around and found that most of my classmates were
+doing research in the area of information theory and coding theory. At MIT, there was the great
+researcher, Claude Shannon, who had launched these fields and had solved most of the
+important problems already. The research problems that were left were hard and of lesser
+consequence. So I decided to launch out in a new area that no one else had yet conceived of.
+Remember that at MIT I was surrounded by lots of computers, and it was clear to me that soon
+these machines would need to communicate with each other. At the time, there was no effective
+way for them to do so, so I decided to develop the technology that would permit efficient and
+reliable data networks to be created.</p>
+</div>
+</section>
+<section id="id2">
+<h2>您在计算机行业的第一份工作是什么？具体做了什么？<a class="headerlink" href="#id2" title="此标题的永久链接">#</a></h2>
+<p>What was your first job in the computer industry? What did it entail?</p>
+<p>我在 1951 年至 1957 年期间在 CCNY 的夜校学习，攻读电气工程学士学位。白天，我先是在一家名为 Photobell 的小型工业电子公司担任技术员，后来成为工程师。在那儿，我将数字技术引入了他们的产品线。本质上，我们使用光电设备来检测特定物体的存在（如箱子、人等），并使用当时称为双稳态多谐振荡器的电路将数字处理引入这一检测领域。这些电路恰好是计算机的基本构件，今天通常被称为触发器或开关。</p>
+<div class="toggle docutils container">
+<p>I went to the evening session at CCNY from 1951 to 1957 for my bachelor’s degree in electrical
+engineering. During the day, I worked first as a technician and then as an engineer at a small,
+industrial electronics firm called Photobell. While there, I introduced digital technology to their
+product line. Essentially, we were using photoelectric devices to detect the presence of certain
+items (boxes, people, etc.) and the use of a circuit known then as a bistable multivibrator was
+just the kind of technology we needed to bring digital processing into this field of detection.
+These circuits happen to be the building blocks for computers, and have come to be known as
+flip-flops or switches in today’s vernacular.</p>
+</div>
+</section>
+<section id="ucla-stanford-research-institute">
+<h2>当您发送第一条主机到主机的消息（从 UCLA 到 Stanford Research Institute）时，您的心里在想什么？<a class="headerlink" href="#ucla-stanford-research-institute" title="此标题的永久链接">#</a></h2>
+<p>What was going through your mind when you sent the first host-to-host message (from UCLA to the Stanford Research Institute)?</p>
+<p>坦率地说，我们完全没有意识到那个事件的重要性。我们没有准备什么具有历史意义的特殊消息，就像许多过去的发明者那样（Samuel Morse 的 “What hath God wrought.”，Alexander Graham Bell 的 “Watson, come here! I want you.”，或者 Neil Armstrong 的 “That’s one small step for a man, one giant leap for mankind.”）。那些人真聪明！他们懂得媒体和公关。我们当时只是想登录到 SRI 的计算机。因此我们键入了 “L”，它被正确接收；接着输入 “o”，也被接收；然后输入 “g”，结果导致 SRI 主机宕机！所以，我们的消息成了有史以来最简短，也许也是最有预兆性的消息：“Lo！”——正如 “Lo and behold!” 所暗示的那样。</p>
+<p>那年早些时候，我在 UCLA 的一份新闻稿中曾被引用说：“一旦网络投入运行，我们将可以像使用电力和电话一样，从家中和办公室方便地访问计算机资源。” 因此我当时的设想是，Internet 将无处不在、始终在线、始终可用，任何人可以使用任何设备在任何地点接入，它将是“隐形”的。然而，我从未预料到我的 99 岁老母亲也会使用 Internet——而她的确做到了！</p>
+<div class="toggle docutils container">
+<p>Frankly, we had no idea of the importance of that event. We had not prepared a special
+message of historic significance, as did so many inventors of the past (Samuel Morse with “What
+hath God wrought.” or Alexander Graham Bell with “Watson, come here! I want you.” or Neal
+Amstrong with “That’s one small step for a man, one giant leap for mankind.”) Those guys were
+smart! They understood media and public relations. All we wanted to do was to login to the SRI
+computer. So we typed the “L”, which was correctly received, we typed the “o” which was
+received, and then we typed the “g” which caused the SRI host computer to crash! So, it turned
+out that our message was the shortest and perhaps the most prophetic message ever, namely
+“Lo!” as in “Lo and behold!”</p>
+<p>Earlier that year, I was quoted in a UCLA press release saying that once the network was up
+and running, it would be possible to gain access to computer utilities from our homes and offices
+as easily as we gain access to electricity and telephone connectivity. So my vision at that time
+was that the Internet would be ubiquitous, always on, always available, anyone with any device
+could connect from any location, and it would be invisible. However, I never anticipated that my
+99-year-old mother would use the Internet—and indeed she did!</p>
+</div>
+</section>
+<section id="id3">
+<h2>您对网络的未来有何愿景？<a class="headerlink" href="#id3" title="此标题的永久链接">#</a></h2>
+<p>What is your vision for the future of networking?</p>
+<p>对基础设施进行预测是比较容易的部分。我预计我们会看到流动计算、移动设备和智能空间的大量部署。实际上，轻量级、廉价、高性能、便携的计算与通信设备（再加上 Internet 的无处不在）已使我们成为“数字游牧者”。流动计算指的是一种技术，使得用户可以在各处自由移动时无缝地访问 Internet 服务，无论走到哪里，无论使用什么设备。</p>
+<p>更难预测的是应用和服务，这些往往以戏剧性的方式让我们大吃一惊（例如电子邮件、搜索技术、万维网、博客、社交网络、用户内容生成，以及音乐、照片、视频的共享等）。我们正处在一类全新、令人惊喜的移动应用即将爆发的临界点，这些应用将传送至我们的手持设备中。</p>
+<p>下一步将是从网络的虚拟世界迈入“智能空间”的物理世界。我们的环境（办公桌、墙壁、车辆、手表、腰带等）将通过执行器、传感器、逻辑处理器、存储器、摄像头、麦克风、扬声器、显示屏和通信模块等技术“活”起来。这些嵌入式技术将使得我们的环境能够提供我们想要的 IP 服务。当我走进一个房间时，房间会知道我进来了。我将能以自然语言（如英语）与环境对话；我的请求将以网页形式呈现，显示在墙面、眼镜中，甚至通过语音、全息影像等方式展现。</p>
+<p>再往远一点看，我设想网络的未来将包括以下关键组成部分：我看到智能软件代理被部署在整个网络中，它们将挖掘数据、处理数据、观察趋势，并动态、适应性地执行任务。我看到网络中产生的流量将越来越多地来自这些嵌入设备和智能代理，而非人类用户。我看到由大量自组织系统构成的网络来管理这一庞大、高速的网络。我看到海量信息在网络中瞬时传播，并经历强大的处理与过滤。Internet 将成为全球范围内无处不在的神经系统。我看到这一切，也看到更多，我们正加速奔向 21 世纪的未来。</p>
+<div class="toggle docutils container">
+<p>The easy part of the vision is to predict the infrastructure itself. I anticipate that we see
+considerable deployment of nomadic computing, mobile devices, and smart spaces. Indeed, the
+availability of lightweight, inexpensive, high-performance, portable computing, and
+communication devices (plus the ubiquity of the Internet) has enabled us to become nomads.
+Nomadic computing refers to the technology that enables end users who travel from place to
+place to gain access to Internet services in a transparent fashion, no matter where they travel
+and no matter what device they carry or gain access to. The harder part of the vision is to predict
+the applications and services, which have consistently surprised us in dramatic ways (e-mail,
+search technologies, the World Wide Web, blogs, social networks, user generation, and sharing
+of music, photos, and videos, etc.). We are on the verge of a new class of surprising and
+innovative mobile applications delivered to our hand-held devices.</p>
+<p>The next step will enable us to move out from the netherworld of cyberspace to the physical
+world of smart spaces. Our environments (desks, walls, vehicles, watches, belts, and so on) will
+come alive with technology, through actuators, sensors, logic, processing, storage, cameras,
+microphones, speakers, displays, and communication. This embedded technology will allow our
+environment to provide the IP services we want. When I walk into a room, the room will know I
+entered. I will be able to communicate with my environment naturally, as in spoken English; my
+requests will generate replies that present Web pages to me from wall displays, through my
+eyeglasses, as speech, holograms, and so forth.</p>
+<p>Looking a bit further out, I see a networking future that includes the following additional key
+components. I see intelligent software agents deployed across the network whose function it is
+to mine data, act on that data, observe trends, and carry out tasks dynamically and adaptively. I
+see considerably more network traffic generated not so much by humans, but by these
+embedded devices and these intelligent software agents. I see large collections of self-
+organizing systems controlling this vast, fast network. I see huge amounts of information flashing
+across this network instantaneously with this information undergoing enormous processing and
+filtering. The Internet will essentially be a pervasive global nervous system. I see all these things
+and more as we move headlong through the twenty-first century.</p>
+</div>
+</section>
+<section id="id4">
+<h2>在职业上，哪些人对您产生了影响？<a class="headerlink" href="#id4" title="此标题的永久链接">#</a></h2>
+<p>What people have inspired you professionally?</p>
+<p>最重要的是 MIT 的 Claude Shannon，他是一位才华横溢的研究者，擅长以高度直观的方式将其数学思想与物理世界联系起来。他曾是我博士论文委员会的成员。</p>
+<div class="toggle docutils container">
+<p>By far, it was Claude Shannon from MIT, a brilliant researcher who had the ability to relate his
+mathematical ideas to the physical world in highly intuitive ways. He was on my PhD thesis
+committee.</p>
+</div>
+</section>
+<section id="id5">
+<h2>您对正在进入网络/互联网领域的学生有何建议？<a class="headerlink" href="#id5" title="此标题的永久链接">#</a></h2>
+<p>Do you have any advice for students entering the networking/Internet field?</p>
+<p>Internet 及其所带来的一切是一个广阔的新前沿，充满了令人惊叹的挑战。在这里，有巨大的创新空间。不要被现有技术所限制。放手去想象你想实现的未来——然后让它成真。</p>
+<div class="toggle docutils container">
+<p>The Internet and all that it enables is a vast new frontier, full of amazing challenges. There is
+room for great innovation. Don’t be constrained by today’s technology. Reach out and imagine
+what could be and then make it happen.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="wiresharklab.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">Wireshark 实验室</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../c2/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">第 2 章 应用层</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">是什么促使您专注于网络/互联网技术？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">您在计算机行业的第一份工作是什么？具体做了什么？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ucla-stanford-research-institute">当您发送第一条主机到主机的消息（从 UCLA 到 Stanford Research Institute）时，您的心里在想什么？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">您对网络的未来有何愿景？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">在职业上，哪些人对您产生了影响？</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">您对正在进入网络/互联网领域的学生有何建议？</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

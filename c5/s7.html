@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>5.7 网络管理与 SNMP &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c5/s7';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="5.8 小结" href="summary.html" />
+    <link rel="prev" title="5.6 ICMP：因特网控制报文协议" href="s6.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 5 章 网络层：控制平面</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c5/s7.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>5.7 网络管理与 SNMP</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c5-7-1">5.7.1 网络管理框架</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c5-7-2">5.7.2 简单网络管理协议（SNMP）</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="snmp">
+<span id="c5-7"></span><h1>5.7 网络管理与 SNMP<a class="headerlink" href="#snmp" title="此标题的永久链接">#</a></h1>
+<p>5.7 Network Management and SNMP</p>
+<p>现在我们已经完成了对网络层的学习，只剩下链路层的内容了，我们很清楚，一个网络由许多复杂且相互作用的硬件和软件组件构成 —— 从构成网络物理组件的链路、交换机、路由器、主机和其他设备，到控制和协调这些设备的多种协议。当一个组织将成百上千个这样的组件组合在一起构建一个网络时，网络管理员要保持网络“正常运行”无疑是一项挑战。我们在 <a class="reference internal" href="s5.html#c5-5"><span class="std std-ref">第 5.5 节</span></a> 中看到，逻辑集中式控制器在 SDN 场景中可以帮助实现这一目标。但网络管理的挑战早在 SDN 出现之前就已存在，期间发展出了一整套丰富的网络管理工具和方法，帮助网络管理员监控、管理和控制网络。我们将在本节中学习这些工具和技术。</p>
+<p>人们常问的一个问题是：“什么是网络管理？”一个构思良好但句子较长的网络管理定义来自 <a class="reference internal" href="../references.html#saydam-1996"><span class="std std-ref">[Saydam 1996]</span></a>：</p>
+<blockquote>
+<div><p>网络管理包括硬件、软件和人力要素的部署、集成与协调，以监控、测试、轮询、配置、分析、评估和控制网络及其元素资源，从而以合理成本满足实时、操作性能和服务质量（QoS）要求。</p>
+</div></blockquote>
+<p>考虑到这个广义的定义，我们在本节中仅介绍网络管理的基本知识 —— 网络管理员执行其任务所使用的架构、协议和信息库。我们不涉及管理员的决策过程，例如故障识别 [<a class="reference internal" href="../references.html#labovitz-1997"><span class="std std-ref">Labovitz 1997</span></a>; <a class="reference internal" href="../references.html#steinder-2002"><span class="std std-ref">Steinder 2002</span></a>; <a class="reference internal" href="../references.html#feamster-2005"><span class="std std-ref">Feamster 2005</span></a>; <a class="reference internal" href="../references.html#wu-2005"><span class="std std-ref">Wu 2005</span></a>; <a class="reference internal" href="../references.html#teixeira-2006"><span class="std std-ref">Teixeira 2006</span></a>]、异常检测 [<a class="reference internal" href="../references.html#lakhina-2005"><span class="std std-ref">Lakhina 2005</span></a>; <a class="reference internal" href="../references.html#barford-2009"><span class="std std-ref">Barford 2009</span></a>]、满足已签署服务等级协议 (SLA) 的网络设计/工程 <a class="reference internal" href="../references.html#huston-1999a"><span class="std std-ref">[Huston 1999a]</span></a> 等内容。因此，我们的重点是有意收窄的；感兴趣的读者应参考这些参考文献、Subramanian 所著的优秀网络管理教材 <a class="reference internal" href="../references.html#subramanian-2000"><span class="std std-ref">[Subramanian 2000]</span></a>，以及本书网站上提供的更详细的网络管理内容。</p>
+<div class="toggle docutils container">
+<p>Having now made our way to the end of our study of the network layer, with only the link-layer before us, we’re well aware that a network consists of many complex, interacting pieces of hardware and software —from the links, switches, routers, hosts, and other devices that comprise the physical components of the network to the many protocols that control and coordinate these devices. When hundreds or thousands of such components are brought together by an organization to form a network, the job of the network administrator to keep the network “up and running” is surely a challenge. We saw in <a class="reference internal" href="s5.html#c5-5"><span class="std std-ref">Section 5.5</span></a> that the logically centralized controller can help with this process in an SDN context. But the challenge of network management has been around long before SDN, with a rich set of network management tools and approaches that help the network administrator monitor, manage, and control the network. We’ll study these tools and techniques in this section.</p>
+<p>An often-asked question is “What is network management?” A well-conceived, single-sentence (albeit a rather long run-on sentence) definition of network management from <a class="reference internal" href="../references.html#saydam-1996"><span class="std std-ref">[Saydam 1996]</span></a> is:</p>
+<blockquote>
+<div><p>Network management includes the deployment, integration, and coordination of the hardware, software, and human elements to monitor, test, poll, configure, analyze, evaluate, and control the network and element resources to meet the real-time, operational performance, and Quality of Service requirements at a reasonable cost.</p>
+</div></blockquote>
+<p>Given this broad definition, we’ll cover only the rudiments of network management in this section—the architecture, protocols, and information base used by a network administrator in performing their task. We’ll not cover the administrator’s decision-making processes, where topics such as fault identification [<a class="reference internal" href="../references.html#labovitz-1997"><span class="std std-ref">Labovitz 1997</span></a>; <a class="reference internal" href="../references.html#steinder-2002"><span class="std std-ref">Steinder 2002</span></a>; <a class="reference internal" href="../references.html#feamster-2005"><span class="std std-ref">Feamster 2005</span></a>; <a class="reference internal" href="../references.html#wu-2005"><span class="std std-ref">Wu 2005</span></a>; <a class="reference internal" href="../references.html#teixeira-2006"><span class="std std-ref">Teixeira 2006</span></a>], anomaly detection [<a class="reference internal" href="../references.html#lakhina-2005"><span class="std std-ref">Lakhina 2005</span></a>; <a class="reference internal" href="../references.html#barford-2009"><span class="std std-ref">Barford 2009</span></a>], network design/engineering to meet contracted Service Level Agreements (SLA’s) <a class="reference internal" href="../references.html#huston-1999a"><span class="std std-ref">[Huston 1999a]</span></a>, and more come into consideration. Our focus is thus purposefully narrow; the interested reader should consult these references, the excellent network-management text by Subramanian <a class="reference internal" href="../references.html#subramanian-2000"><span class="std std-ref">[Subramanian 2000]</span></a>, and the more detailed treatment of network management available on the Web site for this text.</p>
+</div>
+<section id="c5-7-1">
+<span id="id1"></span><h2>5.7.1 网络管理框架<a class="headerlink" href="#c5-7-1" title="此标题的永久链接">#</a></h2>
+<p>5.7.1 The Network Management Framework</p>
+<p><a class="reference internal" href="#figure-5-20"><span class="std std-ref">图 5.20</span></a> 显示了网络管理的关键组件：</p>
+<ul>
+<li><p><strong>管理服务器（managing server）</strong> 是一个应用程序，通常配有人类操作员，运行在网络运营中心（NOC）内的集中式网络管理站中。管理服务器是网络管理活动的中心；它控制网络管理信息的收集、处理、分析和/或显示。在这里发起控制网络行为的操作，人类网络管理员也在此与网络设备交互。</p></li>
+<li><p><strong>被管理设备（managed device）</strong> 是驻留在被管理网络中的一台网络设备（包括其软件）。被管理设备可以是主机、路由器、交换机、中间盒、调制解调器、温度计或其他连接网络的设备。一个被管理设备中可能包含若干所谓的 <strong>被管理对象（managed objects）</strong>。这些被管理对象是被管理设备中的实际硬件组件（例如，网络接口卡是主机或路由器的一个组成部分），以及这些硬件和软件组件的配置参数（例如，诸如 OSPF 的内部 AS 路由协议）。</p></li>
+<li><p>每个被管理设备中的被管理对象都关联有信息，这些信息被收集到一个 <strong>管理信息库（MIB, Management Information Base）</strong> 中；我们将看到这些信息的值可以被管理服务器访问（在许多情况下也可以被设置）。一个 MIB 对象可能是一个计数器，例如由于 IP 数据报首部错误而被路由器丢弃的 IP 数据报数量，或者主机接收到的 UDP 段数量；也可能是描述信息，例如运行在 DNS 服务器上的软件版本；状态信息，例如某个设备是否正常工作；或协议相关信息，例如到某个目的地的路由路径。MIB 对象以一种称为 SMI（结构化管理信息）的数据描述语言定义 [<span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2578.html"><strong>RFC 2578</strong></a>; <span class="target" id="index-1"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2579.html"><strong>RFC 2579</strong></a>; <span class="target" id="index-2"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2580.html"><strong>RFC 2580</strong></a>]。使用形式化定义语言是为了确保网络管理数据的语法和语义定义良好且无歧义。相关的 MIB 对象被组织在 MIB 模块中。截至 2015 年中，已有近 400 个由 RFC 定义的 MIB 模块，以及更多厂商特定（私有）的 MIB 模块。</p></li>
+<li><p>每个被管理设备中还常驻一个 <strong>网络管理代理（network management agent）</strong>，它是运行在被管理设备中的一个进程，用于与管理服务器通信，在管理服务器的指令控制下对被管理设备执行本地操作。网络管理代理类似于我们在 <a class="reference internal" href="s1.html#figure-5-2"><span class="std std-ref">图 5.2</span></a> 中看到的路由代理。</p>
+<figure class="align-center" id="figure-5-20">
+<img alt="../_images/477-0.png" src="../_images/477-0.png" />
+</figure>
+<p><strong>图 5.20 网络管理的组成元素：管理服务器、被管理设备、MIB 数据、远程代理、SNMP</strong></p>
+</li>
+<li><p>网络管理框架的最后一个组成部分是 <strong>网络管理协议（network management protocol）</strong>。该协议在管理服务器与被管理设备之间运行，使得管理服务器可以查询被管理设备的状态，并通过其代理间接在这些设备上执行操作。代理也可以使用网络管理协议向管理服务器报告异常事件（例如组件故障或性能门限违规）。重要的是要注意，网络管理协议本身并不管理网络。相反，它提供了一些功能，使网络管理员能够管理（“监控、测试、轮询、配置、分析、评估和控制”）网络。这是一个微妙但重要的区别。在下一节中，我们将介绍因特网的 SNMP（简单网络管理协议）协议。</p></li>
+</ul>
+<div class="toggle docutils container">
+<p><a class="reference internal" href="#figure-5-20"><span class="std std-ref">Figure 5.20</span></a> shows the key components of network management:</p>
+<ul class="simple">
+<li><p>The <strong>managing server</strong> is an application, typically with a human in the loop, running in a centralized network management station in the network operations center (NOC). The managing server is the</p></li>
+</ul>
+<p>locus of activity for network management; it controls the collection, processing, analysis, and/or display of network management information. It is here that actions are initiated to control network behavior and here that the human network administrator interacts with the network’s devices.
+- A <strong>managed device</strong> is a piece of network equipment (including its software) that resides on a managed network. A managed device might be a host, router, switch, middlebox, modem, thermometer, or other network-connected device. There may be several so-called <strong>managed objects</strong> within a managed device. These managed objects are the actual pieces of hardware within the managed device (for example, a network interface card is but one component of a host or router), and configuration parameters for these hardware and software components (for example, an intra- AS routing protocol such as OSPF).
+- Each managed object within a managed device associated information that is collected into a <strong>Management Information Base (MIB)</strong>; we’ll see that the values of these pieces of information are
+available to (and in many cases able to be set by) the managing server. A MIB object might be a counter, such as the number of IP datagrams discarded at a router due to errors in an IP datagram header, or the number of UDP segments received at a host; descriptive information such as the version of the software running on a DNS server; status information such as whether a particular device is functioning correctly; or protocol-specific information such as a routing path to a destination. MIB objects are specified in a data description language known as SMI (Structure of
+Management Information) [<span class="target" id="index-3"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2578.html"><strong>RFC 2578</strong></a>; <span class="target" id="index-4"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2579.html"><strong>RFC 2579</strong></a>; <span class="target" id="index-5"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2580.html"><strong>RFC 2580</strong></a>]. A formal definition language is used to ensure that the syntax and semantics of the network management data are well defined and unambiguous. Related MIB objects are gathered into MIB modules. As of mid-2015, there were nearly 400 MIB modules defined by RFCs, and a much larger number of vendor-specific (private) MIB modules.
+- Also resident in each managed device is a <strong>network management agent</strong>, a process running in the managed device that communicates with the managing server, taking local actions at the managed device under the command and control of the managing server. The network management agent is similar to the routing agent that we saw in <a class="reference internal" href="s1.html#figure-5-2"><span class="std std-ref">Figure 5.2</span></a>.</p>
+<blockquote>
+<div><figure class="align-center">
+<img alt="../_images/477-0.png" src="../_images/477-0.png" />
+</figure>
+<p><strong>Figure 5.20 Elements of network management: Managing server, ­managed devices, MIB data, remote agents, SNMP</strong></p>
+</div></blockquote>
+<ul class="simple">
+<li><p>The final component of a network management framework is the <strong>network ­management protocol</strong>. The protocol runs between the managing server and the managed devices, allowing the managing server to query the status of managed devices and indirectly take actions at these devices via its agents. Agents can use the network management protocol to inform the managing server of exceptional events (for example, component failures or violation of performance thresholds). It’s important to note that the network management protocol does not itself manage the network. Instead, it provides capabilities that a network administrator can use to manage (“monitor, test, poll, configure, analyze, evaluate, and control”) the network. This is a subtle, but important, distinction. In the following section, we’ll cover the Internet’s SNMP (Simple Network Management Protocol) protocol.</p></li>
+</ul>
+</div>
+</section>
+<section id="c5-7-2">
+<span id="id2"></span><h2>5.7.2 简单网络管理协议（SNMP）<a class="headerlink" href="#c5-7-2" title="此标题的永久链接">#</a></h2>
+<p>5.7.2 The Simple Network Management Protocol (SNMP)</p>
+<p><a href="#id3"><span class="problematic" id="id4">**</span></a>简单网络管理协议**版本 2（SNMPv2）[<span class="target" id="index-6"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3416.html"><strong>RFC 3416</strong></a>] 是一种应用层协议，用于在管理服务器与代表该服务器执行的代理之间传递网络管理控制和信息消息。SNMP 最常见的用法是请求-响应模式，其中 SNMP 管理服务器向 SNMP 代理发送请求，代理接收请求、执行某些操作，并向请求方发送响应。通常，请求用于查询（检索）或修改（设置）与被管理设备关联的 MIB 对象的值。SNMP 的第二种常见用法是代理向管理服务器发送一个未经请求的消息，称为 trap 消息。trap 消息用于通知管理服务器某个异常情况（例如链路接口的上下状态变化），该情况导致 MIB 对象值的变化。</p>
+<p>SNMPv2 定义了七种类型的消息，通常称为协议数据单元（PDU），如 <a class="reference internal" href="#table-5-2"><span class="std std-ref">表 5.2</span></a> 所示，描述如下。PDU 的格式如 <a class="reference internal" href="#figure-5-21"><span class="std std-ref">图 5.21</span></a> 所示。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GetRequest</span></code>、<code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code> PDU 都是由管理服务器发送给代理的，用于请求代理管理设备中一个或多个 MIB 对象的值。所请求值的 MIB 对象在 PDU 的变量绑定部分中指定。<code class="docutils literal notranslate"><span class="pre">GetRequest</span></code>、<code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code> 的区别在于数据请求的粒度不同。<code class="docutils literal notranslate"><span class="pre">GetRequest</span></code> 可请求任意一组 MIB 值；多个 <code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code> 可用于按顺序访问 MIB 对象列表或表格；<code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code> 可一次返回大块数据，从而避免发送多个 <code class="docutils literal notranslate"><span class="pre">GetRequest</span></code> 或 <code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code> 所带来的开销。在这三种情况下，代理都会用包含对象标识符及其关联值的 Response PDU 进行响应。</p></li>
+</ul>
+<p id="table-5-2"><strong>表 5.2 SNMPv2 PDU 类型</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>SNMPv2 PDU 类型</p></td>
+<td><p>发送方-接收方</p></td>
+<td><p>描述</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>获取一个或多个 MIB 对象实例的值</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>获取列表或表中下一个 MIB 对象实例的值</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>获取大块数据中的值，例如一个大表中的值</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InformRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>通知远程管理实体无法直接访问的 MIB 值</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>设置一个或多个 MIB 对象实例的值</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Response</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>响应 <code class="docutils literal notranslate"><span class="pre">GetRequest</span></code>、<code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code>、<code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code>、<code class="docutils literal notranslate"><span class="pre">SetRequest</span> <span class="pre">PDU</span></code> 或 <code class="docutils literal notranslate"><span class="pre">InformRequest</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SNMPv2-Trap</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>通知管理器发生异常事件</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="align-center" id="figure-5-21">
+<img alt="../_images/479-0.png" src="../_images/479-0.png" />
+</figure>
+<p><strong>图 5.21 SNMP PDU 格式</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SetRequest</span></code> PDU 由管理服务器使用，用于设置被管理设备中一个或多个 MIB 对象的值。代理用带有 “noError” 错误状态的 <code class="docutils literal notranslate"><span class="pre">Response</span></code> PDU 进行确认响应，表示值确实已被设置。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InformRequest</span></code> PDU 由管理服务器使用，用于通知另一个管理服务器某些该服务器无法直接访问的 MIB 信息。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Response</span> <span class="pre">PDU</span></code> 通常是被管理设备响应来自管理服务器的请求消息所发送的，返回请求的信息。</p></li>
+<li><p>SNMPv2 的最后一种 PDU 类型是 trap 消息。trap 消息是异步生成的；也就是说，它们不是作为响应某个接收到的请求而生成，而是响应某个事件，为了使管理服务器能够收到通知而生成。 <span class="target" id="index-7"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3418.html"><strong>RFC 3418</strong></a> 定义了若干众所周知的 trap 类型，包括设备的冷启动或热启动、链路上下状态、邻居丢失或身份验证失败事件。接收到的 trap 请求不要求管理服务器做出响应。</p></li>
+</ul>
+<p>鉴于 SNMP 的请求-响应特性，这里值得注意的是，虽然 SNMP PDU 可以通过多种传输协议进行传输，但它通常承载于 UDP 数据报的负载中。实际上， <span class="target" id="index-8"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3417.html"><strong>RFC 3417</strong></a> 指出 UDP 是“首选传输映射”。然而，由于 UDP 是不可靠的传输协议，因此无法保证请求或其响应一定能被目标接收到。PDU 的请求 ID 字段（见 <a class="reference internal" href="#figure-5-21"><span class="std std-ref">图 5.21</span></a>）由管理服务器用于对其发送给代理的请求进行编号；代理的响应从接收到的请求中继承请求 ID。因此，请求 ID 字段可被管理服务器用于检测丢失的请求或响应。是否在未收到响应的情况下重新发送请求，由管理服务器自行决定。特别地，SNMP 标准并不强制指定任何特定的重传机制，甚至不强制必须进行重传。它只要求管理服务器“在重传的频率和持续时间方面采取负责任的行为”。当然，这也引发了一个问题：一个“负责任”的协议应该如何行为呢？</p>
+<p>SNMP 已经历了三个版本的演进。SNMPv3 的设计者表示，“SNMPv3 可以被视为添加了额外安全性和管理能力的 SNMPv2”[<span class="target" id="index-9"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3410.html"><strong>RFC 3410</strong></a>]。当然，SNMPv3 相比 SNMPv2 有一些变化，但这些变化最明显的地方在于管理和安全领域。安全性在 SNMPv3 中起到了核心作用，这一点尤其重要，因为缺乏足够的安全性导致 SNMP 主要被用于监控而非控制（例如，在 SNMPv1 中 <code class="docutils literal notranslate"><span class="pre">SetRequest</span></code> 很少被使用）。我们再一次看到，安全性 —— 我们将在 <a class="reference internal" href="../c8/index.html#c8"><span class="std std-ref">第 8 章</span></a> 中详细讨论 —— 是一个至关重要的关注点，但其重要性似乎又是稍晚才被认识，并作为“附加功能”才被加入进来的。</p>
+<div class="toggle docutils container">
+<p>The <strong>Simple Network Management Protocol</strong> version 2 (SNMPv2) [<span class="target" id="index-10"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3416.html"><strong>RFC 3416</strong></a>] is an application-layer protocol used to convey network-management control and information messages between a managing server and an agent executing on behalf of that managing server. The most common usage of SNMP is in a request-response mode in which an SNMP managing server sends a request to an SNMP agent, who receives the request, performs some action, and sends a reply to the request. Typically, a request will be used to query (retrieve) or modify (set) MIB object values associated with a managed device. A second common usage of SNMP is for an agent to send an unsolicited message, known as a trap message, to a managing server. Trap messages are used to notify a managing server of an exceptional situation (e.g., a link interface going up or down) that has resulted in changes to MIB object values.</p>
+<p>SNMPv2 defines seven types of messages, known generically as protocol data units—PDUs—as shown in <a class="reference internal" href="#table-5-2"><span class="std std-ref">Table 5.2</span></a> and described below. The format of the PDU is shown in <a class="reference internal" href="#figure-5-21"><span class="std std-ref">Figure 5.21</span></a>.</p>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">GetRequest</span></code>, <code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code>, and <code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code> PDUs are all sent from a managing server to an agent to request the value of one or more MIB objects at the agent’s managed device. The MIB objects whose values are being requested are specified in the variable binding portion of the PDU. <code class="docutils literal notranslate"><span class="pre">­GetRequest</span></code>, <code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code>, and <code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code> differ in the granularity of their data requests. <code class="docutils literal notranslate"><span class="pre">GetRequest</span></code> can request an arbitrary set of MIB values; multiple <code class="docutils literal notranslate"><span class="pre">GetNextRequests</span></code> can be used to sequence through a list or table of MIB objects; GetBulkRequest allows a large block of data to be returned, avoiding the overhead incurred if multiple <code class="docutils literal notranslate"><span class="pre">GetRequest</span></code> or <code class="docutils literal notranslate"><span class="pre">­GetNextRequest</span></code> messages were to be sent. In all three cases, the agent responds with a Response PDU containing the object identifiers and their associated values.</p>
+<p><strong>Table 5.2 SNMPv2 PDU types</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>SNMPv2 PDU Type</p></td>
+<td><p>Sender-receiver</p></td>
+<td><p>Description</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>get value of one or more MIB object instances</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>get value of next MIB object instance in list or table</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>get values in large block of data, for example, values in a large table</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">InformRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>inform remote managing entity of MIB values remote to its access</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SetRequest</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>set value of one or more MIB object instances</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Response</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>generated in response to <code class="docutils literal notranslate"><span class="pre">GetRequest</span></code> 、<code class="docutils literal notranslate"><span class="pre">GetNextRequest</span></code> 、<code class="docutils literal notranslate"><span class="pre">GetBulkRequest</span></code> 、<code class="docutils literal notranslate"><span class="pre">SetRequest</span> <span class="pre">PDU</span></code> or <code class="docutils literal notranslate"><span class="pre">InformRequest</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SNMPv2-Trap</span></code></p></td>
+<td><p>manager-to-agent</p></td>
+<td><p>inform manager of an exceptional event #</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="align-center">
+<img alt="../_images/479-0.png" src="../_images/479-0.png" />
+</figure>
+<p><strong>Figure 5.21 SNMP PDU format</strong></p>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">SetRequest</span></code> PDU is used by a managing server to set the value of one or more MIB objects in a managed device. An agent replies with a <code class="docutils literal notranslate"><span class="pre">Response</span></code> PDU with the “noError” error status to confirm that the value has indeed been set.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">InformRequest</span></code> PDU is used by a managing server to notify another managing server of MIB information that is remote to the receiving server.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">Response</span> <span class="pre">PDU</span></code> is typically sent from a managed device to the managing server in response to a request message from that server, returning the requested information.</p></li>
+<li><p>The final type of SNMPv2 PDU is the trap message. Trap messages are generated asynchronously; that is, they are not generated in response to a received request but rather in response to an event for which the managing server requires notification. RFC 3418 defines well-known trap types that include a cold or warm start by a device, a link going up or down, the loss of a neighbor, or an authentication failure event. A received trap request has no required response from a managing server.</p></li>
+</ul>
+<p>Given the request-response nature of SNMP, it is worth noting here that although SNMP PDUs can be carried via many different transport protocols, the SNMP PDU is typically carried in the payload of a UDP datagram. Indeed, RFC 3417 states that UDP is “the ­preferred transport mapping.” However, since UDP is an unreliable transport protocol, there is no guarantee that a request, or its response, will be received at the intended destination. The request ID field of the PDU (see <a class="reference internal" href="#figure-5-21"><span class="std std-ref">Figure 5.21</span></a>) is used by the managing server to number its requests to an agent; the agent’s response takes its request ID from that of the received request. Thus, the request ID field can be used by the managing server to detect lost requests or replies. It is up to the managing server to decide whether to retransmit a request if no corresponding response is received after a given amount of time. In particular, the SNMP standard does not mandate any particular procedure for retransmission, or even if retransmission is to be done in the first place. It only requires that the managing server “needs to act responsibly in respect to the frequency and duration of retransmissions.” This, of course, leads one to wonder how a “responsible” protocol should act!</p>
+<p>SNMP has evolved through three versions. The designers of SNMPv3 have said that “SNMPv3 can be thought of as SNMPv2 with additional security and administration capabilities” [<span class="target" id="index-11"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3410.html"><strong>RFC 3410</strong></a>]. Certainly, there are changes in SNMPv3 over SNMPv2, but nowhere are those changes more evident than in the area of administration and security. The central role of security in SNMPv3 was particularly important, since the lack of adequate security resulted in SNMP being used primarily for monitoring rather than control (for example, <code class="docutils literal notranslate"><span class="pre">SetRequest</span></code> is rarely used in SNMPv1). Once again, we see that security—a topic we’ll cover in detail in <a class="reference internal" href="../c8/index.html#c8"><span class="std std-ref">Chapter 8</span></a> — is of critical concern, but once again a concern whose importance had been realized perhaps a bit late and only then “added on.”</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s6.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">5.6 ICMP：因特网控制报文协议</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="summary.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">5.8 小结</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c5-7-1">5.7.1 网络管理框架</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c5-7-2">5.7.2 简单网络管理协议（SNMP）</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

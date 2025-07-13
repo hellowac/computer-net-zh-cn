@@ -1,0 +1,220 @@
+.. _c1.6:
+
+
+1.6 网络攻击
+=================
+
+1.6 Networks Under Attack
+
+1.6 网络遭受攻击
+
+互联网如今对许多机构来说已变得至关重要，包括大公司、小公司、大学和政府机构。许多个人也依赖互联网进行大量的职业、社交和个人活动。数十亿的“物联网设备”，包括可穿戴设备和家庭设备，正在接入互联网。但在这一切实用性与兴奋的背后，也有一个黑暗面——“坏人”试图破坏我们日常生活中的互联网设备，侵犯我们的隐私，并使我们所依赖的互联网服务瘫痪。
+
+网络安全领域的研究旨在了解坏人如何攻击计算机网络，以及我们这些即将成为计算机网络专家的人如何防御这些攻击，或者更进一步地说，如何从一开始就设计对这些攻击免疫的新体系结构。考虑到现有攻击的频率和多样性，以及未来可能出现的新型且更具破坏性的攻击威胁，网络安全已成为计算机网络领域的核心议题之一。本教材的一大特色就是将网络安全问题置于核心位置。
+
+由于我们目前还没有计算机网络和互联网协议方面的专业知识，因此我们从概述当今较为普遍的安全问题开始。这样可以激发我们对接下来章节更深入讨论的兴趣。所以我们首先问：会出现哪些问题？计算机网络存在哪些漏洞？当前有哪些常见的攻击类型？
+
+.. toggle::
+
+   The Internet has become mission critical for many institutions today, including large and small
+   companies, universities, and government agencies. Many individuals also rely on the Internet for many
+   of their professional, social, and personal activities. Billions of “things,” including wearables and home
+   devices, are currently being connected to the Internet. But behind all this utility and excitement, there is
+   a dark side, a side where “bad guys” attempt to wreak havoc in our daily lives by damaging our Internet-
+   connected computers, violating our privacy, and rendering inoperable the Internet services on which we
+   depend.
+
+   The field of network security is about how the bad guys can attack computer networks and about how
+   we, soon-to-be experts in computer networking, can defend networks against those attacks, or better
+   yet, design new architectures that are immune to such attacks in the first place. Given the frequency and
+   variety of existing attacks as well as the threat of new and more destructive future attacks, network
+   security has become a central topic in the field of computer networking. One of the features of this
+   textbook is that it brings network security issues to the forefront.
+
+   Since we don’t yet have expertise in computer networking and Internet protocols, we’ll begin here by
+   surveying some of today’s more prevalent security-related problems. This will whet our appetite for more
+   substantial discussions in the upcoming chapters. So we begin here by simply asking, what can go
+   wrong? How are computer networks vulnerable? What are some of the more prevalent types of attacks
+   today?
+
+坏人可以通过互联网将恶意软件植入你的主机
+-----------------------------------------------------------------
+The Bad Guys Can Put Malware into Your Host Via the Internet
+
+我们之所以将设备连接到互联网，是因为我们希望接收/发送来自/到互联网的数据。这包括各种有益信息，如 Instagram 帖子、搜索结果、流媒体音乐、视频通话、流媒体电影等。但不幸的是，除了这些好东西之外，也会有恶意内容——统称为 **恶意软件（malware）**——进入并感染我们的设备。一旦恶意软件感染我们的设备，它就能做各种阴险的事情，比如删除我们的文件，安装收集个人信息（如社保号、密码和按键记录）的间谍软件，然后将这些信息（当然是通过互联网！）发送回坏人那里。我们被攻陷的主机还可能被纳入一个由成千上万台同样被攻陷的设备组成的网络，这种网络称为 **僵尸网络（botnet）**，坏人可以利用它发送垃圾邮件或对目标主机发动分布式拒绝服务攻击（后文将讨论）。
+
+如今的大多数恶意软件都是 **自我复制的**：一旦感染了一台主机，它就会从那台主机试图感染其他主机，并从新感染的主机继续传播。通过这种方式，自我复制的恶意软件可以呈指数级传播。恶意软件可以通过病毒或蠕虫的形式传播。 **病毒（virus）** 是需要某种用户交互才能感染设备的恶意软件。一个经典例子是包含恶意可执行代码的电子邮件附件。如果用户接收并打开此类附件，就会无意中在设备上运行恶意软件。通常这类电子邮件病毒具有自我复制能力：一旦执行，该病毒可能会向用户地址簿中的所有联系人发送一封附带相同恶意附件的邮件。 **蠕虫（worm）** 则是不需要任何显式用户交互即可进入设备的恶意软件。例如，用户可能正在运行某个存在漏洞的网络应用程序，攻击者可以向该应用发送恶意软件。在某些情况下，即使没有用户干预，该应用也可能从互联网接收并运行该恶意软件，形成蠕虫。被感染的新设备中的蠕虫随后会扫描互联网，寻找运行相同漏洞应用的主机。一旦找到，它就会将自身复制并发送过去。如今，恶意软件泛滥，防御成本高昂。随着你学习本教材，我们鼓励你思考这样一个问题：计算机网络设计者可以采取哪些措施来保护接入互联网的设备免受恶意软件攻击？
+
+.. toggle::
+
+   We attach devices to the Internet because we want to receive/send data from/to the Internet. This
+   includes all kinds of good stuff, including Instagram posts, Internet search results, streaming music,
+   video conference calls, streaming movies, and so on. But, unfortunately, along with all that good stuff
+   comes malicious stuff—­collectively known as **malware**—that can also enter and infect our devices.
+   Once malware infects our device it can do all kinds of devious things, including deleting our files and
+   installing spyware that collects our private information, such as social security numbers, passwords, and
+   keystrokes, and then sends this (over the Internet, of course!) back to the bad guys. Our compromised
+   host may also be enrolled in a network of thousands of similarly compromised devices, collectively
+   known as a **botnet**, which the bad guys control and leverage for spam e-mail distribution or distributed
+   denial-of-service attacks (soon to be discussed) against targeted hosts.
+
+   Much of the malware out there today is **self-replicating**: once it infects one host, from that host it seeks
+   entry into other hosts over the Internet, and from ­the newly infected hosts, it seeks entry into yet more
+   hosts. In this manner, self-­replicating malware can spread exponentially fast. Malware can spread in
+   the form of a virus or a worm. **Viruses** are malware that require some form of user interaction to infect
+   the user’s device. The classic example is an e-mail attachment containing malicious executable code. If
+   a user receives and opens such an attachment, the user inadvertently runs the malware on the device.
+   Typically, such e-mail viruses are self-replicating: once executed, the virus may send an identical
+   message with an identical malicious attachment to, for example, every recipient in the user’s address
+   book. **Worms** are malware that can enter a device without any explicit user interaction. For example, a
+   user may be running a vulnerable network application to which an attacker can send malware. In some
+   cases, without any user intervention, the application may accept the malware from the Internet and run
+   it, creating a worm. The worm in the newly infected device then scans the Internet, searching for other
+   hosts running the same vulnerable network application. When it finds other vulnerable hosts, it sends a
+   copy of itself to those hosts. Today, malware, is pervasive and costly to defend against. As you work
+   through this textbook, we encourage you to think about the following question: What can computer
+   network designers do to defend Internet-attached devices from malware attacks?
+
+坏人可以攻击服务器和网络基础设施
+-----------------------------------------------------------------
+The Bad Guys Can Attack Servers and Network Infrastructure
+
+另一类广义的安全威胁被称为 **拒绝服务攻击（DoS，Denial-of-Service）**。顾名思义，DoS 攻击使网络、主机或其他基础设施无法被合法用户使用。Web 服务器、邮件服务器、DNS 服务器（见 :ref:`第 2 章 <c2>`）和机构网络都可能成为 DoS 攻击的对象。互联网上的 DoS 攻击极为常见，每年发生数千起 :ref:`[Moore 2001] <Moore 2001>`。Digital Attack Map 网站可用来可视化全球每日的主要 DoS 攻击 :ref:`[DAM 2016] <DAM 2016>`。大多数互联网 DoS 攻击属于以下三种类型之一：
+
+- **漏洞攻击**。攻击者向目标主机上运行的易受攻击的应用程序或操作系统发送少量精心构造的消息。如果发送了特定顺序的数据包，该服务可能停止运行，甚至导致主机崩溃。
+- **带宽洪泛攻击**。攻击者向目标主机发送大量数据包，造成目标接入链路拥堵，合法数据包无法到达服务器。
+- **连接洪泛攻击**。攻击者在目标主机上建立大量半开或全开 TCP 连接（TCP 连接将在 :ref:`第 3 章 <c3>` 中讨论）。主机可能因处理过多虚假连接而拒绝合法连接。
+
+现在我们更详细地看看带宽洪泛攻击。回忆我们在 :ref:`第 1.4.2 节 <c1.4.2>` 中对时延与丢包的分析，我们知道，如果服务器的接入速率为 R bps，那么攻击者就需以约 R bps 的速率发送流量来造成损害。如果 R 非常大，单个攻击源可能无法生成足够的流量。此外，如果所有流量都来自同一个源，上游路由器可能能够检测到攻击并在流量到达服务器前将其屏蔽。在 **分布式拒绝服务（DDoS）** 攻击中（见 :ref:`图 1.25 <Figure 1.25>`），攻击者控制多个源，每个源都向目标发送流量。通过这种方式，所有控制源的总流量速率达到约 R，即可使服务瘫痪。利用成千上万被攻陷主机组成的僵尸网络发动 DDoS 攻击在今天极为常见 :ref:`[DAM 2016] <DAM 2016>`。DDoS 攻击比来自单个主机的 DoS 攻击更难检测和防御。
+
+在学习本教材的过程中，我们鼓励你思考这样一个问题：计算机网络设计者可以采取哪些措施来防御 DoS 攻击？我们将看到，对于三种类型的 DoS 攻击，需要不同的防御策略。
+
+.. _Figure 1.25:
+
+.. figure:: ../img/85-0.png
+   :align: center
+   :name: A distributed denial-of-service attack
+
+**图 1.25 分布式拒绝服务攻击**
+
+.. toggle::
+
+   Another broad class of security threats are known as **denial-of-service (DoS) attacks**. As the name
+   suggests, a DoS attack renders a network, host, or other piece of infrastructure unusable by legitimate
+   users. Web servers, e-mail servers, DNS servers (discussed in :ref:`Chapter 2 <c2>`), and institutional networks
+   can all be subject to DoS attacks. Internet DoS attacks are extremely common, with thousands of DoS
+   attacks occurring every year :ref:`[Moore 2001] <Moore 2001>`. The site Digital Attack Map allows use to visualize the top
+   daily DoS attacks worldwide :ref:`[DAM 2016] <DAM 2016>`. Most Internet DoS attacks fall into one of three categories:
+
+   - **Vulnerability attack**. This involves sending a few well-crafted messages to a vulnerable application or operating system running on a targeted host. If the right sequence of packets is sent to a vulnerable application or operating system, the service can stop or, worse, the host can crash.
+   - **Bandwidth flooding**. The attacker sends a deluge of packets to the targeted host—so many packets that the target’s access link becomes clogged, preventing legitimate packets from reaching the server.
+   - **Connection flooding**. The attacker establishes a large number of half-open or fully open TCP connections (TCP connections are discussed in :ref:`Chapter 3 <c3>`) at the target host. The host can become so bogged down with these bogus connections that it stops accepting legitimate connections.
+
+   Let’s now explore the bandwidth-flooding attack in more detail. Recalling our delay and loss analysis
+   discussion in :ref:`Section 1.4.2 <c1.4.2>`, it’s evident that if the server has an access rate of R bps, then the attacker
+   will need to send traffic at a rate of approximately R bps to cause damage. If R is very large, a single
+   attack source may not be able to generate enough traffic to harm the server. Furthermore, if all the
+   traffic emanates from a single source, an upstream router may be able to detect the attack and block all
+   traffic from that source before the traffic gets near the server. In a **distributed DoS (DDoS)** attack,
+   illustrated in :ref:`Figure 1.25 <Figure 1.25>`, the attacker controls multiple sources and has each source blast traffic at the
+   target. With this approach, the aggregate traffic rate across all the controlled sources needs to be
+   approximately R to cripple the ­service. DDoS attacks leveraging botnets with thousands of comprised
+   hosts are a common occurrence today :ref:`[DAM 2016] <DAM 2016>`. DDos attacks are much harder to detect and
+   defend against than a DoS attack from a single host.
+
+   We encourage you to consider the following question as you work your way through this book: What can
+   computer network designers do to defend against DoS attacks? We will see that different defenses are
+   needed for the three types of DoS attacks.
+
+   .. figure:: ../img/85-0.png
+      :align: center
+
+   **Figure 1.25 A distributed denial-of-service attack**
+
+坏人可以嗅探数据包
+-----------------------------------
+The Bad Guys Can Sniff Packets
+
+如今许多用户通过无线设备接入互联网，例如通过 WiFi 连接的笔记本电脑或具备蜂窝网络连接的手持设备（将在 :ref:`第 7 章 <c7>` 中介绍）。虽然无处不在的互联网访问极为便捷，为移动用户带来了神奇的新应用，但它也带来了重大的安全隐患 —— 只要在无线发送器附近放置一个被动接收器，它就可以获取所有传输的数据包的副本！这些数据包可能包含各种敏感信息，如密码、社保号、商业机密和私人信息。记录所有经过的数据包副本的被动接收器称为 **数据包嗅探器（packet sniffer）**。
+
+嗅探器也可以部署在有线环境中。在有线广播环境（如许多以太网 LAN）中，嗅探器可以获取在 LAN 上传播的广播数据包副本。如 :ref:`第 1.2 节 <c1.2>` 所述，电缆接入技术同样采用广播，也容易被嗅探。此外，若坏人成功访问某机构的接入路由器或接入链路，就可能植入一个嗅探器，复制所有往返于该机构的数据包。嗅探到的数据包可离线分析以提取敏感信息。
+
+嗅探软件可从多个网站免费下载，也有商业版本。教授网络课程的教师有时会布置实验作业，要求编写一个数据包嗅探器和应用层数据还原程序。实际上，与本教材配套的 Wireshark 实验 :ref:`[Wireshark 2016] <Wireshark 2016>`（见本章结尾的 :ref:`Wireshark 实验 <c1.lab>`）就使用了这种嗅探器！
+
+由于数据包嗅探器是被动的 —— 即它们不会向信道中注入数据包 —— 所以很难被检测到。因此，当我们将数据包发送到无线信道时，必须接受这样一个事实：某些坏人可能正在记录我们的数据包副本。你可能已经猜到，对抗数据包嗅探的最佳防御之一是使用加密技术。我们将在 :ref:`第 8 章 <c8>` 中探讨加密在网络安全中的应用。
+
+.. toggle::
+
+   Many users today access the Internet via wireless devices, such as WiFi-connected laptops or handheld
+   devices with cellular Internet connections (covered in :ref:`Chapter 7 <c7>`). While ubiquitous Internet access is
+   extremely convenient and enables marvelous new applications for mobile users, it also creates a major
+   security vulnerability—by placing a passive receiver in the vicinity of the wireless transmitter, that
+   receiver can obtain a copy of every packet that is transmitted! These packets can contain all kinds of
+   sensitive information, including passwords, social security numbers, trade secrets, and private personal
+   messages. A passive receiver that records a copy of every packet that flies by is called a **packet
+   sniffer**.
+
+   Sniffers can be deployed in wired environments as well. In wired broadcast environments, as in many
+   Ethernet LANs, a packet sniffer can obtain copies of broadcast packets sent over the LAN. As described
+   in :ref:`Section 1.2 <c1.2>`, cable access technologies also broadcast packets and are thus vulnerable to sniffing.
+   Furthermore, a bad guy who gains access to an institution’s access router or access link to the Internet
+   may be able to plant a sniffer that makes a copy of every packet going to/from the organization. Sniffed
+   packets can then be analyzed offline for sensitive information.
+
+   Packet-sniffing software is freely available at various Web sites and as commercial products. Professors
+   teaching a networking course have been known to assign lab exercises that involve writing a packet-
+   sniffing and application-layer data reconstruction program. Indeed, the Wireshark :ref:`[Wireshark 2016] <Wireshark 2016>`
+   labs associated with this text (see the introductory :ref:`Wireshark lab <c1.lab>` at the end of this chapter) use exactly
+   such a packet sniffer!
+
+   Because packet sniffers are passive—that is, they do not inject packets into the channel—they are
+   difficult to detect. So, when we send packets into a wireless channel, we must accept the possibility that
+   some bad guy may be recording copies of our packets. As you may have guessed, some of the best
+   defenses against packet sniffing involve cryptography. We will examine cryptography as it applies to
+   network security in :ref:`Chapter 8 <c8>`.
+
+坏人可以伪装成你信任的人
+------------------------------------------------------
+The Bad Guys Can Masquerade as Someone You Trust
+
+构造一个拥有任意源地址、数据内容和目标地址的数据包并将其注入互联网是出奇容易的（你很快就能具备这种能力！）。互联网会照常转发这些伪造的数据包。想象一下接收到这样一个数据包的无辜接收者（比如某个互联网路由器），它将伪造的源地址视为真实地址，然后执行数据包中包含的命令（例如修改转发表）。这种在互联网上注入伪造源地址数据包的能力被称为 **IP 欺骗（IP spoofing）**，它是用户伪装成他人的多种方式之一。
+
+要解决这个问题，我们需要端点认证机制，即能够确定消息确实来源于我们所期望位置的机制。同样，我们鼓励你在学习本书的过程中思考如何为网络应用和协议实现端点认证机制。我们将在 :ref:`第 8 章 <c8>` 中探讨端点认证的机制。
+
+在本节的结尾，我们值得思考一个问题：互联网为何变得如此不安全？简而言之，互联网最初就是以这种方式设计的，基于“相互信任用户接入一个透明网络”的模型 :ref:`[Blumenthal 2001] <Blumenthal 2001>` —— 在这个模型中，安全性不是设计目标。互联网体系结构的许多方面深受这种相互信任理念的影响。例如，默认允许任意用户向其他用户发送数据包（而不是通过请求/授权机制实现），并且用户身份是“声明即视为真实”的，而不是默认认证。
+
+但今天的互联网显然不再是“相互信任用户”的网络。然而，今天的用户仍需在彼此不信任的情况下通信，可能希望保持匿名，可能通过第三方中转通信（如我们将在 :ref:`第 2 章 <c2>` 中学习的 Web 缓存，或在 :ref:`第 7 章 <c7>` 中学习的移动代理），甚至可能不信任通信所依赖的硬件、软件乃至空气介质。随着本书的推进，我们面临众多与安全相关的挑战：我们应当寻找防御嗅探、端点伪装、中间人攻击、DDoS 攻击、恶意软件等的方案。我们应牢记：互信通信是例外，而非常态。欢迎来到现代计算机网络的世界！
+
+.. toggle::
+
+   It is surprisingly easy (you will have the knowledge to do so shortly as you proceed through this text!) to
+   create a packet with an arbitrary source address, packet content, and destination address and then
+   transmit this hand-crafted packet into the Internet, which will dutifully forward the packet to its
+   destination. Imagine the unsuspecting receiver (say an Internet router) who receives such a packet,
+   takes the (false) source address as being truthful, and then performs some command embedded in the
+   packet’s contents (say modifies its forwarding table). The ability to inject packets into the Internet with a
+   false source address is known as **IP spoofing**, and is but one of many ways in which one user can
+   masquerade as another user.
+
+   To solve this problem, we will need end-point authentication, that is, a mechanism that will allow us to
+   determine with certainty if a message originates from where we think it does. Once again, we encourage
+   you to think about how this can be done for network applications and protocols as you progress through
+   the chapters of this book. We will explore mechanisms for end-point authentication in :ref:`Chapter 8 <c8>`.
+
+   In closing this section, it’s worth considering how the Internet got to be such an insecure place in the first
+   place. The answer, in essence, is that the Internet was originally designed to be that way, based on the
+   model of “a group of mutually trusting users attached to a transparent network” :ref:`[Blumenthal 2001] <Blumenthal 2001>`—a
+   model in which (by definition) there is no need for security. Many aspects of the original Internet
+   architecture deeply reflect this notion of mutual trust. For example, the ability for one user to send a
+   packet to any other user is the default rather than a requested/granted capability, and user identity is
+   taken at declared face value, rather than being authenticated by default.
+
+   But today’s Internet certainly does not involve “mutually trusting users.” Nonetheless, today’s users still
+   need to communicate when they don’t necessarily trust each other, may wish to communicate
+   anonymously, may communicate indirectly through third parties (e.g., Web caches, which we’ll study in
+   :ref:`Chapter 2 <c2>`, or mobility-assisting agents, which we’ll study in :ref:`Chapter 7 <c7>`), and may distrust the hardware,
+   software, and even the air through which they communicate. We now have many security-related
+   challenges before us as we progress through this book: We should seek defenses against sniffing, end-
+   point masquerading, man-in-the-middle attacks, DDoS attacks, malware, and more. We should keep in
+   mind that communication among mutually trusted users is the exception rather than the rule. Welcome
+   to the world of modern computer networking!

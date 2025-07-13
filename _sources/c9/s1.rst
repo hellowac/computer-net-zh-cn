@@ -1,0 +1,174 @@
+.. _c9.1:
+
+9.1 多媒体网络应用
+=============================================================
+9.1 Multimedia Networking Applications
+
+
+我们将多媒体网络应用定义为任何使用音频或视频的网络应用程序。在本节中，我们提供多媒体应用程序的分类方法。我们将看到，每一类应用程序都有其独特的服务需求和设计问题。但在深入讨论互联网多媒体应用程序之前，首先考虑音频和视频媒体本身的固有特性是有益的。
+
+.. toggle::
+
+    We define a multimedia network application as any network application that employs audio or video. In this section, we provide a taxonomy of multimedia applications. We’ll see that each class of applications in the taxonomy has its own unique set of service requirements and design issues. But before diving into an in-depth discussion of Internet multimedia applications, it is useful to consider the intrinsic characteristics of the audio and video media themselves.
+
+.. _c9.1.1:
+
+9.1.1 视频的特性
+------------------------------------------------------------
+9.1.1 Properties of Video
+
+视频也许最突出的特性是其 **高比特率**。通过互联网传输的视频比特率通常在 100 kbps（低质量视频会议）到超过 3 Mbps（高清电影流）之间。为了感受视频带宽需求与其他互联网应用的差异，我们可以简单考虑三个不同用户，各自使用不同的互联网应用。第一个用户 Frank 在快速浏览朋友们在 Facebook 上发布的照片。假设 Frank 每 10 秒查看一张新照片，平均每张照片为 200 Kbytes。（如常，在此讨论中我们简化假设 1 Kbyte = 8000 位。）第二个用户 Martha 正在通过互联网（“云端”）向她的智能手机串流音乐。假设 Martha 使用 Spotify 等服务接连播放多首 MP3 歌曲，每首以 128 kbps 编码。第三个用户 Victor 在观看一个以 2 Mbps 编码的视频。最后，假设三个用户的会话时间都是 4000 秒（大约 67 分钟）。:ref:`表 9.1 <Table 9.1>` 对这三位用户的比特率和总传输字节进行了比较。我们可以看到，视频流媒体显然消耗最多带宽，比 Facebook 和音乐流媒体的比特率高出十倍以上。因此，在设计网络视频应用时，首先必须考虑的是视频的高比特率需求。鉴于视频的普及及其高比特率，这也难怪 Cisco 预测 :ref:`[Cisco 2015] <Cisco 2015>` 到 2019 年，流式和存储视频将约占全球消费者互联网流量的 80%。
+
+.. _Table 9.1:
+
+**表 9.1 三种互联网应用的比特率需求比较**
+
+.. list-table::
+
+    * -
+      - **比特率**
+      - **67 分钟传输字节**
+    * - Facebook 的 Frank
+      - 160 kbps
+      - 80 Mbytes
+    * - 音乐的 Martha
+      - 128 kbps
+      - 64 Mbytes
+    * - 视频的 Victor
+      - 2 Mbps
+      - 1 Gbyte
+
+视频的另一个重要特性是其可以被压缩，从而在视频质量与比特率之间进行权衡。视频是一系列图像，通常以恒定速率显示，例如每秒 24 或 30 帧。一个未压缩的数字图像由像素阵列构成，每个像素以若干位表示亮度和颜色。视频中存在两种冗余类型，均可通过 **视频压缩** 加以利用。空间冗余指的是单帧图像中的冗余。直观来看，一个主要是白色区域的图像具有高度冗余性，可在不显著牺牲图像质量的前提下高效压缩。时间冗余反映的是图像之间的重复性。如果某帧图像与后继图像完全相同，那么无需重新编码该帧，仅需在编码中指示其重复即可。现成的视频压缩算法几乎可以将视频压缩为任意所需比特率。当然，比特率越高，图像质量越好，用户的观看体验越佳。
+
+我们还可以使用压缩技术创建同一视频的 **多个版本**，每个版本具有不同的质量等级。例如，可以压缩出三个版本，分别为 300 kbps、1 Mbps 和 3 Mbps。用户可根据其当前可用带宽选择观看版本。高速互联网连接的用户可选 3 Mbps 版本；而通过 3G 网络使用智能手机观看的用户则可能选择 300 kbps 版本。同样，视频会议应用中的视频也可以“即时压缩”，以在会话用户之间的可用端到端带宽条件下提供最佳视频质量。
+
+.. toggle::
+
+    Perhaps the most salient characteristic of video is its **high bit rate**. Video distributed over the Internet typically ranges from 100 kbps for low-quality video conferencing to over 3 Mbps for streaming high- definition movies. To get a sense of how video bandwidth demands compare with those of other Internet applications, let’s briefly consider three different users, each using a different Internet application. Our first user, Frank, is going quickly through photos posted on his friends’ Facebook pages. Let’s assume that Frank is looking at a new photo every 10 seconds, and that photos are on average 200 Kbytes in size. (As usual, throughout this discussion we make the simplifying assumption that 1 Kbyte=8,000 bits.) Our second user, Martha, is streaming music from the Internet (“the cloud”) to her smartphone. Let’s assume Martha is using a service such as Spotify to listen to many MP3 songs, one after the other, each encoded at a rate of 128 kbps. Our third user, Victor, is watching a video that has been encoded at 2 Mbps. Finally, let’s suppose that the session length for all three users is 4,000 seconds (approximately 67 minutes). :ref:`Table 9.1 <Table 9.1>` compares the bit rates and the total bytes transferred for these three users. We see that video streaming consumes by far the most bandwidth, having a bit rate of more than ten times greater than that of the Facebook and music-streaming applications. Therefore, when design ing networked video applications, the first thing we must keep in mind is the high bit-rate requirements of video. Given the popularity of video and its high bit rate, it is perhaps not surprising that Cisco predicts :ref:`[Cisco 2015] <Cisco 2015>` that streaming and stored video will be approximately 80 percent of global consumer Internet traffic by 2019.
+
+    **Table 9.1 Comparison of bit-rate requirements of three Internet applications**
+
+    .. list-table::
+
+        * -
+          - **Bit rate**
+          - **Bytes transferred in 67 min**
+        * - Facebook Frank
+          - 160 kbps
+          - 80 Mbytes
+        * - Martha Music
+          - 128 kbps
+          - 64 Mbytes
+        * - Victor Video
+          - 2 Mbps
+          - 1 Gbyte
+
+    Another important characteristic of video is that it can be compressed, thereby trading off video quality with bit rate. A video is a sequence of images, typically being displayed at a constant rate, for example, at 24 or 30 images per second. An uncompressed, digitally encoded image consists of an array of pixels, with each pixel encoded into a number of bits to represent luminance and color. There are two types of redundancy in video, both of which can be exploited by **video compression**. Spatial redundancy is the redundancy within a given image. Intuitively, an image that consists of mostly white space has a high degree of redundancy and can be efficiently compressed without significantly sacrificing image quality. Temporal redundancy reflects repetition from image to subsequent image. If, for example, an image and the subsequent image are exactly the same, there is no reason to re-encode the subsequent image; it is instead more efficient simply to indicate during encoding that the subsequent image is exactly the same. Today’s off-the-shelf compression algorithms can compress a video to essentially any bit rate desired. Of course, the higher the bit rate, the better the image quality and the better the overall user viewing experience.
+
+    We can also use compression to create **multiple versions** of the same video, each at a different quality level. For example, we can use compression to create, say, three versions of the same video, at rates of 300 kbps, 1 Mbps, and 3 Mbps. Users can then decide which version they want to watch as a function of their current available bandwidth. Users with high-speed Internet connections might choose the 3 Mbps version; users watching the video over 3G with a smartphone might choose the 300 kbps version. Similarly, the video in a video conference application can be compressed “on-the-fly” to provide the best video quality given the available end-to-end bandwidth between conversing users.
+
+.. _c9.1.2:
+
+9.1.2 音频的特性
+------------------------------------------------------------
+9.1.2 Properties of Audio
+
+数字音频（包括数字化语音与音乐）在带宽需求方面远低于视频。然而，数字音频在设计多媒体网络应用时也有其独特特性。为理解这些特性，我们首先来看模拟音频（由人类和乐器产生的）如何转换为数字信号：
+
+- 模拟音频信号以某个固定速率采样，例如每秒 8000 次。每个样本的值为一个实数。
+- 每个样本接着被四舍五入为有限个值之一，此操作称为 **量化**。这些有限值（量化值）通常为 2 的幂，例如 256 个量化值。
+- 每个量化值用固定数量的位表示。例如，如果有 256 个量化值，则每个值（即每个样本）用一个字节表示。所有样本的位表示接连在一起形成数字信号。例如，若模拟音频以每秒 8000 次采样、每个样本 8 位量化，则数字信号的比特率为 64,000 bps。为通过音响播放，该数字信号可以被转换（即解码）为模拟信号。然而，解码后的模拟信号只是原始信号的近似值，声音质量可能显著降低（例如，高频声音可能丢失）。通过提高采样率和量化值的数量，解码信号可更好地逼近原始模拟信号。因此（与视频类似），在解码信号质量与数字信号的比特率与存储需求之间存在权衡。
+
+上述基本编码技术称为 **脉冲编码调制（PCM）**。语音编码常采用 PCM，采样率为 8000 次/秒，每次采样 8 位，对应比特率为 64 kbps。音频 CD 也使用 PCM，采样率为 44,100 次/秒，每个样本 16 位；这对应单声道 705.6 kbps，立体声 1.411 Mbps。
+
+然而，PCM 编码的语音与音乐在互联网上很少使用。与视频一样，音频也使用压缩技术来降低比特率。人类语音可压缩至 10 kbps 以下仍保持可懂度。用于接近 CD 质量立体声音乐的一种流行压缩技术是 **MPEG 1 第三层**，即 **MP3**。MP3 编码器支持多种压缩率；128 kbps 是最常见的编码率，音质几乎无明显损失。一个相关标准是 **高级音频编码（AAC）**，由 Apple 推广。与视频一样，可以为一个预先录制的音频流创建多个版本，每个具有不同的比特率。
+
+尽管音频的比特率远低于视频，用户对音频故障的敏感度却高于视频。例如，设想一次视频会议正在进行。如果视频信号偶尔丢失几秒，会议可能仍能继续而不会造成太多用户困扰。但若音频信号频繁丢失，用户可能不得不中断会话。
+
+.. toggle::
+
+    Digital audio (including digitized speech and music) has significantly lower bandwidth requirements than video. Digital audio, however, has its own unique properties that must be considered when designing multimedia network applications. To understand these properties, let’s first consider how analog audio (which humans and musical instruments generate) is converted to a digital signal:
+
+    - The analog audio signal is sampled at some fixed rate, for example, at 8,000 samples per second. The value of each sample will be some real number. 
+    - Each of the samples is then rounded to one of a finite number of values. This operation is referred to as **quantization**. The number of such finite values—called quantization values—is typically a power of two, for example, 256 quantization values.
+    - Each of the quantization values is represented by a fixed number of bits. For example, if there are 256 quantization values, then each value—and hence each audio sample—is represented by one byte. The bit representations of all the samples are then concatenated together to form the digital representation of the signal. As an example, if an analog audio signal is sampled at 8,000 samples per second and each sample is quantized and represented by 8 bits, then the resulting digital signal will have a rate of 64,000 bits per second. For playback through audio speakers, the digital signal can then be converted back—that is, decoded—to an analog signal. However, the decoded analog signal is only an approximation of the original signal, and the sound quality may be noticeably degraded (for example, high-frequency sounds may be missing in the decoded signal). By increasing the sampling rate and the number of quantization values, the decoded signal can better approximate the original analog signal. Thus (as with video), there is a trade-off between the quality of the decoded signal and the bit-rate and storage requirements of the digital signal.
+
+    The basic encoding technique that we just described is called **pulse code modulation (PCM)**. Speech encoding often uses PCM, with a sampling rate of 8,000 samples per second and 8 bits per sample, resulting in a rate of 64 kbps. The audio compact disk (CD) also uses PCM, with a sampling rate of 44,100 samples per second with 16 bits per sample; this gives a rate of 705.6 kbps for mono and 1.411 Mbps for stereo.
+
+    PCM-encoded speech and music, however, are rarely used in the Internet. Instead, as with video, compression techniques are used to reduce the bit rates of the stream. Human speech can be compressed to less than 10 kbps and still be intelligible. A popular compression technique for near CD- quality stereo music is **MPEG 1 layer 3**, more commonly known as **MP3**. MP3 encoders can compress to many different rates; 128 kbps is the most common encoding rate and produces very little sound degradation. A related standard is **Advanced Audio Coding (AAC)**, which has been popularized by Apple. As with video, multiple versions of a prerecorded audio stream can be created, each at a different bit rate.
+
+    Although audio bit rates are generally much less than those of video, users are generally much more sensitive to audio glitches than video glitches. Consider, for example, a video conference taking place over the Internet. If, from time to time, the video signal is lost for a few seconds, the video conference can likely proceed without too much user frustration. If, however, the audio signal is frequently lost, the users may have to terminate the session.
+
+.. _c9.1.3:
+
+9.1.3 多媒体网络应用的类型
+------------------------------------------------------------
+9.1.3 Types of Multimedia Network Applications
+
+互联网支持大量有用且有趣的多媒体应用。在本小节中，我们将多媒体应用分为三大类：（i）流式存储音视频、（ii）会话语音/视频 IP 通信、以及（iii）流式直播音视频。正如我们将要看到的，每一类应用都有其特定的服务需求和设计问题。
+
+.. toggle::
+
+    The Internet supports a large variety of useful and entertaining multimedia applications. In this subsection, we classify multimedia applications into three broad categories: (i) streaming stored audio/video, (ii) conversational voice/video-over-IP, and (iii) streaming live audio/video. As we will soon see, each of these application categories has its own set of service requirements and design issues.
+
+流式存储音频与视频
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Streaming Stored Audio and Video
+
+为保持讨论具体性，我们聚焦于流式存储视频，这类应用通常同时包含音频与视频。流式存储音频（如 Spotify 的音乐流服务）与视频类似，只是比特率通常低得多。
+
+这类应用中，底层媒体为预录制视频，如电影、电视节目、录制的体育赛事或用户生成视频（如 YouTube 上常见的内容）。这些预录制视频存储在服务器上，用户通过发送请求按需观看。如今，许多互联网公司提供流式视频服务，包括 YouTube（Google）、Netflix、Amazon 和 Hulu。流式存储视频有三个关键特性：
+
+- **流式传输**。在流式存储视频应用中，客户端通常在开始接收视频几秒内就启动播放。这意味着客户端一边播放视频某段内容，一边从服务器接收后续内容。这种技术称为 **流式传输（streaming）**，避免了必须下载整个视频文件（可能造成较长延迟）后才播放。
+- **交互性**。由于媒体是预录制的，用户可暂停、向前/向后定位、快进等。用户发出这些操作请求至客户端实际执行之间的延迟应少于几秒，以确保响应性。
+- **连续播放**。一旦视频播放开始，应按原始录制时间连续进行。因此，必须及时从服务器接收数据以便客户端播放；否则用户可能遇到画面冻结（等待延迟帧）或跳帧（跳过延迟帧）现象。
+
+对于流式视频而言，最重要的性能指标是平均吞吐量。为实现连续播放，网络必须向流媒体应用提供不小于视频比特率的平均吞吐量。正如我们将在 :ref:`第 9.2 节 <c9.2>` 中看到的，通过缓冲与预取，即便吞吐量波动，只要 5–10 秒的平均吞吐量超过视频速率，也可以实现连续播放 :ref:`[Wang 2008] <Wang 2008>`。
+
+许多流式视频应用中，预录视频存储并通过 CDN 分发，而非单一数据中心。也存在许多 P2P 视频流应用，其中视频存储于用户主机（即对等方）上，不同视频块来自分布全球的多个对等方。鉴于互联网视频流的普遍性，我们将在 :ref:`第 9.2 节 <c9.2>` 中深入探讨，重点包括客户端缓冲、预取、质量适配及 CDN 分发等内容。
+
+.. toggle::
+
+    To keep the discussion concrete, we focus here on streaming stored video, which typically combines video and audio components. Streaming stored audio (such as Spotify’s streaming music service) is very similar to streaming stored video, although the bit rates are typically much lower.
+
+    In this class of applications, the underlying medium is prerecorded video, such as a movie, a television show, a prerecorded sporting event, or a prerecorded user-generated video (such as those commonly seen on YouTube). These prerecorded videos are placed on servers, and users send requests to the servers to view the videos on demand. Many Internet companies today provide streaming video, including YouTube (Google), Netflix, Amazon, and Hulu. Streaming stored video has three key distinguishing features.
+
+    - **Streaming**. In a streaming stored video application, the client typically begins video playout within a few seconds after it begins receiving the video from the server. This means that the client will be playing out from one location in the video while at the same time receiving later parts of the video from the server. This technique, known as **streaming**, avoids having to download the entire video file (and incurring a potentially long delay) before playout begins.
+    - **Interactivity**. Because the media is prerecorded, the user may pause, reposition forward, reposition backward, fast-forward, and so on through the video content. The time from when the user makes such a request until the action manifests itself at the client should be less than a few seconds for acceptable responsiveness.
+    - **Continuous playout**. Once playout of the video begins, it should proceed according to the original timing of the recording. Therefore, data must be received from the server in time for its playout at the client; otherwise, users experience video frame freezing (when the client waits for the delayed frames) or frame skipping (when the client skips over delayed frames).
+
+    By far, the most important performance measure for streaming video is average throughput. In order to provide continuous playout, the network must provide an average throughput to the streaming application that is at least as large the bit rate of the video itself. As we will see in :ref:`Section 9.2 <c9.2>`, by using buffering and prefetching, it is possible to provide continuous playout even when the throughput fluctuates, as long as the average throughput (averaged over 5–10 seconds) remains above the video rate :ref:`[Wang 2008] <Wang 2008>`.
+
+    For many streaming video applications, prerecorded video is stored on, and streamed from, a CDN rather than from a single data center. There are also many P2P video streaming applications for which the video is stored on users’ hosts (peers), with different chunks of video arriving from different peers that may spread around the globe. Given the prominence of Internet video streaming, we will explore video streaming in some depth in :ref:`Section 9.2 <c9.2>`, paying particular attention to client buffering, prefetching, adapting quality to bandwidth availability, and CDN distribution.
+
+会话语音与视频 IP 通信
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Conversational Voice- and Video-over-IP
+
+通过互联网进行的实时语音对话通常称为 **网络电话（Internet telephony）**，从用户角度看，它类似传统电路交换电话服务。它也常被称为 **VoIP（语音 IP 通信）**。会话视频通信与之类似，只是同时包含参与者的视频画面。如今大多数语音与视频会话系统支持三人以上会议通话。Skype、QQ、Google Talk 等互联网公司每日拥有数亿语音视频用户。
+
+在 :ref:`第 2 章 <c2>`（:ref:`图 2.4 <Figure 2.4>`）对应用服务需求的讨论中，我们确定了多个评估维度。其中两项——时间要求与容忍数据丢失——对会话语音与视频应用尤为关键。时间要求重要，因为音视频会话应用极度 **延迟敏感**。在两个或以上说话者交互的通话中，从说话/动作发生到对方接收到的延迟应低于几百毫秒。对于语音，延迟小于 150 毫秒不会被人感知；150–400 毫秒之间为可接受范围；超过 400 毫秒将导致令人沮丧甚至完全无法理解的对话。
+
+另一方面，会话多媒体应用是 **可容忍丢失** 的——偶尔的丢失只会造成音视频播放的短暂瑕疵，这些问题通常可部分或完全掩盖。延迟敏感但可容错的特性，与网页浏览、邮件、社交网络与远程登录等弹性数据应用明显不同。弹性应用中，长时间延迟令人烦恼但不致命，而数据完整性与准确性才至关重要。我们将在 :ref:`第 9.3 节 <c9.3>` 中深入讨论会话语音与视频，重点包括如何通过自适应播放、前向纠错及错误隐藏等方法缓解网络导致的丢包与延迟。
+
+.. toggle::
+
+    Real-time conversational voice over the Internet is often referred to as **Internet telephony**, since, from the user’s perspective, it is similar to the traditional circuit-switched telephone service. It is also commonly called **Voice-over-IP (VoIP)**. Conversational video is similar, except that it includes the video of the participants as well as their voices. Most of today’s voice and video conversational systems allow users to create conferences with three or more participants. Conversational voice and video are widely used in the Internet today, with the Internet companies Skype, QQ, and Google Talk boasting hundreds of millions of daily users.
+
+    In our discussion of application service requirements in :ref:`Chapter 2 <c2>` (:ref:`Figure 2.4 <Figure 2.4>`), we identified a number of axes along which application requirements can be classified. Two of these axes—timing considerations and tolerance of data loss—are particularly important for conversational voice and video applications. Timing considerations are important because audio and video conversational applications are highly **delay-sensitive**. For a conversation with two or more interacting speakers, the delay from when a user speaks or moves until the action is manifested at the other end should be less than a few hundred milliseconds. For voice, delays smaller than 150 milliseconds are not perceived by a human listener, delays between 150 and 400 milliseconds can be acceptable, and delays exceeding 400 milliseconds can result in frustrating, if not completely unintelligible, voice conversations.
+
+    On the other hand, conversational multimedia applications are **loss-tolerant**—occasional loss only causes occasional glitches in audio/video playback, and these losses can often be partially or fully concealed. These delay-sensitive but loss-tolerant characteristics are clearly different from those of elastic data applications such as Web browsing, e-mail, social networks, and remote login. For elastic applications, long delays are annoying but not particularly harmful; the completeness and integrity of the transferred data, however, are of paramount importance. We will explore conversational voice and video in more depth in :ref:`Section 9.3 <c9.3>`, paying particular attention to how adaptive playout, forward error correction, and error concealment can mitigate against network-induced packet loss and delay.
+
+流式直播音频与视频
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Streaming Live Audio and Video
+
+第三类应用类似传统广播电台与电视台，只是传输发生在互联网中。这类应用使用户可收听收看来自全球任一角落的现场广播或电视，如体育赛事直播或新闻现场报道。如今，全球有成千上万的广播电视台通过互联网播出内容。
+
+直播类应用通常拥有大量同时接收相同音视频节目的用户。在现今互联网中，这通常通过 CDN 完成（:ref:`第 2.6 节 <c2.6>`）。与流式存储多媒体类似，网络必须为每个直播多媒体流提供大于消费速率的平均吞吐量。由于事件为实时，延迟也是考虑因素，尽管其时延要求远低于会话语音。用户从选择直播开始至播放启动可容忍长达十秒左右的延迟。我们将在本书中不再详述流式直播媒体，因为其使用的许多技术（初始缓冲延迟、自适应带宽使用、CDN 分发）与流式存储媒体相似。
+
+.. toggle::
+
+    This third class of applications is similar to traditional broadcast radio and television, except that transmission takes place over the Internet. These applications allow a user to receive a live radio or television transmission—such as a live sporting event or an ongoing news event—transmitted from any corner of the world. Today, thousands of radio and television stations around the world are broadcasting content over the Internet.
+
+    Live, broadcast-like applications often have many users who receive the same audio/video program at the same time. In the Internet today, this is typically done with CDNs (:ref:`Section 2.6 <c2.6>`). As with streaming stored multimedia, the network must provide each live multimedia flow with an average throughput that is larger than the video consumption rate. Because the event is live, delay can also be an issue, although the timing constraints are much less stringent than those for conversational voice. Delays of up to ten seconds or so from when the user chooses to view a live transmission to when playout begins can be tolerated. We will not cover streaming live media in this book because many of the techniques used for streaming live media—initial buffering delay, adaptive bandwidth use, and CDN distribution—are similar to those for streaming stored media.

@@ -1,0 +1,1102 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>3.4 可靠数据传输的原理 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c3/s4';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3.5 面向连接的传输：TCP" href="s5.html" />
+    <link rel="prev" title="3.3 无连接传输：UDP" href="s3.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 3 章 传输层</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c3/s4.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>3.4 可靠数据传输的原理</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c3-4-1">3.4.1 构建一个可靠数据传输协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rdt1-0">在完全可靠信道上的可靠数据传输：rdt1.0</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rdt2-0">在存在比特错误的信道上的可靠数据传输：rdt2.0</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rdt3-0">在具有比特错误的丢包信道上的可靠数据传输：rdt3.0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c3-4-2">3.4.2 流水线式可靠数据传输协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-gbn">3.4.3 回退 N（GBN）</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sr">3.4.4 选择性重传（SR）</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c3-4">
+<span id="id1"></span><h1>3.4 可靠数据传输的原理<a class="headerlink" href="#c3-4" title="此标题的永久链接">#</a></h1>
+<p>3.4 Principles of Reliable Data Transfer</p>
+<p>在本节中，我们将以通用的上下文来讨论可靠数据传输的问题。这是合适的方式，因为实现可靠数据传输的问题不仅出现在传输层，也出现在链路层以及应用层。因此，这一通用性问题在网络中具有核心的重要性。实际上，如果要列出网络中“十个最基本的重要问题”的清单，可靠数据传输问题很可能名列前茅。在下一节中，我们将考察 TCP，并特别指出，TCP 利用了我们即将描述的许多原理。</p>
+<p><a class="reference internal" href="#figure-3-8"><span class="std std-ref">图 3.8</span></a> 展示了我们研究可靠数据传输的框架。传输层向上层实体提供的服务抽象是一个可靠信道（reliable channel），用于传输数据。在这个可靠信道中，传输的数据位不会被破坏（不会从 0 翻转成 1，或相反），也不会丢失，并且它们按发送顺序被交付。这正是 TCP 向调用它的 Internet 应用程序所提供的服务模型。</p>
+<p><strong>可靠数据传输协议</strong> 的责任是实现这种服务抽象。这一任务之所以困难，是因为可靠数据传输协议之下的层可能并不可靠。例如，TCP 是建立在不可靠（IP）端到端网络层之上的可靠数据传输协议。更一般地说，两个可靠通信端点之间的下层可能是一个物理链路（如链路层数据传输协议的情况），也可能是一个全球互联网络（如传输层协议的情况）。但就我们的目的而言，我们可以将该下层简单地视为一个不可靠的点对点信道。</p>
+<p>在本节中，我们将逐步构建一个可靠数据传输协议的发送方与接收方逻辑，实现对底层信道模型复杂度递增的应对。例如，我们将考虑在底层信道可能破坏位或丢失整个分组的情况下，需要哪些协议机制。在本节讨论中，我们始终假设分组按发送顺序到达（即底层信道不重排序），但可能有些分组会丢失。<a class="reference internal" href="#figure-3-8"><span class="std std-ref">图 3.8(b)</span></a> 展示了我们数据传输协议的接口。数据传输协议的发送方将通过调用 <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code> 来从上层接收数据。该协议随后将在接收端将这些数据传递给上层。（这里 <code class="docutils literal notranslate"><span class="pre">rdt</span></code> 代表可靠数据传输协议，“_send”表示调用的是 <code class="docutils literal notranslate"><span class="pre">rdt</span></code> 的发送端函数。设计任何协议的第一步是选择一个好名字！）在接收端，当一个分组从信道到达时，将调用 <code class="docutils literal notranslate"><span class="pre">rdt_rcv()</span></code>。当 <code class="docutils literal notranslate"><span class="pre">rdt</span></code> 协议想要将数据交付给上层时，将通过调用 <code class="docutils literal notranslate"><span class="pre">deliver_data()</span></code> 来实现。在以下讨论中，我们使用术语“packet（分组）”而不是传输层的“segment（报文段）”。这是因为本节中发展出的理论适用于整个计算机网络，而不仅仅是 Internet 的传输层，因此使用更通用的术语“分组”在这里更合适。</p>
+<figure class="align-left" id="figure-3-8">
+<img alt="../_images/245-0.png" src="../_images/245-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/245-1.png" src="../_images/245-1.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p><strong>图 3.8 可靠数据传输：服务模型与服务实现</strong></p>
+<p>在本节中，我们仅考虑 <strong>单向数据传输</strong> 的情况，即从发送方到接收方的数据传输。可靠的 <strong>双向</strong> （即全双工） <strong>数据传输</strong> 的实现在概念上并不更复杂，但解释起来要繁琐得多。尽管我们仅讨论单向数据传输，但需要注意的是，协议的发送方与接收方仍然需要双向发送分组，如 <a class="reference internal" href="#figure-3-8"><span class="std std-ref">图 3.8</span></a> 所示。我们很快将看到，除了交换包含实际要传输的数据的分组外， <code class="docutils literal notranslate"><span class="pre">rdt</span></code> 协议的发送方与接收方还需要来回交换控制分组。 <code class="docutils literal notranslate"><span class="pre">rdt</span></code> 的发送方与接收方都通过调用 <code class="docutils literal notranslate"><span class="pre">udt_send()</span></code> 向对方发送分组（其中 udt 表示不可靠数据传输）。</p>
+<div class="toggle docutils container">
+<p>In this section, we consider the problem of reliable data transfer in a general context. This is appropriate since the problem of implementing reliable data transfer occurs not only at the transport layer, but also at the link layer and the application layer as well. The general problem is thus of central importance to networking. Indeed, if one had to identify a “top-ten” list of fundamentally important problems in all of networking, this would be a candidate to lead the list. In the next section we’ll examine TCP and show, in particular, that TCP exploits many of the principles that we are about to describe.</p>
+<p><a class="reference internal" href="#figure-3-8"><span class="std std-ref">Figure 3.8</span></a> illustrates the framework for our study of reliable data transfer. The service abstraction provided to the upper-layer entities is that of a reliable channel through which data can be transferred. With a reliable channel, no transferred data bits are corrupted (flipped from 0 to 1, or vice versa) or lost, and all are delivered in the order in which they were sent. This is precisely the service model offered by TCP to the Internet applications that invoke it.</p>
+<p>It is the responsibility of a <strong>reliable data transfer protocol</strong> to implement this service abstraction. This task is made difficult by the fact that the layer below the reliable data transfer protocol may be unreliable. For example, TCP is a reliable data transfer protocol that is implemented on top of an unreliable (IP) end-to-end network layer. More generally, the layer beneath the two reliably communicating end points might consist of a single physical link (as in the case of a link-level data transfer protocol) or a global internetwork (as in the case of a transport-level protocol). For our purposes, however, we can view this lower layer simply as an unreliable point-to-point channel.</p>
+<p>In this section, we will incrementally develop the sender and receiver sides of a reliable data transfer protocol, considering increasingly complex models of the underlying channel. For example, we’ll consider what protocol mechanisms are needed when the underlying channel can corrupt bits or lose entire packets. One assumption we’ll adopt throughout our discussion here is that packets will be delivered in the order in which they were sent, with some packets possibly being lost; that is, the underlying channel will not reorder packets. <a class="reference internal" href="#figure-3-8"><span class="std std-ref">Figure 3.8(b)</span></a> illustrates the interfaces for our data transfer protocol. The sending side of the data transfer protocol will be invoked from above by a call to <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code>. It will pass the data to be delivered to the upper layer at the receiving side. (Here <code class="docutils literal notranslate"><span class="pre">rdt</span></code> stands for reliable data transfer protocol and _send indicates that the sending side of <code class="docutils literal notranslate"><span class="pre">rdt</span></code> is being called. The first step in developing any protocol is to choose a good name!) On the receiving side, <code class="docutils literal notranslate"><span class="pre">rdt_rcv()</span></code> will be called when a packet arrives from the receiving side of the channel. When the <code class="docutils literal notranslate"><span class="pre">rdt</span></code> protocol wants to deliver data to the upper layer, it will do so by calling <code class="docutils literal notranslate"><span class="pre">deliver_data()</span></code>. In the following we use the terminology “packet” rather than transport-layer “segment.” Because the theory developed in this section applies to computer networks in general and not just to the Internet transport layer, the generic term “packet” is perhaps more appropriate here.</p>
+<figure class="align-left">
+<img alt="../_images/245-0.png" src="../_images/245-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/245-1.png" src="../_images/245-1.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+<p><strong>Figure 3.8 Reliable data transfer: Service model and service implementation</strong></p>
+<p>In this section we consider only the case of <strong>unidirectional data transfer</strong>, that is, data transfer from the sending to the receiving side. The case of reliable <strong>bidirectional</strong> (that is, full-duplex) <strong>data transfer</strong> is conceptually no more difficult but considerably more tedious to explain. Although we consider only unidirectional data transfer, it is important to note that the sending and receiving sides of our protocol will nonetheless need to transmit packets in both directions, as indicated in <a class="reference internal" href="#figure-3-8"><span class="std std-ref">Figure 3.8</span></a>. We will see shortly that, in addition to exchanging packets containing the data to be transferred, the sending and receiving sides of <code class="docutils literal notranslate"><span class="pre">rdt</span></code> will also need to exchange control packets back and forth. Both the send and receive sides of <code class="docutils literal notranslate"><span class="pre">rdt</span></code> send packets to the other side by a call to <code class="docutils literal notranslate"><span class="pre">udt_send()</span></code> (where udt stands for unreliable data transfer).</p>
+</div>
+<section id="c3-4-1">
+<span id="id2"></span><h2>3.4.1 构建一个可靠数据传输协议<a class="headerlink" href="#c3-4-1" title="此标题的永久链接">#</a></h2>
+<p>3.4.1 Building a Reliable Data Transfer Protocol</p>
+<p>我们现在逐步介绍一系列协议，每个协议的复杂度逐步提升，最终达到一个完美无缺的可靠数据传输协议。</p>
+<div class="toggle docutils container">
+<p>We now step through a series of protocols, each one becoming more complex, arriving at a flawless, reliable data transfer protocol.</p>
+</div>
+<section id="rdt1-0">
+<h3>在完全可靠信道上的可靠数据传输：rdt1.0<a class="headerlink" href="#rdt1-0" title="此标题的永久链接">#</a></h3>
+<p>Reliable Data Transfer over a Perfectly Reliable Channel: rdt1.0</p>
+<p>我们首先考虑最简单的情况，即底层信道是完全可靠的。这个协议本身，我们称之为 <code class="docutils literal notranslate"><span class="pre">rdt1.0</span></code>，是非常简单的。<a class="reference internal" href="#figure-3-9"><span class="std std-ref">图 3.9</span></a> 展示了 rdt1.0 发送方与接收方的 <strong>有限状态机（FSM）</strong> 定义。<a class="reference internal" href="#figure-3-9"><span class="std std-ref">图 3.9(a)</span></a> 中的 FSM 定义了发送方的操作，而 <a class="reference internal" href="#figure-3-9"><span class="std std-ref">图 3.9(b)</span></a> 中的 FSM 定义了接收方的操作。需要注意的是，发送方与接收方拥有各自独立的 FSM。在 <a class="reference internal" href="#figure-3-9"><span class="std std-ref">图 3.9</span></a> 中，发送方与接收方的 FSM 都仅包含一个状态。FSM 描述中的箭头表示协议从一个状态到另一个状态的转换。（由于 <a class="reference internal" href="#figure-3-9"><span class="std std-ref">图 3.9</span></a> 中的每个 FSM 仅有一个状态，因此状态转换必然是从该状态回到自身；稍后我们将看到更复杂的状态图。）触发状态转换的事件显示在转换标注的水平线上方，而事件发生时执行的动作则显示在水平线下方。当事件发生但无动作，或无事件但有动作时，我们分别在水平线上下使用符号 Λ 显式表示“无动作”或“无事件”。FSM 的初始状态由虚线箭头表示。尽管 <a class="reference internal" href="#figure-3-9"><span class="std std-ref">图 3.9</span></a> 中的 FSM 仅有一个状态，但我们即将看到的 FSM 拥有多个状态，因此标明每个 FSM 的初始状态很重要。</p>
+<p><code class="docutils literal notranslate"><span class="pre">rdt</span></code> 的发送端通过 <code class="docutils literal notranslate"><span class="pre">rdt_send(data)</span></code> 事件从上层接收数据，创建一个包含该数据的分组（通过动作 <code class="docutils literal notranslate"><span class="pre">make_pkt(data)</span></code>），并将该分组发送到信道中。实际上，<code class="docutils literal notranslate"><span class="pre">rdt_send(data)</span></code> 事件通常是由上层应用通过过程调用（例如 <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code>）触发的。</p>
+<figure class="align-center" id="figure-3-9">
+<img alt="../_images/247-0.png" src="../_images/247-0.png" />
+</figure>
+<p><strong>图 3.9 rdt1.0 – 用于完全可靠信道的协议</strong></p>
+<p>在接收端，rdt 通过 <code class="docutils literal notranslate"><span class="pre">rdt_rcv(packet)</span></code> 事件从底层信道接收到一个分组，从分组中提取出数据（通过动作 <code class="docutils literal notranslate"><span class="pre">extract</span> <span class="pre">(packet,</span> <span class="pre">data)</span></code>），并将数据传递给上层（通过动作 <code class="docutils literal notranslate"><span class="pre">deliver_data(data)</span></code>）。实际上， <code class="docutils literal notranslate"><span class="pre">rdt_rcv(packet)</span></code> 事件通常是由下层协议通过过程调用（例如 <code class="docutils literal notranslate"><span class="pre">rdt_rcv()</span></code>）触发的。</p>
+<p>在这个简单的协议中，数据单元与分组之间没有区别。此外，所有分组的流动方向都是从发送方到接收方；由于信道是完全可靠的，接收方无需向发送方提供任何反馈，因为不会发生错误！需要注意的是，我们还假设接收方能够以不低于发送方的速率接收数据。因此，接收方也无需要求发送方减速！</p>
+<div class="toggle docutils container">
+<p>We first consider the simplest case, in which the underlying channel is completely reliable. The protocol itself, which we’ll call <code class="docutils literal notranslate"><span class="pre">rdt1.0</span></code>, is trivial. The <strong>finite-state machine (FSM)</strong> definitions for the rdt1.0 sender and receiver are shown in <a class="reference internal" href="#figure-3-9"><span class="std std-ref">Figure 3.9</span></a>. The FSM in <a class="reference internal" href="#figure-3-9"><span class="std std-ref">Figure 3.9(a)</span></a> defines the operation of the sender, while the FSM in <a class="reference internal" href="#figure-3-9"><span class="std std-ref">Figure 3.9(b)</span></a> defines the operation of the receiver. It is important to note that there are separate FSMs for the sender and for the receiver. The sender and receiver FSMs in <a class="reference internal" href="#figure-3-9"><span class="std std-ref">Figure 3.9</span></a> each have just one state. The arrows in the FSM description indicate the transition of the protocol
+from one state to another. (Since each FSM in <a class="reference internal" href="#figure-3-9"><span class="std std-ref">Figure 3.9</span></a> has just one state, a transition is necessarily from the one state back to itself; we’ll see more complicated state diagrams shortly.) The event causing the transition is shown above the horizontal line labeling the transition, and the actions taken when the event occurs are shown below the horizontal line. When no action is taken on an event, or no event occurs and an action is taken, we’ll use the symbol Λ below or above the horizontal, respectively, to explicitly denote the lack of an action or event. The initial state of the FSM is indicated by the dashed
+arrow. Although the FSMs in <a class="reference internal" href="#figure-3-9"><span class="std std-ref">Figure 3.9</span></a> have but one state, the FSMs we will see shortly have multiple states, so it will be important to identify the initial state of each FSM.</p>
+<p>The sending side of <code class="docutils literal notranslate"><span class="pre">rdt</span></code> simply accepts data from the upper layer via the <code class="docutils literal notranslate"><span class="pre">rdt_send(data)</span></code> event, creates a packet containing the data (via the action <code class="docutils literal notranslate"><span class="pre">make_pkt(data)</span></code>) and sends the packet into the channel. In practice, the <code class="docutils literal notranslate"><span class="pre">rdt_send(data)</span></code> event would result from a procedure call (for example, to
+<code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code>) by the upper-layer application.</p>
+<figure class="align-center">
+<img alt="../_images/247-0.png" src="../_images/247-0.png" />
+</figure>
+<p><strong>Figure 3.9 rdt1.0 – A protocol for a completely reliable channel</strong></p>
+<p>On the receiving side, rdt receives a packet from the underlying channel via the <code class="docutils literal notranslate"><span class="pre">rdt_rcv(packet)</span></code> event, removes the data from the packet (via the action <code class="docutils literal notranslate"><span class="pre">extract</span> <span class="pre">(packet,</span> <span class="pre">data)</span></code>) and passes the data up to the upper layer (via the action <code class="docutils literal notranslate"><span class="pre">deliver_data(data)</span></code>). In practice, the <code class="docutils literal notranslate"><span class="pre">rdt_rcv(packet)</span></code> event would result from a procedure call (for example, to <code class="docutils literal notranslate"><span class="pre">rdt_rcv()</span></code>) from the lower-layer protocol.</p>
+<p>In this simple protocol, there is no difference between a unit of data and a packet. Also, all packet flow is from the sender to receiver; with a perfectly reliable channel there is no need for the receiver side to provide any feedback to the sender since nothing can go wrong! Note that we have also assumed that the receiver is able to receive data as fast as the sender happens to send data. Thus, there is no need for the receiver to ask the sender to slow down!</p>
+</div>
+</section>
+<section id="rdt2-0">
+<h3>在存在比特错误的信道上的可靠数据传输：rdt2.0<a class="headerlink" href="#rdt2-0" title="此标题的永久链接">#</a></h3>
+<p>Reliable Data Transfer over a Channel with Bit Errors: rdt2.0</p>
+<p>一个更现实的底层信道模型是分组中的比特可能会被损坏。这类比特错误通常发生在网络的物理组件中，例如分组在传输、传播或缓冲的过程中。我们暂且继续假设所有传输的分组都会被接收（尽管其比特可能已被损坏），并且按照发送的顺序被接收。</p>
+<p>在为这种信道开发可靠通信协议之前，先思考人们在面对类似情况时可能的应对方式。设想你自己通过电话口述一段较长的信息。在典型的场景中，记录者可能在每听完并理解、记录一整句话后说“OK”。如果记录者听到一句模糊不清的话，他会请你重复这句话。这个口述协议使用了 <strong>正确认可</strong> （“OK”）和 <strong>否认可</strong> （“请重复一遍”）。这些控制消息让接收方能告知发送方哪些内容被正确接收，哪些内容出现了错误需要重传。在计算机网络中，基于这种重传机制的可靠数据传输协议被称为 <strong>ARQ（Automatic Repeat reQuest，自动重传请求）协议</strong>。</p>
+<p>从根本上说，为了应对比特错误，ARQ 协议需要具备三项附加协议能力：</p>
+<ul class="simple">
+<li><p><strong>错误检测</strong>。首先，需要一种机制使接收方能够检测出比特错误是否发生。回忆前一节中提到的，UDP 使用 Internet 校验和字段正是为此目的。在 <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">第 6 章</span></a> 中我们将更详细地探讨错误检测与纠正技术；这些技术使接收方能够检测并可能纠正分组比特错误。目前，我们只需知道这些技术要求从发送方向接收方发送额外的比特（即除了原始数据之外的比特）；这些比特会被收集到 <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> 数据分组的校验和字段中。</p></li>
+<li><p><strong>接收方反馈</strong>。由于发送方与接收方通常运行在不同的端系统上，可能相距数千英里，发送方要了解接收方对分组的看法（即是否正确接收分组）的唯一方式是由接收方显式反馈信息给发送方。在口述场景中的“OK”和“请重复一遍”就是这类反馈的例子。我们的 <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> 协议也将从接收方向发送方发送 ACK 和 NAK 分组。从原理上讲，这些分组只需要一个比特的长度；例如，0 表示 NAK，1 表示 ACK。</p></li>
+<li><p><strong>重传机制</strong>。接收方收到的错误分组将由发送方重新传输。</p></li>
+</ul>
+<p><a class="reference internal" href="#figure-3-10"><span class="std std-ref">图 3.10</span></a> 展示了 <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> 的 FSM 表示，该协议使用了错误检测、确认和否认机制。</p>
+<p><code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> 的发送方有两个状态。在最左边的状态中，发送方协议正在等待从上层传来的数据。当 <code class="docutils literal notranslate"><span class="pre">rdt_send(data)</span></code> 事件发生时，发送方会创建一个包含要发送数据和校验和的分组（<code class="docutils literal notranslate"><span class="pre">sndpkt</span></code>，例如如 <a class="reference internal" href="s3.html#c3-3-2"><span class="std std-ref">第 3.3.2 节</span></a> 中 UDP 段的情况所述），然后通过 <code class="docutils literal notranslate"><span class="pre">udt_send(sndpkt)</span></code> 操作发送该分组。在最右边的状态中，发送方协议正在等待来自接收方的 ACK 或 NAK 分组。如果收到 ACK 分组（<a class="reference internal" href="#figure-3-10"><span class="std std-ref">图 3.10</span></a> 中的 <code class="docutils literal notranslate"><span class="pre">rdt_rcv(rcvpkt)</span> <span class="pre">&amp;&amp;</span> <span class="pre">isACK</span> <span class="pre">(rcvpkt)</span></code> 表示此事件），发送方知道最近发送的分组已被正确接收，因此协议返回到等待上层数据的状态。如果收到 NAK，协议将重传上一个分组，并等待接收方对重传分组的响应 ACK 或 NAK。需要注意的是，当发送方处于等待 ACK 或 NAK 的状态时，它不能从上层获取更多数据；也就是说， <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code> 事件不会发生；只有在收到 ACK 并离开该状态后才会发生。因此，发送方在确认接收方已正确接收当前分组之前，不会发送新的数据。由于这种行为，这类协议被称为 <strong>停等（stop-and-wait）协议</strong>。</p>
+<figure class="align-left" id="figure-3-10">
+<img alt="../_images/249-0.png" src="../_images/249-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/249-1.png" src="../_images/249-1.png" />
+</figure>
+<p><strong>图 3.10 rdt2.0 – 用于具有比特错误信道的协议</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> 的接收方 FSM 仍然只有一个状态。在分组到达时，根据接收到的分组是否损坏，接收方会回复 ACK 或 NAK。在 <a class="reference internal" href="#figure-3-10"><span class="std std-ref">图 3.10</span></a> 中， <code class="docutils literal notranslate"><span class="pre">rdt_rcv(rcvpkt)</span> <span class="pre">&amp;&amp;</span> <span class="pre">corrupt(rcvpkt)</span></code> 表示接收到一个有错误的分组事件。</p>
+<p>协议 <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> 看起来似乎是可行的，但不幸的是它存在一个致命缺陷。特别是我们没有考虑 ACK 或 NAK 分组本身也可能被损坏！（在继续之前，你可以先思考一下该如何修复这个问题。）不幸的是，我们这个小小的疏忽并不像看上去那么无害。最起码，我们需要为 ACK/NAK 分组添加校验和位以检测此类错误。更困难的问题是协议该如何从 ACK 或 NAK 分组的错误中恢复。困难在于如果 ACK 或 NAK 被损坏，发送方就无法知道接收方是否正确接收了最后一份数据。</p>
+<p>考虑处理损坏 ACK 或 NAK 的三种可能方式：</p>
+<ul class="simple">
+<li><p>第一种可能性，设想人在口述场景中的做法。如果讲话者听不清接收方回复的“OK”或“请重复一遍”，讲话者可能会问：“你说什么？”（这会在我们的协议中引入一种新的从发送方向接收方的分组类型）。然后接收方会重复他的回复。但如果讲话者的“你说什么？”也被损坏了呢？接收方无法判断这个模糊的句子是口述内容的一部分还是要求重发最后一次回复，他可能也会回复“你说什么？”。当然，这个回复也可能是模糊的。显然，这是一条困难的道路。</p></li>
+<li><p>第二种替代方案是添加足够的校验和位，使发送方不仅能检测出比特错误，还能从中恢复。这解决了信道会损坏但不会丢包的情形下的直接问题。</p></li>
+<li><p>第三种方法是当发送方收到损坏的 ACK 或 NAK 分组时，简单地重新发送当前的数据分组。然而，这种方法会在发送方到接收方的信道中引入 <strong>重复分组</strong>。重复分组的根本问题在于接收方无法知道它上次发送的 ACK 或 NAK 是否被发送方正确接收。因此，接收方事先无法知道一个到达的分组是新数据还是重传的数据！</p></li>
+</ul>
+<p>解决这个新问题的一个简单方法（几乎所有现有的数据传输协议都采用，包括 TCP）是向数据分组添加一个新字段，让发送方通过该字段为数据分组编号，也就是加入一个 <strong>序列号（sequence number）</strong>。接收方只需检查这个序列号即可判断接收到的分组是否是重传。在这种简单的停等协议情况下，一个 1 比特的序列号就足够了，因为它允许接收方判断发送方是在重传（接收到的分组序列号与最近接收到的分组相同），还是发送一个新分组（序列号发生变化，在模 2 算术中“前进”）。由于我们目前假设信道不会丢包，因此 ACK 和 NAK 分组本身无需指明其确认的是哪个分组。发送方知道任何一个收到的 ACK 或 NAK 分组（无论是否损坏）都是对其最近一次发送数据分组的响应。</p>
+<p><a class="reference internal" href="#figure-3-11"><span class="std std-ref">图 3.11</span></a> 与 <a class="reference internal" href="#figure-3-12"><span class="std std-ref">3.12</span></a> 展示了我们对 <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> 修复后的版本 <code class="docutils literal notranslate"><span class="pre">rdt2.1</span></code> 的 FSM 描述。 <code class="docutils literal notranslate"><span class="pre">rdt2.1</span></code> 的发送方和接收方 FSM 数量都变为之前的两倍。这是因为协议状态现在必须反映出当前正在发送（发送方）或期望接收（接收方）的分组是否具有序列号 0 或 1。注意，那些发送或期望接收编号为 0 的分组状态中的动作与发送或期望接收编号为 1 的分组状态是镜像的；唯一的差异在于序列号的处理。</p>
+<p>协议 <code class="docutils literal notranslate"><span class="pre">rdt2.1</span></code> 使用从接收方向发送方发送的正确认可和否认可。当接收到一个乱序分组时，接收方会发送对其所接收到分组的正确认可；当接收到一个损坏分组时，接收方发送否认可。如果我们不发送 NAK，而是对最后一个正确接收的分组发送 ACK，也能达到与 NAK 相同的效果。发送方若收到两个针对同一分组的 ACK（即，收到 <strong>重复 ACK</strong> ），便知道接收方没有正确接收到 ACK 所确认的分组之后的那个分组。我们用于带比特错误信道的无 NAK 的可靠数据传输协议是 <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code>，见 <span class="xref std std-ref">图 3.13</span> 与 <span class="xref std std-ref">3.14</span>。在 <code class="docutils literal notranslate"><span class="pre">rdt2.1</span></code> 与 <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code> 之间的一个细微变化是，接收方现在必须在 ACK 消息中包含被确认分组的序列号（通过在接收方 FSM 中的 <code class="docutils literal notranslate"><span class="pre">make_pkt()</span></code> 加入 <code class="docutils literal notranslate"><span class="pre">ACK,</span> <span class="pre">0</span></code> 或 <code class="docutils literal notranslate"><span class="pre">ACK,</span> <span class="pre">1</span></code> 参数实现），而发送方现在必须检查 ACK 消息所确认分组的序列号（通过在发送方 FSM 的 <code class="docutils literal notranslate"><span class="pre">isACK()</span></code> 中加入 0 或 1 参数实现）。</p>
+<figure class="align-center" id="figure-3-11">
+<img alt="../_images/251-0.png" src="../_images/251-0.png" />
+</figure>
+<p><strong>图 3.11 rdt2.1 发送方</strong></p>
+<figure class="align-center" id="figure-3-12">
+<img alt="../_images/252-0.png" src="../_images/252-0.png" />
+</figure>
+<p><strong>图 3.12 rdt2.1 接收方</strong></p>
+<div class="toggle docutils container">
+<p>A more realistic model of the underlying channel is one in which bits in a packet may be corrupted. Such bit errors typically occur in the physical components of a network as a packet is transmitted, propagates, or is buffered. We’ll continue to assume for the moment that all transmitted packets are received (although their bits may be corrupted) in the order in which they were sent.</p>
+<p>Before developing a protocol for reliably communicating over such a channel, first consider how people might deal with such a situation. Consider how you yourself might dictate a long message over the phone. In a typical scenario, the message taker might say “OK” after each sentence has been heard, understood, and recorded. If the message taker hears a garbled sentence, you’re asked to repeat the garbled sentence. This message-dictation protocol uses both <strong>positive acknowledgments</strong> (“OK”) and <strong>negative acknowledgments</strong> (“Please repeat that.”). These control messages allow the receiver to let the sender know what has been received correctly, and what has been received in error and thus requires repeating. In a computer network setting, reliable data transfer protocols based on such retransmission are known as <strong>ARQ (Automatic Repeat reQuest) protocols</strong>.</p>
+<p>Fundamentally, three additional protocol capabilities are required in ARQ protocols to handle the presence of bit errors:</p>
+<ul class="simple">
+<li><p><strong>Error detection</strong>. First, a mechanism is needed to allow the receiver to detect when bit errors have occurred. Recall from the previous section that UDP uses the Internet checksum field for exactly this purpose. In <a class="reference internal" href="../c6/index.html#c6"><span class="std std-ref">Chapter 6</span></a> we’ll examine error-detection and -correction techniques in greater detail; these techniques allow the receiver to detect and possibly correct packet bit errors. For now, we need only know that these techniques require that extra bits (beyond the bits of original data to be transferred) be sent from the sender to the receiver; these bits will be gathered into the packet</p></li>
+</ul>
+<p>checksum field of the <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> data packet.
+- <strong>Receiver feedback</strong>. Since the sender and receiver are typically executing on different end systems,
+possibly separated by thousands of miles, the only way for the sender to learn of the receiver’s view of the world (in this case, whether or not a packet was received correctly) is for the receiver to provide explicit feedback to the sender. The positive (ACK) and negative (NAK) acknowledgment
+replies in the message-dictation scenario are examples of such feedback. Our <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> protocol will similarly send ACK and NAK packets back from the receiver to the sender. In principle, these packets need only be one bit long; for example, a 0 value could indicate a NAK and a value of 1 could indicate an ACK.
+- <strong>Retransmission</strong>. A packet that is received in error at the receiver will be retransmitted by the sender.</p>
+<p><a class="reference internal" href="#figure-3-10"><span class="std std-ref">Figure 3.10</span></a> shows the FSM representation of <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code>, a data transfer protocol employing error detection, positive acknowledgments, and negative acknowledgments.</p>
+<p>The send side of <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> has two states. In the leftmost state, the send-side protocol is waiting for data to be passed down from the upper layer. When the <code class="docutils literal notranslate"><span class="pre">rdt_send(data)</span></code> event occurs, the sender will create a packet (<code class="docutils literal notranslate"><span class="pre">sndpkt</span></code>) containing the data to be sent, along with a packet checksum (for example, as discussed in <a class="reference internal" href="s3.html#c3-3-2"><span class="std std-ref">Section 3.3.2</span></a> for the case of a UDP segment), and then send the packet via the <code class="docutils literal notranslate"><span class="pre">udt_send(sndpkt)</span></code> operation. In the rightmost state, the sender protocol is waiting for an ACK or a NAK packet from the receiver. If an ACK packet is received (the notation <code class="docutils literal notranslate"><span class="pre">rdt_rcv(rcvpkt)</span> <span class="pre">&amp;&amp;</span> <span class="pre">isACK</span> <span class="pre">(rcvpkt)</span></code> in <a class="reference internal" href="#figure-3-10"><span class="std std-ref">Figure 3.10</span></a> corresponds to this event), the sender knows that the most recently transmitted packet has been received correctly and thus the protocol returns to the state of waiting for data from the upper layer. If a NAK is received, the protocol retransmits the last packet and waits for an ACK or NAK to be returned by the receiver in response to the retransmitted data packet. It is important to note that when the sender is in the wait-for-ACK-or-NAK
+state, it cannot get more data from the upper layer; that is, the <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code> event can not occur; that will happen only after the sender receives an ACK and leaves this state. Thus, the sender will not send a new piece of data until it is sure that the receiver has correctly received the current packet. Because of
+this behavior, protocols such as <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> are known as <strong>stop-and-wait</strong> protocols.</p>
+<figure class="align-left">
+<img alt="../_images/249-0.png" src="../_images/249-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/249-1.png" src="../_images/249-1.png" />
+</figure>
+<p><strong>Figure 3.10 rdt2.0 – A protocol for a channel with bit errors</strong></p>
+<p>The receiver-side FSM for <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> still has a single state. On packet arrival, the receiver replies with either an ACK or a NAK, depending on whether or not the received packet is corrupted. In <a class="reference internal" href="#figure-3-10"><span class="std std-ref">Figure 3.10</span></a>, the notation <code class="docutils literal notranslate"><span class="pre">rdt_rcv(rcvpkt)</span> <span class="pre">&amp;&amp;</span> <span class="pre">corrupt(rcvpkt)</span></code> corresponds to the event in which a packet is received and is found to be in error.</p>
+<p>Protocol <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code> may look as if it works but, unfortunately, it has a fatal flaw. In particular, we haven’t accounted for the possibility that the ACK or NAK packet could be corrupted! (Before proceeding on, you should think about how this problem may be fixed.) Unfortunately, our slight oversight is not as innocuous as it may seem. Minimally, we will need to add checksum bits to ACK/NAK packets in order to detect such errors. The more difficult question is how the protocol should recover from errors in ACK or NAK packets. The difficulty here is that if an ACK or NAK is corrupted, the sender has no way of knowing whether or not the receiver has correctly received the last piece of transmitted data.</p>
+<p>Consider three possibilities for handling corrupted ACKs or NAKs:</p>
+<ul class="simple">
+<li><p>For the first possibility, consider what a human might do in the message-dictation scenario. If the speaker didn’t understand the “OK” or “Please repeat that” reply from the receiver, the speaker would probably ask, “What did you say?” (thus introducing a new type of sender-to-receiver packet to our protocol). The receiver would then repeat the reply. But what if the speaker’s “What did you say?” is corrupted? The receiver, having no idea whether the garbled sentence was part of the dictation or a request to repeat the last reply, would probably then respond with “What did you say?” And then, of course, that response might be garbled. Clearly, we’re heading down a difficult path.</p></li>
+<li><p>A second alternative is to add enough checksum bits to allow the sender not only to detect, but also to recover from, bit errors. This solves the immediate problem for a channel that can corrupt packets but not lose them.</p></li>
+<li><p>A third approach is for the sender simply to resend the current data packet when it receives a garbled ACK or NAK packet. This approach, however, introduces <strong>duplicate packets</strong> into the sender-to-receiver channel. The fundamental difficulty with duplicate packets is that the receiver doesn’t know whether the ACK or NAK it last sent was received correctly at the sender. Thus, it cannot know a priori whether an arriving packet contains new data or is a retransmission!</p></li>
+</ul>
+<p>A simple solution to this new problem (and one adopted in almost all existing data transfer protocols, including TCP) is to add a new field to the data packet and have the sender number its data packets by putting a <strong>sequence number</strong> into this field. The receiver then need only check this sequence number to
+determine whether or not the received packet is a retransmission. For this simple case of a stop-and- wait protocol, a 1-bit sequence number will suffice, since it will allow the receiver to know whether the sender is resending the previously transmitted packet (the sequence number of the received packet has the same sequence number as the most recently received packet) or a new packet (the sequence number changes, moving “forward” in modulo-2 arithmetic). Since we are currently assuming a channel that does not lose packets, ACK and NAK packets do not themselves need to indicate the sequence number of the packet they are acknowledging. The sender knows that a received ACK or NAK packet (whether garbled or not) was generated in response to its most recently transmitted data packet.</p>
+<p><a class="reference internal" href="#figure-3-11"><span class="std std-ref">Figures 3.11</span></a> and <a class="reference internal" href="#figure-3-12"><span class="std std-ref">3.12</span></a> show the FSM description for <code class="docutils literal notranslate"><span class="pre">rdt2.1</span></code>, our fixed version of <code class="docutils literal notranslate"><span class="pre">rdt2.0</span></code>. The
+<code class="docutils literal notranslate"><span class="pre">rdt2.1</span></code> sender and receiver FSMs each now have twice as many states as before. This is because the protocol state must now reflect whether the packet currently being sent (by the sender) or expected (at the receiver) should have a sequence number of 0 or 1. Note that the actions in those states where a 0- numbered packet is being sent or expected are mirror images of those where a 1-numbered packet is being sent or expected; the only differences have to do with the handling of the sequence number.</p>
+<p>Protocol <code class="docutils literal notranslate"><span class="pre">rdt2.1</span></code> uses both positive and negative acknowledgments from the receiver to the sender. When an out-of-order packet is received, the receiver sends a positive acknowledgment for the packet it has received. When a corrupted packet is received, the receiver sends a negative acknowledgment. We can accomplish the same effect as a NAK if, instead of sending a NAK, we send an ACK for the last correctly received packet. A sender that receives two ACKs for the same packet (that is, receives <strong>duplicate ACKs</strong>) knows that the receiver did not correctly receive the packet following the packet that is being ACKed twice. Our NAK-free reliable
+data transfer protocol for a channel with bit errors is <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code>, shown in <span class="xref std std-ref">Figures 3.13</span> and <span class="xref std std-ref">3.14</span>. One
+subtle change between <code class="docutils literal notranslate"><span class="pre">rtdt2.1</span></code> and <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code> is that the receiver must now include the sequence
+number of the packet being acknowledged by an ACK message (this is done by including the <code class="docutils literal notranslate"><span class="pre">ACK,</span> <span class="pre">0</span></code>
+or <code class="docutils literal notranslate"><span class="pre">ACK,</span> <span class="pre">1</span></code> argument in <code class="docutils literal notranslate"><span class="pre">make_pkt()</span></code> in the receiver FSM), and the sender must now check the sequence number of the packet being acknowledged by a received ACK message (this is done by including the 0 or 1 argument in <code class="docutils literal notranslate"><span class="pre">isACK()</span></code> in the sender FSM).</p>
+<figure class="align-center">
+<img alt="../_images/251-0.png" src="../_images/251-0.png" />
+</figure>
+<p><strong>Figure 3.11 rdt2.1 sender</strong></p>
+<figure class="align-center">
+<img alt="../_images/252-0.png" src="../_images/252-0.png" />
+</figure>
+<p><strong>Figure 3.12 rdt2.1 receiver</strong></p>
+</div>
+</section>
+<section id="rdt3-0">
+<h3>在具有比特错误的丢包信道上的可靠数据传输：rdt3.0<a class="headerlink" href="#rdt3-0" title="此标题的永久链接">#</a></h3>
+<p>Reliable Data Transfer over a Lossy Channel with Bit Errors: rdt3.0</p>
+<p>现在假设底层信道不仅会损坏比特，还可能会丢失分组，这是当前计算机网络（包括 Internet）中并不罕见的现象。协议现在必须应对两个新增的问题：如何检测分组丢失以及在分组丢失时应采取什么措施。使用 <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code> 中已经开发出的技术——校验和、序列号、ACK 分组和重传——可以帮助我们解决后一个问题。处理第一个问题则需要添加新的协议机制。</p>
+<figure class="align-center" id="figure-3-13">
+<img alt="../_images/253-0.png" src="../_images/253-0.png" />
+</figure>
+<p><strong>图 3.13 rdt2.2 发送方</strong></p>
+<p>处理分组丢失有多种可能的方法（其中一些将在本章末尾的习题中探讨）。在这里，我们将检测和恢复丢包的负担放在发送方。假设发送方发送了一个数据分组，而该分组或接收方对该分组的 ACK 被丢失。在任一情况下，发送方都收不到来自接收方的回应。如果发送方愿意等待足够长的时间，以确信某个分组已经丢失，那么它可以简单地重传该数据分组。你应当确信这个协议确实是可行的。</p>
+<p>但是发送方需要等待多久，才能确信某件事情确实丢失了呢？显然，发送方至少需要等待一次发送方与接收方之间的往返延迟（可能包括中间路由器的缓冲延迟）加上接收方处理分组所需的时间。在许多网络中，这种最坏情况下的最大延迟很难估计，更不用说准确知道了。此外，协议理想情况下应尽快从分组丢失中恢复；等待最坏延迟可能意味着在错误恢复启动前会有很长的等待。因此，实际中采用的方法是发送方谨慎地选择一个时间值，使得在该时间内丢包“很可能”已经发生（尽管不能保证）。如果在此时间内未收到 ACK，则重传该分组。注意，如果某个分组遇到特别大的延迟，即使数据分组和 ACK 实际上都未丢失，发送方仍可能重传该分组。这就引入了 <strong>重复数据分组</strong> 的可能性。幸运的是，协议 <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code> 已经具备处理重复分组的功能（即，使用序列号）。</p>
+<figure class="align-center" id="figure-3-14">
+<img alt="../_images/254-0.png" src="../_images/254-0.png" />
+</figure>
+<p><strong>图 3.14 rdt2.2 接收方</strong></p>
+<p>从发送方的视角来看，重传是万能药。发送方无法知道是数据分组丢失了，还是 ACK 丢失了，或者只是数据分组或 ACK 被严重延迟。在所有情况下，处理动作都是相同的：重传。实现基于时间的重传机制需要一个 <strong>倒计时定时器</strong>，它可以在给定时间过后中断发送方。因此发送方需要能够：（1）在每次发送分组（无论是首次还是重传）时启动定时器；（2）响应定时器中断（采取相应措施）；（3）停止定时器。</p>
+<p><a class="reference internal" href="#figure-3-15"><span class="std std-ref">图 3.15</span></a> 显示了 <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> 的发送方 FSM，该协议能够在可能出现分组损坏或丢失的信道上可靠地传输数据；在习题中，你将被要求给出 <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> 的接收方 FSM。<a class="reference internal" href="#figure-3-16"><span class="std std-ref">图 3.16</span></a> 展示了协议在没有丢失或延迟的情况下的操作方式，以及它如何处理丢失的数据分组。在 <a class="reference internal" href="#figure-3-16"><span class="std std-ref">图 3.16</span></a> 中，时间从图的顶部向下推进；注意，由于传输和传播延迟，分组的接收时间必然晚于发送时间。在 <a class="reference internal" href="#figure-3-16-b"><span class="std std-ref">图 3.16(b)</span></a> – <a class="reference internal" href="#figure-3-16-d"><span class="std std-ref">(d)</span></a> 中，发送端的方括号表示设置定时器和超时的时间点。本章结尾的习题探讨了该协议中一些更为微妙的方面。由于分组序列号在 0 和 1 之间交替变化，协议 <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> 有时也被称为 <strong>交替比特协议（alternating-bit protocol）</strong>。</p>
+<figure class="align-center" id="figure-3-15">
+<img alt="../_images/255-0.png" src="../_images/255-0.png" />
+</figure>
+<p><strong>图 3.15 rdt3.0 发送方</strong></p>
+<p>我们现在已经组合出了一个数据传输协议的关键元素。校验和、序列号、定时器以及正负确认分组在协议的运行中都发挥着至关重要且必不可少的作用。我们现在拥有一个可以工作的可靠数据传输协议！</p>
+<figure class="align-center">
+<img alt="../_images/255-1.png" src="../_images/255-1.png" />
+</figure>
+<p><strong>为一个简单的应用层协议开发协议与 FSM 表示</strong></p>
+<div class="toggle docutils container">
+<p>Suppose now that in addition to corrupting bits, the underlying channel can lose packets as well, a not- uncommon event in today’s computer networks (including the Internet). Two additional concerns must now be addressed by the protocol: how to detect packet loss and what to do when packet loss occurs. The use of checksumming, sequence numbers, ACK packets, and retransmissions—the techniques already developed in <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code> —will allow us to answer the latter concern. Handling the first concern will require adding a new protocol mechanism.</p>
+<figure class="align-center">
+<img alt="../_images/253-0.png" src="../_images/253-0.png" />
+</figure>
+<p><strong>Figure 3.13 rdt2.2 sender</strong></p>
+<p>There are many possible approaches toward dealing with packet loss (several more of which are explored in the exercises at the end of the chapter). Here, we’ll put the burden of detecting and recovering from lost packets on the sender. Suppose that the sender transmits a data packet and either that packet, or the receiver’s ACK of that packet, gets lost. In either case, no reply is forthcoming at the sender from the receiver. If the sender is willing to wait long enough so that it is certain that a packet has been lost, it can simply retransmit the data packet. You should convince yourself that this protocol does indeed work.</p>
+<p>But how long must the sender wait to be certain that something has been lost? The sender must clearly wait at least as long as a round-trip delay between the sender and receiver (which may include buffering at intermediate routers) plus whatever amount of time is needed to process a packet at the receiver. In many networks, this worst-case maximum delay is very difficult even to estimate, much less know with certainty. Moreover, the protocol should ideally recover from packet loss as soon as possible; waiting for a worst-case delay could mean a long wait until error recovery is initiated. The approach thus adopted in practice is for the sender to judiciously choose a time value such that packet loss is likely, although not guaranteed, to have happened. If an ACK is not received within this time, the packet is retransmitted. Note that if a packet experiences a particularly large delay, the sender may retransmit the packet even though neither the data packet nor its ACK have been lost. This introduces the possibility of <strong>duplicate data packets</strong> in the sender-to-receiver channel. Happily, protocol <code class="docutils literal notranslate"><span class="pre">rdt2.2</span></code> already has enough functionality (that is, sequence numbers) to handle the case of duplicate packets.</p>
+<figure class="align-center">
+<img alt="../_images/254-0.png" src="../_images/254-0.png" />
+</figure>
+<p><strong>Figure 3.14 rdt2.2 receiver</strong></p>
+<p>From the sender’s viewpoint, retransmission is a panacea. The sender does not know whether a data packet was lost, an ACK was lost, or if the packet or ACK was simply overly delayed. In all cases, the action is the same: retransmit. Implementing a time-based retransmission mechanism requires a <strong>countdown timer</strong> that can interrupt the sender after a given amount of time has expired. The sender will thus need to be able to (1) start the timer each time a packet (either a first-time packet or a retransmission) is sent, (2) respond to a timer interrupt (taking appropriate actions), and (3) stop the timer.</p>
+<p><a class="reference internal" href="#figure-3-15"><span class="std std-ref">Figure 3.15</span></a> shows the sender FSM for <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code>, a protocol that reliably transfers data over a channel that can corrupt or lose packets; in the homework problems, you’ll be asked to provide the receiver FSM for <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code>. <a class="reference internal" href="#figure-3-16"><span class="std std-ref">Figure 3.16</span></a> shows how the protocol operates with no lost or delayed packets and how it handles lost data packets. In <a class="reference internal" href="#figure-3-16"><span class="std std-ref">Figure 3.16</span></a>, time moves forward from the top of the diagram toward the bottom of the diagram; note that a receive time for a packet is necessarily later than the send time for a packet as a result of transmission and propagation delays. In <a class="reference internal" href="#figure-3-16-b"><span class="std std-ref">Figures 3.16(b)</span></a> – <a class="reference internal" href="#figure-3-16-d"><span class="std std-ref">(d)</span></a>, the send-side brackets indicate the times at which a timer is set and later times out. Several of the more subtle aspects of this protocol are explored in the exercises at the end of this chapter. Because packet sequence numbers alternate between 0 and 1, protocol <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> is sometimes known as the <strong>alternating-bit protocol</strong>.</p>
+<figure class="align-center">
+<img alt="../_images/255-0.png" src="../_images/255-0.png" />
+</figure>
+<p><strong>Figure 3.15 rdt3.0 sender</strong></p>
+<p>We have now assembled the key elements of a data transfer protocol. Checksums, sequence numbers, timers, and positive and negative acknowledgment packets each play a crucial and necessary role in the operation of the protocol. We now have a working reliable data transfer protocol!</p>
+<figure class="align-center">
+<img alt="../_images/255-1.png" src="../_images/255-1.png" />
+</figure>
+<p><strong>Developing a protocol and FSM representation for a simple application-layer protocol</strong></p>
+</div>
+</section>
+</section>
+<section id="c3-4-2">
+<span id="id3"></span><h2>3.4.2 流水线式可靠数据传输协议<a class="headerlink" href="#c3-4-2" title="此标题的永久链接">#</a></h2>
+<p>3.4.2 Pipelined Reliable Data Transfer Protocols</p>
+<p>协议 <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> 是功能上正确的协议，但在性能上恐怕难以令人满意，尤其是在当今的高速网络中。 <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> 性能问题的根本在于它是一个停等协议（stop-and-wait protocol）。</p>
+<figure class="align-left" id="figure-3-16-a">
+<span id="figure-3-16"></span><img alt="../_images/256-0.png" src="../_images/256-0.png" />
+</figure>
+<figure class="align-center" id="figure-3-16-b">
+<img alt="../_images/256-1.png" src="../_images/256-1.png" />
+</figure>
+<figure class="align-left" id="figure-3-16-c">
+<img alt="../_images/257-0.png" src="../_images/257-0.png" />
+</figure>
+<figure class="align-center" id="figure-3-16-d">
+<img alt="../_images/257-1.png" src="../_images/257-1.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>图 3.16 rdt3.0（交替比特协议）的操作过程</strong></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<figure class="align-left" id="figure-3-17-a">
+<span id="figure-3-17"></span><img alt="../_images/257-2.png" src="../_images/257-2.png" />
+</figure>
+<figure class="align-center" id="figure-3-17-b">
+<img alt="../_images/258-0.png" src="../_images/258-0.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>图 3.17 停等协议与流水线协议的对比</strong></p>
+<p>为了理解这种停等行为对性能的影响，请考虑一个理想化的场景，其中两个主机分别位于美国的西海岸和东海岸，如 <a class="reference internal" href="#figure-3-17"><span class="std std-ref">图 3.17</span></a> 所示。这两个端系统之间的光速往返传播延迟（RTT）大约为 30 毫秒。假设它们之间通过一个传输速率为 1 Gbps（<span class="math notranslate nohighlight">\(10^9\)</span> 位每秒）的信道连接。假设每个分组大小为 1,000 字节（8,000 位），包含报头字段和数据，那么将分组传入 1 Gbps 链路所需的时间为：</p>
+<blockquote>
+<div><p>dtrans = L/R = 8000 bits / 10^9 bits/sec = 8 微秒</p>
+</div></blockquote>
+<p><a class="reference internal" href="#figure-3-18"><span class="std std-ref">图 3.18(a)</span></a> 显示，使用我们的停等协议时，如果发送方在 t=0 时开始发送分组，则在 t=L/R=8 微秒时，最后一位进入发送方信道。随后该分组开始其 15 毫秒的跨国旅程，在 t=RTT/2 + L/R = 15.008 毫秒时，最后一位从接收方接收器中发出。为了简化分析，假设 ACK 分组非常小（可忽略其传输时间），且接收方在收到数据分组的最后一位时立即发送 ACK，那么该 ACK 会在 t=RTT + L/R = 30.008 毫秒时回到发送方。此时，发送方可以发送下一个消息。因此，在 30.008 毫秒内，发送方实际传输的时间只有 0.008 毫秒。如果我们将发送方（或信道）的 <strong>利用率</strong> 定义为发送方真正忙于将比特发送到信道中的时间比例，那么 <span class="xref std std-ref">图 3.18(a)</span> 中的分析表明，停等协议的发送方利用率 <span class="math notranslate nohighlight">\(U_{sender}\)</span> 为：</p>
+<blockquote>
+<div><p>Usender = L/R / (RTT + L/R) = 0.008 / 30.008 = 0.00027</p>
+</div></blockquote>
+<figure class="align-center" id="figure-3-18">
+<img alt="../_images/259-0.png" src="../_images/259-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/259-1.png" src="../_images/259-1.png" />
+</figure>
+<p><strong>图 3.18 停等发送与流水线发送</strong></p>
+<p>也就是说，发送方只有 0.027% 的时间在真正忙碌地工作！换种角度看，发送方在 30.008 毫秒内仅发送了 1,000 字节，有效吞吐量只有 267 kbps——尽管有一个 1 Gbps 的链路可用！想象一下网络管理员花费巨资购买了一条千兆链路，但却只能得到每秒 267 千位的吞吐量，他该有多沮丧！这是网络协议限制底层网络硬件能力的直观示例。同时我们还忽略了发送方与接收方在低层协议中的处理时间，以及在它们之间任意中间路由器上的处理与排队延迟。若将这些因素计入，只会进一步加大延迟并加剧性能不佳的问题。</p>
+<p>解决这个性能问题的方法其实很简单：与其采用停等方式，不如允许发送方在等待确认之前发送多个分组，如 <a class="reference internal" href="#figure-3-17"><span class="std std-ref">图 3.17(b)</span></a> 所示。<a class="reference internal" href="#figure-3-18"><span class="std std-ref">图 3.18</span></a> 显示，如果允许发送方在等待确认前发送三个分组，则发送方利用率本质上提升了三倍。由于多个从发送方向接收方在途的分组可以想象为填满一条流水线，这种技术被称为 <strong>流水线（pipelining）</strong> 。流水线机制对可靠数据传输协议带来如下影响：</p>
+<ul class="simple">
+<li><p>必须增加序列号的范围，因为每个在途分组（不含重传）必须有唯一的序列号，并且可能存在多个在途但尚未确认的分组。</p></li>
+<li><p>协议的发送方与接收方都可能需要缓存多个分组。至少，发送方必须缓存那些已发送但尚未被确认的分组。接收方可能也需要缓存正确接收的分组，详见后文。</p></li>
+<li><p>所需序列号的范围及缓存需求将取决于数据传输协议应对丢失、损坏和严重延迟分组的方式。可识别出两种基本的流水线错误恢复机制： <strong>回退 N（Go-Back-N）</strong> 和 <strong>选择重传（Selective Repeat）</strong>。</p></li>
+</ul>
+<div class="toggle docutils container">
+<p>Protocol <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> is a functionally correct protocol, but it is unlikely that anyone would be happy with its performance, particularly in today’s high-speed networks. At the heart of <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code>’s performance problem is the fact that it is a stop-and-wait protocol.</p>
+<figure class="align-left">
+<img alt="../_images/256-0.png" src="../_images/256-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/256-1.png" src="../_images/256-1.png" />
+</figure>
+<figure class="align-left">
+<img alt="../_images/257-0.png" src="../_images/257-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/257-1.png" src="../_images/257-1.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>Figure 3.16 Operation of rdt3.0, the alternating-bit protocol</strong></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<figure class="align-left">
+<img alt="../_images/257-2.png" src="../_images/257-2.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/258-0.png" src="../_images/258-0.png" />
+</figure>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>Figure 3.17 Stop-and-wait versus pipelined protocol</strong></p>
+<p>To appreciate the performance impact of this stop-and-wait behavior, consider an idealized case of two hosts, one located on the West Coast of the United States and the other located on the East Coast, as shown in <a class="reference internal" href="#figure-3-17"><span class="std std-ref">Figure 3.17</span></a>. The speed-of-light round-trip propagation delay between these two end systems, RTT, is approximately 30 milliseconds. Suppose that they are connected by a channel with a transmission rate, R, of 1 Gbps (<span class="math notranslate nohighlight">\(10^9\)</span> bits per second). With a packet size, L, of 1,000 bytes (8,000 bits) per packet, including both header fields and data, the time needed to actually transmit the packet into the 1 Gbps link is</p>
+<blockquote>
+<div><p>dtrans=LR=8000 bits/packet109 bits/sec=8 microseconds</p>
+</div></blockquote>
+<p><a class="reference internal" href="#figure-3-18"><span class="std std-ref">Figure 3.18(a)</span></a> shows that with our stop-and-wait protocol, if the sender begins sending the packet at t=0, then at t=L/R=8 microseconds, the last bit enters the channel at the sender side. The packet then makes its 15-msec cross-country journey, with the last bit of the packet emerging at the receiver at t=RTT/2+L/R= 15.008 msec. Assuming for simplicity that ACK packets are extremely small (so that we can ignore their transmission time) and that the receiver can send an ACK as soon as the last bit of a data packet is received, the ACK emerges back at the sender at t=RTT+L/R=30.008 msec. At this point, the sender can now transmit the next message. Thus, in 30.008 msec, the sender was sending for only 0.008 msec. If we define the <strong>utilization</strong> of the sender (or the channel) as the fraction of time the sender is actually busy sending bits into the channel, the analysis in <span class="xref std std-ref">Figure 3.18(a)</span> shows that the stop-and- wait protocol has a rather dismal sender utilization, <span class="math notranslate nohighlight">\(U_{sender}\)</span>, of</p>
+<blockquote>
+<div><p>Usender=L/RRTT+L/R =.00830.008=0.00027</p>
+</div></blockquote>
+<figure class="align-center">
+<img alt="../_images/259-0.png" src="../_images/259-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/259-1.png" src="../_images/259-1.png" />
+</figure>
+<p><strong>Figure 3.18 Stop-and-wait and pipelined sending</strong></p>
+<p>That is, the sender was busy only 2.7 hundredths of one percent of the time! Viewed another way, the sender was able to send only 1,000 bytes in 30.008 milliseconds, an effective throughput of only 267 kbps—even though a 1 Gbps link was available! Imagine the unhappy network manager who just paid a fortune for a gigabit capacity link but manages to get a throughput of only 267 kilobits per second! This is a graphic example of how network protocols can limit the capabilities provided by the underlying network hardware. Also, we have neglected lower-layer protocol-processing times at the sender and receiver, as well as the processing and queuing delays that would occur at any intermediate routers between the sender and receiver. Including these effects would serve only to further increase the delay and further accentuate the poor performance.</p>
+<p>The solution to this particular performance problem is simple: Rather than operate in a stop-and-wait manner, the sender is allowed to send multiple packets without waiting for acknowledgments, as illustrated in <a class="reference internal" href="#figure-3-17"><span class="std std-ref">Figure 3.17(b)</span></a>. <a class="reference internal" href="#figure-3-18"><span class="std std-ref">Figure 3.18</span></a> shows that if the sender is allowed to transmit three packets before having to wait for acknowledgments, the utilization of the sender is essentially tripled. Since the many in-transit sender-to-receiver packets can be visualized as filling a pipeline, this technique is known as <strong>pipelining</strong>. Pipelining has the following consequences for reliable data transfer protocols:</p>
+<ul class="simple">
+<li><p>The range of sequence numbers must be increased, since each in-transit packet (not counting retransmissions) must have a unique sequence number and there may be multiple, in-transit, unacknowledged packets.</p></li>
+<li><p>The sender and receiver sides of the protocols may have to buffer more than one packet. Minimally, the sender will have to buffer packets that have been transmitted but not yet acknowledged. Buffering of correctly received packets may also be needed at the receiver, as discussed below.</p></li>
+<li><p>The range of sequence numbers needed and the buffering requirements will depend on the manner in which a data transfer protocol responds to lost, corrupted, and overly delayed packets. Two basic approaches toward pipelined error recovery can be identified: <strong>Go-Back-N</strong> and <strong>selective repeat</strong>.</p></li>
+</ul>
+</div>
+</section>
+<section id="n-gbn">
+<span id="c3-4-3"></span><h2>3.4.3 回退 N（GBN）<a class="headerlink" href="#n-gbn" title="此标题的永久链接">#</a></h2>
+<p>3.4.3 Go-Back-N (GBN)</p>
+<p>在 <strong>回退 N（Go-Back-N, GBN）协议</strong> 中，发送方被允许在不等待确认的情况下发送多个分组（如果有可用分组），但必须保证在流水线中未被确认的分组不超过某个最大允许数 N。本节我们将较为详细地描述 GBN 协议。但在继续阅读之前，建议你可以先玩一玩配套网站上的 GBN 小程序（这是一个很棒的小程序！）。</p>
+<figure class="align-center" id="figure-3-19">
+<img alt="../_images/260-0.png" src="../_images/260-0.png" />
+</figure>
+<p><strong>图 3.19 回退 N 中发送方对序列号的视图</strong></p>
+<p><a class="reference internal" href="#figure-3-19"><span class="std std-ref">图 3.19</span></a> 展示了 GBN 协议中发送方对序列号范围的理解。如果我们定义 <strong>base</strong> 为最老的未被确认分组的序列号， <code class="docutils literal notranslate"><span class="pre">nextseqnum</span></code> 为当前尚未使用的最小序列号（即下一个将要发送的分组的序列号），那么可以识别出序列号范围中的四个区间。序列号位于 <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">base-1]</span></code> 区间的分组已被发送并得到确认；<code class="docutils literal notranslate"><span class="pre">[base,</span> <span class="pre">nextseqnum-1]</span></code> 区间表示已发送但尚未被确认的分组； <code class="docutils literal notranslate"><span class="pre">[nextseqnum,</span> <span class="pre">base+N-1]</span></code> 区间表示若上层有数据到达，可以立即发送的分组；而序列号大于等于 <code class="docutils literal notranslate"><span class="pre">base+N</span></code> 的分组在流水线中有分组尚未确认（特别是序列号为 <code class="docutils literal notranslate"><span class="pre">base</span></code> 的分组）之前是不能发送的。</p>
+<p>正如 <a class="reference internal" href="#figure-3-19"><span class="std std-ref">图 3.19</span></a> 所示，已发送但尚未被确认的分组序列号范围可被视为在序列号空间上的一个大小为 N 的窗口。随着协议的运行，这个窗口会沿着序列号空间向前滑动。因此，N  <strong>窗口大小</strong>，而 GBN 协议则称为 <strong>滑动窗口协议</strong>。你可能会疑惑，为什么一开始我们要对未确认分组的数量设置上限 N？为什么不允许无限数量的这类分组？我们将在 <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">第 3.5 节</span></a> 看到，流量控制是限制发送方的一个原因。而在 <a class="reference internal" href="s7.html#c3-7"><span class="std std-ref">第 3.7 节</span></a> 研究 TCP 拥塞控制时将看到另一个原因。</p>
+<p>实际中，分组的序列号会被携带在报文头中的一个定长字段中。如果该字段为 k 位，则序列号范围为 [0, 2^k-1]。由于序列号范围有限，所有与序列号有关的算术运算必须使用模 2^k 算法（也就是说，序列号空间可以被看作是一个大小为 2^k 的环，其中序列号 2^k-1 紧跟着序列号 0）。回忆一下 <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> 中的 1 比特序列号，其范围为 [0,1]。本章末尾的一些问题将探索序列号范围有限的后果。我们将在 <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">第 3.5 节</span></a> 中看到，TCP 使用 32 位序列号字段，且其序列号是对字节流中的字节进行计数，而不是对分组计数。</p>
+<p><span class="xref std std-ref">图 3.20</span> 和 <span class="xref std std-ref">图 3.21</span> 给出了 ACK 驱动、无 NAK 的 GBN 协议中发送方与接收方的扩展 FSM 表示。我们将此 FSM 表示称为扩展 FSM，因为其中增加了变量（类似于编程语言中的变量）如 <code class="docutils literal notranslate"><span class="pre">base</span></code> 和 <code class="docutils literal notranslate"><span class="pre">nextseqnum</span></code>，并添加了对这些变量的操作以及与这些变量有关的条件动作。注意，这个扩展 FSM 说明看起来已经开始有点像编程语言的形式了。<a class="reference internal" href="../references.html#bochman-1984"><span class="std std-ref">[Bochman 1984]</span></a> 提供了对 FSM 技术进一步扩展以及其他基于编程语言的协议描述技术的精彩综述。</p>
+<figure class="align-center" id="figure-3-20">
+<img alt="../_images/262-0.png" src="../_images/262-0.png" />
+</figure>
+<p><strong>图 3.20 GBN 发送方的扩展 FSM 描述</strong></p>
+<figure class="align-center" id="figure-3-21">
+<img alt="../_images/262-1.png" src="../_images/262-1.png" />
+</figure>
+<p><strong>图 3.21 GBN 接收方的扩展 FSM 描述</strong></p>
+<p>GBN 发送方必须响应三种类型的事件：</p>
+<ul class="simple">
+<li><p><strong>来自上层的调用</strong>。当 <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code> 被上层调用时，发送方首先检查窗口是否已满，即当前是否已有 N 个未确认分组在途。如果窗口未满，则创建并发送一个分组，并更新相应变量；如果窗口已满，则将数据返回上层，隐式表明窗口已满。上层此时应稍后再试。在实际实现中，发送方更可能会缓存（但暂不发送）这条数据，或提供一种同步机制（如信号量或标志位），允许上层仅在窗口未满时调用 <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code>。</p></li>
+<li><p><strong>收到 ACK</strong>。在 GBN 协议中，某个序号为 n 的 ACK 被视为 <strong>累计确认</strong> ，表示所有序号不大于 n 的分组都已被接收方正确接收。稍后在讨论 GBN 接收方时，我们会再次提到这一点。</p></li>
+<li><p><strong>超时事件</strong>。协议名称 “Go-Back-N” 来源于当出现丢失或严重延迟的分组时发送方的行为。与停等协议类似，GBN 也使用定时器来恢复丢失的数据或确认分组。如果发生超时事件，发送方将重传所有已发送但尚未被确认的分组。<a class="reference internal" href="#figure-3-20"><span class="std std-ref">图 3.20</span></a> 中的发送方只使用一个定时器，可视为针对最早发送但尚未确认分组的定时器。如果收到一个 ACK 且仍有其它未确认分组存在，则重新启动定时器；若所有分组均已确认，则停止定时器。</p></li>
+</ul>
+<p>GBN 接收方的行为也很简单。如果收到一个序号为 n 的分组，且该分组正确无误且按序（即上一次交付给上层的数据来自序号为 n-1 的分组），则发送 ACK(n)，并将该分组中的数据交付上层。否则，接收方将丢弃该分组，并重新发送最近一个按序接收分组的 ACK。注意由于分组是一条条交付给上层的，如果分组 k 已被接收并交付，则所有序号小于 k 的分组也必然已被交付。因此使用累计确认对 GBN 是一种自然选择。</p>
+<p>在 GBN 协议中，接收方会丢弃乱序的分组。虽然丢弃一个正确接收但乱序的分组看似愚蠢和浪费，但这种做法也有一定合理性。回忆一下接收方必须按序将数据交付给上层。假设现在期望接收分组 n，却收到了分组 n+1。由于必须按序交付数据，接收方 <strong>可以</strong> 先缓冲分组 n+1，然后在后续收到并交付分组 n 后再将其交付上层。但如果分组 n 丢失，根据 GBN 的重传规则，发送方最终将重发分组 n 和 n+1。因此接收方可以直接丢弃分组 n+1。这种做法的优点在于接收方的缓冲机制简单——无需缓存任何乱序分组。因此发送方需要维护其窗口的上下边界及 <code class="docutils literal notranslate"><span class="pre">nextseqnum</span></code> 在窗口中的位置，而接收方只需维护一个信息：下一个按序分组的序列号。该值存储在接收方 FSM 中变量 <strong>expectedseqnum</strong> 中，如 <a class="reference internal" href="#figure-3-21"><span class="std std-ref">图 3.21</span></a> 所示。当然，丢弃一个正确接收的分组的缺点在于后续该分组的重传可能也会丢失或损坏，从而需要更多的重传。</p>
+<p><a class="reference internal" href="#figure-3-22"><span class="std std-ref">图 3.22</span></a> 展示了窗口大小为 4 的 GBN 协议运行过程。由于窗口大小受限，发送方可以发送分组 0 到 3，但必须在收到这些分组中的至少一个确认之后才能继续发送。每当收到一个新的 ACK（例如 <code class="docutils literal notranslate"><span class="pre">ACK0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ACK1</span></code>），窗口就向前滑动一次，发送方就可以发送一个新的分组（分别为 pkt4 和 pkt5）。在接收方，分组 2 丢失，因此分组 3、4 和 5 被判断为乱序并被丢弃。</p>
+<p>在结束 GBN 协议的讨论之前，值得注意的是该协议在协议栈中实现时，其结构很可能与 <a class="reference internal" href="#figure-3-20"><span class="std std-ref">图 3.20</span></a> 中的扩展 FSM 类似。其实现形式也很可能是多个过程，分别用于处理可能发生的各种事件。在这种**事件驱动编程**中，各个过程要么由协议栈中的其他过程调用，要么作为中断的响应被调用。在发送方，这些事件包括：（1）上层实体调用 <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code>；（2）定时器中断；（3）底层收到分组后调用 <code class="docutils literal notranslate"><span class="pre">rdt_rcv()</span></code>。本章末尾的编程练习将让你有机会在模拟但真实的网络环境中实际实现这些函数。</p>
+<p>我们在此指出，GBN 协议几乎包含了我们在 <span class="xref std std-ref">第 3.5 节</span> 中学习 TCP 可靠数据传输组件时会遇到的所有技术。这些技术包括使用序列号、累计确认、校验和以及超时/重传操作。</p>
+<figure class="align-center" id="figure-3-22">
+<img alt="../_images/265-0.png" src="../_images/265-0.png" />
+</figure>
+<p><strong>图 3.22 回退 N 的运行过程</strong></p>
+<div class="toggle docutils container">
+<p>In a <strong>Go-Back-N (GBN) protocol</strong>, the sender is allowed to transmit multiple packets (when available) without waiting for an acknowledgment, but is constrained to have no more than some maximum allowable number, N, of unacknowledged packets in the pipeline. We describe the GBN protocol in some detail in this section. But before reading on, you are encouraged to play with the GBN applet (an awesome applet!) at the companion Web site.</p>
+<figure class="align-center">
+<img alt="../_images/260-0.png" src="../_images/260-0.png" />
+</figure>
+<p><strong>Figure 3.19 Sender’s view of sequence numbers in Go-Back-N</strong></p>
+<p><a class="reference internal" href="#figure-3-19"><span class="std std-ref">Figure 3.19</span></a> shows the sender’s view of the range of sequence numbers in a GBN protocol. If we define <strong>base</strong> to be the sequence number of the oldest unacknowledged packet and <code class="docutils literal notranslate"><span class="pre">nextseqnum</span></code> to be the smallest unused sequence number (that is, the sequence number of the next packet to be sent), then four intervals in the range of sequence numbers can be identified. Sequence numbers in the interval <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">base-1]</span></code> correspond to packets that have already been transmitted and acknowledged. The interval <code class="docutils literal notranslate"><span class="pre">[base,</span> <span class="pre">nextseqnum-1]</span></code> corresponds to packets that have been sent but not yet acknowledged. Sequence numbers in the interval <code class="docutils literal notranslate"><span class="pre">[nextseqnum,</span> <span class="pre">base+N-1]</span></code> can be used for packets that can be sent immediately, should data arrive from the upper layer. Finally, sequence numbers greater than or equal to <code class="docutils literal notranslate"><span class="pre">base+N</span></code> cannot be used until an unacknowledged packet currently in the pipeline (specifically, the packet with sequence number <code class="docutils literal notranslate"><span class="pre">base</span></code>) has been acknowledged.</p>
+<p>As suggested by <a class="reference internal" href="#figure-3-19"><span class="std std-ref">Figure 3.19</span></a>, the range of permissible sequence numbers for transmitted but not yet
+acknowledged packets can be viewed as a window of size N over the range of sequence numbers. As
+the protocol operates, this window slides forward over the sequence number space. For this reason, N is often referred to as the <strong>window size</strong> and the GBN protocol itself as a <strong>sliding-window protocol</strong>. You
+might be wondering why we would even limit the number of outstanding, unacknowledged packets to a
+value of N in the first place. Why not allow an unlimited number of such packets? We’ll see in <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">Section 3.5</span></a> that flow control is one reason to impose a limit on the sender. We’ll examine another reason to do so in <a class="reference internal" href="s7.html#c3-7"><span class="std std-ref">Section 3.7</span></a>, when we study TCP congestion control.</p>
+<p>In practice, a packet’s sequence number is carried in a fixed-length field in the packet header. If k is the number of bits in the packet sequence number field, the range of sequence numbers is thus [0,2k−1]. With a finite range of sequence numbers, all arithmetic involving sequence numbers must then be done using modulo 2k arithmetic. (That is, the sequence number space can be thought of as a ring of size 2k, where sequence number 2k−1 is immediately followed by sequence number 0.) Recall that <code class="docutils literal notranslate"><span class="pre">rdt3.0</span></code> had a 1-bit sequence number and a range of sequence numbers of [0,1]. Several of the problems at the end of this chapter explore the consequences of a finite range of sequence numbers. We will see in <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">Section 3.5</span></a> that TCP has a 32-bit sequence number field, where TCP sequence numbers count bytes in the byte stream rather than packets.</p>
+<p><span class="xref std std-ref">Figures 3.20</span> and <span class="xref std std-ref">3.21</span> give an extended FSM description of the sender and receiver sides of an ACK- based, NAK-free, GBN protocol. We refer to this FSM description as an extended FSM because we have added variables (similar to programming-language variables) for <code class="docutils literal notranslate"><span class="pre">base</span></code> and <code class="docutils literal notranslate"><span class="pre">nextseqnum</span></code>, and added operations on these variables and conditional actions involving these variables. Note that the extended FSM specification is now beginning to look somewhat like a programming-language specification. <a class="reference internal" href="../references.html#bochman-1984"><span class="std std-ref">[Bochman 1984]</span></a> provides an excellent survey of additional extensions to FSM techniques as well as other programming-language-based techniques for specifying protocols.</p>
+<figure class="align-center">
+<img alt="../_images/262-0.png" src="../_images/262-0.png" />
+</figure>
+<p><strong>Figure 3.20 Extended FSM description of the GBN sender</strong></p>
+<figure class="align-center">
+<img alt="../_images/262-1.png" src="../_images/262-1.png" />
+</figure>
+<p><strong>Figure 3.21 Extended FSM description of the GBN receiver</strong></p>
+<p>The GBN sender must respond to three types of events:</p>
+<ul class="simple">
+<li><p><strong>Invocation from above</strong>. When <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code> is called from above, the sender first checks to see if the window is full, that is, whether there are N outstanding, unacknowledged packets. If the window is not full, a packet is created and sent, and variables are appropriately updated. If the window is full, the sender simply returns the data back to the upper layer, an implicit indication that the window is full. The upper layer would presumably then have to try again later. In a real implementation, the sender would more likely have either buffered (but not immediately sent) this data, or would have a synchronization mechanism (for example, a semaphore or a flag) that would allow the upper layer to call <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code> only when the window is not full.</p></li>
+<li><p><strong>Receipt of an ACK</strong>. In our GBN protocol, an acknowledgment for a packet with sequence number n will be taken to be a <strong>cumulative acknowledgment</strong>, indicating that all packets with a sequence number up to and including n have been correctly received at the receiver. We’ll come back to this issue shortly when we examine the receiver side of GBN.</p></li>
+<li><p><strong>A timeout event</strong>. The protocol’s name, “Go-Back-N,” is derived from the sender’s behavior in the presence of lost or overly delayed packets. As in the stop-and-wait protocol, a timer will again be used to recover from lost data or acknowledgment packets. If a timeout occurs, the sender resends all packets that have been previously sent but that have not yet been acknowledged. Our sender in <a class="reference internal" href="#figure-3-20"><span class="std std-ref">Figure 3.20</span></a> uses only a single timer, which can be thought of as a timer for the oldest transmitted but not yet acknowledged packet. If an ACK is received but there are still additional transmitted but not yet acknowledged packets, the timer is restarted. If there are no outstanding, unacknowledged packets, the timer is stopped.</p></li>
+</ul>
+<p>The receiver’s actions in GBN are also simple. If a packet with sequence number n is received correctly and is in order (that is, the data last delivered to the upper layer came from a packet with sequence number n−1), the receiver sends an ACK for packet n and delivers the data portion of the packet to the upper layer. In all other cases, the receiver discards the packet and resends an ACK for the most recently received in-order packet. Note that since packets are delivered one at a time to the upper layer, if packet k has been received and delivered, then all packets with a sequence number lower than k have also been delivered. Thus, the use of cumulative acknowledgments is a natural choice for GBN.</p>
+<p>In our GBN protocol, the receiver discards out-of-order packets. Although it may seem silly and wasteful to discard a correctly received (but out-of-order) packet, there is some justification for doing so. Recall that the receiver must deliver data in order to the upper layer. Suppose now that packet n is expected, but packet n+1 arrives. Because data must be delivered in order, the receiver <em>could</em> buffer (save) packet n+1 and then deliver this packet to the upper layer after it had later received and delivered packet n. However, if packet n is lost, both it and packet n+1 will eventually be retransmitted as a result of the GBN retransmission rule at the sender. Thus, the receiver can simply discard packet n+1. The advantage of this approach is the simplicity of receiver buffering—the receiver need not buffer any out- of-order packets. Thus, while the sender must maintain the upper and lower bounds of its window and the position of <strong>nextseqnum</strong> within this window, the only piece of information the receiver need maintain is the sequence number of the next in-order packet. This value is held in the variable <strong>expectedseqnum</strong>, shown in the receiver FSM in <a class="reference internal" href="#figure-3-21"><span class="std std-ref">Figure 3.21</span></a>. Of course, the disadvantage of throwing away a correctly received packet is that the subsequent retransmission of that packet might be lost or garbled and thus even more retransmissions would be required.</p>
+<p><a class="reference internal" href="#figure-3-22"><span class="std std-ref">Figure 3.22</span></a> shows the operation of the GBN protocol for the case of a window size of four packets. Because of this window size limitation, the sender sends packets 0 through 3 but then must wait for one
+or more of these packets to be acknowledged before proceeding. As each successive ACK (for
+example, <code class="docutils literal notranslate"><span class="pre">ACK0</span></code> and <code class="docutils literal notranslate"><span class="pre">ACK1</span></code>) is received, the window slides forward and the sender can transmit one new packet (pkt4 and pkt5, respectively). On the receiver side, packet 2 is lost and thus packets 3, 4, and 5 are found to be out of order and are discarded.</p>
+<p>Before closing our discussion of GBN, it is worth noting that an implementation of this protocol in a protocol stack would likely have a structure similar to that of the extended FSM in <a class="reference internal" href="#figure-3-20"><span class="std std-ref">Figure 3.20</span></a>. The implementation would also likely be in the form of various procedures that implement the actions to be taken in response to the various events that can occur. In such <strong>event-based programming</strong>, the various procedures are called (invoked) either by other procedures in the protocol stack, or as the result of an interrupt. In the sender, these events would be (1) a call from the upper-layer entity to invoke <code class="docutils literal notranslate"><span class="pre">rdt_send()</span></code>, (2) a timer interrupt, and (3) a call from the lower layer to invoke <code class="docutils literal notranslate"><span class="pre">rdt_rcv()</span></code> when a packet arrives. The programming exercises at the end of this chapter will give you a chance to actually implement these routines in a simulated, but realistic, network setting.</p>
+<p>We note here that the GBN protocol incorporates almost all of the techniques that we will encounter when we study the reliable data transfer components of TCP in <span class="xref std std-ref">Section 3.5</span>. These techniques include the use of sequence numbers, cumulative acknowledgments, checksums, and a timeout/retransmit operation.</p>
+<figure class="align-center">
+<img alt="../_images/265-0.png" src="../_images/265-0.png" />
+</figure>
+<p><strong>Figure 3.22 Go-Back-N in operation</strong></p>
+</div>
+</section>
+<section id="sr">
+<span id="c3-4-4"></span><h2>3.4.4 选择性重传（SR）<a class="headerlink" href="#sr" title="此标题的永久链接">#</a></h2>
+<p>3.4.4 Selective Repeat (SR)</p>
+<p>GBN 协议允许发送方在 <a class="reference internal" href="#figure-3-17"><span class="std std-ref">图 3.17</span></a> 中将多个分组“填满流水线”，从而避免了停等协议中我们指出的信道利用率问题。然而，GBN 本身在某些场景下也会遭遇性能问题。特别地，当窗口大小和带宽-时延积都很大时，流水线中可能存在大量分组。此时，单个分组的错误可能会导致 GBN 重传大量分组，其中许多实际上并不需要重传。随着信道错误概率的增加，流水线可能会被这些不必要的重传填满。想象一下，在口述文本的场景中，每当一个词语被听错时，周围的 1,000 个词语（例如，窗口大小为 1,000）都必须重新朗读一遍。整个口述过程将因重复内容而变得极为缓慢。</p>
+<p>顾名思义，选择性重传协议通过仅对发送方怀疑接收方未正确接收（即丢失或损坏）的分组进行重传，从而避免不必要的重传。这种按需、逐个分组的重传要求接收方对每个正确接收的分组单独确认。仍然使用大小为 N 的窗口来限制流水线中未确认分组的数量。但与 GBN 不同，发送方可能已经收到窗口内部分分组的 ACK。<a class="reference internal" href="#figure-3-23"><span class="std std-ref">图 3.23</span></a> 展示了 SR 发送方对序列号空间的视图。<a class="reference internal" href="#figure-3-24"><span class="std std-ref">图 3.24</span></a> 详细列出了 SR 发送方所采取的各种操作。</p>
+<p>SR 接收方将对每一个正确接收的分组发送确认，无论该分组是否按序。乱序分组会被缓存在接收方，直到所有丢失的（即序号较小的）分组被接收到，此时一批按序分组将被交付给上层。<a class="reference internal" href="#figure-3-25"><span class="std std-ref">图 3.25</span></a> 枚举了 SR 接收方所采取的各种操作。<a class="reference internal" href="#figure-3-26"><span class="std std-ref">图 3.26</span></a> 展示了在存在分组丢失的情况下 SR 的运行过程。注意，在 <a class="reference internal" href="#figure-3-26"><span class="std std-ref">图 3.26</span></a> 中，接收方最初缓存了分组 3、4 和 5，并在最终收到分组 2 后，将这些分组与分组 2 一起交付给上层。</p>
+<figure class="align-center" id="figure-3-23">
+<img alt="../_images/266-0.png" src="../_images/266-0.png" />
+</figure>
+<p><strong>图 3.23 选择性重传（SR）发送方与接收方对序列号空间的视图</strong></p>
+<ol class="arabic simple" id="figure-3-24">
+<li><p><em>来自上层的数据被接收</em>。当来自上层的数据到达时，SR 发送方会检查用于该分组的下一个可用序列号。如果该序列号位于发送窗口之内，则将数据封装成分组并发送；否则，和 GBN 中一样，要么将其缓存在本地，要么返回给上层以待稍后发送。</p></li>
+<li><p><em>超时</em>。定时器仍用于防止分组丢失。然而，现在每个分组必须拥有自己独立的逻辑定时器，因为超时后只会重新发送一个分组。一个硬件定时器可以用来模拟多个逻辑定时器的操作 <a class="reference internal" href="../references.html#varghese-1997"><span class="std std-ref">[Varghese 1997]</span></a>。</p></li>
+<li><p><em>ACK 被接收</em>。如果接收到 ACK，SR 发送方会将该分组标记为已接收，前提是它位于发送窗口之内。如果该分组的序列号等于 <code class="docutils literal notranslate"><span class="pre">send_base</span></code>，则将窗口基准移动到尚未确认的、序列号最小的分组处。如果窗口因此向前移动，并且有一些尚未发送的分组，其序列号现在已落入窗口范围，则立即发送这些分组。</p></li>
+</ol>
+<div class="toggle docutils container">
+<figure class="align-center">
+<img alt="../_images/267-0.png" src="../_images/267-0.png" />
+</figure>
+</div>
+<p><strong>图 3.24 SR 发送方的事件与操作</strong></p>
+<ol class="arabic simple" id="figure-3-25">
+<li><p><em>序列号在</em> [<code class="docutils literal notranslate"><span class="pre">rcv_base</span></code>, <code class="docutils literal notranslate"><span class="pre">rcv_base+N-1</span></code>] <em>范围内的分组被正确接收</em>。在这种情况下，接收到的分组位于接收方的窗口之内，接收方会向发送方返回一个选择性确认（selective ACK）分组。如果该分组此前未被接收过，则将其缓存在接收方。如果该分组的序列号等于接收窗口的起始值（<a class="reference internal" href="#figure-3-22"><span class="std std-ref">图 3.22</span></a> 中的 <code class="docutils literal notranslate"><span class="pre">rcv_base</span></code>），则该分组以及从 <code class="docutils literal notranslate"><span class="pre">rcv_base</span></code> 开始按序号连续的、已缓存在接收方的分组将一并交付给上层。随后，接收窗口向前移动已交付给上层的分组数量。例如，参见 <a class="reference internal" href="#figure-3-26"><span class="std std-ref">图 3.26</span></a>。当序列号为 <code class="docutils literal notranslate"><span class="pre">rcv_base=2</span></code> 的分组被接收时，它以及分组 3、4 和 5 可以一并交付给上层。</p></li>
+<li><p><em>序列号在</em> [<code class="docutils literal notranslate"><span class="pre">rcv_base-N</span></code>, <code class="docutils literal notranslate"><span class="pre">rcv_base-1</span></code>] <em>范围内的分组被正确接收</em>。在这种情况下，即使该分组此前已被接收方确认过，仍必须生成一个 ACK。否则，忽略该分组。</p></li>
+</ol>
+<div class="toggle docutils container">
+<figure class="align-center">
+<img alt="../_images/267-1.png" src="../_images/267-1.png" />
+</figure>
+</div>
+<p><strong>图 3.25 SR 接收方的事件与操作</strong></p>
+<p>需要特别注意的是，在 <a class="reference internal" href="#figure-3-25"><span class="std std-ref">图 3.25</span></a> 中的第 2 步中，接收方会对窗口基线以下某些序列号的已接收分组重新确认（而非忽略它们）。你应该确信这种重新确认确实是必要的。以 <a class="reference internal" href="#figure-3-23"><span class="std std-ref">图 3.23</span></a> 中的发送方与接收方的序列号空间为例，如果发送方未能收到来自接收方的 <code class="docutils literal notranslate"><span class="pre">send_base</span></code> 分组的 ACK，发送方最终将重传该分组 <strong>send_base</strong>，尽管我们（但不是发送方）清楚接收方已经收到该分组。如果接收方不去确认这个分组，那么发送方的窗口将永远无法前移！这个例子说明了 SR 协议（以及许多其他协议）中的一个重要方面：发送方和接收方对哪些分组已被正确接收、哪些未被正确接收的理解可能并不一致。对于 SR 协议来说，这意味着发送方与接收方的窗口不会总是重合。</p>
+<figure class="align-center" id="figure-3-26">
+<img alt="../_images/268-0.png" src="../_images/268-0.png" />
+</figure>
+<p><strong>图 3.26 SR 的运行过程</strong></p>
+<p>发送方与接收方窗口之间缺乏同步的现实在面对有限序列号空间时具有重要影响。举个例子，假设序列号空间有限，仅有四个分组序列号 0、1、2、3，窗口大小为 3。设想发送方传输了分组 0 到 2，并且接收方成功接收并确认了这三个分组。此时，接收方的窗口已滑动至第 4、5、6 个分组，序列号分别为 3、0 和 1。现在考虑两种情况：在第一种情况下，如 <a class="reference internal" href="#figure-3-27"><span class="std std-ref">图 3.27(a)</span></a> 所示，前面三个分组的 ACK 丢失，发送方重传这些分组。因此，接收方接收到一个序列号为 0 的分组——即第一个分组的副本。</p>
+<p>在第二种情况中，如 <a class="reference internal" href="#figure-3-27"><span class="std std-ref">图 3.27(b)</span></a> 所示，前三个分组的 ACK 均成功到达发送方。发送方因此前移其窗口，并发送第 4、5、6 个分组，序列号分别为 3、0 和 1。分组 3 丢失，但序列号为 0 的分组到达了接收方——这个分组包含的是 <strong>新</strong> 数据。</p>
+<p>现在考虑接收方在 <a class="reference internal" href="#figure-3-27"><span class="std std-ref">图 3.27</span></a> 中的视角，其视野中有一层“幕布”，因为接收方无法“看到”发送方的动作。接收方只能观察到它从信道接收到的消息序列以及它发送到信道中的消息序列。就接收方而言，这两种场景在观察结果上是一样的。它无法区分是第一个分组的重传，还是第五个分组的原始传输。显然，窗口大小若为序列号空间大小减一是不可行的。那么窗口必须多小才可以？本章结尾的一个问题要求你证明，对于 SR 协议，窗口大小必须小于或等于序列号空间的一半。</p>
+<p>在配套网站上，你将找到一个动画展示 SR 协议运行过程的小程序。可以尝试进行与 GBN 小程序中相同的实验。实验结果是否与你的预期一致？</p>
+<p>这就完成了我们对可靠数据传输协议的讨论。我们涵盖了大量内容，并介绍了多个机制，它们共同实现了可靠数据传输。<a class="reference internal" href="#table-3-1"><span class="std std-ref">表 3.1</span></a> 总结了这些机制。现在你已经看到所有机制如何协同工作，并形成“完整图景”，我们鼓励你重新阅读本节，以体会这些机制是如何逐步添加的，从而适应越来越复杂（更现实）的发送方与接收方之间信道模型，或是提升协议性能。</p>
+<p>让我们通过讨论底层信道模型中一个剩余假设来结束可靠数据传输协议的内容。回忆我们曾假设发送方与接收方之间的信道不会对分组重新排序。当发送方与接收方通过单根物理线路连接时，这通常是合理的假设。然而，当两者之间的“信道”是网络时，分组重新排序就有可能发生。重新排序的一种表现是：某个序列号或确认号为 x 的旧分组副本可能重新出现，即使发送方与接收方的窗口中都已不再包含 x。在发生重新排序的情况下，信道可以被认为是在缓冲分组，并可在未来任意时刻自发释放这些分组。由于序列号可能被复用，因此必须采取一些措施防止这些重复分组。在实际中常用的做法是确保在发送方“确信”之前发送的序列号为 x 的分组已不再存在于网络中之前，不会再次使用该序列号。这通常通过假设一个分组在网络中不会“存活”超过某个最大时间值来实现。在高速网络的 TCP 扩展 <a class="reference internal" href="../references.html#rfc-1323"><span class="std std-ref">[RFC 1323]</span></a> 中，最大分组生存时间约为三分钟。<a class="reference internal" href="../references.html#sunshine-1978"><span class="std std-ref">[Sunshine 1978]</span></a> 描述了一种使用序列号的方法，可完全避免重新排序问题。</p>
+<figure class="align-center" id="figure-3-27">
+<img alt="../_images/270-0.png" src="../_images/270-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/270-1.png" src="../_images/270-1.png" />
+</figure>
+<p><strong>图 3.27 当窗口过大时 SR 接收方的困境：这是新分组，还是重传？</strong></p>
+<p id="table-3-1"><strong>表 3.1 可靠数据传输机制及其用途概览</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>机制</p></td>
+<td><p>用途与说明</p></td>
+</tr>
+<tr class="row-even"><td><p>校验和</p></td>
+<td><p>用于检测传输分组中的比特错误。</p></td>
+</tr>
+<tr class="row-odd"><td><p>定时器</p></td>
+<td><p>用于超时/重传分组，可能是因为分组（或其 ACK）在信道中丢失。由于定时器可能在分组只是延迟但未丢失时触发（称为提前超时），或在分组已被接收但 ACK 丢失时触发，因此接收方可能会收到分组的重复副本。</p></td>
+</tr>
+<tr class="row-even"><td><p>序列号</p></td>
+<td><p>用于对从发送方到接收方的数据分组进行顺序编号。接收方可以通过检测序列号中的间隙来识别丢失分组。接收到具有重复序列号的分组时，可以识别出分组副本。</p></td>
+</tr>
+<tr class="row-odd"><td><p>确认（ACK）</p></td>
+<td><p>接收方用于告知发送方分组或一组分组已正确接收。确认通常包含被确认的分组的序列号。确认可以是单个确认，也可以是累计确认，具体取决于协议。</p></td>
+</tr>
+<tr class="row-even"><td><p>否认（NAK）</p></td>
+<td><p>接收方用于告知发送方某个分组未被正确接收。否认通常包含未被正确接收的分组的序列号。</p></td>
+</tr>
+<tr class="row-odd"><td><p>窗口、流水线</p></td>
+<td><p>发送方可能被限制为只能发送序列号位于某个范围内的分组。通过允许多个分组被发送而尚未确认，可提升发送方在相对于停等模式下的利用率。稍后我们将看到，窗口大小可以根据接收方接收与缓存消息的能力、网络中的拥塞程度，或两者的结合来设定。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="toggle docutils container">
+<p>The GBN protocol allows the sender to potentially “fill the pipeline” in <a class="reference internal" href="#figure-3-17"><span class="std std-ref">Figure 3.17</span></a> with packets, thus avoiding the channel utilization problems we noted with stop-and-wait protocols. There are, however, scenarios in which GBN itself suffers from performance problems. In particular, when the window size and bandwidth-delay product are both large, many packets can be in the pipeline. A single packet error can thus cause GBN to retransmit a large number of packets, many unnecessarily. As the probability of channel errors increases, the pipeline can become filled with these unnecessary retransmissions. Imagine, in our message-dictation scenario, that if every time a word was garbled, the surrounding 1,000 words (for example, a window size of 1,000 words) had to be repeated. The dictation would be slowed by all of the reiterated words.</p>
+<p>As the name suggests, selective-repeat protocols avoid unnecessary retransmissions by having the sender retransmit only those packets that it suspects were received in error (that is, were lost or corrupted) at the receiver. This individual, as-needed, retransmission will require that the receiver individually acknowledge correctly received packets. A window size of N will again be used to limit the number of outstanding, unacknowledged packets in the pipeline. However, unlike GBN, the sender will have already received ACKs for some of the packets in the window. <a class="reference internal" href="#figure-3-23"><span class="std std-ref">Figure 3.23</span></a> shows the SR sender’s view of the sequence number space. <a class="reference internal" href="#figure-3-24"><span class="std std-ref">Figure 3.24</span></a> details the various actions taken by the SR sender.</p>
+<p>The SR receiver will acknowledge a correctly received packet whether or not it is in order. Out-of-order packets are buffered until any missing packets (that is, packets with lower sequence numbers) are received, at which point a batch of packets can be delivered in order to the upper layer. <a class="reference internal" href="#figure-3-25"><span class="std std-ref">Figure 3.25</span></a> itemizes the various actions taken by the SR receiver. <a class="reference internal" href="#figure-3-26"><span class="std std-ref">Figure 3.26</span></a> shows an example of SR operation in the presence of lost packets. Note that in <a class="reference internal" href="#figure-3-26"><span class="std std-ref">Figure 3.26</span></a>, the receiver initially buffers packets 3, 4, and 5, and delivers them together with packet 2 to the upper layer when packet 2 is finally received.</p>
+<figure class="align-center">
+<img alt="../_images/266-0.png" src="../_images/266-0.png" />
+</figure>
+<p><strong>Figure 3.23 Selective-repeat (SR) sender and receiver views of sequence-number space</strong></p>
+<figure class="align-center">
+<img alt="../_images/267-0.png" src="../_images/267-0.png" />
+</figure>
+<p><strong>Figure 3.24 SR sender events and actions</strong></p>
+<figure class="align-center">
+<img alt="../_images/267-1.png" src="../_images/267-1.png" />
+</figure>
+<p><strong>Figure 3.25 SR receiver events and actions</strong></p>
+<p>It is important to note that in Step 2 in <a class="reference internal" href="#figure-3-25"><span class="std std-ref">Figure 3.25</span></a>, the receiver reacknowledges (rather than ignores) already received packets with certain sequence numbers below the current window base. You should convince yourself that this reacknowledgment is indeed needed. Given the sender and receiver sequence number spaces in <a class="reference internal" href="#figure-3-23"><span class="std std-ref">Figure 3.23</span></a>, for example, if there is no ACK for packet send_base propagating from the receiver to the sender, the sender will eventually retransmit packet <strong>send_base</strong>, even though it is clear (to us, not the sender!) that the receiver has already received that packet. If the receiver were not to acknowledge this packet, the sender’s window would never move forward! This example illustrates an important aspect of SR protocols (and many other protocols as well). The sender and receiver will not always have an identical view of what has been received correctly and what has not. For SR protocols, this means that the sender and receiver windows will not always coincide.</p>
+<figure class="align-center">
+<img alt="../_images/268-0.png" src="../_images/268-0.png" />
+</figure>
+<p><strong>Figure 3.26 SR operation</strong></p>
+<p>The lack of synchronization between sender and receiver windows has important consequences when we are faced with the reality of a finite range of sequence numbers. Consider what could happen, for example, with a finite range of four packet sequence numbers, 0, 1, 2, 3, and a window size of three. Suppose packets 0 through 2 are transmitted and correctly received and acknowledged at the receiver. At this point, the receiver’s window is over the fourth, fifth, and sixth packets, which have sequence numbers 3, 0, and 1, respectively. Now consider two scenarios. In the first scenario, shown in <a class="reference internal" href="#figure-3-27"><span class="std std-ref">Figure 3.27(a)</span></a>, the ACKs for the first three packets are lost and the sender retransmits these packets. The receiver thus next receives a packet with sequence number 0—a copy of the first packet sent.</p>
+<p>In the second scenario, shown in <a class="reference internal" href="#figure-3-27"><span class="std std-ref">Figure 3.27(b)</span></a>, the ACKs for the first three packets are all delivered correctly. The sender thus moves its window forward and sends the fourth, fifth, and sixth packets, with sequence numbers 3, 0, and 1, respectively. The packet with sequence number 3 is lost, but the packet with sequence number 0 arrives—a packet containing <em>new</em> data.</p>
+<p>Now consider the receiver’s viewpoint in <a class="reference internal" href="#figure-3-27"><span class="std std-ref">Figure 3.27</span></a>, which has a figurative curtain between the sender and the receiver, since the receiver cannot “see” the actions taken by the sender. All the receiver observes is the sequence of messages it receives from the channel and sends into the channel. As far as it is concerned, the two scenarios in <a class="reference internal" href="#figure-3-27"><span class="std std-ref">Figure 3.27</span></a> are identical. There is no way of distinguishing the retransmission of the first packet from an original transmission of the fifth packet. Clearly, a window size that is 1 less than the size of the sequence number space won’t work. But how small must the window size be? A problem at the end of the chapter asks you to show that the window size must be less than or equal to half the size of the sequence number space for SR protocols.</p>
+<p>At the companion Web site, you will find an applet that animates the operation of the SR protocol. Try performing the same experiments that you did with the GBN applet. Do the results agree with what you expect?</p>
+<p>This completes our discussion of reliable data transfer protocols. We’ve covered a lot of ground and introduced numerous mechanisms that together provide for reliable data transfer. <a class="reference internal" href="#table-3-1"><span class="std std-ref">Table 3.1</span></a> summarizes these mechanisms. Now that we have seen all of these mechanisms in operation and can see the “big picture,” we encourage you to review this section again to see how these mechanisms were incrementally added to cover increasingly complex (and realistic) models of the channel connecting the sender and receiver, or to improve the performance of the protocols.</p>
+<p>Let’s conclude our discussion of reliable data transfer protocols by considering one remaining assumption in our underlying channel model. Recall that we have assumed that packets cannot be reordered within the channel between the sender and receiver. This is generally a reasonable assumption when the sender and receiver are connected by a single physical wire. However, when the “channel” connecting the two is a network, packet reordering can occur. One manifestation of packet reordering is that old copies of a packet with a sequence or acknowledgment number of x can appear, even though neither the sender’s nor the receiver’s window contains x. With packet reordering, the channel can be thought of as essentially buffering packets and spontaneously emitting these packets at any point in the future. Because sequence numbers may be reused, some care must be taken to guard against such duplicate packets. The approach taken in practice is to ensure that a sequence number is not reused until the sender is “sure” that any previously sent packets with sequence number x are no longer in the network. This is done by assuming that a packet cannot “live” in the network for longer than some fixed maximum amount of time. A maximum packet lifetime of approximately three minutes is assumed in the TCP extensions for high-speed networks <a class="reference internal" href="../references.html#rfc-1323"><span class="std std-ref">[RFC 1323]</span></a>. <a class="reference internal" href="../references.html#sunshine-1978"><span class="std std-ref">[Sunshine 1978]</span></a> describes a method for using sequence numbers such that reordering problems can be completely avoided.</p>
+<figure class="align-center">
+<img alt="../_images/270-0.png" src="../_images/270-0.png" />
+</figure>
+<figure class="align-center">
+<img alt="../_images/270-1.png" src="../_images/270-1.png" />
+</figure>
+<p><strong>Figure 3.27 SR receiver dilemma with too-large windows: A new packet or a retransmission?</strong></p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p><strong>Table 3.1 Summary of reliable data transfer mechanisms and their use</strong></p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s3.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">3.3 无连接传输：UDP</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s5.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">3.5 面向连接的传输：TCP</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c3-4-1">3.4.1 构建一个可靠数据传输协议</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rdt1-0">在完全可靠信道上的可靠数据传输：rdt1.0</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rdt2-0">在存在比特错误的信道上的可靠数据传输：rdt2.0</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rdt3-0">在具有比特错误的丢包信道上的可靠数据传输：rdt3.0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#c3-4-2">3.4.2 流水线式可靠数据传输协议</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-gbn">3.4.3 回退 N（GBN）</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sr">3.4.4 选择性重传（SR）</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

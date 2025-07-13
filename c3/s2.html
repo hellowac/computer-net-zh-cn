@@ -1,0 +1,736 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>3.2 复用与解复用 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c3/s2';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="3.3 无连接传输：UDP" href="s3.html" />
+    <link rel="prev" title="3.1 引言与传输层服务" href="s1.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 3 章 传输层</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c9/index.html">第 9 章 多媒体网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s4.html">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c9/interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c3/s2.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>3.2 复用与解复用</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">无连接的复用与解复用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">面向连接的复用与解复用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#web-tcp">Web 服务器与 TCP</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c3-2">
+<span id="id1"></span><h1>3.2 复用与解复用<a class="headerlink" href="#c3-2" title="此标题的永久链接">#</a></h1>
+<p>3.2 Multiplexing and Demultiplexing</p>
+<p>在本节中，我们将讨论传输层的复用与解复用，即将网络层提供的主机到主机的传送服务扩展为运行在主机上的应用进程之间的进程到进程传送服务。为了使讨论具体化，我们将以互联网为背景来讲解这一基本的传输层服务。但我们强调，所有计算机网络都需要复用/解复用服务。</p>
+<p>在目的主机上，传输层从下方的网络层接收报文段。传输层的职责是将这些报文段中的数据交付给主机中相应的应用进程。让我们来看一个例子。假设你正坐在计算机前，一边下载网页，一边运行一个 FTP 会话和两个 Telnet 会话。因此，你运行了四个网络应用进程——两个 Telnet 进程，一个 FTP 进程，一个 HTTP 进程。当你计算机中的传输层从网络层接收到数据时，它需要将接收到的数据定向到这四个进程中的一个。现在让我们看看这个过程是如何完成的。</p>
+<p>首先回忆 <a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">第 2.7 节</span></a> 中提到的，一个进程（作为网络应用的一部分）可以拥有一个或多个 <strong>套接字（socket）</strong> ，这些套接字是数据从网络传递到进程，或从进程传递到网络的通道。因此，如 <a class="reference internal" href="#figure-3-2"><span class="std std-ref">图 3.2</span></a> 所示，接收主机中的传输层实际上并不是将数据直接传递给进程，而是传递给中间的套接字。因为在任何时刻，接收主机中都可能存在多个套接字，所以每个套接字都有一个唯一的标识符。该标识符的格式取决于是 UDP 套接字还是 TCP 套接字，我们将在后文中详细讨论。</p>
+<p>现在让我们来看看接收主机如何将传入的传输层报文段定向到合适的套接字。每个传输层报文段都包含了一组用于此目的的字段。在接收端，传输层检查这些字段，以识别接收套接字，然后将报文段定向到该套接字。将传输层报文段中的数据交付给正确套接字的过程称为 <strong>解复用（demultiplexing）</strong> 。而在源主机中从不同套接字收集数据块、为每个数据块添加首部信息（以后将在解复用中使用）以构建报文段，并将报文段传递给网络层的过程称为 <strong>复用（multiplexing）</strong> 。请注意，<a class="reference internal" href="#figure-3-2"><span class="std std-ref">图 3.2</span></a> 中的中间主机中的传输层必须将来自下层网络层的报文段解复用到上层的 <span class="math notranslate nohighlight">\(P_1\)</span> 或 <span class="math notranslate nohighlight">\(P_2\)</span> 进程中；这是通过将到达报文段中的数据定向到相应进程的套接字来完成的。中间主机的传输层还必须从这些套接字收集输出数据，形成传输层报文段，并将其传递到下层网络层。尽管我们是在互联网传输协议的上下文中引入复用与解复用的，但重要的是要认识到：当某一层的单个协议（无论是传输层或其他层）被上一层的多个协议使用时，这都是需要考虑的问题。</p>
+<figure class="align-center" id="figure-3-2">
+<img alt="../_images/231-0.png" src="../_images/231-0.png" />
+</figure>
+<p><strong>图 3.2 传输层的复用与解复用</strong></p>
+<p>为了说明解复用的过程，我们回顾上一节中的家庭类比。每个孩子都由其名字唯一标识。当 Bill 从邮递员那里收到一堆邮件时，他通过观察信件的收件人是谁来执行解复用操作，然后将信件亲自分发给他的兄弟姐妹。而 Ann 在收集兄弟姐妹的信件并将邮件交给邮递员时则执行了复用操作。</p>
+<p>现在我们理解了传输层复用与解复用的作用，让我们看看主机中是如何具体实现的。从上面的讨论我们知道，传输层复用要求：(1) 套接字具有唯一的标识符；(2) 每个报文段包含用于指示应交付给哪个套接字的特殊字段。这些特殊字段如 <a class="reference internal" href="#figure-3-3"><span class="std std-ref">图 3.3</span></a> 所示，即 <strong>源端口号字段</strong> 和 <strong>目的端口号字段</strong> 。（UDP 和 TCP 报文段还有其他字段，这将在本章后续小节中讨论。）每个端口号是一个 16 位数字，范围从 0 到 65535。端口号范围中的 0 到 1023 被称为 <strong>知名端口号（well-known port numbers）</strong> ，是受限制的，也就是说它们是为诸如 HTTP（使用端口号 80）和 FTP（使用端口号 21）等知名应用协议保留的。知名端口号的列表见 <span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc1700.html"><strong>RFC 1700</strong></a> ，更新版本可在 <a class="reference external" href="http://www.iana.org">http://www.iana.org</a> 上获取 <span class="target" id="index-1"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3232.html"><strong>RFC 3232</strong></a>。当我们开发新应用程序时（比如 <a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">第 2.7 节</span></a> 中开发的简单应用），我们必须为应用分配一个端口号。</p>
+<figure class="align-center" id="figure-3-3">
+<img alt="../_images/232-0.png" src="../_images/232-0.png" />
+</figure>
+<p><strong>图 3.3 传输层报文段中的源端口号与目的端口号字段</strong></p>
+<p>现在应该清楚传输层 <em>可以如何</em> 实现解复用服务：主机中的每个套接字被分配一个端口号，当报文段到达主机时，传输层检查该报文段中的目的端口号，并将其定向到相应的套接字。然后报文段中的数据通过套接字进入附属进程。正如我们将看到的，这基本上就是 UDP 的做法。不过，我们还会看到 TCP 中的复用/解复用机制要更为复杂一些。</p>
+<div class="toggle docutils container">
+<p>In this section, we discuss transport-layer multiplexing and demultiplexing, that is, extending the host-to- host delivery service provided by the network layer to a process-to-process delivery service for applications running on the hosts. In order to keep the discussion concrete, we’ll discuss this basic transport-layer service in the context of the Internet. We emphasize, however, that a multiplexing/demultiplexing service is needed for all computer networks.</p>
+<p>At the destination host, the transport layer receives segments from the network layer just below. The transport layer has the responsibility of delivering the data in these segments to the appropriate application process running in the host. Let’s take a look at an example. Suppose you are sitting in front of your computer, and you are downloading Web pages while running one FTP session and two Telnet sessions. You therefore have four network application processes running—two Telnet processes, one FTP process, and one HTTP process. When the transport layer in your computer receives data from the network layer below, it needs to direct the received data to one of these four processes. Let’s now examine how this is done.</p>
+<p>First recall from <a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">Section 2.7</span></a> that a process (as part of a network application) can have one or more <strong>sockets</strong>, doors through which data passes from the network to the process and through which data
+passes from the process to the network. Thus, as shown in <a class="reference internal" href="#figure-3-2"><span class="std std-ref">Figure 3.2</span></a>, the transport layer in the receiving host does not actually deliver data directly to a process, but instead to an intermediary socket.
+Because at any given time there can be more than one socket in the receiving host, each socket has a unique identifier. The format of the identifier depends on whether the socket is a UDP or a TCP socket, as we’ll discuss shortly.</p>
+<p>Now let’s consider how a receiving host directs an incoming transport-layer segment to the appropriate socket. Each transport-layer segment has a set of fields in the segment for this purpose. At the receiving end, the transport layer examines these fields to identify the receiving socket and then directs the segment to that socket. This job of delivering the data in a transport-layer segment to the correct socket is called <strong>demultiplexing</strong>. The job of gathering data chunks at the source host from different sockets, encapsulating each data chunk with header information (that will later be used in demultiplexing) to create segments, and passing the segments to the network layer is called <strong>multiplexing</strong>. Note that the transport layer in the middle host in <a class="reference internal" href="#figure-3-2"><span class="std std-ref">Figure 3.2</span></a> must demultiplex segments arriving from the network layer below to either process <span class="math notranslate nohighlight">\(P_1\)</span> or <span class="math notranslate nohighlight">\(P_2\)</span> above; this is done by directing the arriving segment’s data to the corresponding process’s socket. The transport layer in the middle host must also gather outgoing data from these sockets, form transport- layer segments, and pass these segments down to the network layer. Although we have introduced multiplexing and demultiplexing in the context of the Internet transport protocols, it’s important to realize that they are concerns whenever a single protocol at one layer (at the transport layer or elsewhere) is used by multiple protocols at the next higher layer.</p>
+<figure class="align-center">
+<img alt="../_images/231-0.png" src="../_images/231-0.png" />
+</figure>
+<p><strong>Figure 3.2 Transport-layer multiplexing and demultiplexing</strong></p>
+<p>To illustrate the demultiplexing job, recall the household analogy in the previous section. Each of the kids is identified by his or her name. When Bill receives a batch of mail from the mail carrier, he performs a demultiplexing operation by observing to whom the letters are addressed and then hand delivering the mail to his brothers and sisters. Ann performs a multiplexing operation when she collects letters from her brothers and sisters and gives the collected mail to the mail person.</p>
+<p>Now that we understand the roles of transport-layer multiplexing and demultiplexing, let us examine how it is actually done in a host. From the discussion above, we know that transport-layer multiplexing requires (1) that sockets have unique identifiers, and (2) that each segment have special fields that indicate the socket to which the segment is to be delivered. These special fields, illustrated in <a class="reference internal" href="#figure-3-3"><span class="std std-ref">Figure 3.3</span></a>, are the <strong>source port number field</strong> and the <strong>destination port number field</strong>. (The UDP and TCP segments have other fields as well, as discussed in the subsequent sections of this chapter.) Each port number is a 16-bit number, ranging from 0 to 65535. The port numbers ranging from 0 to 1023 are called <strong>well-known port numbers</strong> and are restricted, which means that they are reserved for use by well-known application protocols such as HTTP (which uses port number 80) and FTP (which uses port number 21). The list of well-known port numbers is given in RFC 1700 and is updated at <a class="reference external" href="http://www.iana.org">http://www.iana.org</a> <a class="reference internal" href="../references.html#rfc-3232"><span class="std std-ref">[RFC 3232]</span></a>. When we develop a new application (such as the simple application developed in <a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">Section 2.7</span></a>), we must assign the application a port number.</p>
+<figure class="align-center">
+<img alt="../_images/232-0.png" src="../_images/232-0.png" />
+</figure>
+<p><strong>Figure 3.3 Source and destination port-number fields in a transport-layer segment</strong></p>
+<p>It should now be clear how the transport layer <em>could</em> implement the demultiplexing service: Each socket in the host could be assigned a port number, and when a segment arrives at the host, the transport layer
+examines the destination port number in the segment and directs the segment to the corresponding socket. The segment’s data then passes through the socket into the attached process. As we’ll see, this is basically how UDP does it. However, we’ll also see that multiplexing/demultiplexing in TCP is yet more subtle.</p>
+</div>
+<section id="id2">
+<h2>无连接的复用与解复用<a class="headerlink" href="#id2" title="此标题的永久链接">#</a></h2>
+<p>Connectionless Multiplexing and Demultiplexing</p>
+<p>回忆 <a class="reference internal" href="../c2/s7.html#c2-7-1"><span class="std std-ref">第 2.7.1 节</span></a> 中，主机中运行的 Python 程序可以通过以下代码创建一个 UDP 套接字：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clientSocket</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>当以这种方式创建 UDP 套接字时，传输层会自动为该套接字分配一个端口号。具体来说，传输层会分配一个在主机中尚未被其他 UDP 端口使用的 1024 到 65535 范围内的端口号。或者，我们可以在 Python 程序中创建套接字后添加一行代码，通过套接字的 <strong>bind()</strong> 方法将特定端口号（例如 19157）与该 UDP 套接字关联起来：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clientSocket</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">19157</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>如果应用开发者编写的是某个“知名协议”的服务器端代码，那么就必须分配对应的知名端口号。通常，应用程序的客户端由传输层自动（并透明地）分配端口号，而服务器端则使用特定的端口号。</p>
+<p>有了分配给 UDP 套接字的端口号后，我们现在可以精确描述 UDP 的复用/解复用过程。假设主机 A 中某个进程使用 UDP 端口 19157，想要将一段应用数据发送给主机 B 中使用 UDP 端口 46428 的进程。主机 A 中的传输层将创建一个传输层报文段，其中包含应用数据、源端口号（19157）、目的端口号（46428）以及另外两个值（这些我们稍后会讨论，目前可忽略）。传输层随后将生成的报文段传递给网络层。网络层将该报文段封装进一个 IP 数据报，并尽力将其传递给接收主机。如果该报文段到达接收方主机 B，接收方主机的传输层会检查报文段中的目的端口号（46428），并将其交付给由端口号 46428 标识的套接字。注意，主机 B 中可能运行着多个进程，每个都有自己的 UDP 套接字及其关联的端口号。当来自网络的 UDP 报文段到达时，主机 B 通过检查报文段中的目的端口号将其定向（解复用）到相应的套接字。</p>
+<p>需要注意的是，UDP 套接字由一个二元组唯一标识，该二元组包括目的 IP 地址和目的端口号。因此，如果两个 UDP 报文段具有不同的源 IP 地址和/或源端口号，但具有相同的目的 IP 地址和目的端口号，那么这两个报文段将被定向到相同的目标进程，通过相同的目标套接字。</p>
+<p>你可能会想，现在源端口号的作用是什么？正如 <a class="reference internal" href="#figure-3-4"><span class="std std-ref">图 3.4</span></a> 所示，在从 A 到 B 的报文段中，源端口号作为“返回地址”的一部分 —— 当 B 想将报文段发送回 A 时，B 到 A 报文段中的目的端口号将取自 A 到 B 报文段的源端口号。（完整的返回地址是 A 的 IP 地址和源端口号。）例如，回忆我们在 <a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">第 2.7 节</span></a> 中学习的 UDP 服务器程序。在 <strong>UDPServer.py</strong> 中，服务器使用 <strong>recvfrom()</strong> 方法从客户端发来的报文段中提取客户端（源）端口号；随后它发送一个新报文段给客户端，新报文段中的目的端口号就是提取出的源端口号。</p>
+<div class="toggle docutils container">
+<p>Recall from <a class="reference internal" href="../c2/s7.html#c2-7-1"><span class="std std-ref">Section 2.7.1</span></a> that the Python program running in a host can create a UDP socket with the line</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clientSocket</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_DGRAM</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>When a UDP socket is created in this manner, the transport layer automatically assigns a port number to the socket. In particular, the transport layer assigns a port number in the range 1024 to 65535 that is currently not being used by any other UDP port in the host. Alternatively, we can add a line into our Python program after we create the socket to associate a specific port number (say, 19157) to this UDP socket via the socket <strong>bind()</strong> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clientSocket</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">19157</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>If the application developer writing the code were implementing the server side of a “well-known protocol,” then the developer would have to assign the corresponding well-known port number. Typically, the client side of the application lets the transport layer automatically (and transparently) assign the port number, whereas the server side of the application assigns a specific port number.</p>
+<p>With port numbers assigned to UDP sockets, we can now precisely describe UDP multiplexing/demultiplexing. Suppose a process in Host A, with UDP port 19157, wants to send a chunk of application data to a process with UDP port 46428 in Host B. The transport layer in Host A creates a transport-layer segment that includes the application data, the source port number (19157), the destination port number (46428), and two other values (which will be discussed later, but are unimportant for the current discussion). The transport layer then passes the resulting segment to the network layer. The network layer encapsulates the segment in an IP datagram and makes a best-effort attempt to deliver the segment to the receiving host. If the segment arrives at the receiving Host B, the transport layer at the receiving host examines the destination port number in the segment (46428) and delivers the segment to its socket identified by port 46428. Note that Host B could be running multiple processes, each with its own UDP socket and associated port number. As UDP segments arrive from the network, Host B directs (demultiplexes) each segment to the appropriate socket by examining the segment’s destination port number.</p>
+<p>It is important to note that a UDP socket is fully identified by a two-tuple consisting of a destination IP address and a destination port number. As a consequence, if two UDP segments have different source IP addresses and/or source port numbers, but have the same destination IP address and destination port number, then the two segments will be directed to the same destination process via the same destination socket.</p>
+<p>You may be wondering now, what is the purpose of the source port number? As shown in <a class="reference internal" href="#figure-3-4"><span class="std std-ref">Figure 3.4</span></a>, in the A-to-B segment the source port number serves as part of a “return address”—when B wants to send a segment back to A, the destination port in the B-to-A segment will take its value from the source port value of the A-to-B segment. (The complete return address is A’s IP address and the source port number.) As an example, recall the UDP server program studied in <a class="reference internal" href="../c2/s7.html#c2-7"><span class="std std-ref">Section 2.7</span></a>. In <strong>UDPServer.py</strong>, the server uses the <strong>recvfrom()</strong> method to extract the client-side (source) port number from the segment it receives from the client; it then sends a new segment to the client, with the extracted source port number serving as the destination port number in this new segment.</p>
+</div>
+</section>
+<section id="id3">
+<h2>面向连接的复用与解复用<a class="headerlink" href="#id3" title="此标题的永久链接">#</a></h2>
+<p>Connection-Oriented Multiplexing and Demultiplexing</p>
+<p>为了理解 TCP 的解复用，我们需要仔细看看 TCP 套接字和 TCP 连接建立过程。TCP 套接字与 UDP 套接字之间的一个微妙区别是：一个 TCP 套接字由一个四元组标识：(源 IP 地址、源端口号、目的 IP 地址、目的端口号)。因此，当一个 TCP 报文段从网络到达主机时，主机使用这四个值将报文段定向（解复用）到适当的套接字。</p>
+<figure class="align-center" id="figure-3-4">
+<img alt="../_images/234-0.png" src="../_images/234-0.png" />
+</figure>
+<p><strong>图 3.4 源端口号和目的端口号的反转</strong></p>
+<p>特别地，与 UDP 不同的是，两个具有不同源 IP 地址或源端口号的 TCP 报文段（除了用于建立连接的初始 TCP 报文段外）将被定向到两个不同的套接字。为了更深入地理解这一点，让我们重新考虑 <a class="reference internal" href="../c2/s7.html#c2-7-2"><span class="std std-ref">第 2.7.2 节</span></a> 中的 TCP 客户端-服务器编程示例：</p>
+<ul>
+<li><p>TCP 服务器应用程序具有一个“欢迎套接字（welcoming socket）”，在端口号 12000 上等待来自 TCP 客户端的连接建立请求（见 <a class="reference internal" href="../c2/s7.html#figure-2-29"><span class="std std-ref">图 2.29</span></a>）。</p></li>
+<li><p>TCP 客户端创建一个套接字并发送连接建立请求报文段，其代码如下：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clientSocket</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">)</span>
+<span class="n">clientSocket</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">serverName</span><span class="p">,</span><span class="mi">12000</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p>一个连接建立请求本质上就是一个 TCP 报文段，该报文段具有目的端口号 12000，并在 TCP 首部中设置了一个特殊的连接建立比特（将在 <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">第 3.5 节</span></a> 中讨论）。该报文段还包含一个由客户端选择的源端口号。</p></li>
+<li><p>当运行服务器进程的主机操作系统收到目的端口为 12000 的传入连接请求报文段时，它会定位到正在端口号 12000 上等待连接的服务器进程。该服务器进程随后创建一个新套接字：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">connectionSocket</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p>同时，服务器端的传输层记录该连接请求报文段中的以下四个值：(1) 报文段中的源端口号，(2) 源主机的 IP 地址，(3) 报文段中的目的端口号，以及 (4) 自己的 IP 地址。新创建的连接套接字由这四个值标识；所有随后到达的报文段，其源端口、源 IP 地址、目的端口和目的 IP 地址与这四个值匹配的，将被解复用到这个套接字。TCP 连接一旦建立，客户端和服务器就可以互相发送数据了。</p></li>
+</ul>
+<p>服务器主机可能支持多个并发的 TCP 连接套接字，每个套接字绑定到一个进程，并且每个套接字由其独有的四元组标识。当 TCP 报文段到达主机时，将使用所有四个字段（源 IP 地址、源端口号、目的 IP 地址、目的端口号）将该报文段定向（解复用）到适当的套接字。</p>
+<div class="admonition-focus-on-security admonition">
+<p class="admonition-title">聚焦安全(FOCUS ON SECURITY)</p>
+<p>端口扫描</p>
+<p>我们已经看到，服务器进程会在一个开放端口上耐心等待远程客户端的连接。一些端口是为知名应用程序保留的（例如 Web、FTP、DNS 和 SMTP 服务器）；其他端口则被流行应用程序按惯例使用（例如 Microsoft 2000 SQL 服务器监听 UDP 端口 1434）。因此，如果我们发现某个主机上的某个端口是开放的，就有可能将该端口映射到主机上运行的某个特定应用程序。这对系统管理员非常有用，他们经常希望了解网络中哪些主机正在运行哪些网络应用程序。但攻击者为了“侦察环境”，也同样希望知道目标主机上哪些端口是开放的。如果发现某个主机运行的应用程序存在已知的安全漏洞（例如，监听在端口 1434 上的 SQL 服务器曾存在缓冲区溢出漏洞，使远程用户可以在易受攻击主机上执行任意代码，该漏洞被 Slammer 蠕虫所利用 <span class="xref std std-ref">[CERT 2003–04]</span>），那么该主机就容易遭到攻击。</p>
+<p>确定哪些应用程序监听哪些端口是一个相对容易的任务。实际上有许多公共领域的程序称为端口扫描器，专门用于此目的。其中最常用的可能是 nmap，它可以从 <a class="reference external" href="http://nmap.org">http://nmap.org</a> 免费获取，并包含在大多数 Linux 发行版中。对于 TCP，nmap 顺序扫描端口，查找接受 TCP 连接的端口；对于 UDP，nmap 也顺序扫描端口，查找响应所发送 UDP 报文段的端口。在这两种情况下，nmap 都会返回开放、关闭或不可达的端口列表。运行 nmap 的主机可以尝试扫描互联网上 <em>任何地方</em> 的目标主机。我们将在 <a class="reference internal" href="s5.html#c3-5-6"><span class="std std-ref">第 3.5.6 节</span></a> 中再次讨论 nmap，届时我们将探讨 TCP 连接管理。</p>
+</div>
+<figure class="align-center" id="figure-3-5">
+<img alt="../_images/236-0.png" src="../_images/236-0.png" />
+</figure>
+<p><strong>图 3.5 两个客户端使用相同的目的端口号（80）与同一个 Web 服务器通信</strong></p>
+<p><a class="reference internal" href="#figure-3-5"><span class="std std-ref">图 3.5</span></a> 展示了这一情形，其中主机 C 向服务器 B 发起了两个 HTTP 会话，而主机 A 向 B 发起了一个 HTTP 会话。主机 A、C 和服务器 B 分别拥有各自唯一的 IP 地址。主机 C 为其两个 HTTP 连接分配了两个不同的源端口号（26145 和 7532）。由于主机 A 是独立于主机 C 分配源端口号的，它也可能为其 HTTP 连接分配源端口号 26145。但这并不是问题——服务器 B 依然能够正确地将这两个具有相同源端口号的连接解复用开，因为这两个连接具有不同的源 IP 地址。</p>
+<div class="toggle docutils container">
+<p>In order to understand TCP demultiplexing, we have to take a close look at TCP sockets and TCP connection establishment. One subtle difference between a TCP socket and a UDP socket is that a TCP socket is identified by a four-tuple: (source IP address, source port number, destination IP address, destination port number). Thus, when a TCP segment arrives from the network to a host, the host uses all four values to direct (demultiplex) the segment to the appropriate socket.</p>
+<figure class="align-center">
+<img alt="../_images/234-0.png" src="../_images/234-0.png" />
+</figure>
+<p><strong>Figure 3.4 The inversion of source and destination port numbers</strong></p>
+<p>In particular, and in contrast with UDP, two arriving TCP segments with different source IP addresses or source port numbers will (with the exception of a TCP segment carrying the original connection- establishment request) be directed to two different sockets. To gain further insight, let’s reconsider the
+TCP client-server programming example in <a class="reference internal" href="../c2/s7.html#c2-7-2"><span class="std std-ref">Section 2.7.2</span></a>:</p>
+<ul>
+<li><p>The TCP server application has a “welcoming socket,” that waits for connection-establishment requests from TCP clients (see <a class="reference internal" href="../c2/s7.html#figure-2-29"><span class="std std-ref">Figure 2.29</span></a>) on port number 12000.</p></li>
+<li><p>The TCP client creates a socket and sends a connection establishment request segment with the lines:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">clientSocket</span> <span class="o">=</span> <span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">SOCK_STREAM</span><span class="p">)</span>
+<span class="n">clientSocket</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">serverName</span><span class="p">,</span><span class="mi">12000</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p>A connection-establishment request is nothing more than a TCP segment with destination port number 12000 and a special connection-establishment bit set in the TCP header (discussed in <a class="reference internal" href="s5.html#c3-5"><span class="std std-ref">Section 3.5</span></a>). The segment also includes a source port number that was chosen by the client.</p></li>
+<li><p>When the host operating system of the computer running the server process receives the incoming connection-request segment with destination port 12000, it locates the server process that is waiting to accept a connection on port number 12000. The server process then creates a new socket:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">connectionSocket</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">serverSocket</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p>Also, the transport layer at the server notes the following four values in the connection-request segment: (1) the source port number in the segment, (2) the IP address of the source host, (3) the destination port number in the segment, and (4) its own IP address. The newly created connection socket is identified by these four values; all subsequently arriving segments whose source port, source IP address, destination port, and destination IP address match these four values will be demultiplexed to this socket. With the TCP connection now in place, the client and server can now send data to each other.</p></li>
+</ul>
+<p>The server host may support many simultaneous TCP connection sockets, with each socket attached to a process, and with each socket identified by its own four-tuple. When a TCP segment arrives at the host, all four fields (source IP address, source port, destination IP address, destination port) are used to direct (demultiplex) the segment to the appropriate socket.</p>
+<div class="admonition-focus-on-security admonition">
+<p class="admonition-title">FOCUS ON SECURITY</p>
+<p>Port Scanning</p>
+<p>We’ve seen that a server process waits patiently on an open port for contact by a remote client. Some ports are reserved for well-known applications (e.g., Web, FTP, DNS, and SMTP servers); other ports are used by convention by popular applications (e.g., the Microsoft 2000 SQL server listens for requests on UDP port 1434). Thus, if we determine that a port is open on a host, we may be able to map that port to a specific application running on the host. This is very useful for system administrators, who are often interested in knowing which network applications are running on the hosts in their networks. But attackers, in order to “case the joint,” also want to know which ports are open on target hosts. If a host is found to be running an application with a known security flaw (e.g., a SQL server listening on port 1434 was subject to a buffer overflow, allowing a remote user to execute arbitrary code on the vulnerable host, a flaw exploited by the Slammer worm <span class="xref std std-ref">[CERT 2003–04]</span>), then that host is ripe for attack.</p>
+<p>Determining which applications are listening on which ports is a relatively easy task. Indeed there are a number of public domain programs, called port scanners, that do just that. Perhaps the most widely used of these is nmap, freely available at <a class="reference external" href="http://nmap.org">http://nmap.org</a> and included in most Linux distributions. For TCP, nmap sequentially scans ports, looking for ports that are accepting TCP connections. For UDP, nmap again sequentially scans ports, looking for UDP ports that respond to transmitted UDP segments. In both cases, nmap returns a list of open, closed, or unreachable ports. A host running nmap can attempt to scan any target host <em>anywhere</em> in the Internet. We’ll revisit nmap in <a class="reference internal" href="s5.html#c3-5-6"><span class="std std-ref">Section 3.5.6</span></a>, when we discuss TCP connection management.</p>
+</div>
+<figure class="align-center">
+<img alt="../_images/236-0.png" src="../_images/236-0.png" />
+</figure>
+<p><strong>Figure 3.5 Two clients, using the same destination port number (80) to communicate with the same Web server application</strong></p>
+<p>The situation is illustrated in <a class="reference internal" href="#figure-3-5"><span class="std std-ref">Figure 3.5</span></a>, in which Host C initiates two HTTP sessions to server B, and Host A initiates one HTTP session to B. Hosts A and C and server B each have their own unique IP address—A, C, and B, respectively. Host C assigns two different source port numbers (26145 and 7532) to its two HTTP connections. Because Host A is choosing source port numbers independently of C, it might also assign a source port of 26145 to its HTTP connection. But this is not a problem—server B will still be able to correctly demultiplex the two connections having the same source port number, since the two connections have different source IP addresses.</p>
+</div>
+</section>
+<section id="web-tcp">
+<h2>Web 服务器与 TCP<a class="headerlink" href="#web-tcp" title="此标题的永久链接">#</a></h2>
+<p>Web Servers and TCP</p>
+<p>在结束本节讨论之前，有必要进一步谈谈 Web 服务器及其如何使用端口号。考虑一个主机在端口 80 上运行 Web 服务器（例如 Apache Web 服务器）。当客户端（例如浏览器）向服务器发送报文段时，所有报文段都将具有目的端口号 80。特别地，初始连接建立报文段以及承载 HTTP 请求消息的报文段都将具有目的端口号 80。如我们刚才描述的，服务器使用源 IP 地址和源端口号来区分来自不同客户端的报文段。</p>
+<p><a class="reference internal" href="#figure-3-5"><span class="std std-ref">图 3.5</span></a> 展示了一个 Web 服务器为每个连接生成一个新进程。如 <a class="reference internal" href="#figure-3-5"><span class="std std-ref">图 3.5</span></a> 所示，每个进程都有自己的连接套接字，用于接收 HTTP 请求并发送 HTTP 响应。不过我们需要说明，连接套接字与进程之间并不总是一一对应。实际上，现代高性能 Web 服务器通常仅使用一个进程，并为每个新的客户端连接创建一个具有新连接套接字的新线程。（线程可以看作是轻量级子进程。）如果你完成了 <a class="reference internal" href="../c2/index.html#c2"><span class="std std-ref">第 2 章</span></a> 中的第一个编程作业，你就构建了一个采用该方式的 Web 服务器。对于这种服务器，任意时刻都可能存在多个连接套接字（具有不同标识符）绑定到同一个进程上。</p>
+<p>如果客户端和服务器使用的是持久 HTTP，那么在整个持久连接期间，客户端和服务器将通过同一个服务器套接字交换 HTTP 消息。然而，如果客户端和服务器使用非持久 HTTP，那么每个请求/响应对都会创建并关闭一个新的 TCP 连接，因此每个请求/响应也会创建并关闭一个新的套接字。这种频繁的套接字创建和关闭会严重影响繁忙 Web 服务器的性能（尽管可以使用若干操作系统技巧来缓解该问题）。感兴趣的读者可参考 [ <a class="reference internal" href="../references.html#nielsen-1997"><span class="std std-ref">Nielsen 1997</span></a>；<a class="reference internal" href="../references.html#nahum-2002"><span class="std std-ref">Nahum 2002</span></a>] 进一步了解持久与非持久 HTTP 背后的操作系统问题。</p>
+<p>现在我们已讨论了传输层的复用与解复用，让我们继续讨论互联网中的一个传输协议 —— UDP。在下一节中，我们将看到 UDP 相对于网络层协议只增加了复用/解复用服务。</p>
+<div class="toggle docutils container">
+<p>Before closing this discussion, it’s instructive to say a few additional words about Web servers and how they use port numbers. Consider a host running a Web server, such as an Apache Web server, on port 80. When clients (for example, browsers) send segments to the server, all segments will have destination port 80. In particular, both the initial connection-establishment segments and the segments carrying HTTP request messages will have destination port 80. As we have just described, the server distinguishes the segments from the different clients using source IP addresses and source port numbers.</p>
+<p><a class="reference internal" href="#figure-3-5"><span class="std std-ref">Figure 3.5</span></a> shows a Web server that spawns a new process for each connection. As shown in <a class="reference internal" href="#figure-3-5"><span class="std std-ref">Figure 3.5</span></a>, each of these processes has its own connection socket through which HTTP requests arrive and HTTP responses are sent. We mention, however, that there is not always a one-to-one correspondence between connection sockets and processes. In fact, today’s high-performing Web servers often use only one process, and create a new thread with a new connection socket for each new client connection. (A thread can be viewed as a lightweight subprocess.) If you did the first programming assignment in <a class="reference internal" href="../c2/index.html#c2"><span class="std std-ref">Chapter 2</span></a>, you built a Web server that does just this. For such a server, at any given time there may be many connection sockets (with different identifiers) attached to the same process.</p>
+<p>If the client and server are using persistent HTTP, then throughout the duration of the persistent connection the client and server exchange HTTP messages via the same server socket. However, if the client and server use non-persistent HTTP, then a new TCP connection is created and closed for every request/response, and hence a new socket is created and later closed for every request/response. This frequent creating and closing of sockets can severely impact the performance of a busy Web server (although a number of operating system tricks can be used to mitigate the problem). Readers interested in the operating system issues surrounding persistent and non-persistent HTTP are encouraged to see [ <a class="reference internal" href="../references.html#nielsen-1997"><span class="std std-ref">Nielsen 1997</span></a>; <a class="reference internal" href="../references.html#nahum-2002"><span class="std std-ref">Nahum 2002</span></a>].</p>
+<p>Now that we’ve discussed transport-layer multiplexing and demultiplexing, let’s move on and discuss one of the Internet’s transport protocols, UDP. In the next section we’ll see that UDP adds little more to the network-layer protocol than a multiplexing/demultiplexing service.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s1.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">3.1 引言与传输层服务</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s3.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">3.3 无连接传输：UDP</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">无连接的复用与解复用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">面向连接的复用与解复用</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#web-tcp">Web 服务器与 TCP</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

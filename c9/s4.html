@@ -1,0 +1,924 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>9.4 实时对话应用的协议 &#8212; 计算机网络: 自顶向下</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystyles.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/tabs.js"></script>
+    <script>let toggleHintShow = '原文';</script>
+    <script>let toggleHintHide = '收起';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'c9/s4';</script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="9.5 多媒体的网络支持" href="s5.html" />
+    <link rel="prev" title="9.3 基于 IP 的语音通信" href="s3.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">计算机网络: 自顶向下</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">搜索</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">内容</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about_author.html">关于作者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">前言</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c1/index.html">第 1 章 计算机网络与因特网</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s1.html">1.1 什么是互联网？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s2.html">1.2 网络边缘</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s3.html">1.3 网络核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s4.html">1.4 分组交换网络中的时延、丢包与吞吐量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s5.html">1.5 协议层与其服务模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s6.html">1.6 网络攻击</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/s7.html">1.7 计算机网络与互联网的发展历史</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/summary.html">1.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c1/interview.html">访谈：Leonard Kleinrock</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c2/index.html">第 2 章 应用层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s1.html">2.1 网络应用程序原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s2.html">2.2 Web 与 HTTP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s3.html">2.3 互联网中的电子邮件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s4.html">2.4 DNS——互联网的目录服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s5.html">2.5 对等网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s6.html">2.6 视频流与内容分发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/s7.html">2.7 套接字编程：创建网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/summary.html">2.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/socketpro.html">Socket 编程作业</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c2/interview.html">访谈: Marc Andreessen</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c3/index.html">第 3 章 传输层</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s1.html">3.1 引言与传输层服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s2.html">3.2 复用与解复用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s3.html">3.3 无连接传输：UDP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s4.html">3.4 可靠数据传输的原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s5.html">3.5 面向连接的传输：TCP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s6.html">3.6 拥塞控制原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/s7.html">3.7 TCP 拥塞控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/summary.html">3.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c3/interview.html">访谈: Van Jacobson</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c4/index.html">第 4 章 网络层：数据平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s1.html">4.1 网络层概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s2.html">4.2 路由器的内部结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s3.html">4.3 Internet 协议（IP）：IPv4、地址、IPv6 等</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/s4.html">4.4 通用转发与 SDN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/summary.html">4.5 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c4/interview.html">访谈: Vinton G. Cerf</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c5/index.html">第 5 章 网络层：控制平面</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s1.html">5.1 引言</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s2.html">5.2 路由算法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s3.html">5.3 互联网中的域内路由：OSPF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s4.html">5.4 ISP 之间的路由：BGP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s5.html">5.5 SDN 控制平面</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s6.html">5.6 ICMP：因特网控制报文协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/s7.html">5.7 网络管理与 SNMP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/summary.html">5.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c5/interview.html">访谈: Jennifer Rexford</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c6/index.html">第 6 章 链路层与局域网（LANs）</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s1.html">6.1 链路层简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s2.html">6.2 错误检测与纠正技术</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s3.html">6.3 多路访问链路与协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s4.html">6.4 交换式局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s5.html">6.5 链路虚拟化：作为链路层的网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s6.html">6.6 数据中心网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/s7.html">6.7 回顾：网页请求生命周期中的一天</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/summary.html">6.8 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c6/interview.html">访谈：Simon S. Lam</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c7/index.html">第 7 章 无线与移动网络</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s1.html">7.1 简介</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s2.html">7.2 无线链接和网络特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s3.html">7.3 WiFi：802.11 无线局域网</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s4.html">7.4 蜂窝互联网接入</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s5.html">7.5 移动性管理：原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s6.html">7.6 移动 IP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s7.html">7.7 蜂窝网络中的移动性管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/s8.html">7.8 无线与移动性：对高层协议的影响</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/summary.html">7.9 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c7/interview.html">访谈: Deborah Estrin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../c8/index.html">第 8 章 计算机网络中的安全</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s1.html">8.1 什么是网络安全？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s2.html">8.2 密码学原理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s3.html">8.3 消息完整性和数字签名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s4.html">8.4 终端认证</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s5.html">8.5 电子邮件安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s6.html">8.6 保护 TCP 连接: SSL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s7.html">8.7 网络层安全: IPsec 和虚拟专用网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s8.html">8.8 无线局域网的安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/s9.html">8.9 运行安全：防火墙和入侵检测系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/summary.html">8.10 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/homework.html">课后习题与问题</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/wiresharklab.html">Wireshark 实验室</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../c8/interview.html">访谈：Steven M. Bellovin</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">第 9 章 多媒体网络</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="s1.html">9.1 多媒体网络应用</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s2.html">9.2 流媒体存储视频</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s3.html">9.3 基于 IP 的语音通信</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">9.4 实时对话应用的协议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="s5.html">9.5 多媒体的网络支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">9.6 小结</a></li>
+<li class="toctree-l2"><a class="reference internal" href="homework.html">家庭作业问题和疑问</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview.html">访谈：Henning Schulzrinne</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../references.html">引用</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/hellowac/computer-net-zh-cn" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="源码库"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/c9/s4.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>9.4 实时对话应用的协议</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rtp">9.4.1 RTP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">RTP 基础</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">RTP 包头字段</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sip">9.4.2 SIP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ip">已知 IP 地址呼叫建立</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">SIP 地址</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">SIP 消息</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">名称转换和用户定位</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="c9-4">
+<span id="id1"></span><h1>9.4 实时对话应用的协议<a class="headerlink" href="#c9-4" title="此标题的永久链接">#</a></h1>
+<p>9.4 Protocols for Real-Time Conversational Applications</p>
+<p>实时对话应用，包括 VoIP 和视频会议，非常有吸引力且广受欢迎。因此，标准组织如 IETF 和 ITU 多年来（并将继续）致力于制定这类应用的标准也就不足为奇了。有了适当的实时对话应用标准，独立公司能够创造相互兼容的新产品。本节我们考察用于实时对话应用的 RTP 和 SIP。这两个标准在工业产品中得到广泛实现。</p>
+<div class="toggle docutils container">
+<p>Real-time conversational applications, including VoIP and video conferencing, are compelling and very popular. It is therefore not surprising that standards bodies, such as the IETF and ITU, have been busy for many years (and continue to be busy!) at hammering out standards for this class of applications. With the appropriate standards in place for real-time conversational applications, independent companies are creating new products that interoperate with each other. In this section we examine RTP and SIP for real-time conversational applications. Both standards are enjoying widespread implementation in industry products.</p>
+</div>
+<section id="rtp">
+<span id="c9-4-1"></span><h2>9.4.1 RTP<a class="headerlink" href="#rtp" title="此标题的永久链接">#</a></h2>
+<p>在前一节中，我们了解到 VoIP 应用的发送端在将音频块传递给传输层之前，会附加头字段。这些头字段包括序列号和时间戳。由于大多数多媒体网络应用可以使用序列号和时间戳，拥有一个包含音视频数据、序列号和时间戳等字段的标准化包结构非常方便。RTP（定义于 RFC 3550）就是这样的标准。RTP 可用于传输常见格式，如 PCM、ACC、MP3（音频）和 MPEG、H.263（视频）。它也可用于传输专有的音视频格式。如今，RTP 在许多产品和研究原型中得到广泛应用。它还与其他重要的实时交互协议（如 SIP）互补。</p>
+<p>本节介绍 RTP。我们也鼓励您访问 Henning Schulzrinne 的 RTP 站点 <a class="reference internal" href="../references.html#schulzrinne-rtp-2012"><span class="std std-ref">[Schulzrinne-RTP 2012]</span></a>，该站点提供大量相关信息。此外，您可能想访问 RAT 站点 [RAT 2012]，该站点记录了使用 RTP 的 VoIP 应用。</p>
+<div class="toggle docutils container">
+<p>In the previous section, we learned that the sender side of a VoIP application appends header fields to the audio chunks before passing them to the transport layer. These header fields include sequence numbers and timestamps. Since most multimedia networking applications can make use of sequence numbers and timestamps, it is convenient to have a standardized packet structure that includes fields for audio/video data, sequence number, and timestamp, as well as other potentially useful fields. RTP, defined in RFC 3550, is such a standard. RTP can be used for transporting common formats such as PCM, ACC, and MP3 for sound and MPEG and H.263 for video. It can also be used for transporting proprietary sound and video formats. Today, RTP enjoys widespread implementation in many products and research prototypes. It is also complementary to other important real-time interactive protocols, such as SIP.</p>
+<p>In this section, we provide an introduction to RTP. We also encourage you to visit Henning Schulzrinne’s RTP site <a class="reference internal" href="../references.html#schulzrinne-rtp-2012"><span class="std std-ref">[Schulzrinne-RTP 2012]</span></a>, which provides a wealth of information on the subject. Also, you may want to visit the RAT site [RAT 2012], which documents VoIP application that uses RTP.</p>
+</div>
+<section id="id2">
+<h3>RTP 基础<a class="headerlink" href="#id2" title="此标题的永久链接">#</a></h3>
+<p>RTP Basics</p>
+<p>RTP 通常运行于 UDP 之上。发送端将媒体块封装在 RTP 包中，再将该包封装在 UDP 段中，最后交给 IP。接收端从 UDP 段中提取 RTP 包，再从 RTP 包中提取媒体块，然后将其传递给媒体播放器进行解码和播放。</p>
+<p>举例说明，考虑使用 RTP 传输语音。假设语音源为 PCM 编码（即采样、量化和数字化）且速率为 64 kbps。假设应用以 20 毫秒为单位收集编码数据，即每块 160 字节。发送端在每块音频数据前附加一个 <strong>RTP 头</strong>，其中包括音频编码类型、序列号和时间戳。RTP 头通常为 12 字节。音频块与 RTP 头构成 RTP 包。该包随后发送到 UDP 套接字接口。接收端从套接字接口接收 <strong>RTP 包</strong>，提取音频块并利用 RTP 包头字段正确解码并回放音频块。</p>
+<p>如果应用采用 RTP，而非专有方案提供有效载荷类型、序列号或时间戳，应用间的互操作性将更好。例如，若两家公司开发的 VoIP 软件均采用 RTP，则用户使用其中一个产品时，有望与使用另一个产品的用户通信。在 <a class="reference internal" href="#c9-4-2"><span class="std std-ref">第 9.4.2 节</span></a> 中，我们将看到 RTP 常与 SIP 结合使用，SIP 是互联网电话的重要标准。</p>
+<p>应强调，RTP 不提供任何保证数据及时传输或其他服务质量（QoS）的机制；甚至不保证数据包送达或防止乱序。实际上，RTP 封装仅在端系统可见，路由器不区分携带 RTP 包的 IP 数据报与不携带的。</p>
+<p>RTP 允许每个源（如摄像头或麦克风）拥有独立的 RTP 包流。例如，两人视频会议可开启四个 RTP 流——两个用于音频（双向各一）和两个用于视频（同样双向各一）。但许多流行编码技术（如 MPEG 1 和 MPEG 2）在编码时将音视频合成单一流。当编码器合成音视频时，每个方向仅生成一个 RTP 流。</p>
+<p>RTP 包不限于单播应用，也可通过一对多和多对多的多播树发送。对于多对多多播会话，所有发送者和源通常使用相同多播组发送 RTP 流。属于同一多播会话的 RTP 流（如视频会议中多发送者的音视频流）称为 <strong>RTP 会话</strong>。</p>
+<figure class="align-center" id="figure-9-8">
+<img alt="../_images/775-0.png" src="../_images/775-0.png" />
+</figure>
+<p><strong>图 9.8 RTP 头字段</strong></p>
+<div class="toggle docutils container">
+<p>RTP typically runs on top of UDP. The sending side encapsulates a media chunk within an RTP packet, then encapsulates the packet in a UDP segment, and then hands the segment to IP. The receiving side extracts the RTP packet from the UDP segment, then extracts the media chunk from the RTP packet, and then passes the chunk to the media player for decoding and rendering.</p>
+<p>As an example, consider the use of RTP to transport voice. Suppose the voice source is PCM-encoded (that is, sampled, quantized, and digitized) at 64 kbps. Further suppose that the application collects the encoded data in 20-msec chunks, that is, 160 bytes in a chunk. The sending side precedes each chunk of the audio data with an <strong>RTP header</strong> that includes the type of audio encoding, a sequence number, and a timestamp. The RTP header is normally 12 bytes. The audio chunk along with the RTP header form the RTP packet. The RTP packet is then sent into the UDP socket interface. At the receiver side, the application receives the <strong>RTP packet</strong> from its socket interface. The application extracts the audio chunk from the RTP packet and uses the header fields of the RTP packet to properly decode and play back the audio chunk.</p>
+<p>If an application incorporates RTP—instead of a proprietary scheme to provide payload type, sequence numbers, or timestamps—then the application will more easily interoperate with other networked multimedia applications. For example, if two different companies develop VoIP software and they both incorporate RTP into their product, there may be some hope that a user using one of the VoIP products will be able to communicate with a user using the other VoIP product. In <a class="reference internal" href="#c9-4-2"><span class="std std-ref">Section 9.4.2</span></a>, we’ll see that RTP is often used in conjunction with SIP, an important standard for Internet telephony.</p>
+<p>It should be emphasized that RTP does not provide any mechanism to ensure timely delivery of data or provide other quality-of-service (QoS) guarantees; it does not even guarantee delivery of packets or prevent out-of-order delivery of packets. Indeed, RTP encapsulation is seen only at the end systems. Routers do not distinguish between IP datagrams that carry RTP packets and IP datagrams that don’t.</p>
+<p>RTP allows each source (for example, a camera or a microphone) to be assigned its own independent RTP stream of packets. For example, for a video conference between two participants, four RTP streams could be opened—two streams for transmitting the audio (one in each direction) and two streams for transmitting the video (again, one in each direction). However, many popular encoding techniques—including MPEG 1 and MPEG 2—bundle the audio and video into a single stream during the encoding process. When the audio and video are bundled by the encoder, then only one RTP stream is generated in each direction.</p>
+<p>RTP packets are not limited to unicast applications. They can also be sent over one-to-many and many- to-many multicast trees. For a many-to-many multicast session, all of the session’s senders and sources typically use the same multicast group for sending their RTP streams. RTP multicast streams belonging together, such as audio and video streams emanating from multiple senders in a video conference application, belong to an <strong>RTP session</strong>.</p>
+<figure class="align-center">
+<img alt="../_images/775-0.png" src="../_images/775-0.png" />
+</figure>
+<p><strong>Figure 9.8 RTP header fields</strong></p>
+</div>
+</section>
+<section id="id3">
+<h3>RTP 包头字段<a class="headerlink" href="#id3" title="此标题的永久链接">#</a></h3>
+<p>RTP Packet Header Fields</p>
+<p>如 <a class="reference internal" href="#figure-9-8"><span class="std std-ref">图 9.8</span></a> 所示，四个主要 RTP 包头字段是有效载荷类型、序列号、时间戳和源标识符。</p>
+<p>RTP 包中有效载荷类型字段长 7 位。对于音频流，该字段指示音频编码类型（如 PCM、自适应三角调制、线性预测编码）。发送端若在会话中途改变编码，可通过该字段通知接收端。发送端可能为提升音质或降低 RTP 流比特率而改变编码。<a class="reference internal" href="#table-9-2"><span class="std std-ref">表 9.2</span></a> 列出了 RTP 当前支持的一些音频有效载荷类型。</p>
+<p>对于视频流，有效载荷类型用于指示视频编码类型（如运动 JPEG、MPEG 1、MPEG 2、H.261）。同样，发送端可在会话中动态更改视频编码。<a class="reference internal" href="#table-9-3"><span class="std std-ref">表 9.3</span></a> 列出 RTP 支持的一些视频有效载荷类型。其他重要字段包括：</p>
+<ul class="simple">
+<li><p><strong>序列号字段</strong>。长度为 16 位。每发送一个 RTP 包，序列号加一，接收端可用其检测丢包并恢复包序。例如，若接收端收到序列号间断从 86 跳到 89，则知道 87 和 88 包丢失，接收端可尝试掩盖丢失数据。</p></li>
+<li><p><strong>时间戳字段</strong>。长度为 32 位。反映 RTP 数据包中第一个字节的采样时刻。如前节所述，接收端利用时间戳消除网络引入的抖动，实现同步播放。时间戳由发送端采样时钟产生。举例，音频时间戳时钟以采样周期递增（例如，8 kHz 采样时为每 125 微秒递增 1）；若音频应用生成 160 个编码采样的块，则时间戳在源活动时每个 RTP 包递增 160。即使源不活动，时间戳时钟也持续以恒定速率增加。</p></li>
+<li><p><strong>同步源标识符（SSRC）</strong>。长度 32 位。标识 RTP 流的来源。通常，RTP 会话中每个流拥有独特的 SSRC。SSRC 不是发送者的 IP 地址，而是源在新流开始时随机分配的编号。两个流分配相同 SSRC 的概率极小，若发生，两个源将重新选取新的 SSRC。</p></li>
+</ul>
+<p id="table-9-2"><strong>表 9.2 RTP 支持的音频有效载荷类型</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>载荷类型编号</p></td>
+<td><p>音频格式</p></td>
+<td><p>采样率</p></td>
+<td><p>码率</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>PCM μ-law</p></td>
+<td><p>8 kHz</p></td>
+<td><p>64 kbps</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1016</p></td>
+<td><p>8 kHz</p></td>
+<td><p>4.8 kbps</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>GSM</p></td>
+<td><p>8 kHz</p></td>
+<td><p>13 kbps</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>LPC</p></td>
+<td><p>8 kHz</p></td>
+<td><p>2.4 kbps</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>G.722</p></td>
+<td><p>16 kHz</p></td>
+<td><p>48 - 64 kbps</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>MPEG 音频</p></td>
+<td><p>90 kHz</p></td>
+<td><p>–</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>G.728</p></td>
+<td><p>8 kHz</p></td>
+<td><p>16 kbps</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p id="table-9-3"><strong>表 9.3 RTP 支持的一些视频有效载荷类型</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>载荷类型编号</p></td>
+<td><p>视频格式</p></td>
+</tr>
+<tr class="row-even"><td><p>26</p></td>
+<td><p>运动 JPEG</p></td>
+</tr>
+<tr class="row-odd"><td><p>31</p></td>
+<td><p>H.261</p></td>
+</tr>
+<tr class="row-even"><td><p>32</p></td>
+<td><p>MPEG 1 视频</p></td>
+</tr>
+<tr class="row-odd"><td><p>33</p></td>
+<td><p>MPEG 2 视频</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="toggle docutils container">
+<p>As shown in <a class="reference internal" href="#figure-9-8"><span class="std std-ref">Figure 9.8</span></a>, the four main RTP packet header fields are the payload type, sequence number, timestamp, and source identifier fields.</p>
+<p>The payload type field in the RTP packet is 7 bits long. For an audio stream, the payload type field is used to indicate the type of audio encoding (for example, PCM, adaptive delta modulation, linear predictive encoding) that is being used. If a sender decides to change the encoding in the middle of a session, the sender can inform the receiver of the change through this payload type field. The sender may want to change the encoding in order to increase the audio quality or to decrease the RTP stream bit rate. <a class="reference internal" href="#table-9-2"><span class="std std-ref">Table 9.2</span></a> lists some of the audio payload types currently supported by RTP.</p>
+<p>For a video stream, the payload type is used to indicate the type of video encoding (for example, motion JPEG, MPEG 1, MPEG 2, H.261). Again, the sender can change video encoding on the fly during a session. <a class="reference internal" href="#table-9-3"><span class="std std-ref">Table 9.3</span></a> lists some of the video payload types currently supported by RTP. The other important fields are the following:</p>
+<ul class="simple">
+<li><p><strong>Sequence number field</strong>. The sequence number field is 16 bits long. The sequence number increments by one for each RTP packet sent, and may be used by the receiver to detect packet loss and to restore packet sequence. For example, if the receiver side of the application receives a stream of RTP packets with a gap between sequence numbers 86 and 89, then the receiver knows that packets 87 and 88 are missing. The receiver can then attempt to conceal the lost data.</p></li>
+<li><p><strong>Timestamp field</strong>. The timestamp field is 32 bits long. It reflects the sampling instant of the first byte in the RTP data packet. As we saw in the preceding section, the receiver can use timestamps to remove packet jitter introduced in the network and to provide synchronous playout at the receiver. The timestamp is derived from a sampling clock at the sender. As an example, for audio the timestamp clock increments by one for each sampling period (for example, each 125 μsec for an 8 kHz sampling clock); if the audio application generates chunks consisting of 160 encoded samples, then the timestamp increases by 160 for each RTP packet when the source is active. The timestamp clock continues to increase at a constant rate even if the source is inactive.</p></li>
+<li><p><strong>Synchronization source identifier (SSRC)</strong>. The SSRC field is 32 bits long. It identifies the source of the RTP stream. Typically, each stream in an RTP session has a distinct SSRC. The SSRC is not the IP address of the sender, but instead is a number that the source assigns randomly when the new stream is started. The probability that two streams get assigned the same SSRC is very small. Should this happen, the two sources pick a new SSRC value.</p></li>
+</ul>
+<p><strong>Table 9.2 Audio payload types supported by RTP</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>Payload-Type Number</p></td>
+<td><p>Audio Format</p></td>
+<td><p>Sampling Rate</p></td>
+<td><p>Rate</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>PCM μ-law</p></td>
+<td><p>8 kHz</p></td>
+<td><p>64 kbps</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1016</p></td>
+<td><p>8 kHz</p></td>
+<td><p>4.8 kbps</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>GSM</p></td>
+<td><p>8 kHz</p></td>
+<td><p>13 kbps</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>LPC</p></td>
+<td><p>8 kHz</p></td>
+<td><p>2.4 kbps</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>G.722</p></td>
+<td><p>16 kHz</p></td>
+<td><p>48 - 64 kbps</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>MPEG Audio</p></td>
+<td><p>90 kHz</p></td>
+<td><p>–</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>G.728</p></td>
+<td><p>8 kHz</p></td>
+<td><p>16 kbps</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Table 9.3 Some video payload types supported by RTP</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<tbody>
+<tr class="row-odd"><td><p>Payload-Type Number</p></td>
+<td><p>Video Format</p></td>
+</tr>
+<tr class="row-even"><td><p>26</p></td>
+<td><p>Motion JPEG</p></td>
+</tr>
+<tr class="row-odd"><td><p>31</p></td>
+<td><p>H.261</p></td>
+</tr>
+<tr class="row-even"><td><p>32</p></td>
+<td><p>MPEG 1 video</p></td>
+</tr>
+<tr class="row-odd"><td><p>33</p></td>
+<td><p>MPEG 2 video</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="sip">
+<span id="c9-4-2"></span><h2>9.4.2 SIP<a class="headerlink" href="#sip" title="此标题的永久链接">#</a></h2>
+<p>会话发起协议（SIP），定义于 [<span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3261.html"><strong>RFC 3261</strong></a>; <span class="target" id="index-1"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc5411.html"><strong>RFC 5411</strong></a>]，是一个开放且轻量级的协议，具备以下功能：</p>
+<ul class="simple">
+<li><p>提供在 IP 网络上建立呼叫的机制，使呼叫者能通知被呼叫者希望开始通话。允许参与者就媒体编码达成一致。也允许参与者结束呼叫。</p></li>
+<li><p>提供机制使呼叫者确定被呼叫者当前 IP 地址。用户没有单一固定 IP 地址，因为地址可能动态分配（通过 DHCP），且用户可能拥有多个 IP 设备，每个有不同 IP。</p></li>
+<li><p>提供呼叫管理机制，如通话中添加新媒体流、更改编码、邀请新参与者、呼叫转接和呼叫保持。</p></li>
+</ul>
+<div class="toggle docutils container">
+<p>The Session Initiation Protocol (SIP), defined in [<span class="target" id="index-2"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc3261.html"><strong>RFC 3261</strong></a>; <span class="target" id="index-3"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc5411.html"><strong>RFC 5411</strong></a>], is an open and lightweight protocol that does the following:</p>
+<ul class="simple">
+<li><p>It provides mechanisms for establishing calls between a caller and a callee over an IP network. It allows the caller to notify the callee that it wants to start a call. It allows the participants to agree on media encodings. It also allows participants to end calls.</p></li>
+<li><p>It provides mechanisms for the caller to determine the current IP address of the callee. Users do not have a single, fixed IP address because they may be assigned addresses dynamically (using DHCP) and because they may have multiple IP devices, each with a different IP address.</p></li>
+<li><p>It provides mechanisms for call management, such as adding new media streams during the call, changing the encoding during the call, inviting new participants during the call, call transfer, and call holding.</p></li>
+</ul>
+</div>
+<section id="ip">
+<h3>已知 IP 地址呼叫建立<a class="headerlink" href="#ip" title="此标题的永久链接">#</a></h3>
+<p>Setting Up a Call to a Known IP Address</p>
+<p>为理解 SIP 的本质，最好看具体示例。例中，Alice 在其电脑上，想呼叫同样在电脑工作的 Bob。Alice 和 Bob 的电脑均装有基于 SIP 的电话软件用于发起和接听电话。此初步示例假设 Alice 知道 Bob 电脑的 IP 地址。<a class="reference internal" href="#figure-9-9"><span class="std std-ref">图 9.9</span></a> 展示 SIP 呼叫建立过程。</p>
+<p>如 <a class="reference internal" href="#figure-9-9"><span class="std std-ref">图 9.9</span></a> 所示，SIP 会话始于 Alice 向 Bob 发送 INVITE 消息，类似 HTTP 请求。该消息通过 UDP 发送到 SIP 端口 5060。（SIP 消息也可通过 TCP 发送。）INVITE 消息包含 Bob 的标识（<a class="reference external" href="mailto:bob&#37;&#52;&#48;193&#46;64&#46;210&#46;89">bob<span>&#64;</span>193<span>&#46;</span>64<span>&#46;</span>210<span>&#46;</span>89</a>）、Alice 当前 IP 地址、Alice 希望接收音频（编码格式为 AVP 0，即 PCM μ-law 编码，封装于 RTP 中）、及她希望在端口 38060 接收 RTP 包的说明。Bob 收到 INVITE 后发送 SIP 响应，类似 HTTP 响应，也发送至 SIP 端口 5060。Bob 的响应包括 200 OK，及其 IP 地址、期望的编码和封包格式，以及接收音频包的端口号。注意本例中 Alice 和 Bob 使用不同的音频编码：Alice 被要求使用 GSM 编码，而 Bob 被要求使用 PCM μ-law。收到 Bob 响应后，Alice 向 Bob 发送 SIP 确认消息。此 SIP 事务完成后，Bob 和 Alice 可通话。（为视觉方便，<span class="xref std std-ref">图 9.9</span> 显示 Alice 在 Bob 后通话，但实际上他们通常同时通话。）Bob 会按请求编码和封包音频，发送至 IP 167.180.112.24 的端口 38060；Alice 也按请求编码和封包，发送至 IP 193.64.210.89 的端口 48753。</p>
+<figure class="align-center" id="figure-9-9">
+<img alt="../_images/778-0.png" src="../_images/778-0.png" />
+</figure>
+<p><strong>图 9.9 Alice 知道 Bob IP 地址时的 SIP 呼叫建立</strong></p>
+<p>通过该简单示例，我们了解到 SIP 的几个关键特性。第一，SIP 是带外协议：SIP 消息在与媒体数据发送接收不同的套接字中发送接收。第二，SIP 消息本身为 ASCII 可读，类似 HTTP 消息。第三，SIP 要求所有消息需确认，因此可运行于 UDP 或 TCP。</p>
+<p>假设 Bob 没有 PCM μ-law 编码器，无法编码音频，则不会回应 200 OK，而可能返回 606 Not Acceptable，并列出所有可用编码器。Alice 可选择其中编码器，重新发送包含选定编码的 INVITE 消息。Bob 也可直接拒绝呼叫，发送多种拒绝码（如忙、离开、需付款、禁止等）。</p>
+<div class="toggle docutils container">
+<p>To understand the essence of SIP, it is best to take a look at a concrete example. In this example, Alice is at her PC and she wants to call Bob, who is also working at his PC. Alice’s and Bob’s PCs are both equipped with SIP-based software for making and receiving phone calls. In this initial example, we’ll
+assume that Alice knows the IP address of Bob’s PC. <a class="reference internal" href="#figure-9-9"><span class="std std-ref">Figure 9.9</span></a> illustrates the SIP call-establishment process.</p>
+<p>In <a class="reference internal" href="#figure-9-9"><span class="std std-ref">Figure 9.9</span></a>, we see that an SIP session begins when Alice sends Bob an INVITE message, which resembles an HTTP request message. This INVITE message is sent over UDP to the well-known port 5060 for SIP. (SIP messages can also be sent over TCP.) The INVITE message includes an identifier for Bob (<a class="reference external" href="mailto:bob&#37;&#52;&#48;193&#46;64&#46;210&#46;89">bob<span>&#64;</span>193<span>&#46;</span>64<span>&#46;</span>210<span>&#46;</span>89</a>), an indication of Alice’s current IP address, an indication that Alice desires to receive audio, which is to be encoded in format AVP 0 (PCM encoded μ-law) and encapsulated in RTP, and an indication that she wants to receive the RTP packets on port 38060. After receiving Alice’s INVITE message, Bob sends an SIP response message, which resembles an HTTP response message. This response SIP message is also sent to the SIP port 5060. Bob’s response includes a 200 OK as well as an indication of his IP address, his desired encoding and packetization for reception, and his port number to which the audio packets should be sent. Note that in this example Alice and Bob are going to use different audio-encoding mechanisms: Alice is asked to encode her audio with GSM whereas Bob is asked to encode his audio with PCM μ-law. After receiving Bob’s response, Alice sends Bob an SIP acknowledgment message. After this SIP transaction, Bob and Alice can talk. (For visual convenience, <span class="xref std std-ref">Figure 9.9 ,Figure 9.9</span> shows Alice talking after Bob, but in truth they would normally talk at the same time.) Bob will encode and packetize the audio as requested and send the audio packets to port number 38060 at IP address 167.180.112.24. Alice will also encode and packetize the audio as requested and send the audio packets to port number 48753 at IP address 193.64.210.89.</p>
+<figure class="align-center">
+<img alt="../_images/778-0.png" src="../_images/778-0.png" />
+</figure>
+<p><strong>Figure 9.9 SIP call establishment when Alice knows Bob’s IP address</strong></p>
+<p>From this simple example, we have learned a number of key characteristics of SIP. First, SIP is an out- of-band protocol: The SIP messages are sent and received in sockets that are different from those used for sending and receiving the media data. Second, the SIP messages themselves are ASCII-readable and resemble HTTP messages. Third, SIP requires all messages to be acknowledged, so it can run over UDP or TCP.</p>
+<p>In this example, let’s consider what would happen if Bob does not have a PCM μ-law codec for encoding audio. In this case, instead of responding with 200 OK, Bob would likely respond with a 606 Not Acceptable and list in the message all the codecs he can use. Alice would then choose one of the listed codecs and send another INVITE message, this time advertising the chosen codec. Bob could also simply reject the call by sending one of many possible rejection reply codes. (There are many such codes, including “busy,” “gone,” “payment required,” and “forbidden.”)</p>
+</div>
+</section>
+<section id="id4">
+<h3>SIP 地址<a class="headerlink" href="#id4" title="此标题的永久链接">#</a></h3>
+<p>SIP Addresses</p>
+<p>前例中，Bob 的 SIP 地址为 <a class="reference external" href="sip:bob&#64;193.64.210.89">sip:bob&#64;193.64.210.89</a>。但预计多数 SIP 地址类似电邮地址。例如，Bob 的地址可能是 <a class="reference external" href="sip:bob&#64;domain.com">sip:bob&#64;domain.com</a>。Alice 的 SIP 设备发送 INVITE 时包含此类地址，SIP 基础设施将消息路由至 Bob 当前使用的 IP 设备（如下文所述）。SIP 地址也可能是 Bob 的传统电话号码或其唯一的姓名。</p>
+<p>SIP 地址的有趣特性是可嵌入网页，就像邮件地址用 mailto URL 嵌入网页一样。例如，Bob 有个人主页，想让访客能呼叫他，可简单包含 URL <a class="reference external" href="sip:bob&#64;domain.com">sip:bob&#64;domain.com</a>。访客点击时，其设备上的 SIP 应用启动，发送 INVITE 消息给 Bob。</p>
+<div class="toggle docutils container">
+<p>In the previous example, Bob’s SIP address is <a class="reference external" href="sip:bob&#64;193.64.210.89">sip:bob&#64;193.64.210.89</a>. However, we expect many—if not most—SIP addresses to resemble e-mail addresses. For example, Bob’s address might be <a class="reference external" href="sip:bob&#64;domain.com">sip:bob&#64;domain.com</a>. When Alice’s SIP device sends an INVITE message, the message would include this e-mail-like address; the SIP infrastructure would then route the message to the IP device that Bob is currently using (as we’ll discuss below). Other possible forms for the SIP address could be Bob’s legacy phone number or simply Bob’s first/middle/last name (assuming it is unique).</p>
+<p>An interesting feature of SIP addresses is that they can be included in Web pages, just as people’s e- mail addresses are included in Web pages with the mailto URL. For example, suppose Bob has a personal homepage, and he wants to provide a means for visitors to the homepage to call him. He could then simply include the URL <a class="reference external" href="sip:bob&#64;domain.com">sip:bob&#64;domain.com</a>. When the visitor clicks on the URL, the SIP application in the visitor’s device is launched and an INVITE message is sent to Bob.</p>
+</div>
+</section>
+<section id="id5">
+<h3>SIP 消息<a class="headerlink" href="#id5" title="此标题的永久链接">#</a></h3>
+<p>SIP Messages</p>
+<p>本简短介绍不涵盖所有 SIP 消息类型和头。我们简要看 SIP INVITE 消息及几个常见头行。假设 Alice 想发起 VoIP 通话给 Bob，这次 Alice 只知道 Bob 的 SIP 地址 <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a>，不知道其设备 IP。消息可能如下：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>INVITE sip:bob@domain.com SIP/2.0
+Via: SIP/2.0/UDP 167.180.112.24
+From: sip:alice@hereway.com
+To: sip:bob@domain.com
+Call-ID: a2e3a@pigeon.hereway.com
+Content-Type: application/sdp
+Content-Length: 885
+
+c=IN IP4 167.180.112.24
+m=audio 38060 RTP/AVP 0
+</pre></div>
+</div>
+<p>INVITE 行包含 SIP 版本，类似 HTTP 请求。SIP 消息经过每个设备时，会附加 Via 头，指示设备 IP。（稍后我们会看到 INVITE 消息经由多个 SIP 设备到达被呼叫端。）类似邮件，消息包含 From 和 To 头。消息包含唯一标识通话的 Call-ID（类似邮件的 message-ID）。包含 Content-Type 头，定义消息内容格式。包含 Content-Length 头，指明内容长度（字节）。最后内容行包含 Alice 的 IP 及其音频接收偏好。</p>
+<div class="toggle docutils container">
+<p>In this short introduction to SIP, we’ll not cover all SIP message types and headers. Instead, we’ll take a brief look at the SIP INVITE message, along with a few common header lines. Let us again suppose that Alice wants to initiate a VoIP call to Bob, and this time Alice knows only Bob’s SIP address, <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a>, and does not know the IP address of the device that Bob is currently using. Then her message might look something like this:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>INVITE sip:bob@domain.com SIP/2.0
+Via: SIP/2.0/UDP 167.180.112.24
+From: sip:alice@hereway.com
+To: sip:bob@domain.com
+Call-ID: a2e3a@pigeon.hereway.com
+Content-Type: application/sdp
+Content-Length: 885
+
+c=IN IP4 167.180.112.24
+m=audio 38060 RTP/AVP 0
+</pre></div>
+</div>
+<p>The INVITE line includes the SIP version, as does an HTTP request message. Whenever an SIP message passes through an SIP device (including the device that originates the message), it attaches a Via header, which indicates the IP address of the device. (We’ll see soon that the typical INVITE message passes through many SIP devices before reaching the callee’s SIP application.) Similar to an e-mail message, the SIP message includes a From header line and a To header line. The message includes a Call-ID, which uniquely identifies the call (similar to the message-ID in e-mail). It includes a Content-Type header line, which defines the format used to describe the content contained in the SIP message. It also includes a Content-Length header line, which provides the length in bytes of the content in the message. Finally, after a carriage return and line feed, the message contains the content. In this case, the content provides information about Alice’s IP address and how Alice wants to receive the audio.</p>
+</div>
+</section>
+<section id="id6">
+<h3>名称转换和用户定位<a class="headerlink" href="#id6" title="此标题的永久链接">#</a></h3>
+<p>Name Translation and User Location</p>
+<p>在 <a class="reference internal" href="#figure-9-9"><span class="std std-ref">图 9.9</span></a> 示例中，假设 Alice 的 SIP 设备知道 Bob 可联系的 IP 地址。但该假设不现实，因 IP 地址常通过 DHCP 动态分配，且 Bob 可能有多个设备（如家中、工作、车内设备）。现在假设 Alice 只知道 Bob 的电邮地址 <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a>，该地址用于基于 SIP 的呼叫。此时，Alice 需获得 <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a> 当前使用设备的 IP 地址。为此，Alice 生成 INVITE 消息，格式为 INVITE <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a> SIP/2.0，并将其发送到 <strong>SIP 代理</strong>。代理会回复 SIP 应答，可能包含 <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a> 当前设备的 IP 地址。或者应答包含 Bob 的语音邮箱 IP，或包含网页 URL（如“Bob 正在睡觉，别打扰！”）。此外，代理返回结果可能依呼叫者不同而异：若呼叫来自 Bob 的妻子，他可能接听并提供 IP；若来自岳母，可能回复指向“我在睡觉”网页的 URL！</p>
+<p>你可能好奇，代理服务器如何确定 <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a> 的当前 IP 地址？这里需介绍另一 SIP 设备——<strong>SIP 注册服务器</strong>。每个 SIP 用户有对应的注册服务器。用户在设备启动 SIP 应用时，应用向注册服务器发送 SIP 注册消息，通知当前 IP。例如，Bob 在 PDA 上启动 SIP 应用时，会发送如下消息：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>REGISTER sip:domain.com SIP/2.0
+Via: SIP/2.0/UDP 193.64.210.89
+From: sip:bob@domain.com
+To: sip:bob@domain.com
+Expires: 3600
+</pre></div>
+</div>
+<p>Bob 的注册服务器记录其当前 IP 地址。Bob 切换新设备时，新设备发送新注册消息，更新 IP 地址。若 Bob 长时间使用同一设备，设备会定期发送刷新注册消息，表明最近 IP 仍有效。（上述示例中，每 3600 秒需发送一次刷新消息以维护注册。）注册服务器类似 DNS 权威名称服务器：DNS 解析固定主机名到固定 IP，SIP 注册服务器解析固定人类标识（如 <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a>）到动态 IP。通常 SIP 注册服务器和代理运行于同一主机。</p>
+<p>接着看 Alice 的 SIP 代理如何获取 Bob 当前 IP。从前述可知，代理只需将 Alice 的 INVITE 转发给 Bob 的注册服务器或代理，后者再转发给 Bob 当前 SIP 设备。Bob 收到 INVITE 后，会向 Alice 发送 SIP 响应。</p>
+<p>举例见 <a class="reference internal" href="#figure-9-10"><span class="std std-ref">图 9.10</span></a>，其中 <a class="reference external" href="mailto:jim&#37;&#52;&#48;umass&#46;edu">jim<span>&#64;</span>umass<span>&#46;</span>edu</a> 当前 IP 为 217.123.56.89，欲与 <a class="reference external" href="mailto:keith&#37;&#52;&#48;upenn">keith<span>&#64;</span>upenn</a>.edu（IP 197.87.54.21）建立 VoIP 会话。步骤如下：</p>
+<figure class="align-center" id="figure-9-10">
+<img alt="../_images/782-0.png" src="../_images/782-0.png" />
+</figure>
+<p><strong>图 9.10 会话发起，涉及 SIP 代理和注册服务器</strong></p>
+<ol class="arabic simple">
+<li><p>Jim 向 umass SIP 代理发送 INVITE 消息。(2) 代理执行 upenn.edu SIP 注册服务器的 DNS 查询（图中未示），并转发消息至注册服务器。(3) 因 <a class="reference external" href="mailto:keith&#37;&#52;&#48;upenn&#46;edu">keith<span>&#64;</span>upenn<span>&#46;</span>edu</a> 不再在 upenn 注册，upenn 注册服务器发送重定向响应，指向 <a class="reference external" href="mailto:keith&#37;&#52;&#48;nyu&#46;edu">keith<span>&#64;</span>nyu<span>&#46;</span>edu</a>。(4) umass 代理向 NYU SIP 注册服务器发送 INVITE。(5) NYU 注册服务器知晓 <a class="reference external" href="mailto:keith&#37;&#52;&#48;upenn&#46;edu">keith<span>&#64;</span>upenn<span>&#46;</span>edu</a> 的 IP，转发 INVITE 至 IP 197.87.54.21，运行 Keith 的 SIP 客户端。(6–8) SIP 响应经注册服务器/代理回传至 IP 217.123.56.89 上的 SIP 客户端。(9) 两客户端直接发送媒体。（还有 SIP 确认消息，图中未示。）</p></li>
+</ol>
+<p>我们对 SIP 的讨论侧重于语音呼叫的发起。SIP 作为一种用于一般呼叫发起和结束的信令协议，也可用于视频会议和基于文本的会话。事实上，SIP 已成为许多即时消息应用的基础组件。希望深入了解 SIP 的读者，建议访问 Henning Schulzrinne 的 SIP 网站 <a class="reference internal" href="../references.html#schulzrinne-sip-2016"><span class="std std-ref">[Schulzrinne-SIP 2016]</span></a>。特别地，网站提供 SIP 客户端和服务器的开源软件 <a class="reference internal" href="../references.html#sip-software-2016"><span class="std std-ref">[SIP Software 2016]</span></a>。</p>
+<div class="toggle docutils container">
+<p>In the example in <a class="reference internal" href="#figure-9-9"><span class="std std-ref">Figure 9.9</span></a>, we assumed that Alice’s SIP device knew the IP address where Bob could be contacted. But this assumption is quite unrealistic, not only because IP addresses are often dynamically assigned with DHCP, but also because Bob may have multiple IP devices (for example, different devices for his home, work, and car). So now let us suppose that Alice knows only Bob’s e-mail address, <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a>, and that this same address is used for SIP-based calls. In this case, Alice needs to obtain the IP address of the device that the user <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a> is currently using. To find this out, Alice creates an INVITE message that begins with INVITE <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a> SIP/2.0 and sends this message to an <strong>SIP proxy</strong>. The proxy will respond with an SIP reply that might include the IP address of the device that <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a> is currently using. Alternatively, the reply might include the IP address of Bob’s voicemail box, or it might include a URL of a Web page (that says “Bob is sleeping. Leave me alone!”). Also, the result returned by the proxy might depend on the caller: If the call is from Bob’s wife, he might accept the call and supply his IP address; if the call is from Bob’s mother-in- law, he might respond with the URL that points to the I-am-sleeping Web page!</p>
+<p>Now, you are probably wondering, how can the proxy server determine the current IP address for <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a>? To answer this question, we need to say a few words about another SIP device, the <strong>SIP registrar</strong>. Every SIP user has an associated registrar. Whenever a user launches an SIP application on a device, the application sends an SIP register message to the registrar, informing the registrar of its current IP address. For example, when Bob launches his SIP application on his PDA, the application would send a message along the lines of:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>REGISTER sip:domain.com SIP/2.0
+Via: SIP/2.0/UDP 193.64.210.89
+From: sip:bob@domain.com
+To: sip:bob@domain.com
+Expires: 3600
+</pre></div>
+</div>
+<p>Bob’s registrar keeps track of Bob’s current IP address. Whenever Bob switches to a new SIP device, the new device sends a new register message, indicating the new IP address. Also, if Bob remains at the same device for an extended period of time, the device will send refresh register messages, indicating that the most recently sent IP address is still valid. (In the example above, refresh messages need to be sent every 3600 seconds to maintain the address at the registrar server.) It is worth noting that the registrar is analogous to a DNS authoritative name server: The DNS server translates fixed host names to fixed IP addresses; the SIP registrar translates fixed human identifiers (for example, <a class="reference external" href="mailto:bob&#37;&#52;&#48;domain&#46;com">bob<span>&#64;</span>domain<span>&#46;</span>com</a>) to dynamic IP addresses. Often SIP registrars and SIP proxies are run on the same host.</p>
+<p>Now let’s examine how Alice’s SIP proxy server obtains Bob’s current IP address. From the preceding discussion we see that the proxy server simply needs to forward Alice’s INVITE message to Bob’s registrar/proxy. The registrar/proxy could then forward the message to Bob’s current SIP device. Finally, Bob, having now received Alice’s INVITE message, could send an SIP response to Alice.</p>
+<p>As an example, consider <a class="reference internal" href="#figure-9-10"><span class="std std-ref">Figure 9.10</span></a>, in which <a class="reference external" href="mailto:jim&#37;&#52;&#48;umass&#46;edu">jim<span>&#64;</span>umass<span>&#46;</span>edu</a>, currently working on 217.123.56.89, wants to initiate a Voice-over-IP (VoIP) session with <a class="reference external" href="mailto:keith&#37;&#52;&#48;upenn&#46;edu">keith<span>&#64;</span>upenn<span>&#46;</span>edu</a>, currently working on 197.87.54.21. The following steps are taken:</p>
+<figure class="align-center">
+<img alt="../_images/782-0.png" src="../_images/782-0.png" />
+</figure>
+<p><strong>Figure 9.10 Session initiation, involving SIP proxies and registrars</strong></p>
+<ol class="arabic simple">
+<li><p>Jim sends an INVITE message to the umass SIP proxy. (2) The proxy does a DNS lookup on the SIP registrar upenn.edu (not shown in diagram) and then forwards the message to the registrar server. (3) Because <a class="reference external" href="mailto:keith&#37;&#52;&#48;upenn&#46;edu">keith<span>&#64;</span>upenn<span>&#46;</span>edu</a> is no longer registered at the upenn registrar, the upenn registrar sends a redirect response, indicating that it should try <a class="reference external" href="mailto:keith&#37;&#52;&#48;nyu&#46;edu">keith<span>&#64;</span>nyu<span>&#46;</span>edu</a>. (4) The umass proxy sends an INVITE message to the NYU SIP registrar. (5) The NYU registrar knows the IP address of <a class="reference external" href="mailto:keith&#37;&#52;&#48;upenn&#46;edu">keith<span>&#64;</span>upenn<span>&#46;</span>edu</a> and forwards the INVITE message to the host 197.87.54.21, which is running Keith’s SIP client. (6–8) An SIP response is sent back through registrars/proxies to the SIP client on 217.123.56.89. (9) Media is sent directly between the two clients. (There is also an SIP acknowledgment message, which is not shown.)</p></li>
+</ol>
+<p>Our discussion of SIP has focused on call initiation for voice calls. SIP, being a signaling protocol for initiating and ending calls in general, can be used for video conference calls as well as for text-based sessions. In fact, SIP has become a fundamental component in many instant messaging applications. Readers desiring to learn more about SIP are encouraged to visit Henning Schulzrinne’s SIP Web site <a class="reference internal" href="../references.html#schulzrinne-sip-2016"><span class="std std-ref">[Schulzrinne-SIP 2016]</span></a>. In particular, on this site you will find open source software for SIP clients and servers <a class="reference internal" href="../references.html#sip-software-2016"><span class="std std-ref">[SIP Software 2016]</span></a>.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="s3.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">9.3 基于 IP 的语音通信</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="s5.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">9.5 多媒体的网络支持</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rtp">9.4.1 RTP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">RTP 基础</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">RTP 包头字段</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sip">9.4.2 SIP</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ip">已知 IP 地址呼叫建立</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">SIP 地址</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">SIP 消息</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">名称转换和用户定位</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： Jim Kurose/Keith Ross
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jim Kurose/Keith Ross.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
